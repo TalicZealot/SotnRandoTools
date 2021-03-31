@@ -4,7 +4,7 @@ A collection of tools to enhance the `Castlevania:Symphony of the Night Randomiz
 
 ## Installation
 This tool requires Bizhawk version 2.6 or higher.
-Extract the latest release and put the contents in the `Bizhawk/ExternalTools/` folder.
+Extract the [latest release](https://github.com/TalicZealot/SotnRandoTools/releases/latest) and put the contents in the `Bizhawk/ExternalTools/` folder.
 It should look like this:
 ```
 BizHawk
