@@ -33,7 +33,7 @@ namespace SotnRandoTools.Services
 			RelicWatches = relicWatches;
 			coopRelicWatches = new WatchList(this.memoryDomains, this.systemId);
 			coopRelicWatches.Load(Paths.RelicWatchesPath, false);
-			CoopRelicWatches = relicWatches;
+			CoopRelicWatches = coopRelicWatches;
 			safeLocationWatches = new WatchList(this.memoryDomains, this.systemId);
 			safeLocationWatches.Load(Paths.SafeLocationWatchesPath, false);
 			SafeLocationWatches = safeLocationWatches;

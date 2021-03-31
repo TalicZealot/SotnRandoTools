@@ -104,7 +104,7 @@ namespace SotnRandoTools.Coop
 			{
 				server.Send(connectedClientAddress, new byte[] { (byte) type, data[0], data[1] });
 			}
-			else if (client is not null)
+			else if (client is not null && client.IsConnected)
 			{
 				client.Send(new byte[] { (byte) type, data[0], data[1] });
 			}
@@ -125,6 +125,7 @@ namespace SotnRandoTools.Coop
 
 		private void Disconnected(object sender, ClientDisconnectedEventArgs e)
 		{
+			client.Dispose();
 			Console.WriteLine($"Disconnected from host.");
 		}
 

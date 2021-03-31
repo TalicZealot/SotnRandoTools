@@ -6,9 +6,8 @@ namespace SotnRandoTools.Configuration
 	{
 		public CoopConfig()
 		{
-
-			ShareRelics = false;
-			SendRelics = true;
+			ShareRelics = true;
+			SendRelics = false;
 			ShareWarps = true;
 			ShareShortcuts = true;
 			SendItems = true;

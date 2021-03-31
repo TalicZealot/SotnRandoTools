@@ -79,7 +79,7 @@ namespace SotnRandoTools.Coop
 			{
 				selectPressed = true;
 				string item = alucardApi.GetSelectedItemName();
-				if (alucardApi.HasItemInInventory(item))
+				if (!item.Contains("empty hand") && !item.Contains("-") && alucardApi.HasItemInInventory(item))
 				{
 					alucardApi.TakeOneItemByName(item);
 					ushort indexData = (ushort)Equipment.Items.IndexOf(item);
@@ -157,18 +157,18 @@ namespace SotnRandoTools.Coop
 		private void UpdateRelics()
 		{
 			watchlistService.UpdateWatchlist(watchlistService.CoopRelicWatches);
-			for (int i = 0; i < watchlistService.RelicWatches.Count; i++)
+			for (int i = 0; i < watchlistService.CoopRelicWatches.Count; i++)
 			{
-				if (watchlistService.RelicWatches[i].ChangeCount > 0)
+				if (watchlistService.CoopRelicWatches[i].ChangeCount > 0)
 				{
-					if (watchlistService.RelicWatches[i].Value > 0)
+					if (watchlistService.CoopRelicWatches[i].Value > 0)
 					{
 						coopMessanger.SendData(MessageType.Relic, BitConverter.GetBytes((ushort)i));
-						Console.WriteLine($"Sending relic: {watchlistService.RelicWatches[i].Notes}");
+						Console.WriteLine($"Sending relic: {watchlistService.CoopRelicWatches[i].Notes}");
 					}
 				}
 			}
-			watchlistService.RelicWatches.ClearChangeCounts();
+			watchlistService.CoopRelicWatches.ClearChangeCounts();
 		}
 
 		private void UpdateProgressionItems()
