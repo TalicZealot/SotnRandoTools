@@ -1,0 +1,19 @@
+SystemID PSX
+03BEBC	b	h	0	MainRAM	WarpsFirstCastle
+03BEBD	b	h	0	MainRAM	WarpsSecondCastle
+03BDFC	b	h	0	MainRAM	OuterWallElevator
+03BE6F	b	h	0	MainRAM	AlchemyElevator
+03BE1D	b	h	0	MainRAM	EntranceToMarble
+03BE4C	b	h	0	MainRAM	ChapelStatue
+03BE9E	b	h	0	MainRAM	ColosseumElevator
+03BE9D	b	h	0	MainRAM	ColosseumToChapel
+03BDED	b	h	0	MainRAM	MarbleBlueDoor
+03BEB3	b	h	0	MainRAM	CavernsSwitchAndBridge
+03BE1C	b	h	0	MainRAM	EntranceToCaverns
+03BE1E	b	h	0	MainRAM	EntranceWarp
+03BDEC	b	h	0	MainRAM	FirstClockRoomDoor
+03BED0	b	h	0	MainRAM	SecondClockRoomDoor
+03BE3C	b	h	0	MainRAM	FirstDemonButton
+03BE44	b	h	0	MainRAM	SecondDemonButton
+03BE80	b	h	0	MainRAM	KeepStairs
+

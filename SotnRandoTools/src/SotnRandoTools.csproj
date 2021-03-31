@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <TargetFramework>net48</TargetFramework>
+    <Authors>TalicZealot</Authors>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AssemblyName>SotnRandoTools</AssemblyName>
+    <RootNamespace>SotnRandoTools</RootNamespace>
+    <OutputType>Library</OutputType>
+    <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
+    <AnalysisLevel>5.0</AnalysisLevel>
+    <Version>0.1.0</Version>
+    <Description>A collection of tools to enhance the experience of playign the SotN randomizer.</Description>
+    <Copyright />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove=".stylecop.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <AdditionalFiles Include=".stylecop.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" PrivateAssets="all" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="SuperSimpleTcp" Version="2.4.0" />
+    <Reference Include="BizHawk.Emulation.Common">
+      <HintPath>..\BizHawk\dll\BizHawk.Emulation.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="SotnApi">
+      <HintPath>..\BizHawk\ExternalTools\SotnRandoTools\SotnApi.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="BizHawk.Client.Common" HintPath="$(ProjectDir)../BizHawk/dll/BizHawk.Client.Common.dll" />
+    <Reference Include="BizHawk.Client.EmuHawk" HintPath="$(ProjectDir)../BizHawk/EmuHawk.exe" />
+    <Reference Include="BizHawk.Common" HintPath="$(ProjectDir)../BizHawk/dll/BizHawk.Common.dll" />
+    <Reference Include="BizHawk.WinForms.Controls" HintPath="$(ProjectDir)../BizHawk/dll/BizHawk.WinForms.Controls.dll" />
+    <Reference Include="WindowsBase, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Panels\CoopSettingsPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Panels\KhaosSettingsPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="CoopForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="TrackerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Update="KhaosForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Copy SourceFiles="$(OutputPath)$(MSBuildProjectName).dll" DestinationFolder="$(ProjectDir)../BizHawk/ExternalTools" />
+  </Target>
+</Project>

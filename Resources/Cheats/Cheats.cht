@@ -1,0 +1,6 @@
+073FDE	40	N	MainRAM	0	AlucardAttackHitboxWidth	b	h	0	None	
+073FDF	40	N	MainRAM	0	AlucardAttackHitboxHeight	b	h	0	None	
+097BB0	05	N	MainRAM	0	Mana	b	h	0	None	
+072F17	11	N	MainRAM	0	DarkMetamorphasis	b	h	0	None	
+097973	03	N	MainRAM	0	FaerieScroll	b	h	0	None	
+074BD4	04	N	MainRAM	0	SubweaponTimer	b	h	0	None	
