@@ -43,6 +43,8 @@ namespace SotnRandoTools.Coop
 					if (!alucardApi.HasRelic((Relic) index))
 					{
 						alucardApi.GrantRelic((Relic) index);
+						watchlistService.UpdateWatchlist(watchlistService.CoopRelicWatches);
+						watchlistService.CoopRelicWatches.ClearChangeCounts();
 						guiApi.AddMessage($"Received relic: {(Relic) index}");
 						Console.WriteLine($"Received relic: {(Relic) index}");
 					}
