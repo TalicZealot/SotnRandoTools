@@ -24,7 +24,7 @@ namespace SotnRandoTools
 			saveServerCheckbox.Checked = toolConfig.Coop.StoreLastServer;
 			portTextBox.Text = toolConfig.Coop.DefaultPort.ToString();
 			serverTextBox.Text = toolConfig.Coop.DefaultServer;
-			 
+
 			shareRelicsRadio.Checked = toolConfig.Coop.ShareRelics;
 			sendRelicsRadio.Checked = toolConfig.Coop.SendRelics;
 		}

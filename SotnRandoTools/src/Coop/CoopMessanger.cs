@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Linq;
 using System.Net;
-using System.Net.Sockets;
-using System.Text;
 using SimpleTcp;
-using SotnApi.Interfaces;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Coop.Enums;
 using SotnRandoTools.Coop.Interfaces;
+using SotnRandoTools.Utils;
 
 namespace SotnRandoTools.Coop
 {
@@ -80,7 +77,7 @@ namespace SotnRandoTools.Coop
 			//server.Keepalive.EnableTcpKeepAlives = true;
 
 			server.Start();
-			string myIP = getExternalIP().Replace("\n", "");
+			string myIP = WebRequests.getExternalIP().Replace("\n", "");
 			System.Windows.Forms.Clipboard.SetText(myIP + ":" + port);
 
 			toolConfig.Coop.InitiateServerSettings();
@@ -176,32 +173,6 @@ namespace SotnRandoTools.Coop
 			}
 
 			SendData(MessageType.Settings, BitConverter.GetBytes((ushort) settings));
-		}
-
-		private string getExternalIP()
-		{
-			using (WebClient client = new WebClient())
-			{
-				try
-				{
-					return client.DownloadString("http://wtfismyip.com/text");
-				}
-				catch (WebException e)
-				{
-					Console.WriteLine(e.Message);
-				}
-
-				try
-				{
-					return client.DownloadString("https://api.ipify.org/");
-				}
-				catch (WebException e)
-				{
-					Console.WriteLine(e.Message);
-				}
-
-				return "Could not retrieve IP";
-			}
 		}
 	}
 }

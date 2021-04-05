@@ -469,6 +469,9 @@ namespace SotnRandoTools.RandoTracker
 					break;
 				case "glitch":
 					equipmentExtension = true;
+					relics.Where(x => x.Name == "CubeOfZoe").FirstOrDefault().Progression = true;
+					relics.Where(x => x.Name == "DemonCard").FirstOrDefault().Progression = true;
+					relics.Where(x => x.Name == "NoseDevilCard").FirstOrDefault().Progression = true;
 					relics[25].Progression = false;
 					GraphicsEngine.SetProgression();
 					GraphicsEngine.CalculateGrid(toolConfig.Tracker.Width, toolConfig.Tracker.Height);
@@ -548,6 +551,10 @@ namespace SotnRandoTools.RandoTracker
 				uint col = (uint) location.MapCol / 4;
 				return renderingApi.RoomIsRendered(row, col);
 			}
+			else
+			{
+				Console.WriteLine("No locations remaining.");
+			}
 			return true;
 		}
 
@@ -622,6 +629,11 @@ namespace SotnRandoTools.RandoTracker
 					if (unlock)
 					{
 						changes++;
+						if (preset == "speedrun" || preset == "glitch")
+						{
+							location.AvailabilityColor = MapColor.Available;
+							break;
+						}
 						location.AvailabilityColor = MapColor.Allowed;
 						break;
 					}

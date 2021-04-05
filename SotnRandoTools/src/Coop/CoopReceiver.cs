@@ -1,13 +1,13 @@
 ﻿using System;
-using SotnApi.Interfaces;
+using System.Text.RegularExpressions;
+using BizHawk.Client.Common;
 using SotnApi.Constants.Values.Alucard;
 using SotnApi.Constants.Values.Alucard.Enums;
+using SotnApi.Interfaces;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Coop.Enums;
-using BizHawk.Client.Common;
 using SotnRandoTools.Coop.Interfaces;
 using SotnRandoTools.Services;
-using System.Text.RegularExpressions;
 
 namespace SotnRandoTools.Coop
 {
@@ -72,12 +72,12 @@ namespace SotnRandoTools.Coop
 					Console.WriteLine($"Received warp: Inverted {(Warp) index}");
 					break;
 				case MessageType.Shortcut:
-					DecodeShortcut((Shortcut)index);
+					DecodeShortcut((Shortcut) index);
 					watchlistService.UpdateWatchlist(watchlistService.WarpsAndShortcutsWatches);
 					watchlistService.WarpsAndShortcutsWatches.ClearChangeCounts();
 					break;
 				case MessageType.Settings:
-					DecodeSettings((int)index);
+					DecodeSettings((int) index);
 					guiApi.AddMessage($"Received co-op settings from host.");
 					Console.WriteLine($"Received co-op settings from host.");
 					break;
@@ -88,7 +88,7 @@ namespace SotnRandoTools.Coop
 
 		private void DecodeSettings(int settings)
 		{
-			if ((settings & (int)SettingsFlags.SendRelics) == (int)SettingsFlags.SendRelics)
+			if ((settings & (int) SettingsFlags.SendRelics) == (int) SettingsFlags.SendRelics)
 			{
 				toolConfig.Coop.ConnectionSendRelics = true;
 			}

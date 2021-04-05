@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
-using System.Windows.Forms;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Constants;
 using SotnRandoTools.RandoTracker.Interfaces;

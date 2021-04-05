@@ -3,7 +3,6 @@ using System.Text.RegularExpressions;
 using BizHawk.Client.Common;
 using SotnApi.Constants.Values.Alucard;
 using SotnApi.Constants.Values.Alucard.Enums;
-using SotnApi.Constants.Values.Game;
 using SotnApi.Interfaces;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Coop.Enums;
@@ -82,7 +81,7 @@ namespace SotnRandoTools.Coop
 				if (!item.Contains("empty hand") && !item.Contains("-") && alucardApi.HasItemInInventory(item))
 				{
 					alucardApi.TakeOneItemByName(item);
-					ushort indexData = (ushort)Equipment.Items.IndexOf(item);
+					ushort indexData = (ushort) Equipment.Items.IndexOf(item);
 					coopMessanger.SendData(MessageType.Item, BitConverter.GetBytes(indexData));
 					Console.WriteLine($"Sending item: {item}");
 				}
@@ -163,7 +162,7 @@ namespace SotnRandoTools.Coop
 				{
 					if (watchlistService.CoopRelicWatches[i].Value > 0)
 					{
-						coopMessanger.SendData(MessageType.Relic, BitConverter.GetBytes((ushort)i));
+						coopMessanger.SendData(MessageType.Relic, BitConverter.GetBytes((ushort) i));
 						Console.WriteLine($"Sending relic: {watchlistService.CoopRelicWatches[i].Notes}");
 					}
 				}

@@ -10,6 +10,11 @@
 		public const string AlertZaWarudo = "./ExternalTools/SotnRandoTools/Sounds/ZaWarudo.wav";
 		public const string AlertAlucardWhat = "./ExternalTools/SotnRandoTools/Sounds/AlucardWhat.wav";
 
+		public const string LatestReleaseApi = "https://api.github.com/repos/taliczealot/sotnrandotools/releases";
+		public const string LatestReleaseUrl = "https://github.com/TalicZealot/SotnRandoTools/releases/latest";
+		public const string UpdaterPath = @"\ExternalTools\SotnRandoTools\Updater\SimpleLatestReleaseUpdater.exe";
+		public const string UpdaterFolderPath = @"\ExternalTools\SotnRandoTools\Updater\";
+
 		public const string RelicWatchesPath = "./ExternalTools/SotnRandoTools/Watches/Relics.wch";
 		public const string SafeLocationWatchesPath = "./ExternalTools/SotnRandoTools/Watches/SafeLocations.wch";
 		public const string EquipmentLocationWatchesPath = "./ExternalTools/SotnRandoTools/Watches/EquipmentLocations.wch";

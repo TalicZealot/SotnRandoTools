@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using BizHawk.Client.Common;
 using SotnApi.Interfaces;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Coop;
-using SotnRandoTools.RandoTracker;
-using SotnRandoTools.RandoTracker.Adapters;
 using SotnRandoTools.Services;
 
 namespace SotnRandoTools
@@ -59,7 +56,7 @@ namespace SotnRandoTools
 
 		private void hostButton_Click(object sender, EventArgs e)
 		{
-			int port = (int)this.portNumeric.Value;
+			int port = (int) this.portNumeric.Value;
 
 			if (port > 1024 && port < 49151)
 			{

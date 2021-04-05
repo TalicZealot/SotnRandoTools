@@ -11,7 +11,7 @@
     <OutputType>Library</OutputType>
     <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
     <AnalysisLevel>5.0</AnalysisLevel>
-    <Version>0.1.0</Version>
+    <Version>0.1.2</Version>
     <Description>A collection of tools to enhance the experience of playign the SotN randomizer.</Description>
     <Copyright />
   </PropertyGroup>
@@ -35,6 +35,9 @@
     <Reference Include="SotnApi">
       <HintPath>..\BizHawk\ExternalTools\SotnRandoTools\SotnApi.dll</HintPath>
     </Reference>
+    <Reference Include="System.Net.Http">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Net.Http.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="BizHawk.Client.Common" HintPath="$(ProjectDir)../BizHawk/dll/BizHawk.Client.Common.dll" />
     <Reference Include="BizHawk.Client.EmuHawk" HintPath="$(ProjectDir)../BizHawk/EmuHawk.exe" />
@@ -46,6 +49,9 @@
     <None Include="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Panels\AboutPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Panels\CoopSettingsPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>

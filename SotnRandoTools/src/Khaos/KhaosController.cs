@@ -209,7 +209,10 @@ namespace SotnRandoTools.Khaos
 
 		public void StartKhaos()
 		{
-			botFileWatcher.EnableRaisingEvents = true;
+			if (File.Exists(toolConfig.Khaos.BotActionsFilePath))
+			{
+				botFileWatcher.EnableRaisingEvents = true;
+			}
 			actionTimer.Start();
 			fastActionTimer.Start();
 			//OverwriteBossNames(subscribers);
@@ -354,7 +357,6 @@ namespace SotnRandoTools.Khaos
 			{
 				case 1:
 					SpawnPoisonHitbox();
-
 					break;
 				case 2:
 					SpawnCurseHitbox();
@@ -512,9 +514,7 @@ namespace SotnRandoTools.Khaos
 		{
 			if (bloodManaActive)
 			{
-				uint currentMana = alucardApi.CurrentMp;
-				spentMana = (int) storedMana - (int) currentMana;
-				storedMana = currentMana;
+				CheckManaUsage();
 			}
 		}
 
@@ -861,7 +861,7 @@ namespace SotnRandoTools.Khaos
 		private void RandomizeGold()
 		{
 			Random rnd = new Random();
-			uint gold = (uint) rnd.Next(0, 10000);
+			uint gold = (uint) rnd.Next(0, 5000);
 			uint roll = (uint) rnd.Next(0, 21);
 			if (roll > 16 && roll < 20)
 			{
@@ -885,10 +885,18 @@ namespace SotnRandoTools.Khaos
 			uint con = alucardApi.Con;
 			uint intel = alucardApi.Int;
 			uint lck = alucardApi.Lck;
-			uint statPool = str + con + intel + lck - 28;
-			uint offset = (uint) rnd.Next(1, 21);
-			statPool = rnd.Next(1, 3) > 1 ? statPool + offset : statPool - offset;
-			offset = (uint) rnd.Next(1, 21);
+			uint statPool = str + con + intel + lck > 28 ? str + con + intel + lck - 28 : str + con + intel + lck;
+			uint offset = (uint) (rnd.NextDouble() * statPool);
+
+			int statPoolRoll = rnd.Next(1, 3);
+			if (statPoolRoll > 1)
+			{
+				statPool = statPool + offset;
+			}
+			else
+			{
+				statPool = ((int) statPool - (int) offset) < 0 ? 0 : statPool - offset;
+			}
 
 			double a = rnd.NextDouble();
 			double b = rnd.NextDouble();
@@ -905,14 +913,26 @@ namespace SotnRandoTools.Khaos
 			alucardApi.Int = (uint) (6 + (statPool * percentageInt));
 			alucardApi.Lck = (uint) (6 + (statPool * percentageLck));
 
-			uint pointsPool = maxHp + maxMana - 110;
+			uint pointsPool = maxHp + maxMana > 110 ? maxHp + maxMana - 110 : maxHp + maxMana;
 			if (maxHp + maxMana < 110)
 			{
 				pointsPool = 110;
 			}
-			pointsPool = rnd.Next(1, 3) > 1 ? pointsPool + offset : pointsPool - offset;
-			uint pointsHp = 80 + (uint) (rnd.NextDouble() * pointsPool);
-			uint pointsMp = 30 + (pointsPool - pointsHp);
+			offset = (uint) (rnd.NextDouble() * pointsPool);
+
+			int pointsRoll = rnd.Next(1, 3);
+			if (pointsRoll > 1)
+			{
+				pointsPool = pointsPool + offset;
+			}
+			else
+			{
+				pointsPool = ((int) pointsPool - (int) offset) < 0 ? 0 : pointsPool - offset;
+			}
+
+			double hpPercent = rnd.NextDouble();
+			uint pointsHp = 80 + (uint) (hpPercent * pointsPool);
+			uint pointsMp = 30 + (uint) (pointsPool - (hpPercent * pointsPool));
 
 			if (currentHp > pointsHp)
 			{
@@ -1020,6 +1040,13 @@ namespace SotnRandoTools.Khaos
 			{
 				alucardApi.GrantItemByName("Silver Ring");
 			}
+		}
+
+		private void CheckManaUsage()
+		{
+			uint currentMana = alucardApi.CurrentMp;
+			spentMana = (int) storedMana - (int) currentMana;
+			storedMana = currentMana;
 		}
 	}
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -70,6 +71,7 @@ namespace SotnRandoTools
 		private AutotrackerSettingsPanel? autotrackerSettingsPanel;
 		private KhaosSettingsPanel? khaosSettingsPanel;
 		private CoopSettingsPanel? coopSettingsPanel;
+		private AboutPanel? aboutPanel;
 		private string _windowTitle = "Symphony of the Night Randomizer Tools";
 		private const int PanelOffset = 130;
 		private const int UpdateCooldownFrames = 10;
@@ -98,6 +100,11 @@ namespace SotnRandoTools
 		{
 			this.Location = toolConfig.Location;
 
+			aboutPanel = new AboutPanel();
+			aboutPanel.Location = new Point(0, PanelOffset);
+			this.Controls.Add(aboutPanel);
+			aboutPanel.UpdateButton_Click += AboutPanel_UpdateButton_Click;
+
 			autotrackerSettingsPanel = new AutotrackerSettingsPanel(toolConfig);
 			autotrackerSettingsPanel.Location = new Point(0, PanelOffset);
 			this.Controls.Add(autotrackerSettingsPanel);
@@ -119,6 +126,7 @@ namespace SotnRandoTools
 			renderingApi = new RenderingApi(_maybeMemAPI);
 			watchlistService = new WatchlistService(_memoryDomains, _emu?.SystemId, GlobalConfig);
 		}
+
 		public override bool AskSaveChanges() => true;
 
 		public override void Restart() { }
@@ -157,6 +165,12 @@ namespace SotnRandoTools
 			{
 				khaosForm.Close();
 				khaosForm.Dispose();
+			}
+
+			if (coopForm != null)
+			{
+				coopForm.Close();
+				coopForm.Dispose();
 			}
 		}
 
@@ -221,6 +235,9 @@ namespace SotnRandoTools
 			coopSettingsPanel.Enabled = false;
 			multiplayerLaunch.Visible = false;
 			multiplayerLaunch.Enabled = false;
+
+			aboutPanel.Visible = false;
+			aboutPanel.Enabled = false;
 		}
 
 		private void khaosChatSelect_Click(object sender, EventArgs e)
@@ -239,6 +256,9 @@ namespace SotnRandoTools
 			coopSettingsPanel.Enabled = false;
 			multiplayerLaunch.Visible = false;
 			multiplayerLaunch.Enabled = false;
+
+			aboutPanel.Visible = false;
+			aboutPanel.Enabled = false;
 		}
 
 		private void multiplayerSelect_Click(object sender, EventArgs e)
@@ -257,12 +277,30 @@ namespace SotnRandoTools
 			khaosSettingsPanel.Enabled = false;
 			khaosChatLaunch.Visible = false;
 			khaosChatLaunch.Enabled = false;
+
+			aboutPanel.Visible = false;
+			aboutPanel.Enabled = false;
 		}
 
 		private void aboutButton_Click(object sender, EventArgs e)
 		{
-			string targetURL = @"https://www.twitch.tv/taliczealot";
-			System.Diagnostics.Process.Start(targetURL);
+			aboutPanel.Visible = true;
+			aboutPanel.Enabled = true;
+
+			autotrackerSettingsPanel.Visible = false;
+			autotrackerSettingsPanel.Enabled = false;
+			autotrackerLaunch.Visible = false;
+			autotrackerLaunch.Enabled = false;
+
+			khaosSettingsPanel.Visible = false;
+			khaosSettingsPanel.Enabled = false;
+			khaosChatLaunch.Visible = false;
+			khaosChatLaunch.Enabled = false;
+
+			coopSettingsPanel.Visible = false;
+			coopSettingsPanel.Enabled = false;
+			multiplayerLaunch.Visible = false;
+			multiplayerLaunch.Enabled = false;
 		}
 
 		private void ToolMainForm_Move(object sender, EventArgs e)
@@ -271,6 +309,15 @@ namespace SotnRandoTools
 			{
 				toolConfig.Location = this.Location;
 			}
+		}
+
+		private void AboutPanel_UpdateButton_Click(object sender, EventArgs e)
+		{
+			string path = Directory.GetCurrentDirectory();
+			var updater = new ProcessStartInfo() { FileName = path + Paths.UpdaterPath, UseShellExecute = false };
+			updater.WorkingDirectory = (path + Paths.UpdaterFolderPath);
+			Process.Start(updater);
+			this.Close();
 		}
 	}
 }

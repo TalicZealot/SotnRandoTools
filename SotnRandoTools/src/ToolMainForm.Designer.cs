@@ -31,7 +31,6 @@ namespace SotnRandoTools
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ToolMainForm));
             this.mainMenuPanel = new System.Windows.Forms.Panel();
-            this.updateButton = new System.Windows.Forms.Button();
             this.autotrackerSelect = new System.Windows.Forms.Button();
             this.aboutButton = new System.Windows.Forms.Button();
             this.multiplayerLaunch = new System.Windows.Forms.Button();
@@ -44,7 +43,6 @@ namespace SotnRandoTools
             // 
             // mainMenuPanel
             // 
-            this.mainMenuPanel.Controls.Add(this.updateButton);
             this.mainMenuPanel.Controls.Add(this.autotrackerSelect);
             this.mainMenuPanel.Controls.Add(this.aboutButton);
             this.mainMenuPanel.Controls.Add(this.multiplayerLaunch);
@@ -57,22 +55,6 @@ namespace SotnRandoTools
             this.mainMenuPanel.Name = "mainMenuPanel";
             this.mainMenuPanel.Size = new System.Drawing.Size(394, 127);
             this.mainMenuPanel.TabIndex = 0;
-            // 
-            // updateButton
-            // 
-            this.updateButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
-            this.updateButton.FlatAppearance.BorderSize = 2;
-            this.updateButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
-            this.updateButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
-            this.updateButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.updateButton.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.updateButton.Location = new System.Drawing.Point(293, 88);
-            this.updateButton.Name = "updateButton";
-            this.updateButton.Size = new System.Drawing.Size(87, 29);
-            this.updateButton.TabIndex = 6;
-            this.updateButton.Text = "Update";
-            this.updateButton.UseVisualStyleBackColor = true;
-            this.updateButton.Visible = false;
             // 
             // autotrackerSelect
             // 
@@ -95,7 +77,7 @@ namespace SotnRandoTools
             // 
             this.aboutButton.BackgroundImage = global::SotnRandoTools.Properties.Resources.LogoTZtwtr1;
             this.aboutButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.aboutButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.aboutButton.Cursor = System.Windows.Forms.Cursors.Default;
             this.aboutButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
             this.aboutButton.FlatAppearance.BorderSize = 2;
             this.aboutButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
@@ -189,6 +171,7 @@ namespace SotnRandoTools
             this.autotrackerLaunch.TabIndex = 1;
             this.autotrackerLaunch.Text = "Launch";
             this.autotrackerLaunch.UseVisualStyleBackColor = true;
+            this.autotrackerLaunch.Visible = false;
             this.autotrackerLaunch.Click += new System.EventHandler(this.autotrackerLaunch_Click);
             // 
             // ToolMainForm
@@ -224,7 +207,6 @@ namespace SotnRandoTools
         private System.Windows.Forms.Button khaosChatSelect;
         private System.Windows.Forms.Button aboutButton;
         private System.Windows.Forms.Button autotrackerSelect;
-		private System.Windows.Forms.Button updateButton;
 	}
 }
 
