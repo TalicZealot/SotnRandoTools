@@ -23,6 +23,8 @@
   * command respawnbosses
 * Honest Gamer: The honorable SotN Alucards don't abuse spells. Mana locked to 5mp.
   * command honest
+* Subweapons Only: Can only use subweapons for combat for the next minute. Gives Alucard Cube of Zoe, a subweapon and 200 hearts.
+  * command subonly
 * Cripple: Not so fast! Speed set to 75%
   * command cripple
 * Blood Mana: Spells now cost HP instead of mana.

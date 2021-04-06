@@ -300,7 +300,7 @@ namespace SotnRandoTools.RandoTracker
 			UpdateSeedLabel();
 
 			bool inGame = gameApi.Status == Status.InGame;
-			bool updatedSecondCastle = gameApi.SecondCastle > 0;
+			bool updatedSecondCastle = gameApi.SecondCastle;
 
 			if (gameApi.InAlucardMode())
 			{

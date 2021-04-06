@@ -204,6 +204,19 @@ namespace SotnRandoTools
 			}
 		}
 
+		private void subsonlyButton_Click(object sender, EventArgs e)
+		{
+			if (toolConfig.Khaos.ControlPannelQueueActions)
+			{
+				khaosControler.EnqueueAction("subsonly Khaos");
+			}
+			else
+			{
+
+				khaosControler.SubweaponsOnly();
+			}
+		}
+
 		private void lightHelpButton_Click(object sender, EventArgs e)
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)

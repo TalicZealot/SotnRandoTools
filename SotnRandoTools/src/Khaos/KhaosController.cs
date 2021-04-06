@@ -19,6 +19,7 @@ namespace SotnRandoTools.Khaos
 {
 	public class KhaosController
 	{
+		private const float WeakenFactor = 0.5F;
 		private const float CrippleFactor = 0.8F;
 		private const int DrainPerSecond = 1;
 		private const int PandoraMinItems = 3;
@@ -159,6 +160,7 @@ namespace SotnRandoTools.Khaos
 
 		private Timer zawarudoTimer = new Timer();
 		private Timer honestGamerTimer = new Timer();
+		private Timer subweaponsOnlyTimer = new Timer();
 		private Timer magicianTimer = new Timer();
 		private Timer meltyTimer = new Timer();
 		private Timer crippleTimer = new Timer();
@@ -264,14 +266,17 @@ namespace SotnRandoTools.Khaos
 			Random rnd = new Random();
 			string item = lightHelpItems[rnd.Next(0, lightHelpItems.Length)];
 
-			int roll = rnd.Next(1, 3);
+			int roll = rnd.Next(1, 4);
 			switch (roll)
 			{
 				case 1:
 					alucardApi.GrantItemByName(item);
 					break;
 				case 2:
-					alucardApi.Heal(50);
+					alucardApi.ActivatePotion(Potion.Potion);
+					break;
+				case 3:
+					alucardApi.ActivatePotion(Potion.ShieldPotion);
 					break;
 				default:
 					break;
@@ -285,14 +290,17 @@ namespace SotnRandoTools.Khaos
 			Random rnd = new Random();
 			string item = mediumHelpItems[rnd.Next(0, mediumHelpItems.Length)];
 
-			int roll = rnd.Next(1, 3);
+			int roll = rnd.Next(1, 4);
 			switch (roll)
 			{
 				case 1:
 					alucardApi.GrantItemByName(item);
 					break;
 				case 2:
-					alucardApi.Heal(450);
+					alucardApi.ActivatePotion(Potion.Elexir);
+					break;
+				case 3:
+					alucardApi.ActivatePotion(Potion.ManaPrism);
 					break;
 				default:
 					break;
@@ -378,16 +386,16 @@ namespace SotnRandoTools.Khaos
 
 		public void Weaken()
 		{
-			alucardApi.CurrentHp = (uint) (alucardApi.CurrentHp * 0.5);
-			alucardApi.CurrentMp = (uint) (alucardApi.CurrentHp * 0.5);
-			alucardApi.CurrentHearts = (uint) (alucardApi.CurrentHp * 0.5);
-			alucardApi.MaxtHp = (uint) (alucardApi.MaxtHp * 0.5);
-			alucardApi.MaxtMp = (uint) (alucardApi.MaxtHp * 0.5);
-			alucardApi.MaxtHearts = (uint) (alucardApi.MaxtHp * 0.5);
-			alucardApi.Str = (uint) (alucardApi.Str * 0.5);
-			alucardApi.Con = (uint) (alucardApi.Con * 0.5);
-			alucardApi.Int = (uint) (alucardApi.Int * 0.5);
-			alucardApi.Lck = (uint) (alucardApi.Lck * 0.5);
+			alucardApi.CurrentHp = (uint) (alucardApi.CurrentHp * WeakenFactor);
+			alucardApi.CurrentMp = (uint) (alucardApi.CurrentHp * WeakenFactor);
+			alucardApi.CurrentHearts = (uint) (alucardApi.CurrentHp * WeakenFactor);
+			alucardApi.MaxtHp = (uint) (alucardApi.MaxtHp * WeakenFactor);
+			alucardApi.MaxtMp = (uint) (alucardApi.MaxtHp * WeakenFactor);
+			alucardApi.MaxtHearts = (uint) (alucardApi.MaxtHp * WeakenFactor);
+			alucardApi.Str = (uint) (alucardApi.Str * WeakenFactor);
+			alucardApi.Con = (uint) (alucardApi.Con * WeakenFactor);
+			alucardApi.Int = (uint) (alucardApi.Int * WeakenFactor);
+			alucardApi.Lck = (uint) (alucardApi.Lck * WeakenFactor);
 
 			audioPlayer.Open(new Uri(Paths.AlertRichterLaugh, UriKind.Relative));
 			audioPlayer.Play();
@@ -407,6 +415,29 @@ namespace SotnRandoTools.Khaos
 			bloodManaActive = true;
 			bloodManaTimer.Start();
 			bloodManaTickTimer.Start();
+			audioPlayer.Open(new Uri(Paths.AlertRichterLaugh, UriKind.Relative));
+			audioPlayer.Play();
+		}
+
+		public void SubweaponsOnly()
+		{
+			Random rnd = new Random();
+			int roll = rnd.Next(1, 10);
+			while (roll == 6)
+			{
+				roll = rnd.Next(1, 10);
+			}
+			alucardApi.Subweapon = (Subweapon) roll;
+			alucardApi.CurrentHearts = 200;
+			alucardApi.ActivatePotion(Potion.SmartPotion);
+			alucardApi.GrantRelic(Relic.CubeOfZoe);
+			HonestGamer();
+			Cheat curse = cheats.GetCheatByName("CurseTimer");
+			curse.Enable();
+			Cheat manaCheat = cheats.GetCheatByName("Mana");
+			manaCheat.PokeValue(5);
+			manaCheat.Enable();
+			subweaponsOnlyTimer.Start();
 			audioPlayer.Open(new Uri(Paths.AlertRichterLaugh, UriKind.Relative));
 			audioPlayer.Play();
 		}
@@ -431,8 +462,12 @@ namespace SotnRandoTools.Khaos
 			Random rnd = new Random();
 			double goldPercent = rnd.NextDouble();
 			alucardApi.Gold = (uint) ((double) alucardApi.Gold * goldPercent);
-			//TODO: handle empty slots
-			alucardApi.GrantItemByName(Equipment.Items[rnd.Next(1, Equipment.Items.Count)]);
+			string item = Equipment.Items[rnd.Next(1, Equipment.Items.Count)];
+			while (item.Contains("empty hand") || item.Contains("-"))
+			{
+				item = Equipment.Items[rnd.Next(1, Equipment.Items.Count)];
+			}
+			alucardApi.GrantItemByName(item);
 
 			audioPlayer.Open(new Uri(Paths.AlertLibrarianThankYou, UriKind.Relative));
 			audioPlayer.Play();
@@ -441,7 +476,8 @@ namespace SotnRandoTools.Khaos
 		public void BattleOrders()
 		{
 			alucardApi.CurrentHp = alucardApi.MaxtHp * 2;
-			alucardApi.CurrentMp = alucardApi.MaxtMp * 2;
+			alucardApi.CurrentMp = alucardApi.MaxtMp;
+			alucardApi.ActivatePotion(Potion.ShieldPotion);
 		}
 
 		public void HonestGamer()
@@ -456,6 +492,7 @@ namespace SotnRandoTools.Khaos
 
 		public void Magician()
 		{
+			alucardApi.ActivatePotion(Potion.SmartPotion);
 			Cheat manaCheat = cheats.GetCheatByName("Mana");
 			manaCheat.PokeValue(99);
 			manaCheat.Enable();
@@ -564,6 +601,9 @@ namespace SotnRandoTools.Khaos
 				case "honest":
 					queuedFastActions.Enqueue(HonestGamer);
 					break;
+				case "subsonly":
+					queuedActions.Enqueue(SubweaponsOnly);
+					break;
 				case "cripple":
 					queuedFastActions.Enqueue(Cripple);
 					break;
@@ -616,6 +656,8 @@ namespace SotnRandoTools.Khaos
 			actionTimer.Interval = 1 * (60 * 1000);
 			honestGamerTimer.Tick += HonestGamerOff;
 			honestGamerTimer.Interval = 1 * (60 * 1000);
+			subweaponsOnlyTimer.Tick += SubweaponsOnlyOff;
+			subweaponsOnlyTimer.Interval = 1 * (60 * 1000);
 			magicianTimer.Tick += MagicianOff;
 			magicianTimer.Interval = 1 * (60 * 1000);
 			meltyTimer.Tick += MeltyBloodOff;
@@ -665,6 +707,15 @@ namespace SotnRandoTools.Khaos
 			Cheat manaCheat = cheats.GetCheatByName("Mana");
 			manaCheat.Disable();
 			honestGamerTimer.Stop();
+		}
+
+		private void SubweaponsOnlyOff(object sender, EventArgs e)
+		{
+			Cheat curse = cheats.GetCheatByName("CurseTimer");
+			curse.Disable();
+			Cheat manaCheat = cheats.GetCheatByName("Mana");
+			manaCheat.Disable();
+			subweaponsOnlyTimer.Stop();
 		}
 
 		private void MagicianOff(Object sender, EventArgs e)
@@ -742,7 +793,7 @@ namespace SotnRandoTools.Khaos
 
 			if (hordeZone != zone || hordeZone2 != zone2 || hordeEnemy == null)
 			{
-				long enemy = actorApi.FindEnemy(1, 50);
+				long enemy = actorApi.FindEnemy(0, gameApi.SecondCastle ? 100 : 30);
 				if (enemy > 0)
 				{
 					hordeEnemy = new Actor(actorApi.GetActor(enemy));
@@ -772,8 +823,7 @@ namespace SotnRandoTools.Khaos
 
 			Actor? boss = null;
 
-			//200 first castle 887 second
-			long enemy = actorApi.FindEnemy(200, 2000);
+			long enemy = actorApi.FindEnemy(gameApi.SecondCastle ? 886 : 199, 2000);
 			if (enemy > 0)
 			{
 				boss = new Actor(actorApi.GetActor(enemy));

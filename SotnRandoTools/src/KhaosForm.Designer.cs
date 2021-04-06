@@ -31,6 +31,7 @@ namespace SotnRandoTools
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(KhaosForm));
             this.controlBox = new System.Windows.Forms.GroupBox();
+            this.hordeButton = new System.Windows.Forms.Button();
             this.zawarudoButton = new System.Windows.Forms.Button();
             this.modePanel = new System.Windows.Forms.GroupBox();
             this.instantRadio = new System.Windows.Forms.RadioButton();
@@ -57,13 +58,14 @@ namespace SotnRandoTools
             this.randomEquipmentButton = new System.Windows.Forms.Button();
             this.randomStatusButton = new System.Windows.Forms.Button();
             this.startButton = new System.Windows.Forms.Button();
-            this.hordeButton = new System.Windows.Forms.Button();
+            this.subsonlyButton = new System.Windows.Forms.Button();
             this.controlBox.SuspendLayout();
             this.modePanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // controlBox
             // 
+            this.controlBox.Controls.Add(this.subsonlyButton);
             this.controlBox.Controls.Add(this.hordeButton);
             this.controlBox.Controls.Add(this.zawarudoButton);
             this.controlBox.Controls.Add(this.modePanel);
@@ -97,6 +99,21 @@ namespace SotnRandoTools
             this.controlBox.TabIndex = 0;
             this.controlBox.TabStop = false;
             this.controlBox.Text = "Manual Control Panel";
+            // 
+            // hordeButton
+            // 
+            this.hordeButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
+            this.hordeButton.FlatAppearance.BorderSize = 2;
+            this.hordeButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
+            this.hordeButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
+            this.hordeButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.hordeButton.Location = new System.Drawing.Point(146, 353);
+            this.hordeButton.Name = "hordeButton";
+            this.hordeButton.Size = new System.Drawing.Size(134, 26);
+            this.hordeButton.TabIndex = 23;
+            this.hordeButton.Text = "Khaos Horde";
+            this.hordeButton.UseVisualStyleBackColor = true;
+            this.hordeButton.Click += new System.EventHandler(this.hordeButton_Click);
             // 
             // zawarudoButton
             // 
@@ -155,7 +172,7 @@ namespace SotnRandoTools
             this.thurstButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.thurstButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.thurstButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.thurstButton.Location = new System.Drawing.Point(146, 289);
+            this.thurstButton.Location = new System.Drawing.Point(146, 321);
             this.thurstButton.Name = "thurstButton";
             this.thurstButton.Size = new System.Drawing.Size(134, 26);
             this.thurstButton.TabIndex = 20;
@@ -185,7 +202,7 @@ namespace SotnRandoTools
             this.bloodManaButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.bloodManaButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.bloodManaButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.bloodManaButton.Location = new System.Drawing.Point(146, 257);
+            this.bloodManaButton.Location = new System.Drawing.Point(146, 289);
             this.bloodManaButton.Name = "bloodManaButton";
             this.bloodManaButton.Size = new System.Drawing.Size(134, 26);
             this.bloodManaButton.TabIndex = 18;
@@ -200,7 +217,7 @@ namespace SotnRandoTools
             this.crippleButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.crippleButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.crippleButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.crippleButton.Location = new System.Drawing.Point(146, 225);
+            this.crippleButton.Location = new System.Drawing.Point(146, 257);
             this.crippleButton.Name = "crippleButton";
             this.crippleButton.Size = new System.Drawing.Size(134, 26);
             this.crippleButton.TabIndex = 17;
@@ -479,20 +496,20 @@ namespace SotnRandoTools
             this.startButton.UseVisualStyleBackColor = true;
             this.startButton.Click += new System.EventHandler(this.startButton_Click);
             // 
-            // hordeButton
+            // subsonlyButton
             // 
-            this.hordeButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
-            this.hordeButton.FlatAppearance.BorderSize = 2;
-            this.hordeButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
-            this.hordeButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
-            this.hordeButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.hordeButton.Location = new System.Drawing.Point(146, 321);
-            this.hordeButton.Name = "hordeButton";
-            this.hordeButton.Size = new System.Drawing.Size(134, 26);
-            this.hordeButton.TabIndex = 23;
-            this.hordeButton.Text = "Khaos Horde";
-            this.hordeButton.UseVisualStyleBackColor = true;
-            this.hordeButton.Click += new System.EventHandler(this.hordeButton_Click);
+            this.subsonlyButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
+            this.subsonlyButton.FlatAppearance.BorderSize = 2;
+            this.subsonlyButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
+            this.subsonlyButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
+            this.subsonlyButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.subsonlyButton.Location = new System.Drawing.Point(146, 225);
+            this.subsonlyButton.Name = "subsonlyButton";
+            this.subsonlyButton.Size = new System.Drawing.Size(134, 26);
+            this.subsonlyButton.TabIndex = 24;
+            this.subsonlyButton.Text = "SubweaponsOnly";
+            this.subsonlyButton.UseVisualStyleBackColor = true;
+            this.subsonlyButton.Click += new System.EventHandler(this.subsonlyButton_Click);
             // 
             // KhaosForm
             // 
@@ -546,6 +563,7 @@ namespace SotnRandoTools
 		private System.Windows.Forms.RadioButton queueRadio;
 		private System.Windows.Forms.Button zawarudoButton;
 		private System.Windows.Forms.Button hordeButton;
+		private System.Windows.Forms.Button subsonlyButton;
 	}
 }
 
