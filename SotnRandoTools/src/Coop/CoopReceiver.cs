@@ -49,6 +49,13 @@ namespace SotnRandoTools.Coop
 						Console.WriteLine($"Received relic: {(Relic) index}");
 					}
 					break;
+				case MessageType.Location:
+					gameApi.SetRoomToVisited(watchlistService.CoopLocationWatches[index].Address);
+					watchlistService.UpdateWatchlist(watchlistService.CoopLocationWatches);
+					watchlistService.CoopLocationWatches.ClearChangeCounts();
+					guiApi.AddMessage($"Received location: {watchlistService.CoopLocationWatches[index].Notes}");
+					Console.WriteLine($"Received location: {watchlistService.CoopLocationWatches[index].Notes}");
+					break;
 				case MessageType.Item:
 					alucardApi.GrantItemByName(Equipment.Items[index]);
 					guiApi.AddMessage($"Received item: {Equipment.Items[index]}");
@@ -122,11 +129,19 @@ namespace SotnRandoTools.Coop
 			}
 			if ((settings & (int) SettingsFlags.SendAssists) == (int) SettingsFlags.SendAssists)
 			{
-				toolConfig.Coop.ConnectionAssists = true; ;
+				toolConfig.Coop.ConnectionSendAssists = true; ;
 			}
 			else
 			{
-				toolConfig.Coop.ConnectionAssists = false;
+				toolConfig.Coop.ConnectionSendAssists = false;
+			}
+			if ((settings & (int) SettingsFlags.ShareLocations) == (int) SettingsFlags.ShareLocations)
+			{
+				toolConfig.Coop.ConnectionShareLocations = true; ;
+			}
+			else
+			{
+				toolConfig.Coop.ConnectionShareLocations = false;
 			}
 		}
 

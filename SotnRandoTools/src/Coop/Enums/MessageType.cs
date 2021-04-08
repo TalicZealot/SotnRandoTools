@@ -11,6 +11,7 @@ namespace SotnRandoTools.Coop.Enums
 		WarpFirstCastle,
 		WarpSecondCastle,
 		Shortcut,
-		Settings
+		Settings,
+		Location
 	}
 }

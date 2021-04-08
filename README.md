@@ -1,8 +1,13 @@
-# SotN Rando Tools
+# Symphony of the Night Randomizer Tools
 
-A collection of tools to enhance the `Castlevania:Symphony of the Night Randomizer` experience. 
+A collection of tools to enhance the [Castlevania:Symphony of the Night Randomizer](https://sotn.io) experience. 
 
 This tool and the accompanying library and app are open source. The idea is to implement these features with the perspective of SotN players and provide the source for other developers to learn from and contribute just like the randomizer itself.
+
+## Associated Projects
+* [SotnApi](https://github.com/TalicZealot/SotnApi)
+* [SimpleLatestReleaseUpdater](https://github.com/TalicZealot/SimpleLatestReleaseUpdater)
+* [SotN Randomizer Source](https://github.com/3snowp7im/SotN-Randomizer)
 
 ## Installation
 This tool requires Bizhawk version 2.6 or higher.
@@ -10,7 +15,7 @@ Extract the [latest release](https://github.com/TalicZealot/SotnRandoTools/relea
 It should look like this:
 ```
 BizHawk
-└───ExtternalTools
+└───ExternalTools
 │   │   SotnRandoTools.dll
 │   │
 │   └───SotnRandoTools
@@ -18,12 +23,19 @@ BizHawk
 │       │   ...
 ```
 
+## Usage
+Open in BizHawk through ```Tools > Extarnal Tool > Symphony of the Night Randomizer Tools```
+Set your preferences and open the tool you want to use. You can then minimize the main tools window, but don't close it.
+Every tool's window possition and the Tracker's size are all saved and will open where you last left them.
+
+## Updating
+On lunching the tool it will check for a new release and inform the user. If there is a newer release the update button apepars. Clicking it shuts down BizHawk and updates the tool. If it displays "Installation failed" please run the updater manually by going to ```BizHawk\ExternalTools\SotnRandoTools\Updater\SimpleLatestReleaseUpdater.exe``` or get the [latest release](https://github.com/TalicZealot/SotnRandoTools/releases/latest) from GitHub and update manually.
+
 ## Autotracker
 The new tracker has been re-written from the ground up for better performance and usability. Can be manually rescaled and supports different rendering modes. Saves size and location. Locations are drawn on the game map iself instead of relying on BizHawk GUI. It doesn't rely on the PSX display mode anymore and automatically detects everything it needs.
 
 ## Co-Op
-Currently coop requires the host to have the port they want to use forwarded.
-Hosting automatically copies your address(ip:port) to the clipboard. The other player uses that address to connect.
+Currently coop requires the host to have the port they want to use forwarded. Hosting automatically copies your address(ip:port) to the clipboard. The other player uses that address to connect. Please be careful to not leak your IP!
 Enable BizHawk messages through `View > Display Messages`.
 Open the BizHawk console through `View > Open Log Window` for detailed information.
 The Select button is used to send the currently highlighted item in the inventory or relic in the relic menu.

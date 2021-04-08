@@ -15,6 +15,7 @@ namespace SotnRandoTools.Services
 		private WatchList coopRelicWatches;
 		private WatchList safeLocationWatches;
 		private WatchList equipmentLocationWatches;
+		private WatchList coopLocationWatches;
 		private WatchList progressionItemWatches;
 		private WatchList thrustSwordWatches;
 		private WatchList warpsAndShortcutsWatches;
@@ -31,21 +32,32 @@ namespace SotnRandoTools.Services
 			relicWatches = new WatchList(this.memoryDomains, this.systemId);
 			relicWatches.Load(Paths.RelicWatchesPath, false);
 			RelicWatches = relicWatches;
+
 			coopRelicWatches = new WatchList(this.memoryDomains, this.systemId);
 			coopRelicWatches.Load(Paths.RelicWatchesPath, false);
 			CoopRelicWatches = coopRelicWatches;
+
 			safeLocationWatches = new WatchList(this.memoryDomains, this.systemId);
 			safeLocationWatches.Load(Paths.SafeLocationWatchesPath, false);
 			SafeLocationWatches = safeLocationWatches;
+
 			equipmentLocationWatches = new WatchList(this.memoryDomains, this.systemId);
 			equipmentLocationWatches.Load(Paths.EquipmentLocationWatchesPath, false);
 			EquipmentLocationWatches = equipmentLocationWatches;
+
+			coopLocationWatches = new WatchList(this.memoryDomains, this.systemId);
+			coopLocationWatches.Load(Paths.SafeLocationWatchesPath, false);
+			coopLocationWatches.Load(Paths.EquipmentLocationWatchesPath, true);
+			CoopLocationWatches = coopLocationWatches;
+
 			progressionItemWatches = new WatchList(this.memoryDomains, this.systemId);
 			progressionItemWatches.Load(Paths.ProgressionItemWatchesPath, false);
 			ProgressionItemWatches = progressionItemWatches;
+
 			thrustSwordWatches = new WatchList(this.memoryDomains, this.systemId);
 			thrustSwordWatches.Load(Paths.ThrustSwordWatchesPath, false);
 			ThrustSwordWatches = thrustSwordWatches;
+
 			warpsAndShortcutsWatches = new WatchList(this.memoryDomains, this.systemId);
 			warpsAndShortcutsWatches.Load(Paths.WarpsAndShortcutsWatchPath, false);
 			WarpsAndShortcutsWatches = warpsAndShortcutsWatches;
@@ -55,6 +67,7 @@ namespace SotnRandoTools.Services
 		public WatchList CoopRelicWatches { get; }
 		public WatchList SafeLocationWatches { get; }
 		public WatchList EquipmentLocationWatches { get; }
+		public WatchList CoopLocationWatches { get; }
 		public WatchList ProgressionItemWatches { get; }
 		public WatchList ThrustSwordWatches { get; }
 		public WatchList WarpsAndShortcutsWatches { get; }

@@ -11,7 +11,8 @@ namespace SotnRandoTools.Configuration
 			ShareWarps = true;
 			ShareShortcuts = true;
 			SendItems = true;
-			Assists = true;
+			SendAssists = true;
+			ShareLocations = true;
 			StoreLastServer = true;
 			DefaultServer = "";
 			DefaultPort = 46318;
@@ -23,15 +24,17 @@ namespace SotnRandoTools.Configuration
 		public bool ShareWarps { get; set; }
 		public bool ShareShortcuts { get; set; }
 		public bool SendItems { get; set; }
+		public bool ShareLocations { get; set; }
 		public bool StoreLastServer { get; set; }
-		public bool Assists;
+		public bool SendAssists;
 		public int DefaultPort { get; set; }
 		public string DefaultServer { get; set; }
 		public bool ConnectionSendRelics { get; set; }
 		public bool ConnectionShareWarps { get; set; }
 		public bool ConnectionShareShortcuts { get; set; }
 		public bool ConnectionSendItems { get; set; }
-		public bool ConnectionAssists { get; set; }
+		public bool ConnectionSendAssists { get; set; }
+		public bool ConnectionShareLocations { get; set; }
 
 		public void InitiateServerSettings()
 		{
@@ -39,7 +42,8 @@ namespace SotnRandoTools.Configuration
 			ConnectionShareWarps = ShareWarps;
 			ConnectionShareShortcuts = ShareShortcuts;
 			ConnectionSendItems = SendItems;
-			ConnectionAssists = Assists;
+			ConnectionSendAssists = SendAssists;
+			ConnectionShareLocations = ShareLocations;
 		}
 	}
 }

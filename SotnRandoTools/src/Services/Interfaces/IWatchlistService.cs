@@ -9,6 +9,7 @@ namespace SotnRandoTools.Services
 		WatchList RelicWatches { get; }
 		WatchList CoopRelicWatches { get; }
 		WatchList SafeLocationWatches { get; }
+		WatchList CoopLocationWatches { get; }
 		WatchList ThrustSwordWatches { get; }
 		WatchList WarpsAndShortcutsWatches { get; }
 

@@ -78,7 +78,7 @@ namespace SotnRandoTools
             this.updateButton.Name = "updateButton";
             this.updateButton.Size = new System.Drawing.Size(382, 54);
             this.updateButton.TabIndex = 4;
-            this.updateButton.Text = "Update Available";
+            this.updateButton.Text = "Update Now";
             this.updateButton.UseVisualStyleBackColor = true;
             this.updateButton.Visible = false;
             this.updateButton.Click += new System.EventHandler(this.updateButton_Click);

@@ -610,7 +610,7 @@ namespace SotnRandoTools.Khaos
 				case "bloodmana":
 					queuedFastActions.Enqueue(BloodMana);
 					break;
-				case "thurst":
+				case "thirst":
 					queuedFastActions.Enqueue(Thirst);
 					break;
 				case "horde":
@@ -675,7 +675,7 @@ namespace SotnRandoTools.Khaos
 			hordeTimer.Tick += new EventHandler(HordeOff);
 			hordeTimer.Interval = 1 * (60 * 1000);
 			hordeSpawnTimer.Tick += new EventHandler(HordeSpawn);
-			hordeSpawnTimer.Interval = 1 * (1500);
+			hordeSpawnTimer.Interval = 1 * (1000);
 			zawarudoTimer.Tick += new EventHandler(ZawarudoOff);
 			zawarudoTimer.Interval = 1 * (40 * 1000);
 		}
@@ -759,7 +759,10 @@ namespace SotnRandoTools.Khaos
 
 		private void ThirstDrain(Object sender, EventArgs e)
 		{
-			alucardApi.CurrentHp -= DrainPerSecond;
+			if (alucardApi.CurrentHp > 1)
+			{
+				alucardApi.CurrentHp -= DrainPerSecond;
+			}
 		}
 
 		private void ThirstOff(Object sender, EventArgs e)
@@ -808,8 +811,8 @@ namespace SotnRandoTools.Khaos
 			else if (hordeEnemy is not null)
 			{
 				Random rnd = new Random();
-				hordeEnemy.Xpos = (uint) rnd.Next(10, 245);
-				hordeEnemy.Ypos = (uint) rnd.Next(10, 245);
+				hordeEnemy.Xpos = (ushort) rnd.Next(10, 245);
+				hordeEnemy.Ypos = (ushort) rnd.Next(10, 245);
 				actorApi.SpawnActor(hordeEnemy);
 			}
 		}
@@ -828,7 +831,7 @@ namespace SotnRandoTools.Khaos
 			{
 				boss = new Actor(actorApi.GetActor(enemy));
 				Random rnd = new Random();
-				boss.Xpos = (uint) rnd.Next(70, 170);
+				boss.Xpos = (ushort) rnd.Next(70, 170);
 				actorApi.SpawnActor(boss);
 				//stop timer
 			}

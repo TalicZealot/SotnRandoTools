@@ -45,6 +45,8 @@ namespace SotnRandoTools
             this.serverTextBox = new System.Windows.Forms.TextBox();
             this.portLabel = new System.Windows.Forms.Label();
             this.portTextBox = new System.Windows.Forms.TextBox();
+            this.sendAssistsCheckbox = new System.Windows.Forms.CheckBox();
+            this.shareLocationsCheckbox = new System.Windows.Forms.CheckBox();
             this.relicsBox.SuspendLayout();
             this.optionsBox.SuspendLayout();
             this.connectionGroup.SuspendLayout();
@@ -121,13 +123,15 @@ namespace SotnRandoTools
             // 
             // optionsBox
             // 
+            this.optionsBox.Controls.Add(this.shareLocationsCheckbox);
+            this.optionsBox.Controls.Add(this.sendAssistsCheckbox);
             this.optionsBox.Controls.Add(this.shareShortcutsCheckbox);
             this.optionsBox.Controls.Add(this.shareWarpsCheckbox);
             this.optionsBox.Controls.Add(this.sendItemsCheckbox);
             this.optionsBox.ForeColor = System.Drawing.Color.White;
             this.optionsBox.Location = new System.Drawing.Point(6, 137);
             this.optionsBox.Name = "optionsBox";
-            this.optionsBox.Size = new System.Drawing.Size(182, 93);
+            this.optionsBox.Size = new System.Drawing.Size(182, 140);
             this.optionsBox.TabIndex = 4;
             this.optionsBox.TabStop = false;
             this.optionsBox.Text = "Options";
@@ -226,6 +230,28 @@ namespace SotnRandoTools
             this.portTextBox.TabIndex = 0;
             this.portTextBox.TextChanged += new System.EventHandler(this.portTextBox_TextChanged);
             // 
+            // sendAssistsCheckbox
+            // 
+            this.sendAssistsCheckbox.AutoSize = true;
+            this.sendAssistsCheckbox.Location = new System.Drawing.Point(6, 90);
+            this.sendAssistsCheckbox.Name = "sendAssistsCheckbox";
+            this.sendAssistsCheckbox.Size = new System.Drawing.Size(85, 17);
+            this.sendAssistsCheckbox.TabIndex = 3;
+            this.sendAssistsCheckbox.Text = "Send assists";
+            this.sendAssistsCheckbox.UseVisualStyleBackColor = true;
+            this.sendAssistsCheckbox.CheckedChanged += new System.EventHandler(this.sendAssistsCheckbox_CheckedChanged);
+            // 
+            // shareLocationsCheckbox
+            // 
+            this.shareLocationsCheckbox.AutoSize = true;
+            this.shareLocationsCheckbox.Location = new System.Drawing.Point(6, 113);
+            this.shareLocationsCheckbox.Name = "shareLocationsCheckbox";
+            this.shareLocationsCheckbox.Size = new System.Drawing.Size(99, 17);
+            this.shareLocationsCheckbox.TabIndex = 4;
+            this.shareLocationsCheckbox.Text = "Share locations";
+            this.shareLocationsCheckbox.UseVisualStyleBackColor = true;
+            this.shareLocationsCheckbox.CheckedChanged += new System.EventHandler(this.shareLocationsCheckbox_CheckedChanged);
+            // 
             // CoopSettingsPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -271,5 +297,7 @@ namespace SotnRandoTools
 		private System.Windows.Forms.Label serverLabel;
 		private System.Windows.Forms.TextBox serverTextBox;
 		private System.Windows.Forms.CheckBox saveServerCheckbox;
+		private System.Windows.Forms.CheckBox shareLocationsCheckbox;
+		private System.Windows.Forms.CheckBox sendAssistsCheckbox;
 	}
 }

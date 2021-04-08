@@ -517,7 +517,7 @@ namespace SotnRandoTools.RandoTracker
 				{
 					roomWatch = watchlistService.EquipmentLocationWatches.Where(x => x.Notes == room.Name).FirstOrDefault();
 				}
-				gameApi.ClearByte(roomWatch.Address);
+				gameApi.SetRoomToUnvisited(roomWatch.Address);
 			}
 		}
 
@@ -544,11 +544,18 @@ namespace SotnRandoTools.RandoTracker
 
 		private bool LocationsDrawn()
 		{
-			Location location = locations.Where(l => (!l.Status && l.SecondCastle == secondCastle && l.EquipmentExtension == equipmentExtension && l.GuardedExtension == guardedExtension)).FirstOrDefault();
-			if (location != null)
+			Location uncheckedLocation = locations.Where(l => (!l.Status && l.SecondCastle == secondCastle &&
+			(l.EquipmentExtension == false || l.EquipmentExtension == equipmentExtension) &&
+			(l.GuardedExtension == false || l.GuardedExtension == guardedExtension))).FirstOrDefault();
+			if (uncheckedLocation != null)
 			{
-				uint row = (uint) location.MapRow / 2;
-				uint col = (uint) location.MapCol / 4;
+				uint row = (uint) uncheckedLocation.MapRow / 2;
+				uint col = (uint) uncheckedLocation.MapCol / 4;
+				if (secondCastle)
+				{
+					row = (398 / 2) - row;
+					col = (504 / 4) - col;
+				}
 				return renderingApi.RoomIsRendered(row, col);
 			}
 			else

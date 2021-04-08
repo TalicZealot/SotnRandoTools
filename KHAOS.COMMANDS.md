@@ -29,8 +29,8 @@
   * command cripple
 * Blood Mana: Spells now cost HP instead of mana.
   * command bloodmana
-* Thurst: Alucard's vampire nature makes him thirst for blood! Alucard gets Dark Metamorphasis effect, but loses hp over time for one minute.
-  * command thurst
+* Thirst: Alucard's vampire nature makes him thirst for blood! Alucard gets Dark Metamorphasis effect, but loses hp over time for one minute.
+  * command thirst
 * Khaos Horde: Dracula's castle continuously spawns more monsters with hp no more than 50 for one minute.
   * command horde
 

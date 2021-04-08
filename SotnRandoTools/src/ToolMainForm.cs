@@ -317,7 +317,7 @@ namespace SotnRandoTools
 			var updater = new ProcessStartInfo() { FileName = path + Paths.UpdaterPath, UseShellExecute = false };
 			updater.WorkingDirectory = (path + Paths.UpdaterFolderPath);
 			Process.Start(updater);
-			this.Close();
+			Application.Exit();
 		}
 	}
 }

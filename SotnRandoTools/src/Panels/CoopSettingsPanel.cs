@@ -21,6 +21,9 @@ namespace SotnRandoTools
 			sendItemsCheckbox.Checked = toolConfig.Coop.SendItems;
 			shareWarpsCheckbox.Checked = toolConfig.Coop.ShareWarps;
 			shareShortcutsCheckbox.Checked = toolConfig.Coop.ShareShortcuts;
+			sendAssistsCheckbox.Checked = toolConfig.Coop.SendAssists;
+			shareLocationsCheckbox.Checked = toolConfig.Coop.ShareLocations;
+
 			saveServerCheckbox.Checked = toolConfig.Coop.StoreLastServer;
 			portTextBox.Text = toolConfig.Coop.DefaultPort.ToString();
 			serverTextBox.Text = toolConfig.Coop.DefaultServer;
@@ -76,6 +79,16 @@ namespace SotnRandoTools
 		private void serverTextBox_TextChanged(object sender, EventArgs e)
 		{
 			toolConfig.Coop.DefaultServer = serverTextBox.Text;
+		}
+
+		private void sendAssistsCheckbox_CheckedChanged(object sender, EventArgs e)
+		{
+			toolConfig.Coop.SendAssists  = sendAssistsCheckbox.Checked;
+		}
+
+		private void shareLocationsCheckbox_CheckedChanged(object sender, EventArgs e)
+		{
+			toolConfig.Coop.ShareLocations = shareLocationsCheckbox.Checked;
 		}
 	}
 }

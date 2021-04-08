@@ -65,9 +65,14 @@ namespace SotnRandoTools.Coop
 				UpdateSendItem();
 			}
 
-			if (toolConfig.Coop.ConnectionAssists)
+			if (toolConfig.Coop.ConnectionSendAssists)
 			{
 				UpdateAssist();
+			}
+
+			if (toolConfig.Coop.ConnectionShareLocations)
+			{
+				UpdateLocations();
 			}
 		}
 
@@ -168,6 +173,23 @@ namespace SotnRandoTools.Coop
 				}
 			}
 			watchlistService.CoopRelicWatches.ClearChangeCounts();
+		}
+
+		private void UpdateLocations()
+		{
+			watchlistService.UpdateWatchlist(watchlistService.CoopLocationWatches);
+			for (int i = 0; i < watchlistService.CoopLocationWatches.Count; i++)
+			{
+				if (watchlistService.CoopLocationWatches[i].ChangeCount > 0)
+				{
+					if (watchlistService.CoopLocationWatches[i].Value > 0)
+					{
+						coopMessanger.SendData(MessageType.Location, BitConverter.GetBytes((ushort) i));
+						Console.WriteLine($"Sending Location: {watchlistService.CoopLocationWatches[i].Notes}");
+					}
+				}
+			}
+			watchlistService.CoopLocationWatches.ClearChangeCounts();
 		}
 
 		private void UpdateProgressionItems()

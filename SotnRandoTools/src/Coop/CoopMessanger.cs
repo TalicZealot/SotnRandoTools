@@ -167,9 +167,13 @@ namespace SotnRandoTools.Coop
 			{
 				settings = settings | (int) SettingsFlags.SendItems;
 			}
-			if (toolConfig.Coop.Assists)
+			if (toolConfig.Coop.SendAssists)
 			{
 				settings = settings | (int) SettingsFlags.SendAssists;
+			}
+			if (toolConfig.Coop.ShareLocations)
+			{
+				settings = settings | (int) SettingsFlags.ShareLocations;
 			}
 
 			SendData(MessageType.Settings, BitConverter.GetBytes((ushort) settings));
