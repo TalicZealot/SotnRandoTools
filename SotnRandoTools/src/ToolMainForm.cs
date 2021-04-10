@@ -65,6 +65,7 @@ namespace SotnRandoTools
 		private RenderingApi? renderingApi;
 		private ToolConfig toolConfig;
 		private WatchlistService? watchlistService;
+		private NotificationService? notificationService;
 		private TrackerForm? trackerForm;
 		private KhaosForm? khaosForm;
 		private CoopForm? coopForm;
@@ -125,6 +126,7 @@ namespace SotnRandoTools
 			gameApi = new GameApi(_maybeMemAPI);
 			renderingApi = new RenderingApi(_maybeMemAPI);
 			watchlistService = new WatchlistService(_memoryDomains, _emu?.SystemId, GlobalConfig);
+			notificationService = new NotificationService(_maybeGuiAPI, _maybeClientAPI.ScreenWidth() , _maybeClientAPI.ScreenHeight());
 		}
 
 		public override bool AskSaveChanges() => true;
@@ -194,27 +196,27 @@ namespace SotnRandoTools
 			if (khaosForm is not null && gameApi is not null && alucardApi is not null && actorApi is not null)
 			{
 				khaosForm.Close();
-				khaosForm = new KhaosForm(toolConfig, this.MainForm.CheatList, gameApi, alucardApi, actorApi);
+				khaosForm = new KhaosForm(toolConfig, this.MainForm.CheatList, gameApi, alucardApi, actorApi, notificationService);
 				khaosForm.Show();
 			}
 			else if (khaosForm is null && gameApi is not null && alucardApi is not null && actorApi is not null)
 			{
-				khaosForm = new KhaosForm(toolConfig, this.MainForm.CheatList, gameApi, alucardApi, actorApi);
+				khaosForm = new KhaosForm(toolConfig, this.MainForm.CheatList, gameApi, alucardApi, actorApi, notificationService);
 				khaosForm.Show();
 			}
 		}
 
 		private void multiplayerLaunch_Click(object sender, EventArgs e)
 		{
-			if (coopForm is not null && gameApi is not null && alucardApi is not null && watchlistService is not null && _maybeJoypadApi is not null && _maybeGuiAPI is not null)
+			if (coopForm is not null && gameApi is not null && alucardApi is not null && watchlistService is not null && _maybeJoypadApi is not null)
 			{
 				coopForm.Close();
-				coopForm = new CoopForm(toolConfig, watchlistService, gameApi, alucardApi, _maybeJoypadApi, _maybeGuiAPI);
+				coopForm = new CoopForm(toolConfig, watchlistService, gameApi, alucardApi, _maybeJoypadApi, notificationService);
 				coopForm.Show();
 			}
-			else if (coopForm is null && gameApi is not null && alucardApi is not null && watchlistService is not null && _maybeJoypadApi is not null && _maybeGuiAPI is not null)
+			else if (coopForm is null && gameApi is not null && alucardApi is not null && watchlistService is not null && _maybeJoypadApi is not null)
 			{
-				coopForm = new CoopForm(toolConfig, watchlistService, gameApi, alucardApi, _maybeJoypadApi, _maybeGuiAPI);
+				coopForm = new CoopForm(toolConfig, watchlistService, gameApi, alucardApi, _maybeJoypadApi, notificationService);
 				coopForm.Show();
 			}
 		}

@@ -23,6 +23,7 @@
 		public const string WarpsAndShortcutsWatchPath = "./ExternalTools/SotnRandoTools/Watches/WarpsAndShortcuts.wch";
 
 		public const string ImagesPath = "./ExternalTools/SotnRandoTools/Images/";
+		public const string TextboxImage = "./ExternalTools/SotnRandoTools/Images/SotnTextBox.png";
 
 		public const string CasualPresetPath = "./ExternalTools/SotnRandoTools/Presets/casual.json";
 		public const string SafePresetPath = "./ExternalTools/SotnRandoTools/Presets/safe.json";

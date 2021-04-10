@@ -21,7 +21,7 @@ namespace SotnRandoTools.Utils
 			{
 				try
 				{
-					return client.DownloadString("http://wtfismyip.com/text");
+					return client.DownloadString("http://ipv4.icanhazip.com/");
 				}
 				catch (WebException e)
 				{

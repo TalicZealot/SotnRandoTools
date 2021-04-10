@@ -16,12 +16,12 @@ namespace SotnRandoTools
 		private readonly CoopMessanger coopMessanger;
 		private readonly CoopReceiver coopReceiver;
 
-		public CoopForm(IToolConfig toolConfig, IWatchlistService watchlistService, IGameApi gameApi, IAlucardApi alucardApi, IJoypadApi joypadApi, IGuiApi guiApi)
+		public CoopForm(IToolConfig toolConfig, IWatchlistService watchlistService, IGameApi gameApi, IAlucardApi alucardApi, IJoypadApi joypadApi, INotificationService notificationService)
 		{
 			if (toolConfig is null) throw new ArgumentNullException(nameof(toolConfig));
 			this.toolConfig = toolConfig;
 
-			this.coopReceiver = new CoopReceiver(toolConfig, gameApi, alucardApi, guiApi, watchlistService);
+			this.coopReceiver = new CoopReceiver(toolConfig, gameApi, alucardApi, notificationService, watchlistService);
 			this.coopMessanger = new CoopMessanger(toolConfig, coopReceiver);
 			this.coopSender = new CoopSender(toolConfig, watchlistService, gameApi, alucardApi, joypadApi, coopMessanger);
 			InitializeComponent();

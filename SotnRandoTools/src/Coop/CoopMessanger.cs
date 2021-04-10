@@ -15,6 +15,7 @@ namespace SotnRandoTools.Coop
 		private SimpleTcpServer? server;
 		private SimpleTcpClient? client;
 		private string connectedClientAddress = "";
+		private bool manualDisconnect = false;
 
 		public CoopMessanger(IToolConfig toolConfig, ICoopReceiver coopReceiver)
 		{
@@ -30,9 +31,6 @@ namespace SotnRandoTools.Coop
 			{
 				client = new SimpleTcpClient(hostIp, port);
 			}
-
-			//Causes disconnects instead of keeping the connection up.
-			//client.Keepalive.EnableTcpKeepAlives = true;
 
 			try
 			{
@@ -55,6 +53,7 @@ namespace SotnRandoTools.Coop
 		{
 			if (client is not null)
 			{
+				manualDisconnect = true;
 				client.Disconnect();
 				client.Dispose();
 			}
@@ -72,9 +71,6 @@ namespace SotnRandoTools.Coop
 				server.Events.ClientDisconnected += ClientDisconnected;
 				server.Events.DataReceived += DataReceived;
 			}
-
-			//Causes disconnects instead of keeping the connection up.
-			//server.Keepalive.EnableTcpKeepAlives = true;
 
 			server.Start();
 			string myIP = WebRequests.getExternalIP().Replace("\n", "");
@@ -122,8 +118,16 @@ namespace SotnRandoTools.Coop
 
 		private void Disconnected(object sender, ClientDisconnectedEventArgs e)
 		{
-			client.Dispose();
 			Console.WriteLine($"Disconnected from host.");
+			if (!manualDisconnect)
+			{
+				Console.WriteLine($"Attempting to reconnect...");
+				client.ConnectWithRetries(2 * 1000);
+			}
+			else
+			{
+				manualDisconnect = false;
+			}
 		}
 
 		private void ClientConnected(object sender, ClientConnectedEventArgs e)

@@ -4,6 +4,7 @@ using BizHawk.Client.Common;
 using SotnApi.Interfaces;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Khaos;
+using SotnRandoTools.Services;
 using SotnRandoTools.Services.Adapters;
 
 namespace SotnRandoTools
@@ -17,7 +18,7 @@ namespace SotnRandoTools
 		private readonly IAlucardApi alucardApi;
 		private readonly IActorApi actorApi;
 
-		public KhaosForm(IToolConfig toolConfig, CheatCollection cheats, IGameApi gameApi, IAlucardApi alucardApi, IActorApi actorApi)
+		public KhaosForm(IToolConfig toolConfig, CheatCollection cheats, IGameApi gameApi, IAlucardApi alucardApi, IActorApi actorApi, INotificationService notificationService)
 		{
 			if (toolConfig is null) throw new ArgumentNullException(nameof(toolConfig));
 			if (cheats is null) throw new ArgumentNullException(nameof(cheats));
@@ -32,7 +33,7 @@ namespace SotnRandoTools
 			this.actorApi = actorApi;
 
 			adaptedCheats = new CheatCollectionAdapter(cheats);
-			khaosControler = new KhaosController(toolConfig, gameApi, alucardApi, actorApi, adaptedCheats);
+			khaosControler = new KhaosController(toolConfig, gameApi, alucardApi, actorApi, adaptedCheats, notificationService);
 
 			InitializeComponent();
 			SuspendLayout();
@@ -69,7 +70,7 @@ namespace SotnRandoTools
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
 			{
-				khaosControler.EnqueueAction("randomstatus Khaos");
+				khaosControler.EnqueueAction("kstatus Khaos");
 			}
 			else
 			{
@@ -81,7 +82,7 @@ namespace SotnRandoTools
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
 			{
-				khaosControler.EnqueueAction("randomizeequipment Khaos");
+				khaosControler.EnqueueAction("kequipment Khaos");
 			}
 			else
 			{
@@ -94,7 +95,7 @@ namespace SotnRandoTools
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
 			{
-				khaosControler.EnqueueAction("randomizestats Khaos");
+				khaosControler.EnqueueAction("kstats Khaos");
 			}
 			else
 			{
@@ -107,7 +108,7 @@ namespace SotnRandoTools
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
 			{
-				khaosControler.EnqueueAction("randomizerelics Khaos");
+				khaosControler.EnqueueAction("krelics Khaos");
 			}
 			else
 			{

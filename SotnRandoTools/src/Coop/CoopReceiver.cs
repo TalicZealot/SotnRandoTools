@@ -16,20 +16,20 @@ namespace SotnRandoTools.Coop
 		private readonly IToolConfig toolConfig;
 		private readonly IGameApi gameApi;
 		private readonly IAlucardApi alucardApi;
-		private readonly IGuiApi guiApi;
+		private readonly INotificationService notificationService;
 		private readonly IWatchlistService watchlistService;
 
-		public CoopReceiver(IToolConfig toolConfig, IGameApi gameApi, IAlucardApi alucardApi, IGuiApi guiApi, IWatchlistService watchlistService)
+		public CoopReceiver(IToolConfig toolConfig, IGameApi gameApi, IAlucardApi alucardApi, INotificationService notificationService, IWatchlistService watchlistService)
 		{
 			if (toolConfig is null) throw new ArgumentNullException(nameof(toolConfig));
 			if (gameApi is null) throw new ArgumentNullException(nameof(gameApi));
 			if (alucardApi is null) throw new ArgumentNullException(nameof(alucardApi));
-			if (guiApi is null) throw new ArgumentNullException(nameof(guiApi));
+			if (notificationService is null) throw new ArgumentNullException(nameof(notificationService));
 			if (watchlistService is null) throw new ArgumentNullException(nameof(watchlistService));
 			this.toolConfig = toolConfig;
 			this.gameApi = gameApi;
 			this.alucardApi = alucardApi;
-			this.guiApi = guiApi;
+			this.notificationService = notificationService;
 			this.watchlistService = watchlistService;
 		}
 
@@ -45,7 +45,7 @@ namespace SotnRandoTools.Coop
 						alucardApi.GrantRelic((Relic) index);
 						watchlistService.UpdateWatchlist(watchlistService.CoopRelicWatches);
 						watchlistService.CoopRelicWatches.ClearChangeCounts();
-						guiApi.AddMessage($"Received relic: {(Relic) index}");
+						notificationService.DisplayMessage(((Relic) index).ToString());
 						Console.WriteLine($"Received relic: {(Relic) index}");
 					}
 					break;
@@ -53,12 +53,12 @@ namespace SotnRandoTools.Coop
 					gameApi.SetRoomToVisited(watchlistService.CoopLocationWatches[index].Address);
 					watchlistService.UpdateWatchlist(watchlistService.CoopLocationWatches);
 					watchlistService.CoopLocationWatches.ClearChangeCounts();
-					guiApi.AddMessage($"Received location: {watchlistService.CoopLocationWatches[index].Notes}");
+					notificationService.DisplayMessage(watchlistService.CoopLocationWatches[index].Notes);
 					Console.WriteLine($"Received location: {watchlistService.CoopLocationWatches[index].Notes}");
 					break;
 				case MessageType.Item:
 					alucardApi.GrantItemByName(Equipment.Items[index]);
-					guiApi.AddMessage($"Received item: {Equipment.Items[index]}");
+					notificationService.DisplayMessage(Equipment.Items[index]);
 					Console.WriteLine($"Received item: {Equipment.Items[index]}");
 					break;
 				case MessageType.Effect:
@@ -68,14 +68,14 @@ namespace SotnRandoTools.Coop
 					alucardApi.GrantFirstCastleWarp((Warp) index);
 					watchlistService.UpdateWatchlist(watchlistService.WarpsAndShortcutsWatches);
 					watchlistService.WarpsAndShortcutsWatches.ClearChangeCounts();
-					guiApi.AddMessage($"Received warp: {(Warp) index}");
+					notificationService.DisplayMessage(((Warp) index).ToString());
 					Console.WriteLine($"Received warp: {(Warp) index}");
 					break;
 				case MessageType.WarpSecondCastle:
 					alucardApi.GrantSecondCastleWarp((Warp) index);
 					watchlistService.UpdateWatchlist(watchlistService.WarpsAndShortcutsWatches);
 					watchlistService.WarpsAndShortcutsWatches.ClearChangeCounts();
-					guiApi.AddMessage($"Received warp: Inverted {(Warp) index}");
+					notificationService.DisplayMessage(((Warp) index).ToString());
 					Console.WriteLine($"Received warp: Inverted {(Warp) index}");
 					break;
 				case MessageType.Shortcut:
@@ -85,7 +85,7 @@ namespace SotnRandoTools.Coop
 					break;
 				case MessageType.Settings:
 					DecodeSettings((int) index);
-					guiApi.AddMessage($"Received co-op settings from host.");
+					notificationService.DisplayMessage("Connected");
 					Console.WriteLine($"Received co-op settings from host.");
 					break;
 				default:
@@ -244,7 +244,7 @@ namespace SotnRandoTools.Coop
 					return;
 			}
 
-			guiApi.AddMessage($"Received shortcut: {shortcut}");
+			notificationService.DisplayMessage(shortcut.ToString());
 			Console.WriteLine($"Received shortcut: {shortcut}");
 		}
 
@@ -261,7 +261,6 @@ namespace SotnRandoTools.Coop
 				return;
 			}
 
-			guiApi.AddMessage($"Received assist: {item}");
 			Console.WriteLine($"Received assist: {item}");
 		}
 	}

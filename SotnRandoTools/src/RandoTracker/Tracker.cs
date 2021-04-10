@@ -675,5 +675,28 @@ namespace SotnRandoTools.RandoTracker
 
 			return false;
 		}
+
+		private void RestartToDefaults()
+		{
+			foreach (var relic in relics)
+			{
+				relic.Status = false;
+			}
+
+			foreach (var location in locations)
+			{
+				location.Status = false;
+			}
+
+			foreach (var item in progressionItems)
+			{
+				item.Status = false;
+			}
+
+			foreach (var item in thrustSwords)
+			{
+				item.Status = false;
+			}
+		}
 	}
 }

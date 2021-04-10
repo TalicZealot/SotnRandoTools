@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 using System.Windows.Media;
+
 using BizHawk.Client.Common;
 using SotnApi.Constants.Addresses;
 using SotnApi.Constants.Values.Alucard;
@@ -12,6 +13,7 @@ using SotnApi.Interfaces;
 using SotnApi.Models;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Constants;
+using SotnRandoTools.Services;
 using SotnRandoTools.Services.Adapters;
 using SotnRandoTools.Utils;
 
@@ -30,6 +32,7 @@ namespace SotnRandoTools.Khaos
 		private readonly IAlucardApi alucardApi;
 		private readonly IActorApi actorApi;
 		private readonly ICheatCollectionAdapter cheats;
+		private readonly INotificationService notificationService;
 		//replace with WMPLib.WindowsMediaPlayer
 		private MediaPlayer audioPlayer = new MediaPlayer();
 
@@ -158,18 +161,18 @@ namespace SotnRandoTools.Khaos
 		private Timer actionTimer = new Timer();
 		private Timer fastActionTimer = new Timer();
 
-		private Timer zawarudoTimer = new Timer();
-		private Timer honestGamerTimer = new Timer();
-		private Timer subweaponsOnlyTimer = new Timer();
-		private Timer magicianTimer = new Timer();
-		private Timer meltyTimer = new Timer();
-		private Timer crippleTimer = new Timer();
-		private Timer bloodManaTimer = new Timer();
-		private Timer bloodManaTickTimer = new Timer();
-		private Timer thirstTimer = new Timer();
-		private Timer thirstTickTimer = new Timer();
-		private Timer hordeTimer = new Timer();
-		private Timer hordeSpawnTimer = new Timer();
+		private System.Timers.Timer zawarudoTimer = new System.Timers.Timer();
+		private System.Timers.Timer honestGamerTimer = new System.Timers.Timer();
+		private System.Timers.Timer subweaponsOnlyTimer = new System.Timers.Timer();
+		private System.Timers.Timer magicianTimer = new System.Timers.Timer();
+		private System.Timers.Timer meltyTimer = new System.Timers.Timer();
+		private System.Timers.Timer crippleTimer = new System.Timers.Timer();
+		private System.Timers.Timer bloodManaTimer = new System.Timers.Timer();
+		private System.Timers.Timer bloodManaTickTimer = new System.Timers.Timer();
+		private System.Timers.Timer thirstTimer = new System.Timers.Timer();
+		private System.Timers.Timer thirstTickTimer = new System.Timers.Timer();
+		private System.Timers.Timer hordeTimer = new System.Timers.Timer();
+		private System.Timers.Timer hordeSpawnTimer = new System.Timers.Timer();
 
 		private uint hordeZone = 0;
 		private uint hordeZone2 = 0;
@@ -180,18 +183,20 @@ namespace SotnRandoTools.Khaos
 
 		private FileSystemWatcher botFileWatcher = new FileSystemWatcher();
 
-		public KhaosController(IToolConfig toolConfig, IGameApi gameApi, IAlucardApi alucardApi, IActorApi actorApi, ICheatCollectionAdapter cheats)
+		public KhaosController(IToolConfig toolConfig, IGameApi gameApi, IAlucardApi alucardApi, IActorApi actorApi, ICheatCollectionAdapter cheats, INotificationService notificationService)
 		{
 			if (toolConfig is null) throw new ArgumentNullException(nameof(toolConfig));
 			if (gameApi is null) throw new ArgumentNullException(nameof(gameApi));
 			if (alucardApi is null) throw new ArgumentNullException(nameof(alucardApi));
 			if (actorApi is null) throw new ArgumentNullException(nameof(actorApi));
 			if (cheats == null) throw new ArgumentNullException(nameof(cheats));
+			if (notificationService == null) throw new ArgumentNullException(nameof(notificationService));
 			this.toolConfig = toolConfig;
 			this.gameApi = gameApi;
 			this.alucardApi = alucardApi;
 			this.actorApi = actorApi;
 			this.cheats = cheats;
+			this.notificationService = notificationService;
 
 			if (File.Exists(toolConfig.Khaos.BotActionsFilePath))
 			{
@@ -573,74 +578,98 @@ namespace SotnRandoTools.Khaos
 			{
 				case "kstatus":
 					queuedFastActions.Enqueue(InflictRandomStatus);
+					notificationService.DisplayMessage(user + " used Khaos Status");
 					break;
 				case "kequipment":
 					queuedFastActions.Enqueue(RandomizeEquipment);
+					notificationService.DisplayMessage(user + " used Khaos Equipment");
 					break;
 				case "kstats":
 					queuedFastActions.Enqueue(RandomizeStats);
+					notificationService.DisplayMessage(user + " used Khaos Stats");
 					break;
 				case "krelics":
 					queuedFastActions.Enqueue(RandomizeRelics);
+					notificationService.DisplayMessage(user + " used Khaos Relics");
 					break;
 				case "pandora":
 					queuedActions.Enqueue(PandorasBox);
+					notificationService.DisplayMessage(user + " opened Pandora's Box");
 					break;
 				case "gamble":
 					queuedFastActions.Enqueue(Gamble);
+					notificationService.DisplayMessage(user + " used Gamble");
 					break;
 				case "bankrupt":
 					queuedFastActions.Enqueue(Bankrupt);
+					notificationService.DisplayMessage(user + " used Bankrupt");
 					break;
 				case "weaken":
 					queuedActions.Enqueue(Weaken);
+					notificationService.DisplayMessage(user + " used Weaken");
 					break;
 				case "respawnbosses":
 					queuedActions.Enqueue(RespawnBosses);
+					notificationService.DisplayMessage(user + " used Respawn Bosses");
 					break;
 				case "honest":
 					queuedFastActions.Enqueue(HonestGamer);
+					notificationService.DisplayMessage(user + " used Honest Gamer");
 					break;
 				case "subsonly":
 					queuedActions.Enqueue(SubweaponsOnly);
+					notificationService.DisplayMessage(user + " used Subweapons Only");
 					break;
 				case "cripple":
 					queuedFastActions.Enqueue(Cripple);
+					notificationService.DisplayMessage(user + " used Cripple");
 					break;
 				case "bloodmana":
 					queuedFastActions.Enqueue(BloodMana);
+					notificationService.DisplayMessage(user + " used Blood Mana");
 					break;
 				case "thirst":
 					queuedFastActions.Enqueue(Thirst);
+					notificationService.DisplayMessage(user + " used Thirst");
 					break;
 				case "horde":
 					queuedFastActions.Enqueue(Horde);
+					notificationService.DisplayMessage(user + " used Horde");
 					break;
 				case "vampire":
 					queuedFastActions.Enqueue(Vampire);
+					notificationService.DisplayMessage(user + " used Vampire");
 					break;
 				case "lighthelp":
 					queuedFastActions.Enqueue(RandomLightHelp);
+					notificationService.DisplayMessage(user + " used Light Help");
 					break;
 				case "mediumhelp":
 					queuedFastActions.Enqueue(RandomMediumHelp);
+					notificationService.DisplayMessage(user + " used Medium Help");
 					break;
 				case "heavyhelp":
 					queuedFastActions.Enqueue(RandomHeavytHelp);
+					notificationService.DisplayMessage(user + " used Heavy Help");
 					break;
 				case "battleorders":
 					queuedFastActions.Enqueue(BattleOrders);
+					notificationService.DisplayMessage(user + " used Battle Orders");
 					break;
 				case "magician":
 					queuedFastActions.Enqueue(Magician);
+					notificationService.DisplayMessage(user + " used Magician");
 					break;
 				case "melty":
 					queuedFastActions.Enqueue(MeltyBlood);
+					notificationService.DisplayMessage(user + " used Melty Blood");
 					break;
 				case "fourbeasts":
 					queuedFastActions.Enqueue(FourBeasts);
+					notificationService.DisplayMessage(user + " used Four Beasts");
 					break;
 				case "zawarudo":
+					notificationService.DisplayMessage(user + " ZA WARUDO");
 					queuedFastActions.Enqueue(ZaWarudo);
 					break;
 				default:
@@ -654,29 +683,29 @@ namespace SotnRandoTools.Khaos
 			fastActionTimer.Interval = 2 * (1 * 1000);
 			actionTimer.Tick += ExecuteAction;
 			actionTimer.Interval = 1 * (60 * 1000);
-			honestGamerTimer.Tick += HonestGamerOff;
+			honestGamerTimer.Elapsed += HonestGamerOff;
 			honestGamerTimer.Interval = 1 * (60 * 1000);
-			subweaponsOnlyTimer.Tick += SubweaponsOnlyOff;
+			subweaponsOnlyTimer.Elapsed += SubweaponsOnlyOff;
 			subweaponsOnlyTimer.Interval = 1 * (60 * 1000);
-			magicianTimer.Tick += MagicianOff;
+			magicianTimer.Elapsed += MagicianOff;
 			magicianTimer.Interval = 1 * (60 * 1000);
-			meltyTimer.Tick += MeltyBloodOff;
+			meltyTimer.Elapsed += MeltyBloodOff;
 			meltyTimer.Interval = 1 * (60 * 1000);
-			crippleTimer.Tick += CrippleOff;
+			crippleTimer.Elapsed += CrippleOff;
 			crippleTimer.Interval = 1 * (60 * 1000);
-			bloodManaTimer.Tick += BloodManaOff;
+			bloodManaTimer.Elapsed += BloodManaOff;
 			bloodManaTimer.Interval = 1 * (60 * 1000);
-			bloodManaTickTimer.Tick += BloodManaUpdate;
+			bloodManaTickTimer.Elapsed += BloodManaUpdate;
 			bloodManaTickTimer.Interval = 100;
-			thirstTimer.Tick += ThirstOff;
+			thirstTimer.Elapsed += ThirstOff;
 			thirstTimer.Interval = 2 * (60 * 1000);
-			thirstTickTimer.Tick += new EventHandler(ThirstDrain);
+			thirstTickTimer.Elapsed += ThirstDrain;
 			thirstTickTimer.Interval = 1000;
-			hordeTimer.Tick += new EventHandler(HordeOff);
+			hordeTimer.Elapsed += HordeOff;
 			hordeTimer.Interval = 1 * (60 * 1000);
-			hordeSpawnTimer.Tick += new EventHandler(HordeSpawn);
+			hordeSpawnTimer.Elapsed += HordeSpawn;
 			hordeSpawnTimer.Interval = 1 * (1000);
-			zawarudoTimer.Tick += new EventHandler(ZawarudoOff);
+			zawarudoTimer.Elapsed += ZawarudoOff;
 			zawarudoTimer.Interval = 1 * (40 * 1000);
 		}
 
@@ -900,6 +929,16 @@ namespace SotnRandoTools.Khaos
 
 		private void BankruptActivate()
 		{
+			bool hasHolyGlasses = alucardApi.HasItemInInventory("Holy glasses");
+			bool hasSpikeBreaker = alucardApi.HasItemInInventory("Spike Breaker");
+			bool hasGoldRing = alucardApi.HasItemInInventory("Gold Ring");
+			bool hasSilverRing = alucardApi.HasItemInInventory("Silver Ring");
+			bool equippedHolyGlasses = Equipment.Items[(int) (alucardApi.Helm + Equipment.HandCount + 1)] == "Holy glasses";
+			bool equippedSpikeBreaker = Equipment.Items[(int) (alucardApi.Armor + Equipment.HandCount + 1)] == "Spike Breaker";
+			bool equippedGoldRing = Equipment.Items[(int) (alucardApi.Accessory1 + Equipment.HandCount + 1)] == "Gold Ring" || Equipment.Items[(int) (alucardApi.Accessory2 + Equipment.HandCount)] == "Gold Ring";
+			bool equippedSilverRing = Equipment.Items[(int) (alucardApi.Accessory1 + Equipment.HandCount + 1)] == "Silver Ring" || Equipment.Items[(int) (alucardApi.Accessory2 + Equipment.HandCount)] == "Silver Ring";
+
+
 			alucardApi.Gold = 0;
 			alucardApi.ClearInventory();
 			alucardApi.RightHand = 0;
@@ -909,6 +948,23 @@ namespace SotnRandoTools.Khaos
 			alucardApi.Cloak = Equipment.CloakStart;
 			alucardApi.Accessory1 = Equipment.AccessoryStart;
 			alucardApi.Accessory2 = Equipment.AccessoryStart;
+
+			if (equippedHolyGlasses || hasHolyGlasses)
+			{
+				alucardApi.GrantItemByName("Holy glasses");
+			}
+			if (equippedSpikeBreaker || hasSpikeBreaker)
+			{
+				alucardApi.GrantItemByName("Spike Breaker");
+			}
+			if (equippedGoldRing || hasGoldRing)
+			{
+				alucardApi.GrantItemByName("Gold Ring");
+			}
+			if (equippedSilverRing || hasSilverRing)
+			{
+				alucardApi.GrantItemByName("Silver Ring");
+			}
 		}
 
 		private void RandomizeGold()
@@ -1062,10 +1118,10 @@ namespace SotnRandoTools.Khaos
 
 		private void RandomizeEquipmentSlots()
 		{
-			bool equippedHolyGlasses = Equipment.Items[(int) (alucardApi.Helm + Equipment.HandCount)] == "Holy glasses";
-			bool equippedSpikeBreaker = Equipment.Items[(int) (alucardApi.Armor + Equipment.HandCount)] == "Spike Breaker";
-			bool equippedGoldRing = Equipment.Items[(int) (alucardApi.Accessory1 + Equipment.HandCount)] == "Gold Ring" || Equipment.Items[(int) (alucardApi.Accessory2 + Equipment.HandCount)] == "Gold Ring";
-			bool equippedSilverRing = Equipment.Items[(int) (alucardApi.Accessory1 + Equipment.HandCount)] == "Silver Ring" || Equipment.Items[(int) (alucardApi.Accessory2 + Equipment.HandCount)] == "Silver Ring";
+			bool equippedHolyGlasses = Equipment.Items[(int) (alucardApi.Helm + Equipment.HandCount + 1)] == "Holy glasses";
+			bool equippedSpikeBreaker = Equipment.Items[(int) (alucardApi.Armor + Equipment.HandCount + 1)] == "Spike Breaker";
+			bool equippedGoldRing = Equipment.Items[(int) (alucardApi.Accessory1 + Equipment.HandCount + 1)] == "Gold Ring" || Equipment.Items[(int) (alucardApi.Accessory2 + Equipment.HandCount)] == "Gold Ring";
+			bool equippedSilverRing = Equipment.Items[(int) (alucardApi.Accessory1 + Equipment.HandCount + 1)] == "Silver Ring" || Equipment.Items[(int) (alucardApi.Accessory2 + Equipment.HandCount)] == "Silver Ring";
 
 			Random rnd = new Random();
 			alucardApi.RightHand = (uint) rnd.Next(0, Equipment.HandCount + 1);
