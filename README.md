@@ -36,7 +36,6 @@ The new tracker has been re-written from the ground up for better performance an
 
 ## Co-Op
 Currently coop requires the host to have the port they want to use forwarded. Hosting automatically copies your address(ip:port) to the clipboard. The other player uses that address to connect. Please be careful to not leak your IP!
-Enable BizHawk messages through `View > Display Messages`.
 Open the BizHawk console through `View > Open Log Window` for detailed information.
 The Select button is used to send the currently highlighted item in the inventory or relic in the relic menu.
 The Circle button is used to perform an assist action. Using a potion in your inventory and activating it for the other player.

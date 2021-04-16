@@ -25,7 +25,7 @@
   * command honest
 * Subweapons Only: Can only use subweapons for combat for the next minute. Gives Alucard Cube of Zoe, a subweapon and 200 hearts.
   * command subonly
-* Cripple: Not so fast! Speed set to 75%
+* Cripple: Not so fast! Speed set to 75% for one minute.
   * command cripple
 * Blood Mana: Spells now cost HP instead of mana.
   * command bloodmana
@@ -53,3 +53,5 @@
   * command fourbeasts
 * ZA WARUDO: mudamudamudamudamudamudamudamudamudamudamudamudamudamudamudamudamudamuda
   * command zawarudo
+* Haste: Increase movement speed for one minute.
+  * command haste

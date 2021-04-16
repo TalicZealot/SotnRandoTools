@@ -10,8 +10,15 @@ namespace SotnRandoTools.Configuration
 		{
 			Alerts = true;
 			ControlPannelQueueActions = true;
-			Volume = 8;
+			Volume = 2;
 			BotActionsFilePath = "";
+			WeakenFactor = 0.5F;
+			CrippleFactor = 0.8F;
+			HasteFactor = 1.3F;
+			ThirstDrainPerSecond = 1;
+			PandoraMinItems = 3;
+			PandoraMaxItems = 32;
+
 			Actions = new List<Action>
 			{
 				new Action{Name="Khaos Status", Aliases = new string[] {"kstatus"}, Enabled = true, Scaling = false},
@@ -25,5 +32,11 @@ namespace SotnRandoTools.Configuration
 		public string BotActionsFilePath { get; set; }
 
 		public List<Action> Actions { get; set; }
+		public float WeakenFactor { get; set; }
+		public float CrippleFactor { get; set; }
+		public float HasteFactor { get; set; }
+		public uint ThirstDrainPerSecond { get; set; }
+		public int PandoraMinItems { get; set; }
+		public int PandoraMaxItems { get; set; }
 	}
 }

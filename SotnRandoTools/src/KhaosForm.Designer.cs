@@ -31,6 +31,8 @@ namespace SotnRandoTools
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(KhaosForm));
             this.controlBox = new System.Windows.Forms.GroupBox();
+            this.hasteButton = new System.Windows.Forms.Button();
+            this.subsonlyButton = new System.Windows.Forms.Button();
             this.hordeButton = new System.Windows.Forms.Button();
             this.zawarudoButton = new System.Windows.Forms.Button();
             this.modePanel = new System.Windows.Forms.GroupBox();
@@ -58,13 +60,13 @@ namespace SotnRandoTools
             this.randomEquipmentButton = new System.Windows.Forms.Button();
             this.randomStatusButton = new System.Windows.Forms.Button();
             this.startButton = new System.Windows.Forms.Button();
-            this.subsonlyButton = new System.Windows.Forms.Button();
             this.controlBox.SuspendLayout();
             this.modePanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // controlBox
             // 
+            this.controlBox.Controls.Add(this.hasteButton);
             this.controlBox.Controls.Add(this.subsonlyButton);
             this.controlBox.Controls.Add(this.hordeButton);
             this.controlBox.Controls.Add(this.zawarudoButton);
@@ -93,12 +95,42 @@ namespace SotnRandoTools
             this.controlBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.controlBox.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.controlBox.ForeColor = System.Drawing.Color.White;
-            this.controlBox.Location = new System.Drawing.Point(12, 186);
+            this.controlBox.Location = new System.Drawing.Point(12, 72);
             this.controlBox.Name = "controlBox";
-            this.controlBox.Size = new System.Drawing.Size(426, 398);
+            this.controlBox.Size = new System.Drawing.Size(426, 419);
             this.controlBox.TabIndex = 0;
             this.controlBox.TabStop = false;
             this.controlBox.Text = "Manual Control Panel";
+            // 
+            // hasteButton
+            // 
+            this.hasteButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
+            this.hasteButton.FlatAppearance.BorderSize = 2;
+            this.hasteButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
+            this.hasteButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
+            this.hasteButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.hasteButton.Location = new System.Drawing.Point(286, 385);
+            this.hasteButton.Name = "hasteButton";
+            this.hasteButton.Size = new System.Drawing.Size(134, 26);
+            this.hasteButton.TabIndex = 25;
+            this.hasteButton.Text = "Haste";
+            this.hasteButton.UseVisualStyleBackColor = true;
+            this.hasteButton.Click += new System.EventHandler(this.hasteButton_Click);
+            // 
+            // subsonlyButton
+            // 
+            this.subsonlyButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
+            this.subsonlyButton.FlatAppearance.BorderSize = 2;
+            this.subsonlyButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
+            this.subsonlyButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
+            this.subsonlyButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.subsonlyButton.Location = new System.Drawing.Point(146, 225);
+            this.subsonlyButton.Name = "subsonlyButton";
+            this.subsonlyButton.Size = new System.Drawing.Size(134, 26);
+            this.subsonlyButton.TabIndex = 24;
+            this.subsonlyButton.Text = "SubweaponsOnly";
+            this.subsonlyButton.UseVisualStyleBackColor = true;
+            this.subsonlyButton.Click += new System.EventHandler(this.subsonlyButton_Click);
             // 
             // hordeButton
             // 
@@ -488,7 +520,7 @@ namespace SotnRandoTools
             this.startButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.startButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.startButton.ForeColor = System.Drawing.Color.White;
-            this.startButton.Location = new System.Drawing.Point(158, 29);
+            this.startButton.Location = new System.Drawing.Point(158, 12);
             this.startButton.Name = "startButton";
             this.startButton.Size = new System.Drawing.Size(134, 54);
             this.startButton.TabIndex = 5;
@@ -496,25 +528,10 @@ namespace SotnRandoTools
             this.startButton.UseVisualStyleBackColor = true;
             this.startButton.Click += new System.EventHandler(this.startButton_Click);
             // 
-            // subsonlyButton
-            // 
-            this.subsonlyButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
-            this.subsonlyButton.FlatAppearance.BorderSize = 2;
-            this.subsonlyButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
-            this.subsonlyButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
-            this.subsonlyButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.subsonlyButton.Location = new System.Drawing.Point(146, 225);
-            this.subsonlyButton.Name = "subsonlyButton";
-            this.subsonlyButton.Size = new System.Drawing.Size(134, 26);
-            this.subsonlyButton.TabIndex = 24;
-            this.subsonlyButton.Text = "SubweaponsOnly";
-            this.subsonlyButton.UseVisualStyleBackColor = true;
-            this.subsonlyButton.Click += new System.EventHandler(this.subsonlyButton_Click);
-            // 
             // KhaosForm
             // 
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
-            this.ClientSize = new System.Drawing.Size(450, 596);
+            this.ClientSize = new System.Drawing.Size(450, 498);
             this.Controls.Add(this.startButton);
             this.Controls.Add(this.controlBox);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -564,6 +581,7 @@ namespace SotnRandoTools
 		private System.Windows.Forms.Button zawarudoButton;
 		private System.Windows.Forms.Button hordeButton;
 		private System.Windows.Forms.Button subsonlyButton;
+		private System.Windows.Forms.Button hasteButton;
 	}
 }
 

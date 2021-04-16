@@ -37,6 +37,12 @@ namespace SotnRandoTools.Coop
 		{
 			MessageType type = (MessageType) data[0];
 			ushort index = BitConverter.ToUInt16(data, 1);
+			byte indexByte = data[1];
+			byte dataByte = 0;
+			if (data.Length > 2)
+			{
+				dataByte = data[2];
+			}
 			switch (type)
 			{
 				case MessageType.Relic:
@@ -50,11 +56,11 @@ namespace SotnRandoTools.Coop
 					}
 					break;
 				case MessageType.Location:
-					gameApi.SetRoomToVisited(watchlistService.CoopLocationWatches[index].Address);
+					gameApi.SetRoomValue(watchlistService.CoopLocationWatches[indexByte].Address, dataByte);
 					watchlistService.UpdateWatchlist(watchlistService.CoopLocationWatches);
 					watchlistService.CoopLocationWatches.ClearChangeCounts();
-					notificationService.DisplayMessage(watchlistService.CoopLocationWatches[index].Notes);
-					Console.WriteLine($"Received location: {watchlistService.CoopLocationWatches[index].Notes}");
+					//notificationService.DisplayMessage($"location {watchlistService.CoopLocationWatches[indexByte].Notes}");
+					Console.WriteLine($"Received location: {watchlistService.CoopLocationWatches[indexByte].Notes}");
 					break;
 				case MessageType.Item:
 					alucardApi.GrantItemByName(Equipment.Items[index]);
@@ -240,7 +246,7 @@ namespace SotnRandoTools.Coop
 					}
 					break;
 				default:
-					Console.WriteLine($"RShortcut {shortcut} not found!");
+					Console.WriteLine($"Shortcut {shortcut} not found!");
 					return;
 			}
 

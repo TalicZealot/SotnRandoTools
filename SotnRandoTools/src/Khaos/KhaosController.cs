@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
-using System.Windows.Media;
-
 using BizHawk.Client.Common;
 using SotnApi.Constants.Addresses;
 using SotnApi.Constants.Values.Alucard;
@@ -21,20 +20,12 @@ namespace SotnRandoTools.Khaos
 {
 	public class KhaosController
 	{
-		private const float WeakenFactor = 0.5F;
-		private const float CrippleFactor = 0.8F;
-		private const int DrainPerSecond = 1;
-		private const int PandoraMinItems = 3;
-		private const int PandoraMaxItems = 32;
-
 		private readonly IToolConfig toolConfig;
 		private readonly IGameApi gameApi;
 		private readonly IAlucardApi alucardApi;
 		private readonly IActorApi actorApi;
 		private readonly ICheatCollectionAdapter cheats;
 		private readonly INotificationService notificationService;
-		//replace with WMPLib.WindowsMediaPlayer
-		private MediaPlayer audioPlayer = new MediaPlayer();
 
 
 		private string[] lightHelpItems =
@@ -161,11 +152,8 @@ namespace SotnRandoTools.Khaos
 		private Timer actionTimer = new Timer();
 		private Timer fastActionTimer = new Timer();
 
-		private System.Timers.Timer zawarudoTimer = new System.Timers.Timer();
 		private System.Timers.Timer honestGamerTimer = new System.Timers.Timer();
 		private System.Timers.Timer subweaponsOnlyTimer = new System.Timers.Timer();
-		private System.Timers.Timer magicianTimer = new System.Timers.Timer();
-		private System.Timers.Timer meltyTimer = new System.Timers.Timer();
 		private System.Timers.Timer crippleTimer = new System.Timers.Timer();
 		private System.Timers.Timer bloodManaTimer = new System.Timers.Timer();
 		private System.Timers.Timer bloodManaTickTimer = new System.Timers.Timer();
@@ -173,6 +161,10 @@ namespace SotnRandoTools.Khaos
 		private System.Timers.Timer thirstTickTimer = new System.Timers.Timer();
 		private System.Timers.Timer hordeTimer = new System.Timers.Timer();
 		private System.Timers.Timer hordeSpawnTimer = new System.Timers.Timer();
+		private System.Timers.Timer magicianTimer = new System.Timers.Timer();
+		private System.Timers.Timer meltyTimer = new System.Timers.Timer();
+		private System.Timers.Timer zawarudoTimer = new System.Timers.Timer();
+		private System.Timers.Timer hasteTimer = new System.Timers.Timer();
 
 		private uint hordeZone = 0;
 		private uint hordeZone2 = 0;
@@ -209,8 +201,6 @@ namespace SotnRandoTools.Khaos
 				Console.WriteLine("Bot action file not found!");
 			}
 
-			audioPlayer.Volume = (float) toolConfig.Khaos.Volume / 10F;
-
 			InitializeTimers();
 		}
 
@@ -230,6 +220,18 @@ namespace SotnRandoTools.Khaos
 			gameApi.OverwriteString(Strings.Dracula, "3snoW");
 		}
 
+		public void StopKhaos()
+		{
+			if (File.Exists(toolConfig.Khaos.BotActionsFilePath))
+			{
+				botFileWatcher.EnableRaisingEvents = false;
+			}
+			actionTimer.Stop();
+			fastActionTimer.Stop();
+			Cheat faerieScroll = cheats.GetCheatByName("FaerieScroll");
+			faerieScroll.Disable();
+		}
+
 		public void OverwriteBossNames(string[] subscribers)
 		{
 			int i = 0;
@@ -244,29 +246,184 @@ namespace SotnRandoTools.Khaos
 			}
 		}
 
-		public void RandomizeRelics()
+		#region Khaotic Effects
+		public void InflictRandomStatus(string user = "Khaos")
 		{
-			RandomizeRelicsActivate();
-			audioPlayer.Open(new Uri(Paths.AlertAlucardWhat, UriKind.Relative));
-			audioPlayer.Play();
-		}
+			Random rnd = new Random();
+			int result = rnd.Next(1, 4);
+			switch (result)
+			{
+				case 1:
+					SpawnPoisonHitbox();
+					notificationService.DisplayMessage($"{user} poisoned you");
+					break;
+				case 2:
+					SpawnCurseHitbox();
+					notificationService.DisplayMessage($"{user} cursed you");
+					break;
+				case 3:
+					SpawnStoneHitbox();
+					notificationService.DisplayMessage($"{user} petrified you");
+					break;
+				default:
+					break;
+			}
 
-		public void RandomizeEquipment()
+			notificationService.PlayAlert(Paths.AlertDeathLaugh);
+		}
+		public void RandomizeEquipment(string user = "Khaos")
 		{
 			RandomizeEquipmentSlots();
 
-			audioPlayer.Open(new Uri(Paths.AlertAlucardWhat, UriKind.Relative));
-			audioPlayer.Play();
+			notificationService.DisplayMessage($"{user} used Khaos Equipment");
+			notificationService.PlayAlert(Paths.AlertAlucardWhat);
 		}
-
-		public void RandomizeStats()
+		public void RandomizeStats(string user = "Khaos")
 		{
 			RandomizeStatsActivate();
-			audioPlayer.Open(new Uri(Paths.AlertAlucardWhat, UriKind.Relative));
-			audioPlayer.Play();
+			notificationService.DisplayMessage($"{user} used Khaos Stats");
+			notificationService.PlayAlert(Paths.AlertAlucardWhat);
 		}
+		public void RandomizeRelics(string user = "Khaos")
+		{
+			RandomizeRelicsActivate();
+			notificationService.DisplayMessage($"{user} used Khaos Relics");
+			notificationService.PlayAlert(Paths.AlertAlucardWhat);
+		}
+		public void PandorasBox(string user = "Khaos")
+		{
+			RandomizeGold();
+			RandomizeStatsActivate();
+			RandomizeEquipmentSlots();
+			RandomizeRelicsActivate();
+			RandomizeInventory();
+			RandomizeSubweapon();
+			gameApi.RespawnBosses();
+			notificationService.DisplayMessage($"{user} opened Pandora's Box");
+			notificationService.PlayAlert(Paths.AlertAlucardWhat);
+		}
+		public void Gamble(string user = "Khaos")
+		{
+			Random rnd = new Random();
+			double goldPercent = rnd.NextDouble();
+			uint newGold = (uint) ((double) alucardApi.Gold * goldPercent);
+			uint goldSpent = alucardApi.Gold - newGold;
+			alucardApi.Gold = newGold;
+			string item = Equipment.Items[rnd.Next(1, Equipment.Items.Count)];
+			while (item.Contains("empty hand") || item.Contains("-"))
+			{
+				item = Equipment.Items[rnd.Next(1, Equipment.Items.Count)];
+			}
+			alucardApi.GrantItemByName(item);
 
-		public void RandomLightHelp()
+
+			notificationService.DisplayMessage($"{user} gambled {goldSpent} gold for {item}");
+			notificationService.PlayAlert(Paths.AlertLibrarianThankYou);
+		}
+		#endregion
+		#region Debuffs
+		public void Thirst(string user = "Khaos")
+		{
+			alucardApi.DarkMetamorphasisTimer = 40;
+			thirstTimer.Start();
+			thirstTickTimer.Start();
+
+			notificationService.DisplayMessage($"{user} used Thirst");
+			notificationService.PlayAlert(Paths.AlertDeathLaugh);
+		}
+		public void Weaken(string user = "Khaos")
+		{
+			alucardApi.CurrentHp = (uint) (alucardApi.CurrentHp * toolConfig.Khaos.WeakenFactor);
+			alucardApi.CurrentMp = (uint) (alucardApi.CurrentHp * toolConfig.Khaos.WeakenFactor);
+			alucardApi.CurrentHearts = (uint) (alucardApi.CurrentHp * toolConfig.Khaos.WeakenFactor);
+			alucardApi.MaxtHp = (uint) (alucardApi.MaxtHp * toolConfig.Khaos.WeakenFactor);
+			alucardApi.MaxtMp = (uint) (alucardApi.MaxtHp * toolConfig.Khaos.WeakenFactor);
+			alucardApi.MaxtHearts = (uint) (alucardApi.MaxtHp * toolConfig.Khaos.WeakenFactor);
+			alucardApi.Str = (uint) (alucardApi.Str * toolConfig.Khaos.WeakenFactor);
+			alucardApi.Con = (uint) (alucardApi.Con * toolConfig.Khaos.WeakenFactor);
+			alucardApi.Int = (uint) (alucardApi.Int * toolConfig.Khaos.WeakenFactor);
+			alucardApi.Lck = (uint) (alucardApi.Lck * toolConfig.Khaos.WeakenFactor);
+
+			notificationService.DisplayMessage($"{user} used Weaken");
+			notificationService.PlayAlert(Paths.AlertDeathLaugh);
+		}
+		public void Cripple(string user = "Khaos")
+		{
+			SetSpeed(toolConfig.Khaos.CrippleFactor);
+			crippleTimer.Start();
+			notificationService.DisplayMessage($"{user} used Cripple");
+			notificationService.PlayAlert(Paths.AlertAlucardWhat);
+		}
+		public void BloodMana(string user = "Khaos")
+		{
+			storedMana = alucardApi.CurrentMp;
+			bloodManaActive = true;
+			bloodManaTimer.Start();
+			bloodManaTickTimer.Start();
+			notificationService.DisplayMessage($"{user} used Blood Mana");
+			notificationService.PlayAlert(Paths.AlertRichterLaugh);
+		}
+		public void HonestGamer(string user = "Khaos")
+		{
+			Cheat manaCheat = cheats.GetCheatByName("Mana");
+			manaCheat.PokeValue(5);
+			manaCheat.Enable();
+			honestGamerTimer.Start();
+			notificationService.DisplayMessage($"{user} used Honest Gamer");
+			notificationService.PlayAlert(Paths.AlertRichterLaugh);
+
+		}
+		public void SubweaponsOnly(string user = "Khaos")
+		{
+			Random rnd = new Random();
+			int roll = rnd.Next(1, 10);
+			while (roll == 6)
+			{
+				roll = rnd.Next(1, 10);
+			}
+			alucardApi.Subweapon = (Subweapon) roll;
+			alucardApi.CurrentHearts = 200;
+			alucardApi.ActivatePotion(Potion.SmartPotion);
+			alucardApi.GrantRelic(Relic.CubeOfZoe);
+			HonestGamer();
+			Cheat curse = cheats.GetCheatByName("CurseTimer");
+			curse.Enable();
+			Cheat manaCheat = cheats.GetCheatByName("Mana");
+			manaCheat.PokeValue(5);
+			manaCheat.Enable();
+			subweaponsOnlyTimer.Start();
+			notificationService.DisplayMessage($"{user} used Subweapons Only");
+			notificationService.PlayAlert(Paths.AlertRichterLaugh);
+		}
+		public void Bankrupt(string user = "Khaos")
+		{
+			BankruptActivate();
+			notificationService.DisplayMessage($"{user} used Bankrupt");
+			notificationService.PlayAlert(Paths.AlertDeathLaugh);
+		}
+		public void RespawnBosses(string user = "Khaos")
+		{
+			gameApi.RespawnBosses();
+			notificationService.DisplayMessage($"{user} used Respawn Bosses");
+			notificationService.PlayAlert(Paths.AlertDeathLaugh);
+		}
+		public void Horde(string user = "Khaos")
+		{
+			hordeTimer.Start();
+			hordeSpawnTimer.Start();
+			notificationService.DisplayMessage($"{user} summoned the Horde");
+			notificationService.PlayAlert(Paths.AlertRichterLaugh);
+		}
+		public void Endurance(string user = "Khaos")
+		{
+			hordeTimer.Start();
+			hordeSpawnTimer.Start();
+			notificationService.DisplayMessage($"{user} used Endurance");
+			notificationService.PlayAlert(Paths.AlertRichterLaugh);
+		}
+		#endregion
+		#region Buffs
+		public void RandomLightHelp(string user = "Khaos")
 		{
 			Random rnd = new Random();
 			string item = lightHelpItems[rnd.Next(0, lightHelpItems.Length)];
@@ -276,21 +433,22 @@ namespace SotnRandoTools.Khaos
 			{
 				case 1:
 					alucardApi.GrantItemByName(item);
+					notificationService.DisplayMessage($"{user} gave you a {item}");
 					break;
 				case 2:
 					alucardApi.ActivatePotion(Potion.Potion);
+					notificationService.DisplayMessage($"{user} healed you");
 					break;
 				case 3:
 					alucardApi.ActivatePotion(Potion.ShieldPotion);
+					notificationService.DisplayMessage($"{user} used a Shield Potion");
 					break;
 				default:
 					break;
 			}
-			audioPlayer.Open(new Uri(Paths.AlertFairyPotion, UriKind.Relative));
-			audioPlayer.Play();
+			notificationService.PlayAlert(Paths.AlertFairyPotion);
 		}
-
-		public void RandomMediumHelp()
+		public void RandomMediumHelp(string user = "Khaos")
 		{
 			Random rnd = new Random();
 			string item = mediumHelpItems[rnd.Next(0, mediumHelpItems.Length)];
@@ -300,21 +458,22 @@ namespace SotnRandoTools.Khaos
 			{
 				case 1:
 					alucardApi.GrantItemByName(item);
+					notificationService.DisplayMessage($"{user} gave you a {item}");
 					break;
 				case 2:
 					alucardApi.ActivatePotion(Potion.Elexir);
+					notificationService.DisplayMessage($"{user} healed you");
 					break;
 				case 3:
 					alucardApi.ActivatePotion(Potion.ManaPrism);
+					notificationService.DisplayMessage($"{user} used a Mana Prism");
 					break;
 				default:
 					break;
 			}
-			audioPlayer.Open(new Uri(Paths.AlertFairyPotion, UriKind.Relative));
-			audioPlayer.Play();
+			notificationService.PlayAlert(Paths.AlertFairyPotion);
 		}
-
-		public void RandomHeavytHelp()
+		public void RandomHeavytHelp(string user = "Khaos")
 		{
 			Random rnd = new Random();
 			string item = heavyHelpItems[rnd.Next(0, heavyHelpItems.Length)];
@@ -338,173 +497,39 @@ namespace SotnRandoTools.Khaos
 			{
 				case 1:
 					alucardApi.GrantItemByName(item);
+					notificationService.DisplayMessage($"{user} gave you a {item}");
 					break;
 				case 2:
 					alucardApi.GrantRelic((Relic) relic);
+					notificationService.DisplayMessage($"{user} gave you {(Relic) relic}");
 					break;
 				default:
 					break;
 			}
-			audioPlayer.Open(new Uri(Paths.AlertFairyPotion, UriKind.Relative));
-			audioPlayer.Play();
+			notificationService.PlayAlert(Paths.AlertFairyPotion);
 		}
-
-		public void PandorasBox()
-		{
-			RandomizeGold();
-			RandomizeStatsActivate();
-			RandomizeEquipmentSlots();
-			RandomizeRelicsActivate();
-			RandomizeInventory();
-			RandomizeSubweapon();
-			gameApi.RespawnBosses();
-			audioPlayer.Open(new Uri(Paths.AlertAlucardWhat, UriKind.Relative));
-			audioPlayer.Play();
-		}
-
-		public void InflictRandomStatus()
-		{
-			Random rnd = new Random();
-			int result = rnd.Next(1, 4);
-			switch (result)
-			{
-				case 1:
-					SpawnPoisonHitbox();
-					break;
-				case 2:
-					SpawnCurseHitbox();
-					break;
-				case 3:
-					SpawnStoneHitbox();
-					break;
-				default:
-					break;
-			}
-			audioPlayer.Open(new Uri(Paths.AlertDeathLaugh, UriKind.Relative));
-			audioPlayer.Play();
-		}
-
-		public void Vampire()
+		public void Vampire(string user = "Khaos")
 		{
 			alucardApi.DarkMetamorphasisTimer = 0xD;
+			notificationService.DisplayMessage($"{user} used Vampire");
 		}
-
-		public void Weaken()
-		{
-			alucardApi.CurrentHp = (uint) (alucardApi.CurrentHp * WeakenFactor);
-			alucardApi.CurrentMp = (uint) (alucardApi.CurrentHp * WeakenFactor);
-			alucardApi.CurrentHearts = (uint) (alucardApi.CurrentHp * WeakenFactor);
-			alucardApi.MaxtHp = (uint) (alucardApi.MaxtHp * WeakenFactor);
-			alucardApi.MaxtMp = (uint) (alucardApi.MaxtHp * WeakenFactor);
-			alucardApi.MaxtHearts = (uint) (alucardApi.MaxtHp * WeakenFactor);
-			alucardApi.Str = (uint) (alucardApi.Str * WeakenFactor);
-			alucardApi.Con = (uint) (alucardApi.Con * WeakenFactor);
-			alucardApi.Int = (uint) (alucardApi.Int * WeakenFactor);
-			alucardApi.Lck = (uint) (alucardApi.Lck * WeakenFactor);
-
-			audioPlayer.Open(new Uri(Paths.AlertRichterLaugh, UriKind.Relative));
-			audioPlayer.Play();
-		}
-
-		public void Cripple()
-		{
-			CrippleToggle(true);
-			crippleTimer.Start();
-			audioPlayer.Open(new Uri(Paths.AlertAlucardWhat, UriKind.Relative));
-			audioPlayer.Play();
-		}
-
-		public void BloodMana()
-		{
-			storedMana = alucardApi.CurrentMp;
-			bloodManaActive = true;
-			bloodManaTimer.Start();
-			bloodManaTickTimer.Start();
-			audioPlayer.Open(new Uri(Paths.AlertRichterLaugh, UriKind.Relative));
-			audioPlayer.Play();
-		}
-
-		public void SubweaponsOnly()
-		{
-			Random rnd = new Random();
-			int roll = rnd.Next(1, 10);
-			while (roll == 6)
-			{
-				roll = rnd.Next(1, 10);
-			}
-			alucardApi.Subweapon = (Subweapon) roll;
-			alucardApi.CurrentHearts = 200;
-			alucardApi.ActivatePotion(Potion.SmartPotion);
-			alucardApi.GrantRelic(Relic.CubeOfZoe);
-			HonestGamer();
-			Cheat curse = cheats.GetCheatByName("CurseTimer");
-			curse.Enable();
-			Cheat manaCheat = cheats.GetCheatByName("Mana");
-			manaCheat.PokeValue(5);
-			manaCheat.Enable();
-			subweaponsOnlyTimer.Start();
-			audioPlayer.Open(new Uri(Paths.AlertRichterLaugh, UriKind.Relative));
-			audioPlayer.Play();
-		}
-
-		public void Bankrupt()
-		{
-			BankruptActivate();
-
-			audioPlayer.Open(new Uri(Paths.AlertDeathLaugh, UriKind.Relative));
-			audioPlayer.Play();
-		}
-
-		public void RespawnBosses()
-		{
-			gameApi.RespawnBosses();
-			audioPlayer.Open(new Uri(Paths.AlertDeathLaugh, UriKind.Relative));
-			audioPlayer.Play();
-		}
-
-		public void Gamble()
-		{
-			Random rnd = new Random();
-			double goldPercent = rnd.NextDouble();
-			alucardApi.Gold = (uint) ((double) alucardApi.Gold * goldPercent);
-			string item = Equipment.Items[rnd.Next(1, Equipment.Items.Count)];
-			while (item.Contains("empty hand") || item.Contains("-"))
-			{
-				item = Equipment.Items[rnd.Next(1, Equipment.Items.Count)];
-			}
-			alucardApi.GrantItemByName(item);
-
-			audioPlayer.Open(new Uri(Paths.AlertLibrarianThankYou, UriKind.Relative));
-			audioPlayer.Play();
-		}
-
-		public void BattleOrders()
+		public void BattleOrders(string user = "Khaos")
 		{
 			alucardApi.CurrentHp = alucardApi.MaxtHp * 2;
 			alucardApi.CurrentMp = alucardApi.MaxtMp;
 			alucardApi.ActivatePotion(Potion.ShieldPotion);
+			notificationService.DisplayMessage($"{user} used Battle Orders");
 		}
-
-		public void HonestGamer()
-		{
-			Cheat manaCheat = cheats.GetCheatByName("Mana");
-			manaCheat.PokeValue(5);
-			manaCheat.Enable();
-			honestGamerTimer.Start();
-			audioPlayer.Open(new Uri(Paths.AlertRichterLaugh, UriKind.Relative));
-			audioPlayer.Play();
-		}
-
-		public void Magician()
+		public void Magician(string user = "Khaos")
 		{
 			alucardApi.ActivatePotion(Potion.SmartPotion);
 			Cheat manaCheat = cheats.GetCheatByName("Mana");
 			manaCheat.PokeValue(99);
 			manaCheat.Enable();
 			magicianTimer.Start();
+			notificationService.DisplayMessage($"{user} activated Magician mode");
 		}
-
-		public void ZaWarudo()
+		public void ZaWarudo(string user = "Khaos")
 		{
 			alucardApi.ActivateStopwatch();
 			alucardApi.Subweapon = Subweapon.Stopwatch;
@@ -513,44 +538,33 @@ namespace SotnRandoTools.Khaos
 			stopwatchTimer.Enable();
 			zawarudoTimer.Start();
 
-			audioPlayer.Open(new Uri(Paths.AlertZaWarudo, UriKind.Relative));
-			audioPlayer.Play();
+			notificationService.DisplayMessage($"{user} used ZA WARUDO");
+			notificationService.PlayAlert(Paths.AlertZaWarudo);
 		}
-
-		public void MeltyBlood()
+		public void MeltyBlood(string user = "Khaos")
 		{
 			Cheat width = cheats.GetCheatByName("AlucardAttackHitboxWidth");
 			Cheat height = cheats.GetCheatByName("AlucardAttackHitboxHeight");
 			width.Enable();
 			height.Enable();
 			meltyTimer.Start();
-			audioPlayer.Open(new Uri(Paths.AlertMelty, UriKind.Relative));
-			audioPlayer.Play();
+			notificationService.DisplayMessage($"{user} activated Melty Blood");
+			notificationService.PlayAlert(Paths.AlertMelty);
 		}
-
-		public void FourBeasts()
+		public void FourBeasts(string user = "Khaos")
 		{
 			alucardApi.InvincibilityTimer = 0xD;
 			alucardApi.AttackPotionTimer = 0xD;
 			alucardApi.ShineTimer = 0xD;
+			notificationService.DisplayMessage($"{user} used Four Beasts");
 		}
-
-		public void Thirst()
+		public void Haste(string user = "Khaos")
 		{
-			alucardApi.DarkMetamorphasisTimer = 40;
-			thirstTimer.Start();
-			thirstTickTimer.Start();
-			audioPlayer.Open(new Uri(Paths.AlertDeathLaugh, UriKind.Relative));
-			audioPlayer.Play();
+			SetSpeed(toolConfig.Khaos.HasteFactor);
+			hasteTimer.Start();
+			notificationService.DisplayMessage($"{user} used Haste");
 		}
-
-		public void Horde()
-		{
-			hordeTimer.Start();
-			hordeSpawnTimer.Start();
-			audioPlayer.Open(new Uri(Paths.AlertRichterLaugh, UriKind.Relative));
-			audioPlayer.Play();
-		}
+		#endregion
 
 		public void Update()
 		{
@@ -564,113 +578,95 @@ namespace SotnRandoTools.Khaos
 		{
 			if (command is null) throw new ArgumentNullException(nameof(command));
 			if (command == "") throw new ArgumentException($"Parameter {nameof(command)} is empty!");
-			string user = "";
 
+			string user = String.Empty;
 			string[] commandArgs = command.Split(' ');
-			Console.WriteLine(String.Join(" + ", commandArgs));
 			string action = commandArgs[0];
 			if (commandArgs.Length > 1)
 			{
 				user = commandArgs[1];
 			}
+			if (user == String.Empty)
+			{
+				user = "Khaos";
+			}
 
 			switch (action)
 			{
 				case "kstatus":
-					queuedFastActions.Enqueue(InflictRandomStatus);
-					notificationService.DisplayMessage(user + " used Khaos Status");
+					queuedFastActions.Enqueue(new MethodInvoker(() => InflictRandomStatus(user)));
 					break;
 				case "kequipment":
-					queuedFastActions.Enqueue(RandomizeEquipment);
-					notificationService.DisplayMessage(user + " used Khaos Equipment");
+					queuedFastActions.Enqueue(new MethodInvoker(() => RandomizeEquipment(user)));
 					break;
 				case "kstats":
-					queuedFastActions.Enqueue(RandomizeStats);
-					notificationService.DisplayMessage(user + " used Khaos Stats");
+					queuedFastActions.Enqueue(new MethodInvoker(() => RandomizeStats(user)));
 					break;
 				case "krelics":
-					queuedFastActions.Enqueue(RandomizeRelics);
-					notificationService.DisplayMessage(user + " used Khaos Relics");
+					queuedFastActions.Enqueue(new MethodInvoker(() => RandomizeRelics(user)));
 					break;
 				case "pandora":
-					queuedActions.Enqueue(PandorasBox);
-					notificationService.DisplayMessage(user + " opened Pandora's Box");
+					queuedFastActions.Enqueue(new MethodInvoker(() => PandorasBox(user)));
 					break;
 				case "gamble":
-					queuedFastActions.Enqueue(Gamble);
-					notificationService.DisplayMessage(user + " used Gamble");
+					queuedFastActions.Enqueue(new MethodInvoker(() => Gamble(user)));
 					break;
 				case "bankrupt":
-					queuedFastActions.Enqueue(Bankrupt);
-					notificationService.DisplayMessage(user + " used Bankrupt");
+					queuedFastActions.Enqueue(new MethodInvoker(() => Bankrupt(user)));
 					break;
 				case "weaken":
-					queuedActions.Enqueue(Weaken);
-					notificationService.DisplayMessage(user + " used Weaken");
+					queuedFastActions.Enqueue(new MethodInvoker(() => Weaken(user)));
 					break;
 				case "respawnbosses":
-					queuedActions.Enqueue(RespawnBosses);
-					notificationService.DisplayMessage(user + " used Respawn Bosses");
+					queuedFastActions.Enqueue(new MethodInvoker(() => RespawnBosses(user)));
 					break;
 				case "honest":
-					queuedFastActions.Enqueue(HonestGamer);
-					notificationService.DisplayMessage(user + " used Honest Gamer");
+					queuedFastActions.Enqueue(new MethodInvoker(() => HonestGamer(user)));
 					break;
 				case "subsonly":
-					queuedActions.Enqueue(SubweaponsOnly);
-					notificationService.DisplayMessage(user + " used Subweapons Only");
+					queuedFastActions.Enqueue(new MethodInvoker(() => SubweaponsOnly(user)));
 					break;
 				case "cripple":
-					queuedFastActions.Enqueue(Cripple);
-					notificationService.DisplayMessage(user + " used Cripple");
+					queuedFastActions.Enqueue(new MethodInvoker(() => Cripple(user)));
 					break;
 				case "bloodmana":
-					queuedFastActions.Enqueue(BloodMana);
-					notificationService.DisplayMessage(user + " used Blood Mana");
+					queuedFastActions.Enqueue(new MethodInvoker(() => BloodMana(user)));
 					break;
 				case "thirst":
-					queuedFastActions.Enqueue(Thirst);
-					notificationService.DisplayMessage(user + " used Thirst");
+					queuedFastActions.Enqueue(new MethodInvoker(() => Thirst(user)));
 					break;
 				case "horde":
-					queuedFastActions.Enqueue(Horde);
-					notificationService.DisplayMessage(user + " used Horde");
+					queuedFastActions.Enqueue(new MethodInvoker(() => Horde(user)));
 					break;
 				case "vampire":
-					queuedFastActions.Enqueue(Vampire);
-					notificationService.DisplayMessage(user + " used Vampire");
+					queuedFastActions.Enqueue(new MethodInvoker(() => Vampire(user)));
 					break;
 				case "lighthelp":
-					queuedFastActions.Enqueue(RandomLightHelp);
-					notificationService.DisplayMessage(user + " used Light Help");
+					queuedFastActions.Enqueue(new MethodInvoker(() => RandomLightHelp(user)));
 					break;
 				case "mediumhelp":
-					queuedFastActions.Enqueue(RandomMediumHelp);
-					notificationService.DisplayMessage(user + " used Medium Help");
+					queuedFastActions.Enqueue(new MethodInvoker(() => RandomMediumHelp(user)));
 					break;
 				case "heavyhelp":
-					queuedFastActions.Enqueue(RandomHeavytHelp);
-					notificationService.DisplayMessage(user + " used Heavy Help");
+					queuedFastActions.Enqueue(new MethodInvoker(() => RandomHeavytHelp(user)));
 					break;
 				case "battleorders":
-					queuedFastActions.Enqueue(BattleOrders);
-					notificationService.DisplayMessage(user + " used Battle Orders");
+					queuedFastActions.Enqueue(new MethodInvoker(() => BattleOrders(user)));
 					break;
 				case "magician":
-					queuedFastActions.Enqueue(Magician);
-					notificationService.DisplayMessage(user + " used Magician");
+					queuedFastActions.Enqueue(new MethodInvoker(() => Magician(user)));
 					break;
 				case "melty":
-					queuedFastActions.Enqueue(MeltyBlood);
-					notificationService.DisplayMessage(user + " used Melty Blood");
+					queuedFastActions.Enqueue(new MethodInvoker(() => MeltyBlood(user)));
 					break;
 				case "fourbeasts":
-					queuedFastActions.Enqueue(FourBeasts);
-					notificationService.DisplayMessage(user + " used Four Beasts");
+					queuedFastActions.Enqueue(new MethodInvoker(() => FourBeasts(user)));
 					break;
 				case "zawarudo":
-					notificationService.DisplayMessage(user + " ZA WARUDO");
-					queuedFastActions.Enqueue(ZaWarudo);
+					queuedFastActions.Enqueue(new MethodInvoker(() => ZaWarudo(user)));
+					break;
+				case "haste":
+					queuedFastActions.Enqueue(new MethodInvoker(() => Haste(user)));
 					break;
 				default:
 					break;
@@ -683,14 +679,11 @@ namespace SotnRandoTools.Khaos
 			fastActionTimer.Interval = 2 * (1 * 1000);
 			actionTimer.Tick += ExecuteAction;
 			actionTimer.Interval = 1 * (60 * 1000);
+
 			honestGamerTimer.Elapsed += HonestGamerOff;
 			honestGamerTimer.Interval = 1 * (60 * 1000);
 			subweaponsOnlyTimer.Elapsed += SubweaponsOnlyOff;
 			subweaponsOnlyTimer.Interval = 1 * (60 * 1000);
-			magicianTimer.Elapsed += MagicianOff;
-			magicianTimer.Interval = 1 * (60 * 1000);
-			meltyTimer.Elapsed += MeltyBloodOff;
-			meltyTimer.Interval = 1 * (60 * 1000);
 			crippleTimer.Elapsed += CrippleOff;
 			crippleTimer.Interval = 1 * (60 * 1000);
 			bloodManaTimer.Elapsed += BloodManaOff;
@@ -705,8 +698,16 @@ namespace SotnRandoTools.Khaos
 			hordeTimer.Interval = 1 * (60 * 1000);
 			hordeSpawnTimer.Elapsed += HordeSpawn;
 			hordeSpawnTimer.Interval = 1 * (1000);
+			//hordeSpawnTimer.Interval = toolConfig.Khaos.Actions.Where(a => a.Name == "Khaos Horde").FirstOrDefault().Interval.TotalMilliseconds;
+
+			magicianTimer.Elapsed += MagicianOff;
+			magicianTimer.Interval = 1 * (60 * 1000);
+			meltyTimer.Elapsed += MeltyBloodOff;
+			meltyTimer.Interval = 1 * (60 * 1000);
 			zawarudoTimer.Elapsed += ZawarudoOff;
 			zawarudoTimer.Interval = 1 * (40 * 1000);
+			hasteTimer.Elapsed += HasteOff;
+			hasteTimer.Interval = 1 * (60 * 1000);
 		}
 
 		private void ExecuteAction(Object sender, EventArgs e)
@@ -731,242 +732,7 @@ namespace SotnRandoTools.Khaos
 			}
 		}
 
-		private void HonestGamerOff(Object sender, EventArgs e)
-		{
-			Cheat manaCheat = cheats.GetCheatByName("Mana");
-			manaCheat.Disable();
-			honestGamerTimer.Stop();
-		}
-
-		private void SubweaponsOnlyOff(object sender, EventArgs e)
-		{
-			Cheat curse = cheats.GetCheatByName("CurseTimer");
-			curse.Disable();
-			Cheat manaCheat = cheats.GetCheatByName("Mana");
-			manaCheat.Disable();
-			subweaponsOnlyTimer.Stop();
-		}
-
-		private void MagicianOff(Object sender, EventArgs e)
-		{
-			//int potion
-			Cheat manaCheat = cheats.GetCheatByName("Mana");
-			manaCheat.Disable();
-			magicianTimer.Stop();
-		}
-
-		private void MeltyBloodOff(Object sender, EventArgs e)
-		{
-			Cheat width = cheats.GetCheatByName("AlucardAttackHitboxWidth");
-			Cheat height = cheats.GetCheatByName("AlucardAttackHitboxHeight");
-			width.Disable();
-			height.Disable();
-			meltyTimer.Stop();
-		}
-
-		private void CrippleOff(Object sender, EventArgs e)
-		{
-			CrippleToggle(false);
-			crippleTimer.Stop();
-		}
-
-		private void BloodManaUpdate(Object sender, EventArgs e)
-		{
-			if (spentMana > 1)
-			{
-				alucardApi.CurrentMp += (uint) spentMana;
-				alucardApi.CurrentHp -= (uint) spentMana;
-			}
-		}
-
-		private void BloodManaOff(Object sender, EventArgs e)
-		{
-			bloodManaActive = false;
-			bloodManaTimer.Stop();
-			bloodManaTickTimer.Stop();
-		}
-
-		private void ThirstDrain(Object sender, EventArgs e)
-		{
-			if (alucardApi.CurrentHp > 1)
-			{
-				alucardApi.CurrentHp -= DrainPerSecond;
-			}
-		}
-
-		private void ThirstOff(Object sender, EventArgs e)
-		{
-			thirstTimer.Stop();
-			thirstTickTimer.Stop();
-		}
-
-		private void HordeOff(Object sender, EventArgs e)
-		{
-			hordeTimer.Stop();
-			hordeSpawnTimer.Stop();
-		}
-
-		private void ZawarudoOff(Object sender, EventArgs e)
-		{
-			Cheat stopwatchTimer = cheats.GetCheatByName("SubweaponTimer");
-			stopwatchTimer.Disable();
-			zawarudoTimer.Stop();
-		}
-
-		private void HordeSpawn(Object sender, EventArgs e)
-		{
-			if (!gameApi.InAlucardMode() || !gameApi.CanMenu() || alucardApi.CurrentHp < 5)
-			{
-				return;
-			}
-
-			uint zone = gameApi.Zone;
-			uint zone2 = gameApi.Zone2;
-
-			if (hordeZone != zone || hordeZone2 != zone2 || hordeEnemy == null)
-			{
-				long enemy = actorApi.FindEnemy(0, gameApi.SecondCastle ? 100 : 30);
-				if (enemy > 0)
-				{
-					hordeEnemy = new Actor(actorApi.GetActor(enemy));
-				}
-				else
-				{
-					hordeEnemy = null;
-				}
-				hordeZone = zone;
-				hordeZone2 = zone2;
-			}
-			else if (hordeEnemy is not null)
-			{
-				Random rnd = new Random();
-				hordeEnemy.Xpos = (ushort) rnd.Next(10, 245);
-				hordeEnemy.Ypos = (ushort) rnd.Next(10, 245);
-				actorApi.SpawnActor(hordeEnemy);
-			}
-		}
-
-		private void EnduranceSpawn(Object sender, EventArgs e)
-		{
-			if (!gameApi.InAlucardMode() || !gameApi.CanMenu() || alucardApi.CurrentHp < 5)
-			{
-				return;
-			}
-
-			Actor? boss = null;
-
-			long enemy = actorApi.FindEnemy(gameApi.SecondCastle ? 886 : 199, 2000);
-			if (enemy > 0)
-			{
-				boss = new Actor(actorApi.GetActor(enemy));
-				Random rnd = new Random();
-				boss.Xpos = (ushort) rnd.Next(70, 170);
-				actorApi.SpawnActor(boss);
-				//stop timer
-			}
-			else
-			{
-				return;
-			}
-		}
-
-		private void OnBotFileChanged(object sender, FileSystemEventArgs e)
-		{
-			string lastLine = FileExtensions.GetLastLine(toolConfig.Khaos.BotActionsFilePath);
-			EnqueueAction(lastLine);
-		}
-
-		private void SpawnPoisonHitbox()
-		{
-			Actor poison = new Actor();
-			poison.HitboxHeight = 255;
-			poison.HitboxWidth = 255;
-			poison.AutoToggle = 1;
-			poison.Damage = 10;
-			poison.DamageTypeA = (uint) Actors.Poison;
-			actorApi.SpawnActor(poison);
-		}
-
-		private void SpawnCurseHitbox()
-		{
-			Actor poison = new Actor();
-			poison.HitboxHeight = 255;
-			poison.HitboxWidth = 255;
-			poison.AutoToggle = 1;
-			poison.Damage = 10;
-			poison.DamageTypeB = (uint) Actors.Curse;
-			actorApi.SpawnActor(poison);
-		}
-
-		private void SpawnStoneHitbox()
-		{
-			Actor poison = new Actor();
-			poison.HitboxHeight = 255;
-			poison.HitboxWidth = 255;
-			poison.AutoToggle = 1;
-			poison.Damage = 10;
-			poison.DamageTypeA = (uint) Actors.Stone;
-			poison.DamageTypeB = (uint) Actors.Stone;
-			actorApi.SpawnActor(poison);
-		}
-
-		private void CrippleToggle(bool on)
-		{
-			float factor = on == true ? CrippleFactor : 1;
-
-			alucardApi.WingsmashHorizontalSpeed = (uint) (DefaultSpeeds.WingsmashHorizontal * factor);
-			alucardApi.WalkingWholeSpeed = (uint) (DefaultSpeeds.WalkingWhole * factor);
-			alucardApi.WalkingFractSpeed = (uint) (DefaultSpeeds.WalkingFract * factor);
-			alucardApi.JumpingHorizontalWholeSpeed = (uint) (DefaultSpeeds.WalkingWhole * factor);
-			alucardApi.JumpingHorizontalFractSpeed = (uint) (DefaultSpeeds.WalkingFract * factor);
-			alucardApi.FallingHorizontalWholeSpeed = (uint) (DefaultSpeeds.WalkingWhole * factor);
-			alucardApi.FallingHorizontalFractSpeed = (uint) (DefaultSpeeds.WalkingFract * factor);
-			alucardApi.WolfDashTopRightSpeed = (sbyte) ((sbyte) DefaultSpeeds.WolfDashTopRight - 1);
-			alucardApi.WolfDashTopLeftSpeed = (sbyte) ((sbyte) DefaultSpeeds.WolfDashTopLeft - 1);
-			uint adjustedBackdashDecel = on == true ? DefaultSpeeds.BackdashDecelSlow : DefaultSpeeds.BackdashDecel;
-			alucardApi.BackdashDecel = adjustedBackdashDecel;
-		}
-
-		private void BankruptActivate()
-		{
-			bool hasHolyGlasses = alucardApi.HasItemInInventory("Holy glasses");
-			bool hasSpikeBreaker = alucardApi.HasItemInInventory("Spike Breaker");
-			bool hasGoldRing = alucardApi.HasItemInInventory("Gold Ring");
-			bool hasSilverRing = alucardApi.HasItemInInventory("Silver Ring");
-			bool equippedHolyGlasses = Equipment.Items[(int) (alucardApi.Helm + Equipment.HandCount + 1)] == "Holy glasses";
-			bool equippedSpikeBreaker = Equipment.Items[(int) (alucardApi.Armor + Equipment.HandCount + 1)] == "Spike Breaker";
-			bool equippedGoldRing = Equipment.Items[(int) (alucardApi.Accessory1 + Equipment.HandCount + 1)] == "Gold Ring" || Equipment.Items[(int) (alucardApi.Accessory2 + Equipment.HandCount)] == "Gold Ring";
-			bool equippedSilverRing = Equipment.Items[(int) (alucardApi.Accessory1 + Equipment.HandCount + 1)] == "Silver Ring" || Equipment.Items[(int) (alucardApi.Accessory2 + Equipment.HandCount)] == "Silver Ring";
-
-
-			alucardApi.Gold = 0;
-			alucardApi.ClearInventory();
-			alucardApi.RightHand = 0;
-			alucardApi.LeftHand = 0;
-			alucardApi.Helm = Equipment.HelmStart;
-			alucardApi.Armor = 0;
-			alucardApi.Cloak = Equipment.CloakStart;
-			alucardApi.Accessory1 = Equipment.AccessoryStart;
-			alucardApi.Accessory2 = Equipment.AccessoryStart;
-
-			if (equippedHolyGlasses || hasHolyGlasses)
-			{
-				alucardApi.GrantItemByName("Holy glasses");
-			}
-			if (equippedSpikeBreaker || hasSpikeBreaker)
-			{
-				alucardApi.GrantItemByName("Spike Breaker");
-			}
-			if (equippedGoldRing || hasGoldRing)
-			{
-				alucardApi.GrantItemByName("Gold Ring");
-			}
-			if (equippedSilverRing || hasSilverRing)
-			{
-				alucardApi.GrantItemByName("Silver Ring");
-			}
-		}
-
+		#region Khaotic events
 		private void RandomizeGold()
 		{
 			Random rnd = new Random();
@@ -982,7 +748,6 @@ namespace SotnRandoTools.Khaos
 			}
 			alucardApi.Gold = gold;
 		}
-
 		private void RandomizeStatsActivate()
 		{
 			Random rnd = new Random();
@@ -1055,7 +820,6 @@ namespace SotnRandoTools.Khaos
 			alucardApi.MaxtHp = pointsHp;
 			alucardApi.MaxtMp = pointsMp;
 		}
-
 		private void RandomizeInventory()
 		{
 			bool hasHolyGlasses = alucardApi.HasItemInInventory("Holy glasses");
@@ -1066,7 +830,7 @@ namespace SotnRandoTools.Khaos
 			alucardApi.ClearInventory();
 			Random rnd = new Random();
 
-			int itemCount = rnd.Next(PandoraMinItems, PandoraMaxItems + 1);
+			int itemCount = rnd.Next(toolConfig.Khaos.PandoraMinItems, toolConfig.Khaos.PandoraMaxItems + 1);
 
 			for (int i = 0; i < itemCount; i++)
 			{
@@ -1091,14 +855,12 @@ namespace SotnRandoTools.Khaos
 				alucardApi.GrantItemByName("Silver Ring");
 			}
 		}
-
 		private void RandomizeSubweapon()
 		{
 			Random rnd = new Random();
 			var subweapons = Enum.GetValues(typeof(Subweapon));
 			alucardApi.Subweapon = (Subweapon) subweapons.GetValue(rnd.Next(subweapons.Length));
 		}
-
 		private void RandomizeRelicsActivate()
 		{
 			Random rnd = new Random();
@@ -1115,7 +877,6 @@ namespace SotnRandoTools.Khaos
 				}
 			}
 		}
-
 		private void RandomizeEquipmentSlots()
 		{
 			bool equippedHolyGlasses = Equipment.Items[(int) (alucardApi.Helm + Equipment.HandCount + 1)] == "Holy glasses";
@@ -1150,12 +911,244 @@ namespace SotnRandoTools.Khaos
 				alucardApi.GrantItemByName("Silver Ring");
 			}
 		}
+		#endregion
+		#region Debuff events
+		private void BloodManaUpdate(Object sender, EventArgs e)
+		{
+			if (spentMana > 1)
+			{
+				alucardApi.CurrentMp += (uint) spentMana;
+				alucardApi.CurrentHp -= (uint) spentMana;
+			}
+		}
+		private void BloodManaOff(Object sender, EventArgs e)
+		{
+			bloodManaActive = false;
+			bloodManaTimer.Stop();
+			bloodManaTickTimer.Stop();
+		}
+		private void ThirstDrain(Object sender, EventArgs e)
+		{
+			if (alucardApi.CurrentHp > 1)
+			{
+				alucardApi.CurrentHp -= toolConfig.Khaos.ThirstDrainPerSecond;
+			}
+		}
+		private void ThirstOff(Object sender, EventArgs e)
+		{
+			thirstTimer.Stop();
+			thirstTickTimer.Stop();
+		}
+		private void HordeOff(Object sender, EventArgs e)
+		{
+			hordeTimer.Stop();
+			hordeSpawnTimer.Stop();
+		}
+		private void HordeSpawn(Object sender, EventArgs e)
+		{
+			if (!gameApi.InAlucardMode() || !gameApi.CanMenu() || alucardApi.CurrentHp < 5)
+			{
+				return;
+			}
 
+			uint zone = gameApi.Zone;
+			uint zone2 = gameApi.Zone2;
+
+			if (hordeZone != zone || hordeZone2 != zone2 || hordeEnemy == null)
+			{
+				long enemy = actorApi.FindEnemy(0, gameApi.SecondCastle ? 100 : 30);
+				if (enemy > 0)
+				{
+					hordeEnemy = new Actor(actorApi.GetActor(enemy));
+				}
+				else
+				{
+					hordeEnemy = null;
+				}
+				hordeZone = zone;
+				hordeZone2 = zone2;
+			}
+			else if (hordeEnemy is not null)
+			{
+				Random rnd = new Random();
+				hordeEnemy.Xpos = (ushort) rnd.Next(10, 245);
+				hordeEnemy.Ypos = (ushort) rnd.Next(10, 245);
+				actorApi.SpawnActor(hordeEnemy);
+			}
+		}
+		private void HonestGamerOff(Object sender, EventArgs e)
+		{
+			Cheat manaCheat = cheats.GetCheatByName("Mana");
+			manaCheat.Disable();
+			honestGamerTimer.Stop();
+		}
+		private void SubweaponsOnlyOff(object sender, EventArgs e)
+		{
+			Cheat curse = cheats.GetCheatByName("CurseTimer");
+			curse.Disable();
+			Cheat manaCheat = cheats.GetCheatByName("Mana");
+			manaCheat.Disable();
+			subweaponsOnlyTimer.Stop();
+		}
+		private void CrippleOff(Object sender, EventArgs e)
+		{
+			SetSpeed();
+			crippleTimer.Stop();
+		}
+		private void EnduranceSpawn(Object sender, EventArgs e)
+		{
+			if (!gameApi.InAlucardMode() || !gameApi.CanMenu() || alucardApi.CurrentHp < 5)
+			{
+				return;
+			}
+
+			Actor? boss = null;
+
+			long enemy = actorApi.FindEnemy(gameApi.SecondCastle ? 886 : 199, 2000);
+			if (enemy > 0)
+			{
+				boss = new Actor(actorApi.GetActor(enemy));
+				Random rnd = new Random();
+				boss.Xpos = (ushort) rnd.Next(70, 170);
+				actorApi.SpawnActor(boss);
+				//stop timer
+			}
+			else
+			{
+				return;
+			}
+		}
+		private void SpawnPoisonHitbox()
+		{
+			Actor poison = new Actor();
+			poison.HitboxHeight = 255;
+			poison.HitboxWidth = 255;
+			poison.AutoToggle = 1;
+			poison.Damage = 10;
+			poison.DamageTypeA = (uint) Actors.Poison;
+			actorApi.SpawnActor(poison);
+		}
+		private void SpawnCurseHitbox()
+		{
+			Actor poison = new Actor();
+			poison.HitboxHeight = 255;
+			poison.HitboxWidth = 255;
+			poison.AutoToggle = 1;
+			poison.Damage = 10;
+			poison.DamageTypeB = (uint) Actors.Curse;
+			actorApi.SpawnActor(poison);
+		}
+		private void SpawnStoneHitbox()
+		{
+			Actor poison = new Actor();
+			poison.HitboxHeight = 255;
+			poison.HitboxWidth = 255;
+			poison.AutoToggle = 1;
+			poison.Damage = 10;
+			poison.DamageTypeA = (uint) Actors.Stone;
+			poison.DamageTypeB = (uint) Actors.Stone;
+			actorApi.SpawnActor(poison);
+		}
+		private void BankruptActivate()
+		{
+			bool hasHolyGlasses = alucardApi.HasItemInInventory("Holy glasses");
+			bool hasSpikeBreaker = alucardApi.HasItemInInventory("Spike Breaker");
+			bool hasGoldRing = alucardApi.HasItemInInventory("Gold Ring");
+			bool hasSilverRing = alucardApi.HasItemInInventory("Silver Ring");
+			bool equippedHolyGlasses = Equipment.Items[(int) (alucardApi.Helm + Equipment.HandCount + 1)] == "Holy glasses";
+			bool equippedSpikeBreaker = Equipment.Items[(int) (alucardApi.Armor + Equipment.HandCount + 1)] == "Spike Breaker";
+			bool equippedGoldRing = Equipment.Items[(int) (alucardApi.Accessory1 + Equipment.HandCount + 1)] == "Gold Ring" || Equipment.Items[(int) (alucardApi.Accessory2 + Equipment.HandCount)] == "Gold Ring";
+			bool equippedSilverRing = Equipment.Items[(int) (alucardApi.Accessory1 + Equipment.HandCount + 1)] == "Silver Ring" || Equipment.Items[(int) (alucardApi.Accessory2 + Equipment.HandCount)] == "Silver Ring";
+
+
+			alucardApi.Gold = 0;
+			alucardApi.ClearInventory();
+			alucardApi.RightHand = 0;
+			alucardApi.LeftHand = 0;
+			alucardApi.Helm = Equipment.HelmStart;
+			alucardApi.Armor = 0;
+			alucardApi.Cloak = Equipment.CloakStart;
+			alucardApi.Accessory1 = Equipment.AccessoryStart;
+			alucardApi.Accessory2 = Equipment.AccessoryStart;
+
+			if (equippedHolyGlasses || hasHolyGlasses)
+			{
+				alucardApi.GrantItemByName("Holy glasses");
+			}
+			if (equippedSpikeBreaker || hasSpikeBreaker)
+			{
+				alucardApi.GrantItemByName("Spike Breaker");
+			}
+			if (equippedGoldRing || hasGoldRing)
+			{
+				alucardApi.GrantItemByName("Gold Ring");
+			}
+			if (equippedSilverRing || hasSilverRing)
+			{
+				alucardApi.GrantItemByName("Silver Ring");
+			}
+		}
+		#endregion
+		#region Buff events
+		private void MagicianOff(Object sender, EventArgs e)
+		{
+			//int potion
+			Cheat manaCheat = cheats.GetCheatByName("Mana");
+			manaCheat.Disable();
+			magicianTimer.Stop();
+		}
+		private void MeltyBloodOff(Object sender, EventArgs e)
+		{
+			Cheat width = cheats.GetCheatByName("AlucardAttackHitboxWidth");
+			Cheat height = cheats.GetCheatByName("AlucardAttackHitboxHeight");
+			width.Disable();
+			height.Disable();
+			meltyTimer.Stop();
+		}
+		private void ZawarudoOff(Object sender, EventArgs e)
+		{
+			Cheat stopwatchTimer = cheats.GetCheatByName("SubweaponTimer");
+			stopwatchTimer.Disable();
+			zawarudoTimer.Stop();
+		}
+		private void HasteOff(Object sender, EventArgs e)
+		{
+			SetSpeed();
+			hasteTimer.Stop();
+		}
+		#endregion
+
+		private void SetSpeed(float factor = 1)
+		{
+			bool slow = factor < 1;
+			bool fast = factor > 1;
+			alucardApi.WingsmashHorizontalSpeed = (uint) (DefaultSpeeds.WingsmashHorizontal * factor);
+			alucardApi.WalkingWholeSpeed = fast == true ? (uint) (DefaultSpeeds.WalkingWhole * (factor * 2)) : (uint) (DefaultSpeeds.WalkingWhole * factor);
+			alucardApi.WalkingFractSpeed = (uint) (DefaultSpeeds.WalkingFract * factor);
+			alucardApi.JumpingHorizontalWholeSpeed = fast == true ? (uint) (DefaultSpeeds.WalkingWhole * (factor * 2)) : (uint) (DefaultSpeeds.WalkingWhole * factor);
+			alucardApi.JumpingHorizontalFractSpeed = (uint) (DefaultSpeeds.WalkingFract * factor);
+			alucardApi.FallingHorizontalWholeSpeed = fast == true ? (uint) (DefaultSpeeds.WalkingWhole * (factor * 2)) : (uint) (DefaultSpeeds.WalkingWhole * factor);
+			alucardApi.FallingHorizontalFractSpeed = (uint) (DefaultSpeeds.WalkingFract * factor);
+			alucardApi.WolfDashTopRightSpeed = (sbyte) Math.Floor(DefaultSpeeds.WolfDashTopRight * factor);
+			alucardApi.WolfDashTopLeftSpeed = (sbyte) Math.Ceiling(DefaultSpeeds.WolfDashTopLeft * factor);
+			alucardApi.BackdashDecel = slow == true ? DefaultSpeeds.BackdashDecelSlow : DefaultSpeeds.BackdashDecel;
+		}
 		private void CheckManaUsage()
 		{
 			uint currentMana = alucardApi.CurrentMp;
 			spentMana = (int) storedMana - (int) currentMana;
 			storedMana = currentMana;
+		}
+		private void CheckExperience()
+		{
+			uint currentExperiecne = alucardApi.Experiecne;
+			//gainedExperiecne = (int) currentExperiecne - (int) storedExperiecne;
+			//storedExperiecne = currentExperiecne;
+		}
+		private void OnBotFileChanged(object sender, FileSystemEventArgs e)
+		{
+			string lastLine = FileExtensions.GetLastLine(toolConfig.Khaos.BotActionsFilePath);
+			EnqueueAction(lastLine);
 		}
 	}
 }

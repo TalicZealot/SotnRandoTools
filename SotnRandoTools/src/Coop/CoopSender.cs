@@ -184,7 +184,7 @@ namespace SotnRandoTools.Coop
 				{
 					if (watchlistService.CoopLocationWatches[i].Value > 0)
 					{
-						coopMessanger.SendData(MessageType.Location, BitConverter.GetBytes((ushort) i));
+						coopMessanger.SendData(MessageType.Location, new byte[] { (byte) i, (byte) watchlistService.CoopLocationWatches[i].Value });
 						Console.WriteLine($"Sending Location: {watchlistService.CoopLocationWatches[i].Notes}");
 					}
 				}

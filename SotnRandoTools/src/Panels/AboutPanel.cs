@@ -1,6 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Drawing;
 using System.Windows.Forms;
+using SotnRandoTools.Constants;
 using SotnRandoTools.Utils;
 
 namespace SotnRandoTools
@@ -25,11 +28,17 @@ namespace SotnRandoTools
 			if (await WebRequests.NewReleaseAvaiable(currentVersion))
 			{
 				updateButton.Visible = true;
+				this.versionLabel.Text += " ❌";
+				this.upToDateToolTip.SetToolTip(versionLabel, "New version available!");
+				this.upToDateToolTip.ToolTipIcon = ToolTipIcon.Warning;
+				this.versionLabel.ForeColor = Color.PaleVioletRed;
 			}
 			else
 			{
 				this.versionLabel.Text += " ✔️";
 				this.upToDateToolTip.SetToolTip(versionLabel, "Up to date!");
+				this.upToDateToolTip.ToolTipIcon = ToolTipIcon.None;
+				this.versionLabel.ForeColor = Color.SpringGreen;
 			}
 		}
 
@@ -37,6 +46,42 @@ namespace SotnRandoTools
 		{
 			if (this.UpdateButton_Click != null)
 				this.UpdateButton_Click(this, e);
+		}
+
+		private void sotnApiLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		{
+			sotnApiLink.LinkVisited = true;
+			Process.Start(Paths.ApiLink);
+		}
+
+		private void updaterLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		{
+			updaterLink.LinkVisited = true;
+			Process.Start(Paths.UpdaterLink);
+		}
+
+		private void randoLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		{
+			randoLink.LinkVisited = true;
+			Process.Start(Paths.RandoSourceLink);
+		}
+
+		private void readmeLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		{
+			readmeLink.LinkVisited = true;
+			Process.Start(Paths.ReadmeLink);
+		}
+
+		private void sourceLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		{
+			sourceLink.LinkVisited = true;
+			Process.Start(Paths.SourceLink);
+		}
+
+		private void donateLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		{
+			donateLink.LinkVisited = true;
+			Process.Start(Paths.DonateLink);
 		}
 	}
 }

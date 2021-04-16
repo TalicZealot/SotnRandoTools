@@ -17,6 +17,7 @@ namespace SotnRandoTools
 		private readonly IGameApi gameApi;
 		private readonly IAlucardApi alucardApi;
 		private readonly IActorApi actorApi;
+		private bool started = false;
 
 		public KhaosForm(IToolConfig toolConfig, CheatCollection cheats, IGameApi gameApi, IAlucardApi alucardApi, IActorApi actorApi, INotificationService notificationService)
 		{
@@ -65,7 +66,34 @@ namespace SotnRandoTools
 				toolConfig.Khaos.Location = this.Location;
 			}
 		}
+		private void queueRadio_CheckedChanged(object sender, EventArgs e)
+		{
+			if (queueRadio.Checked)
+			{
+				toolConfig.Khaos.ControlPannelQueueActions = true;
+			}
+			else
+			{
+				toolConfig.Khaos.ControlPannelQueueActions = false;
+			}
+		}
+		private void startButton_Click(object sender, EventArgs e)
+		{
+			if (started)
+			{
+				started = false;
+				khaosControler.StopKhaos();
+				startButton.Text = "Start";
+			}
+			else
+			{
+				started = true;
+				khaosControler.StartKhaos();
+				startButton.Text = "Stop";
+			}
+		}
 
+		#region Khaotic effects
 		private void randomStatusButton_Click(object sender, EventArgs e)
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
@@ -77,7 +105,6 @@ namespace SotnRandoTools
 				khaosControler.InflictRandomStatus();
 			}
 		}
-
 		private void randomEquipmentButton_Click(object sender, EventArgs e)
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
@@ -90,7 +117,6 @@ namespace SotnRandoTools
 				khaosControler.RandomizeEquipment();
 			}
 		}
-
 		private void randomizeStatsButton_Click(object sender, EventArgs e)
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
@@ -103,7 +129,6 @@ namespace SotnRandoTools
 				khaosControler.RandomizeStats();
 			}
 		}
-
 		private void randomizeRelicsButton_Click(object sender, EventArgs e)
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
@@ -116,7 +141,6 @@ namespace SotnRandoTools
 				khaosControler.RandomizeRelics();
 			}
 		}
-
 		private void pandorasBoxButton_Click(object sender, EventArgs e)
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
@@ -129,7 +153,6 @@ namespace SotnRandoTools
 				khaosControler.PandorasBox();
 			}
 		}
-
 		private void bankruptButton_Click(object sender, EventArgs e)
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
@@ -141,44 +164,6 @@ namespace SotnRandoTools
 				khaosControler.Bankrupt();
 			}
 		}
-
-		private void weakenButton_Click(object sender, EventArgs e)
-		{
-			if (toolConfig.Khaos.ControlPannelQueueActions)
-			{
-				khaosControler.EnqueueAction("weaken Khaos");
-			}
-			else
-			{
-				khaosControler.Weaken();
-			}
-		}
-
-		private void respawnBossesButton_Click(object sender, EventArgs e)
-		{
-			if (toolConfig.Khaos.ControlPannelQueueActions)
-			{
-				khaosControler.EnqueueAction("respawnbosses Khaos");
-			}
-			else
-			{
-				khaosControler.RespawnBosses();
-			}
-		}
-
-		private void vampireButton_Click(object sender, EventArgs e)
-		{
-			if (toolConfig.Khaos.ControlPannelQueueActions)
-			{
-				khaosControler.EnqueueAction("vampire Khaos");
-			}
-			else
-			{
-
-				khaosControler.Vampire();
-			}
-		}
-
 		private void gambleButton_Click(object sender, EventArgs e)
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
@@ -191,7 +176,30 @@ namespace SotnRandoTools
 				khaosControler.Gamble();
 			}
 		}
-
+		#endregion
+		#region Debuffs
+		private void weakenButton_Click(object sender, EventArgs e)
+		{
+			if (toolConfig.Khaos.ControlPannelQueueActions)
+			{
+				khaosControler.EnqueueAction("weaken Khaos");
+			}
+			else
+			{
+				khaosControler.Weaken();
+			}
+		}
+		private void respawnBossesButton_Click(object sender, EventArgs e)
+		{
+			if (toolConfig.Khaos.ControlPannelQueueActions)
+			{
+				khaosControler.EnqueueAction("respawnbosses Khaos");
+			}
+			else
+			{
+				khaosControler.RespawnBosses();
+			}
+		}
 		private void honestButton_Click(object sender, EventArgs e)
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
@@ -204,7 +212,6 @@ namespace SotnRandoTools
 				khaosControler.HonestGamer();
 			}
 		}
-
 		private void subsonlyButton_Click(object sender, EventArgs e)
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
@@ -217,84 +224,39 @@ namespace SotnRandoTools
 				khaosControler.SubweaponsOnly();
 			}
 		}
-
-		private void lightHelpButton_Click(object sender, EventArgs e)
+		private void bloodManaButton_Click(object sender, EventArgs e)
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
 			{
-				khaosControler.EnqueueAction("lighthelp Khaos");
+				khaosControler.EnqueueAction("bloodmana Khaos");
 			}
 			else
 			{
-				khaosControler.RandomLightHelp();
+				khaosControler.BloodMana();
 			}
 		}
-
-		private void mediumHelpButton_Click(object sender, EventArgs e)
+		private void thurstButton_Click(object sender, EventArgs e)
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
 			{
-				khaosControler.EnqueueAction("mediumhelp Khaos");
+				khaosControler.EnqueueAction("thirst Khaos");
 			}
 			else
 			{
-
-				khaosControler.RandomMediumHelp();
+				khaosControler.Thirst();
 			}
 		}
-
-		private void heavyHelpButton_Click(object sender, EventArgs e)
+		private void hordeButton_Click(object sender, EventArgs e)
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
 			{
-				khaosControler.EnqueueAction("heavyhelp Khaos");
+				khaosControler.EnqueueAction("horde Khaos");
 			}
 			else
 			{
-
-				khaosControler.RandomHeavytHelp();
+				khaosControler.Horde();
 			}
 		}
-
-		private void battleOrdersButton_Click(object sender, EventArgs e)
-		{
-			if (toolConfig.Khaos.ControlPannelQueueActions)
-			{
-				khaosControler.EnqueueAction("battleorders Khaos");
-			}
-			else
-			{
-
-				khaosControler.BattleOrders();
-			}
-		}
-
-		private void magicianButton_Click(object sender, EventArgs e)
-		{
-			if (toolConfig.Khaos.ControlPannelQueueActions)
-			{
-				khaosControler.EnqueueAction("magician Khaos");
-			}
-			else
-			{
-
-				khaosControler.Magician();
-			}
-		}
-
-		private void meltyButton_Click(object sender, EventArgs e)
-		{
-			if (toolConfig.Khaos.ControlPannelQueueActions)
-			{
-				khaosControler.EnqueueAction("melty Khaos");
-			}
-			else
-			{
-
-				khaosControler.MeltyBlood();
-			}
-		}
-
 		private void crippleButton_Click(object sender, EventArgs e)
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
@@ -307,19 +269,91 @@ namespace SotnRandoTools
 				khaosControler.Cripple();
 			}
 		}
-
-		private void bloodManaButton_Click(object sender, EventArgs e)
+		#endregion
+		#region Buffs
+		private void lightHelpButton_Click(object sender, EventArgs e)
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
 			{
-				khaosControler.EnqueueAction("bloodmana Khaos");
+				khaosControler.EnqueueAction("lighthelp Khaos");
 			}
 			else
 			{
-				khaosControler.BloodMana();
+				khaosControler.RandomLightHelp();
 			}
 		}
+		private void mediumHelpButton_Click(object sender, EventArgs e)
+		{
+			if (toolConfig.Khaos.ControlPannelQueueActions)
+			{
+				khaosControler.EnqueueAction("mediumhelp Khaos");
+			}
+			else
+			{
 
+				khaosControler.RandomMediumHelp();
+			}
+		}
+		private void heavyHelpButton_Click(object sender, EventArgs e)
+		{
+			if (toolConfig.Khaos.ControlPannelQueueActions)
+			{
+				khaosControler.EnqueueAction("heavyhelp Khaos");
+			}
+			else
+			{
+
+				khaosControler.RandomHeavytHelp();
+			}
+		}
+		private void battleOrdersButton_Click(object sender, EventArgs e)
+		{
+			if (toolConfig.Khaos.ControlPannelQueueActions)
+			{
+				khaosControler.EnqueueAction("battleorders Khaos");
+			}
+			else
+			{
+
+				khaosControler.BattleOrders();
+			}
+		}
+		private void magicianButton_Click(object sender, EventArgs e)
+		{
+			if (toolConfig.Khaos.ControlPannelQueueActions)
+			{
+				khaosControler.EnqueueAction("magician Khaos");
+			}
+			else
+			{
+
+				khaosControler.Magician();
+			}
+		}
+		private void meltyButton_Click(object sender, EventArgs e)
+		{
+			if (toolConfig.Khaos.ControlPannelQueueActions)
+			{
+				khaosControler.EnqueueAction("melty Khaos");
+			}
+			else
+			{
+
+				khaosControler.MeltyBlood();
+			}
+		}
+		private void vampireButton_Click(object sender, EventArgs e)
+		{
+			if (toolConfig.Khaos.ControlPannelQueueActions)
+			{
+				khaosControler.EnqueueAction("vampire Khaos");
+			}
+			else
+			{
+
+				khaosControler.Vampire();
+			}
+		}
 		private void fourBeastsButton_Click(object sender, EventArgs e)
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
@@ -331,36 +365,6 @@ namespace SotnRandoTools
 				khaosControler.FourBeasts();
 			}
 		}
-
-		private void thurstButton_Click(object sender, EventArgs e)
-		{
-			if (toolConfig.Khaos.ControlPannelQueueActions)
-			{
-				khaosControler.EnqueueAction("thirst Khaos");
-			}
-			else
-			{
-				khaosControler.Thirst();
-			}
-		}
-
-		private void queueRadio_CheckedChanged(object sender, EventArgs e)
-		{
-			if (queueRadio.Checked)
-			{
-				toolConfig.Khaos.ControlPannelQueueActions = true;
-			}
-			else
-			{
-				toolConfig.Khaos.ControlPannelQueueActions = false;
-			}
-		}
-
-		private void startButton_Click(object sender, EventArgs e)
-		{
-			khaosControler.StartKhaos();
-		}
-
 		private void zawarudoButton_Click(object sender, EventArgs e)
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
@@ -372,17 +376,17 @@ namespace SotnRandoTools
 				khaosControler.ZaWarudo();
 			}
 		}
-
-		private void hordeButton_Click(object sender, EventArgs e)
+		private void hasteButton_Click(object sender, EventArgs e)
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
 			{
-				khaosControler.EnqueueAction("horde Khaos");
+				khaosControler.EnqueueAction("haste Khaos");
 			}
 			else
 			{
-				khaosControler.Horde();
+				khaosControler.Haste();
 			}
 		}
+		#endregion
 	}
 }

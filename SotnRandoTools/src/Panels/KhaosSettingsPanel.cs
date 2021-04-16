@@ -24,7 +24,7 @@ namespace SotnRandoTools
 			{
 				botCommandsPath.Text = toolConfig.Khaos.BotActionsFilePath;
 			}
-			volumeTrackBar.Value = toolConfig.Khaos.Volume;
+			//volumeTrackBar.Value = toolConfig.Khaos.Volume;
 		}
 
 		private void saveButton_Click(object sender, EventArgs e)
@@ -40,7 +40,7 @@ namespace SotnRandoTools
 
 		private void volumeTrackBar_Scroll(object sender, EventArgs e)
 		{
-			toolConfig.Khaos.Volume = volumeTrackBar.Value;
+			//toolConfig.Khaos.Volume = volumeTrackBar.Value;
 		}
 
 		private void botCommandsBrowseButton_Click(object sender, EventArgs e)

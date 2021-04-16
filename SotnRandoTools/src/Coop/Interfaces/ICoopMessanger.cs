@@ -4,10 +4,11 @@ namespace SotnRandoTools.Coop.Interfaces
 {
 	public interface ICoopMessanger
 	{
-		bool Connect(string hostIp, int port);
+		void Connect(string hostIp, int port);
 		void Disconnect();
-		bool StartServer(int port);
+		void StartServer(int port);
 		void StopServer();
+		void DisposeAll();
 		void SendData(MessageType type, byte[] data);
 	}
 }
