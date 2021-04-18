@@ -15,21 +15,20 @@ namespace SotnRandoTools.Services
 
 		private readonly IGuiApi guiApi;
 		private readonly IToolConfig toolConfig;
+		private readonly IEmuClientApi clientAPI;
 
 		private System.Timers.Timer messageTimer;
-		private int screenWidth = 0;
-		private int screenHeight = 0;
 		private Image textbox;
 		private WMPLib.WindowsMediaPlayer audioPlayer = new WMPLib.WindowsMediaPlayer();
 
-		public NotificationService(IToolConfig toolConfig, IGuiApi guiApi, int screenWidth, int screenHeight)
+		public NotificationService(IToolConfig toolConfig, IGuiApi guiApi, IEmuClientApi clientAPI)
 		{
 			if (guiApi is null) throw new ArgumentNullException(nameof(guiApi));
 			if (toolConfig is null) throw new ArgumentNullException(nameof(toolConfig));
+			if (clientAPI is null) throw new ArgumentNullException(nameof(clientAPI));
 			this.guiApi = guiApi;
 			this.toolConfig = toolConfig;
-			this.screenWidth = screenWidth;
-			this.screenHeight = screenHeight;
+			this.clientAPI = clientAPI;
 
 			messageTimer = new System.Timers.Timer();
 			messageTimer.Interval = NotificationTime;
@@ -49,6 +48,8 @@ namespace SotnRandoTools.Services
 
 		public void DisplayMessage(string message)
 		{
+			int screenWidth = clientAPI.ScreenWidth();
+			int screenHeight = clientAPI.ScreenHeight();
 			int fontSize = 22;
 			while (TextRenderer.MeasureText(message, new Font("Arial", fontSize)).Width > 428)
 			{

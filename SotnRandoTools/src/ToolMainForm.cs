@@ -126,7 +126,7 @@ namespace SotnRandoTools
 			gameApi = new GameApi(_maybeMemAPI);
 			renderingApi = new RenderingApi(_maybeMemAPI);
 			watchlistService = new WatchlistService(_memoryDomains, _emu?.SystemId, GlobalConfig);
-			notificationService = new NotificationService(toolConfig, _maybeGuiAPI, _maybeClientAPI.ScreenWidth() , _maybeClientAPI.ScreenHeight());
+			notificationService = new NotificationService(toolConfig, _maybeGuiAPI, _maybeClientAPI);
 		}
 
 		public override bool AskSaveChanges() => true;

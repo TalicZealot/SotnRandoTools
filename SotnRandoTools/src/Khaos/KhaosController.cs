@@ -147,8 +147,8 @@ namespace SotnRandoTools.Khaos
 		{
 		};
 
-		private Queue<MethodInvoker> queuedActions = new Queue<MethodInvoker>();
-		private Queue<MethodInvoker> queuedFastActions = new Queue<MethodInvoker>();
+		private Queue<MethodInvoker> queuedActions = new();
+		private Queue<MethodInvoker> queuedFastActions = new();
 		private Timer actionTimer = new Timer();
 		private Timer fastActionTimer = new Timer();
 
@@ -169,6 +169,7 @@ namespace SotnRandoTools.Khaos
 		private uint hordeZone = 0;
 		private uint hordeZone2 = 0;
 		private Actor? hordeEnemy = null;
+		private List<Actor> bannedEnemies = new();
 		private uint storedMana = 0;
 		private int spentMana = 0;
 		private bool bloodManaActive = false;
@@ -218,6 +219,7 @@ namespace SotnRandoTools.Khaos
 			gameApi.OverwriteString(Strings.FleaMan, "Kappa");
 			gameApi.OverwriteString(Strings.Shaft, "Talic");
 			gameApi.OverwriteString(Strings.Dracula, "3snoW");
+			notificationService.DisplayMessage($"Khaos started");
 		}
 
 		public void StopKhaos()
@@ -230,6 +232,7 @@ namespace SotnRandoTools.Khaos
 			fastActionTimer.Stop();
 			Cheat faerieScroll = cheats.GetCheatByName("FaerieScroll");
 			faerieScroll.Disable();
+			notificationService.DisplayMessage($"Khaos stopped");
 		}
 
 		public void OverwriteBossNames(string[] subscribers)
@@ -274,7 +277,6 @@ namespace SotnRandoTools.Khaos
 		public void RandomizeEquipment(string user = "Khaos")
 		{
 			RandomizeEquipmentSlots();
-
 			notificationService.DisplayMessage($"{user} used Khaos Equipment");
 			notificationService.PlayAlert(Paths.AlertAlucardWhat);
 		}
@@ -573,7 +575,6 @@ namespace SotnRandoTools.Khaos
 				CheckManaUsage();
 			}
 		}
-
 		public void EnqueueAction(string command)
 		{
 			if (command is null) throw new ArgumentNullException(nameof(command));
@@ -597,46 +598,46 @@ namespace SotnRandoTools.Khaos
 					queuedFastActions.Enqueue(new MethodInvoker(() => InflictRandomStatus(user)));
 					break;
 				case "kequipment":
-					queuedFastActions.Enqueue(new MethodInvoker(() => RandomizeEquipment(user)));
+					queuedActions.Enqueue(new MethodInvoker(() => RandomizeEquipment(user)));
 					break;
 				case "kstats":
-					queuedFastActions.Enqueue(new MethodInvoker(() => RandomizeStats(user)));
+					queuedActions.Enqueue(new MethodInvoker(() => RandomizeStats(user)));
 					break;
 				case "krelics":
-					queuedFastActions.Enqueue(new MethodInvoker(() => RandomizeRelics(user)));
+					queuedActions.Enqueue(new MethodInvoker(() => RandomizeRelics(user)));
 					break;
 				case "pandora":
-					queuedFastActions.Enqueue(new MethodInvoker(() => PandorasBox(user)));
+					queuedActions.Enqueue(new MethodInvoker(() => PandorasBox(user)));
 					break;
 				case "gamble":
-					queuedFastActions.Enqueue(new MethodInvoker(() => Gamble(user)));
+					queuedActions.Enqueue(new MethodInvoker(() => Gamble(user)));
 					break;
 				case "bankrupt":
-					queuedFastActions.Enqueue(new MethodInvoker(() => Bankrupt(user)));
+					queuedActions.Enqueue(new MethodInvoker(() => Bankrupt(user)));
 					break;
 				case "weaken":
-					queuedFastActions.Enqueue(new MethodInvoker(() => Weaken(user)));
+					queuedActions.Enqueue(new MethodInvoker(() => Weaken(user)));
 					break;
 				case "respawnbosses":
-					queuedFastActions.Enqueue(new MethodInvoker(() => RespawnBosses(user)));
+					queuedActions.Enqueue(new MethodInvoker(() => RespawnBosses(user)));
 					break;
 				case "honest":
-					queuedFastActions.Enqueue(new MethodInvoker(() => HonestGamer(user)));
+					queuedActions.Enqueue(new MethodInvoker(() => HonestGamer(user)));
 					break;
 				case "subsonly":
-					queuedFastActions.Enqueue(new MethodInvoker(() => SubweaponsOnly(user)));
+					queuedActions.Enqueue(new MethodInvoker(() => SubweaponsOnly(user)));
 					break;
 				case "cripple":
-					queuedFastActions.Enqueue(new MethodInvoker(() => Cripple(user)));
+					queuedActions.Enqueue(new MethodInvoker(() => Cripple(user)));
 					break;
 				case "bloodmana":
-					queuedFastActions.Enqueue(new MethodInvoker(() => BloodMana(user)));
+					queuedActions.Enqueue(new MethodInvoker(() => BloodMana(user)));
 					break;
 				case "thirst":
-					queuedFastActions.Enqueue(new MethodInvoker(() => Thirst(user)));
+					queuedActions.Enqueue(new MethodInvoker(() => Thirst(user)));
 					break;
 				case "horde":
-					queuedFastActions.Enqueue(new MethodInvoker(() => Horde(user)));
+					queuedActions.Enqueue(new MethodInvoker(() => Horde(user)));
 					break;
 				case "vampire":
 					queuedFastActions.Enqueue(new MethodInvoker(() => Vampire(user)));
@@ -651,34 +652,33 @@ namespace SotnRandoTools.Khaos
 					queuedFastActions.Enqueue(new MethodInvoker(() => RandomHeavytHelp(user)));
 					break;
 				case "battleorders":
-					queuedFastActions.Enqueue(new MethodInvoker(() => BattleOrders(user)));
+					queuedActions.Enqueue(new MethodInvoker(() => BattleOrders(user)));
 					break;
 				case "magician":
-					queuedFastActions.Enqueue(new MethodInvoker(() => Magician(user)));
+					queuedActions.Enqueue(new MethodInvoker(() => Magician(user)));
 					break;
 				case "melty":
-					queuedFastActions.Enqueue(new MethodInvoker(() => MeltyBlood(user)));
+					queuedActions.Enqueue(new MethodInvoker(() => MeltyBlood(user)));
 					break;
 				case "fourbeasts":
-					queuedFastActions.Enqueue(new MethodInvoker(() => FourBeasts(user)));
+					queuedActions.Enqueue(new MethodInvoker(() => FourBeasts(user)));
 					break;
 				case "zawarudo":
-					queuedFastActions.Enqueue(new MethodInvoker(() => ZaWarudo(user)));
+					queuedActions.Enqueue(new MethodInvoker(() => ZaWarudo(user)));
 					break;
 				case "haste":
-					queuedFastActions.Enqueue(new MethodInvoker(() => Haste(user)));
+					queuedActions.Enqueue(new MethodInvoker(() => Haste(user)));
 					break;
 				default:
 					break;
 			}
 		}
-
 		private void InitializeTimers()
 		{
 			fastActionTimer.Tick += ExecuteFastAction;
 			fastActionTimer.Interval = 2 * (1 * 1000);
 			actionTimer.Tick += ExecuteAction;
-			actionTimer.Interval = 1 * (60 * 1000);
+			actionTimer.Interval = 2 * (1 * 1000);
 
 			honestGamerTimer.Elapsed += HonestGamerOff;
 			honestGamerTimer.Interval = 1 * (60 * 1000);
@@ -709,7 +709,6 @@ namespace SotnRandoTools.Khaos
 			hasteTimer.Elapsed += HasteOff;
 			hasteTimer.Interval = 1 * (60 * 1000);
 		}
-
 		private void ExecuteAction(Object sender, EventArgs e)
 		{
 			if (gameApi.InAlucardMode() && gameApi.CanMenu() && alucardApi.CurrentHp > 5)
@@ -717,10 +716,17 @@ namespace SotnRandoTools.Khaos
 				if (queuedActions.Count > 0)
 				{
 					queuedActions.Dequeue()();
+					if (actionTimer.Interval < 1 * (60 * 1000))
+					{
+						actionTimer.Interval = 1 * (60 * 1000);
+					}
+				}
+				else
+				{
+					actionTimer.Interval = 2 * (1 * 1000);
 				}
 			}
 		}
-
 		private void ExecuteFastAction(Object sender, EventArgs e)
 		{
 			if (gameApi.InAlucardMode() && gameApi.CanMenu() && alucardApi.CurrentHp > 5)
@@ -956,10 +962,22 @@ namespace SotnRandoTools.Khaos
 
 			if (hordeZone != zone || hordeZone2 != zone2 || hordeEnemy == null)
 			{
-				long enemy = actorApi.FindEnemy(0, gameApi.SecondCastle ? 100 : 30);
+				long bannedEnemy = actorApi.FindEnemy(gameApi.SecondCastle ? 101 : 31, 10000);
+				if (bannedEnemy > 0)
+				{
+					bannedEnemies.Add(new Actor(actorApi.GetActor(bannedEnemy)));
+				}
+				long enemy = actorApi.FindEnemy(1, gameApi.SecondCastle ? 100 : 30, new int[] {26, 16, 18, 22});
 				if (enemy > 0)
 				{
 					hordeEnemy = new Actor(actorApi.GetActor(enemy));
+					foreach (Actor bannedEnemyActor in bannedEnemies)
+					{
+						if (hordeEnemy.Damage == bannedEnemyActor.Damage && hordeEnemy.HitboxHeight == bannedEnemyActor.HitboxHeight)
+						{
+							hordeEnemy = null;
+						}
+					}
 				}
 				else
 				{

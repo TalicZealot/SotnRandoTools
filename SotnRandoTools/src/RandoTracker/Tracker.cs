@@ -323,7 +323,7 @@ namespace SotnRandoTools.RandoTracker
 					SetMapLocations();
 					gameReset = false;
 				}
-				if (!LocationsDrawn())
+				if (!LocationsDrawn() && toolConfig.Tracker.Locations)
 				{
 					SetMapLocations();
 				}
@@ -331,6 +331,11 @@ namespace SotnRandoTools.RandoTracker
 			else if (!inGame)
 			{
 				gameReset = true;
+			}
+			else if (gameApi.InPrologue())
+			{
+				//have state bool
+				//reset defaults
 			}
 		}
 

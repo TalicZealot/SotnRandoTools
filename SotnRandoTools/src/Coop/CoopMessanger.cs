@@ -46,6 +46,7 @@ namespace SotnRandoTools.Coop
 			}
 			catch (Exception)
 			{
+				coopViewModel.Message = "Connection timed out!";
 				Console.WriteLine("Connection timed out!");
 				coopViewModel.ClientConnected = false;
 				return;
@@ -61,6 +62,7 @@ namespace SotnRandoTools.Coop
 				manualDisconnect = true;
 				client.Disconnect();
 				coopViewModel.ClientConnected = false;
+				coopViewModel.Message = "Disconnected";
 			}
 		}
 
@@ -103,8 +105,8 @@ namespace SotnRandoTools.Coop
 			if (server is not null && server.IsListening)
 			{
 				coopViewModel.ServerStarted = false;
-				server.DisconnectClient(connectedClientAddress);
 				server.Stop();
+				coopViewModel.Message = "Server stopped";
 			}
 		}
 
