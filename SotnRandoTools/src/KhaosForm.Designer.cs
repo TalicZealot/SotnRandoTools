@@ -60,12 +60,14 @@ namespace SotnRandoTools
             this.randomEquipmentButton = new System.Windows.Forms.Button();
             this.randomStatusButton = new System.Windows.Forms.Button();
             this.startButton = new System.Windows.Forms.Button();
+            this.enduranceButton = new System.Windows.Forms.Button();
             this.controlBox.SuspendLayout();
             this.modePanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // controlBox
             // 
+            this.controlBox.Controls.Add(this.enduranceButton);
             this.controlBox.Controls.Add(this.hasteButton);
             this.controlBox.Controls.Add(this.subsonlyButton);
             this.controlBox.Controls.Add(this.hordeButton);
@@ -528,6 +530,21 @@ namespace SotnRandoTools
             this.startButton.UseVisualStyleBackColor = true;
             this.startButton.Click += new System.EventHandler(this.startButton_Click);
             // 
+            // enduranceButton
+            // 
+            this.enduranceButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
+            this.enduranceButton.FlatAppearance.BorderSize = 2;
+            this.enduranceButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
+            this.enduranceButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
+            this.enduranceButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.enduranceButton.Location = new System.Drawing.Point(146, 385);
+            this.enduranceButton.Name = "enduranceButton";
+            this.enduranceButton.Size = new System.Drawing.Size(134, 26);
+            this.enduranceButton.TabIndex = 26;
+            this.enduranceButton.Text = "Endurance";
+            this.enduranceButton.UseVisualStyleBackColor = true;
+            this.enduranceButton.Click += new System.EventHandler(this.enduranceButton_Click);
+            // 
             // KhaosForm
             // 
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
@@ -582,6 +599,7 @@ namespace SotnRandoTools
 		private System.Windows.Forms.Button hordeButton;
 		private System.Windows.Forms.Button subsonlyButton;
 		private System.Windows.Forms.Button hasteButton;
+		private System.Windows.Forms.Button enduranceButton;
 	}
 }
 

@@ -257,6 +257,17 @@ namespace SotnRandoTools
 				khaosControler.Horde();
 			}
 		}
+		private void enduranceButton_Click(object sender, EventArgs e)
+		{
+			if (toolConfig.Khaos.ControlPannelQueueActions)
+			{
+				khaosControler.EnqueueAction("endurance Khaos");
+			}
+			else
+			{
+				khaosControler.Endurance();
+			}
+		}
 		private void crippleButton_Click(object sender, EventArgs e)
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
@@ -388,5 +399,6 @@ namespace SotnRandoTools
 			}
 		}
 		#endregion
+
 	}
 }

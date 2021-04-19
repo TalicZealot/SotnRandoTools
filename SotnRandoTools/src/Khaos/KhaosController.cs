@@ -152,19 +152,20 @@ namespace SotnRandoTools.Khaos
 		private Timer actionTimer = new Timer();
 		private Timer fastActionTimer = new Timer();
 
-		private System.Timers.Timer honestGamerTimer = new System.Timers.Timer();
-		private System.Timers.Timer subweaponsOnlyTimer = new System.Timers.Timer();
-		private System.Timers.Timer crippleTimer = new System.Timers.Timer();
-		private System.Timers.Timer bloodManaTimer = new System.Timers.Timer();
-		private System.Timers.Timer bloodManaTickTimer = new System.Timers.Timer();
-		private System.Timers.Timer thirstTimer = new System.Timers.Timer();
-		private System.Timers.Timer thirstTickTimer = new System.Timers.Timer();
-		private System.Timers.Timer hordeTimer = new System.Timers.Timer();
-		private System.Timers.Timer hordeSpawnTimer = new System.Timers.Timer();
-		private System.Timers.Timer magicianTimer = new System.Timers.Timer();
-		private System.Timers.Timer meltyTimer = new System.Timers.Timer();
-		private System.Timers.Timer zawarudoTimer = new System.Timers.Timer();
-		private System.Timers.Timer hasteTimer = new System.Timers.Timer();
+		private System.Timers.Timer honestGamerTimer = new();
+		private System.Timers.Timer subweaponsOnlyTimer = new();
+		private System.Timers.Timer crippleTimer = new();
+		private System.Timers.Timer bloodManaTimer = new();
+		private System.Timers.Timer bloodManaTickTimer = new();
+		private System.Timers.Timer thirstTimer = new();
+		private System.Timers.Timer thirstTickTimer = new();
+		private System.Timers.Timer hordeTimer = new();
+		private System.Timers.Timer hordeSpawnTimer = new();
+		private System.Timers.Timer enduranceSpawnTimer = new();
+		private System.Timers.Timer magicianTimer = new();
+		private System.Timers.Timer meltyTimer = new();
+		private System.Timers.Timer zawarudoTimer = new();
+		private System.Timers.Timer hasteTimer = new();
 
 		private uint hordeZone = 0;
 		private uint hordeZone2 = 0;
@@ -418,8 +419,7 @@ namespace SotnRandoTools.Khaos
 		}
 		public void Endurance(string user = "Khaos")
 		{
-			hordeTimer.Start();
-			hordeSpawnTimer.Start();
+			enduranceSpawnTimer.Start();
 			notificationService.DisplayMessage($"{user} used Endurance");
 			notificationService.PlayAlert(Paths.AlertRichterLaugh);
 		}
@@ -594,6 +594,7 @@ namespace SotnRandoTools.Khaos
 
 			switch (action)
 			{
+				#region Khaotic commands
 				case "kstatus":
 					queuedFastActions.Enqueue(new MethodInvoker(() => InflictRandomStatus(user)));
 					break;
@@ -612,6 +613,8 @@ namespace SotnRandoTools.Khaos
 				case "gamble":
 					queuedActions.Enqueue(new MethodInvoker(() => Gamble(user)));
 					break;
+				#endregion
+				#region Debuffs
 				case "bankrupt":
 					queuedActions.Enqueue(new MethodInvoker(() => Bankrupt(user)));
 					break;
@@ -639,6 +642,11 @@ namespace SotnRandoTools.Khaos
 				case "horde":
 					queuedActions.Enqueue(new MethodInvoker(() => Horde(user)));
 					break;
+				case "endurance":
+					queuedActions.Enqueue(new MethodInvoker(() => Endurance(user)));
+					break;
+				#endregion
+				#region Buffs
 				case "vampire":
 					queuedFastActions.Enqueue(new MethodInvoker(() => Vampire(user)));
 					break;
@@ -671,6 +679,7 @@ namespace SotnRandoTools.Khaos
 					break;
 				default:
 					break;
+					#endregion
 			}
 		}
 		private void InitializeTimers()
@@ -699,6 +708,8 @@ namespace SotnRandoTools.Khaos
 			hordeSpawnTimer.Elapsed += HordeSpawn;
 			hordeSpawnTimer.Interval = 1 * (1000);
 			//hordeSpawnTimer.Interval = toolConfig.Khaos.Actions.Where(a => a.Name == "Khaos Horde").FirstOrDefault().Interval.TotalMilliseconds;
+			enduranceSpawnTimer.Elapsed += EnduranceSpawn;
+			enduranceSpawnTimer.Interval = 2 * (1000);
 
 			magicianTimer.Elapsed += MagicianOff;
 			magicianTimer.Interval = 1 * (60 * 1000);
@@ -716,9 +727,9 @@ namespace SotnRandoTools.Khaos
 				if (queuedActions.Count > 0)
 				{
 					queuedActions.Dequeue()();
-					if (actionTimer.Interval < 1 * (60 * 1000))
+					if (actionTimer.Interval < 1 * (30 * 1000))
 					{
-						actionTimer.Interval = 1 * (60 * 1000);
+						actionTimer.Interval = 1 * (30 * 1000);
 					}
 				}
 				else
@@ -1029,13 +1040,14 @@ namespace SotnRandoTools.Khaos
 				Random rnd = new Random();
 				boss.Xpos = (ushort) rnd.Next(70, 170);
 				actorApi.SpawnActor(boss);
-				//stop timer
+				enduranceSpawnTimer.Stop();
 			}
 			else
 			{
 				return;
 			}
 		}
+
 		private void SpawnPoisonHitbox()
 		{
 			Actor poison = new Actor();

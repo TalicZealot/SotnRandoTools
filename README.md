@@ -1,6 +1,7 @@
 # Symphony of the Night Randomizer Tools
 
 A collection of tools to enhance the [Castlevania:Symphony of the Night Randomizer](https://sotn.io) experience. 
+[![(latest) release | GitHub](https://img.shields.io/github/release/TalicZealot/SotnRandoTools.svg?logo=github&logoColor=333333&style=popout)](https://github.com/TalicZealot/SotnRandoTools/releases/latest)
 
 This tool and the accompanying library and app are open source. The idea is to implement these features with the perspective of SotN players and provide the source for other developers to learn from and contribute just like the randomizer itself.
 
@@ -24,7 +25,7 @@ BizHawk
 ```
 
 ## Usage
-Open in BizHawk through ```Tools > Extarnal Tool > Symphony of the Night Randomizer Tools```
+After launching the game in BizHawk open through ```Tools > Extarnal Tool > Symphony of the Night Randomizer Tools```
 Set your preferences and open the tool you want to use. You can then minimize the main tools window, but don't close it.
 Every tool's window possition and the Tracker's size are all saved and will open where you last left them.
 

@@ -33,6 +33,8 @@
   * command thirst
 * Khaos Horde: Dracula's castle continuously spawns more monsters with hp no more than 50 for one minute.
   * command horde
+* Endurance: Next boss is doubled.
+  * command endurance
 
 ## Buffs
 * Vampire: Alucard gets Dark Metamorphasis for an extended period.
