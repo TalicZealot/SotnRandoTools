@@ -159,6 +159,7 @@ namespace SotnRandoTools
 				this.targetIp.BackColor = Color.Red;
 				this.addressTooltip.SetToolTip(targetIp, "Invalid address!");
 				this.addressTooltip.ToolTipIcon = ToolTipIcon.Warning;
+				this.addressTooltip.Active = true;
 				return false;
 			}
 			addressValidated = true;
@@ -180,6 +181,8 @@ namespace SotnRandoTools
 		private void targetIp_Validated(object sender, EventArgs e)
 		{
 			addressValidated = true;
+			this.targetIp.BackColor = Color.White;
+			this.addressTooltip.Active = false;
 		}
 	}
 }

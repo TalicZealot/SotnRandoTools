@@ -29,34 +29,77 @@ namespace SotnRandoTools
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.khaosPanelTitle = new System.Windows.Forms.Label();
             this.divider = new System.Windows.Forms.Label();
             this.saveButton = new System.Windows.Forms.Button();
             this.khaosTabs = new System.Windows.Forms.TabControl();
-            this.prefsTab = new System.Windows.Forms.TabPage();
+            this.generalTab = new System.Windows.Forms.TabPage();
+            this.generalSettingsBox = new System.Windows.Forms.GroupBox();
+            this.pandoraMaxTextBox = new System.Windows.Forms.TextBox();
+            this.pandoraMinTextBox = new System.Windows.Forms.TextBox();
+            this.queueTextBox = new System.Windows.Forms.TextBox();
+            this.thirstTextBox = new System.Windows.Forms.TextBox();
+            this.weakenTextBox = new System.Windows.Forms.TextBox();
+            this.hasteTextBox = new System.Windows.Forms.TextBox();
+            this.crippleTextBox = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.queueLabel = new System.Windows.Forms.Label();
+            this.thirstLabel = new System.Windows.Forms.Label();
+            this.weakenLabel = new System.Windows.Forms.Label();
+            this.hasteLabel = new System.Windows.Forms.Label();
+            this.crippleLabel = new System.Windows.Forms.Label();
             this.audioBox = new System.Windows.Forms.GroupBox();
             this.volumeLabel = new System.Windows.Forms.Label();
             this.volumeTrackBar = new System.Windows.Forms.TrackBar();
             this.alertsCheckbox = new System.Windows.Forms.CheckBox();
+            this.inputTab = new System.Windows.Forms.TabPage();
+            this.namesBox = new System.Windows.Forms.GroupBox();
+            this.namesBrowseButton = new System.Windows.Forms.Button();
+            this.namesPath = new System.Windows.Forms.TextBox();
+            this.namesLabel = new System.Windows.Forms.Label();
             this.botInputGroup = new System.Windows.Forms.GroupBox();
             this.botCommandsBrowseButton = new System.Windows.Forms.Button();
             this.botCommandsPath = new System.Windows.Forms.TextBox();
             this.botCommandLabel = new System.Windows.Forms.Label();
-            this.pricingBuffsTab = new System.Windows.Forms.TabPage();
-            this.actionPricesGridView = new System.Windows.Forms.DataGridView();
-            this.actionName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.channelPoints = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.bits = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.donation = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.alertsTab = new System.Windows.Forms.TabPage();
+            this.alertsGridView = new System.Windows.Forms.DataGridView();
+            this.actionSettings = new System.Windows.Forms.TabPage();
+            this.actionsGridView = new System.Windows.Forms.DataGridView();
             this.botActionFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.alertFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.namesFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.valueToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.AlertEnabled = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.Duration = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Interval = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ActionName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.AlertPath = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Browse = new System.Windows.Forms.DataGridViewButtonColumn();
             this.khaosTabs.SuspendLayout();
-            this.prefsTab.SuspendLayout();
+            this.generalTab.SuspendLayout();
+            this.generalSettingsBox.SuspendLayout();
             this.audioBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.volumeTrackBar)).BeginInit();
+            this.inputTab.SuspendLayout();
+            this.namesBox.SuspendLayout();
             this.botInputGroup.SuspendLayout();
-            this.pricingBuffsTab.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.actionPricesGridView)).BeginInit();
+            this.alertsTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.alertsGridView)).BeginInit();
+            this.actionSettings.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.actionsGridView)).BeginInit();
             this.SuspendLayout();
             // 
             // khaosPanelTitle
@@ -95,26 +138,178 @@ namespace SotnRandoTools
             // 
             // khaosTabs
             // 
-            this.khaosTabs.Controls.Add(this.prefsTab);
-            this.khaosTabs.Controls.Add(this.pricingBuffsTab);
+            this.khaosTabs.Controls.Add(this.generalTab);
+            this.khaosTabs.Controls.Add(this.inputTab);
+            this.khaosTabs.Controls.Add(this.alertsTab);
+            this.khaosTabs.Controls.Add(this.actionSettings);
             this.khaosTabs.Location = new System.Drawing.Point(6, 43);
             this.khaosTabs.Name = "khaosTabs";
             this.khaosTabs.SelectedIndex = 0;
             this.khaosTabs.Size = new System.Drawing.Size(382, 291);
             this.khaosTabs.TabIndex = 3;
             // 
-            // prefsTab
+            // generalTab
             // 
-            this.prefsTab.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
-            this.prefsTab.Controls.Add(this.audioBox);
-            this.prefsTab.Controls.Add(this.botInputGroup);
-            this.prefsTab.ForeColor = System.Drawing.Color.White;
-            this.prefsTab.Location = new System.Drawing.Point(4, 22);
-            this.prefsTab.Name = "prefsTab";
-            this.prefsTab.Padding = new System.Windows.Forms.Padding(3);
-            this.prefsTab.Size = new System.Drawing.Size(374, 265);
-            this.prefsTab.TabIndex = 0;
-            this.prefsTab.Text = "Preferences";
+            this.generalTab.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
+            this.generalTab.Controls.Add(this.generalSettingsBox);
+            this.generalTab.Controls.Add(this.audioBox);
+            this.generalTab.ForeColor = System.Drawing.Color.White;
+            this.generalTab.Location = new System.Drawing.Point(4, 22);
+            this.generalTab.Name = "generalTab";
+            this.generalTab.Padding = new System.Windows.Forms.Padding(3);
+            this.generalTab.Size = new System.Drawing.Size(374, 265);
+            this.generalTab.TabIndex = 0;
+            this.generalTab.Text = "General";
+            // 
+            // generalSettingsBox
+            // 
+            this.generalSettingsBox.Controls.Add(this.pandoraMaxTextBox);
+            this.generalSettingsBox.Controls.Add(this.pandoraMinTextBox);
+            this.generalSettingsBox.Controls.Add(this.queueTextBox);
+            this.generalSettingsBox.Controls.Add(this.thirstTextBox);
+            this.generalSettingsBox.Controls.Add(this.weakenTextBox);
+            this.generalSettingsBox.Controls.Add(this.hasteTextBox);
+            this.generalSettingsBox.Controls.Add(this.crippleTextBox);
+            this.generalSettingsBox.Controls.Add(this.label2);
+            this.generalSettingsBox.Controls.Add(this.label1);
+            this.generalSettingsBox.Controls.Add(this.queueLabel);
+            this.generalSettingsBox.Controls.Add(this.thirstLabel);
+            this.generalSettingsBox.Controls.Add(this.weakenLabel);
+            this.generalSettingsBox.Controls.Add(this.hasteLabel);
+            this.generalSettingsBox.Controls.Add(this.crippleLabel);
+            this.generalSettingsBox.ForeColor = System.Drawing.Color.White;
+            this.generalSettingsBox.Location = new System.Drawing.Point(6, 100);
+            this.generalSettingsBox.Name = "generalSettingsBox";
+            this.generalSettingsBox.Size = new System.Drawing.Size(360, 159);
+            this.generalSettingsBox.TabIndex = 2;
+            this.generalSettingsBox.TabStop = false;
+            this.generalSettingsBox.Text = "General";
+            // 
+            // pandoraMaxTextBox
+            // 
+            this.pandoraMaxTextBox.Location = new System.Drawing.Point(300, 39);
+            this.pandoraMaxTextBox.Name = "pandoraMaxTextBox";
+            this.pandoraMaxTextBox.Size = new System.Drawing.Size(54, 21);
+            this.pandoraMaxTextBox.TabIndex = 13;
+            this.pandoraMaxTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.pandoraMaxTextBox_Validating);
+            this.pandoraMaxTextBox.Validated += new System.EventHandler(this.pandoraMaxTextBox_Validated);
+            // 
+            // pandoraMinTextBox
+            // 
+            this.pandoraMinTextBox.Location = new System.Drawing.Point(300, 14);
+            this.pandoraMinTextBox.Name = "pandoraMinTextBox";
+            this.pandoraMinTextBox.Size = new System.Drawing.Size(54, 21);
+            this.pandoraMinTextBox.TabIndex = 12;
+            this.pandoraMinTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.pandoraMinTextBox_Validating);
+            this.pandoraMinTextBox.Validated += new System.EventHandler(this.pandoraMinTextBox_Validated);
+            // 
+            // queueTextBox
+            // 
+            this.queueTextBox.Location = new System.Drawing.Point(100, 114);
+            this.queueTextBox.Name = "queueTextBox";
+            this.queueTextBox.Size = new System.Drawing.Size(54, 21);
+            this.queueTextBox.TabIndex = 11;
+            this.queueTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.queueTextBox_Validating);
+            this.queueTextBox.Validated += new System.EventHandler(this.queueTextBox_Validated);
+            // 
+            // thirstTextBox
+            // 
+            this.thirstTextBox.Location = new System.Drawing.Point(100, 89);
+            this.thirstTextBox.Name = "thirstTextBox";
+            this.thirstTextBox.Size = new System.Drawing.Size(54, 21);
+            this.thirstTextBox.TabIndex = 10;
+            this.thirstTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.thirstTextBox_Validating);
+            this.thirstTextBox.Validated += new System.EventHandler(this.thirstTextBox_Validated);
+            // 
+            // weakenTextBox
+            // 
+            this.weakenTextBox.Location = new System.Drawing.Point(100, 64);
+            this.weakenTextBox.Name = "weakenTextBox";
+            this.weakenTextBox.Size = new System.Drawing.Size(54, 21);
+            this.weakenTextBox.TabIndex = 9;
+            this.weakenTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.weakenTextBox_Validating);
+            this.weakenTextBox.Validated += new System.EventHandler(this.weakenTextBox_Validated);
+            // 
+            // hasteTextBox
+            // 
+            this.hasteTextBox.Location = new System.Drawing.Point(100, 39);
+            this.hasteTextBox.Name = "hasteTextBox";
+            this.hasteTextBox.Size = new System.Drawing.Size(54, 21);
+            this.hasteTextBox.TabIndex = 8;
+            this.hasteTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.hasteTextBox_Validating);
+            this.hasteTextBox.Validated += new System.EventHandler(this.hasteTextBox_Validated);
+            // 
+            // crippleTextBox
+            // 
+            this.crippleTextBox.Location = new System.Drawing.Point(100, 14);
+            this.crippleTextBox.Name = "crippleTextBox";
+            this.crippleTextBox.Size = new System.Drawing.Size(54, 21);
+            this.crippleTextBox.TabIndex = 7;
+            this.crippleTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.crippleTextBox_Validating);
+            this.crippleTextBox.Validated += new System.EventHandler(this.crippleTextBox_Validated);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(190, 42);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(104, 13);
+            this.label2.TabIndex = 6;
+            this.label2.Text = "Pandora Max Items:";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(190, 17);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(100, 13);
+            this.label1.TabIndex = 5;
+            this.label1.Text = "Pandora Min Items:";
+            // 
+            // queueLabel
+            // 
+            this.queueLabel.AutoSize = true;
+            this.queueLabel.Location = new System.Drawing.Point(10, 117);
+            this.queueLabel.Name = "queueLabel";
+            this.queueLabel.Size = new System.Drawing.Size(84, 13);
+            this.queueLabel.TabIndex = 4;
+            this.queueLabel.Text = "Queue Interval:";
+            // 
+            // thirstLabel
+            // 
+            this.thirstLabel.AutoSize = true;
+            this.thirstLabel.Location = new System.Drawing.Point(10, 92);
+            this.thirstLabel.Name = "thirstLabel";
+            this.thirstLabel.Size = new System.Drawing.Size(66, 13);
+            this.thirstLabel.TabIndex = 3;
+            this.thirstLabel.Text = "Thirst Drain:";
+            // 
+            // weakenLabel
+            // 
+            this.weakenLabel.AutoSize = true;
+            this.weakenLabel.Location = new System.Drawing.Point(10, 67);
+            this.weakenLabel.Name = "weakenLabel";
+            this.weakenLabel.Size = new System.Drawing.Size(84, 13);
+            this.weakenLabel.TabIndex = 2;
+            this.weakenLabel.Text = "Weaken Factor:";
+            // 
+            // hasteLabel
+            // 
+            this.hasteLabel.AutoSize = true;
+            this.hasteLabel.Location = new System.Drawing.Point(10, 42);
+            this.hasteLabel.Name = "hasteLabel";
+            this.hasteLabel.Size = new System.Drawing.Size(72, 13);
+            this.hasteLabel.TabIndex = 1;
+            this.hasteLabel.Text = "Haste Speed:";
+            // 
+            // crippleLabel
+            // 
+            this.crippleLabel.AutoSize = true;
+            this.crippleLabel.Location = new System.Drawing.Point(10, 17);
+            this.crippleLabel.Name = "crippleLabel";
+            this.crippleLabel.Size = new System.Drawing.Size(77, 13);
+            this.crippleLabel.TabIndex = 0;
+            this.crippleLabel.Text = "Cripple Speed:";
             // 
             // audioBox
             // 
@@ -122,9 +317,9 @@ namespace SotnRandoTools
             this.audioBox.Controls.Add(this.volumeTrackBar);
             this.audioBox.Controls.Add(this.alertsCheckbox);
             this.audioBox.ForeColor = System.Drawing.Color.White;
-            this.audioBox.Location = new System.Drawing.Point(6, 118);
+            this.audioBox.Location = new System.Drawing.Point(6, 6);
             this.audioBox.Name = "audioBox";
-            this.audioBox.Size = new System.Drawing.Size(361, 92);
+            this.audioBox.Size = new System.Drawing.Size(361, 91);
             this.audioBox.TabIndex = 1;
             this.audioBox.TabStop = false;
             this.audioBox.Text = "Sound";
@@ -144,6 +339,7 @@ namespace SotnRandoTools
             this.volumeTrackBar.Name = "volumeTrackBar";
             this.volumeTrackBar.Size = new System.Drawing.Size(302, 45);
             this.volumeTrackBar.TabIndex = 1;
+            this.volumeTrackBar.TickFrequency = 0;
             this.volumeTrackBar.TickStyle = System.Windows.Forms.TickStyle.None;
             this.volumeTrackBar.Value = 10;
             this.volumeTrackBar.Scroll += new System.EventHandler(this.volumeTrackBar_Scroll);
@@ -153,11 +349,67 @@ namespace SotnRandoTools
             this.alertsCheckbox.AutoSize = true;
             this.alertsCheckbox.Location = new System.Drawing.Point(9, 20);
             this.alertsCheckbox.Name = "alertsCheckbox";
-            this.alertsCheckbox.Size = new System.Drawing.Size(219, 17);
+            this.alertsCheckbox.Size = new System.Drawing.Size(214, 17);
             this.alertsCheckbox.TabIndex = 0;
-            this.alertsCheckbox.Text = "Enable audio alerts on reward activation";
+            this.alertsCheckbox.Text = "Enable audio alerts on action activation";
             this.alertsCheckbox.UseVisualStyleBackColor = true;
             this.alertsCheckbox.CheckedChanged += new System.EventHandler(this.alertsCheckbox_CheckedChanged);
+            // 
+            // inputTab
+            // 
+            this.inputTab.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
+            this.inputTab.Controls.Add(this.namesBox);
+            this.inputTab.Controls.Add(this.botInputGroup);
+            this.inputTab.Location = new System.Drawing.Point(4, 22);
+            this.inputTab.Name = "inputTab";
+            this.inputTab.Size = new System.Drawing.Size(374, 265);
+            this.inputTab.TabIndex = 1;
+            this.inputTab.Text = "Input";
+            // 
+            // namesBox
+            // 
+            this.namesBox.Controls.Add(this.namesBrowseButton);
+            this.namesBox.Controls.Add(this.namesPath);
+            this.namesBox.Controls.Add(this.namesLabel);
+            this.namesBox.ForeColor = System.Drawing.Color.White;
+            this.namesBox.Location = new System.Drawing.Point(6, 73);
+            this.namesBox.Name = "namesBox";
+            this.namesBox.Size = new System.Drawing.Size(362, 61);
+            this.namesBox.TabIndex = 2;
+            this.namesBox.TabStop = false;
+            this.namesBox.Text = "Names";
+            // 
+            // namesBrowseButton
+            // 
+            this.namesBrowseButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
+            this.namesBrowseButton.FlatAppearance.BorderSize = 2;
+            this.namesBrowseButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
+            this.namesBrowseButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
+            this.namesBrowseButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.namesBrowseButton.Font = new System.Drawing.Font("Tahoma", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.namesBrowseButton.Location = new System.Drawing.Point(288, 22);
+            this.namesBrowseButton.Name = "namesBrowseButton";
+            this.namesBrowseButton.Size = new System.Drawing.Size(68, 21);
+            this.namesBrowseButton.TabIndex = 5;
+            this.namesBrowseButton.Text = "Browse...";
+            this.namesBrowseButton.UseVisualStyleBackColor = true;
+            this.namesBrowseButton.Click += new System.EventHandler(this.namesBrowseButton_Click);
+            // 
+            // namesPath
+            // 
+            this.namesPath.Location = new System.Drawing.Point(93, 23);
+            this.namesPath.Name = "namesPath";
+            this.namesPath.Size = new System.Drawing.Size(189, 21);
+            this.namesPath.TabIndex = 4;
+            // 
+            // namesLabel
+            // 
+            this.namesLabel.AutoSize = true;
+            this.namesLabel.Location = new System.Drawing.Point(6, 26);
+            this.namesLabel.Name = "namesLabel";
+            this.namesLabel.Size = new System.Drawing.Size(60, 13);
+            this.namesLabel.TabIndex = 3;
+            this.namesLabel.Text = "Names file:";
             // 
             // botInputGroup
             // 
@@ -165,19 +417,24 @@ namespace SotnRandoTools
             this.botInputGroup.Controls.Add(this.botCommandsPath);
             this.botInputGroup.Controls.Add(this.botCommandLabel);
             this.botInputGroup.ForeColor = System.Drawing.Color.White;
-            this.botInputGroup.Location = new System.Drawing.Point(6, 40);
+            this.botInputGroup.Location = new System.Drawing.Point(6, 6);
             this.botInputGroup.Name = "botInputGroup";
             this.botInputGroup.Size = new System.Drawing.Size(362, 57);
-            this.botInputGroup.TabIndex = 0;
+            this.botInputGroup.TabIndex = 1;
             this.botInputGroup.TabStop = false;
             this.botInputGroup.Text = "Bot Input";
             // 
             // botCommandsBrowseButton
             // 
+            this.botCommandsBrowseButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
+            this.botCommandsBrowseButton.FlatAppearance.BorderSize = 2;
+            this.botCommandsBrowseButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
+            this.botCommandsBrowseButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.botCommandsBrowseButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.botCommandsBrowseButton.Font = new System.Drawing.Font("Tahoma", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.botCommandsBrowseButton.Location = new System.Drawing.Point(288, 19);
             this.botCommandsBrowseButton.Name = "botCommandsBrowseButton";
-            this.botCommandsBrowseButton.Size = new System.Drawing.Size(68, 21);
+            this.botCommandsBrowseButton.Size = new System.Drawing.Size(68, 22);
             this.botCommandsBrowseButton.TabIndex = 2;
             this.botCommandsBrowseButton.Text = "Browse...";
             this.botCommandsBrowseButton.UseVisualStyleBackColor = true;
@@ -200,75 +457,207 @@ namespace SotnRandoTools
             this.botCommandLabel.TabIndex = 0;
             this.botCommandLabel.Text = "Bot actions file:";
             // 
-            // pricingBuffsTab
+            // alertsTab
             // 
-            this.pricingBuffsTab.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
-            this.pricingBuffsTab.Controls.Add(this.actionPricesGridView);
-            this.pricingBuffsTab.ForeColor = System.Drawing.Color.White;
-            this.pricingBuffsTab.Location = new System.Drawing.Point(4, 22);
-            this.pricingBuffsTab.Name = "pricingBuffsTab";
-            this.pricingBuffsTab.Padding = new System.Windows.Forms.Padding(3);
-            this.pricingBuffsTab.Size = new System.Drawing.Size(374, 265);
-            this.pricingBuffsTab.TabIndex = 1;
-            this.pricingBuffsTab.Text = "Pricing: Buffs";
+            this.alertsTab.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
+            this.alertsTab.Controls.Add(this.alertsGridView);
+            this.alertsTab.Location = new System.Drawing.Point(4, 22);
+            this.alertsTab.Name = "alertsTab";
+            this.alertsTab.Size = new System.Drawing.Size(374, 265);
+            this.alertsTab.TabIndex = 2;
+            this.alertsTab.Text = "Alerts";
             // 
-            // actionPricesGridView
+            // alertsGridView
             // 
-            this.actionPricesGridView.AllowUserToAddRows = false;
-            this.actionPricesGridView.AllowUserToDeleteRows = false;
-            this.actionPricesGridView.AllowUserToResizeColumns = false;
-            this.actionPricesGridView.AllowUserToResizeRows = false;
-            this.actionPricesGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.actionPricesGridView.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
+            this.alertsGridView.AllowUserToAddRows = false;
+            this.alertsGridView.AllowUserToDeleteRows = false;
+            this.alertsGridView.AllowUserToResizeColumns = false;
+            this.alertsGridView.AllowUserToResizeRows = false;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
+            this.alertsGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            this.alertsGridView.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
+            this.alertsGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.alertsGridView.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
+            this.alertsGridView.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.DimGray;
             dataGridViewCellStyle2.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.White;
             dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            this.actionPricesGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
-            this.actionPricesGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.actionPricesGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.actionName,
-            this.channelPoints,
-            this.bits,
-            this.donation});
-            this.actionPricesGridView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.actionPricesGridView.Location = new System.Drawing.Point(3, 3);
-            this.actionPricesGridView.Name = "actionPricesGridView";
-            this.actionPricesGridView.RowHeadersVisible = false;
-            this.actionPricesGridView.Size = new System.Drawing.Size(368, 259);
-            this.actionPricesGridView.TabIndex = 8;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.alertsGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            this.alertsGridView.ColumnHeadersHeight = 20;
+            this.alertsGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            this.alertsGridView.ColumnHeadersVisible = false;
+            this.alertsGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.ActionName,
+            this.AlertPath,
+            this.Browse});
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.alertsGridView.DefaultCellStyle = dataGridViewCellStyle4;
+            this.alertsGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnKeystroke;
+            this.alertsGridView.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
+            this.alertsGridView.Location = new System.Drawing.Point(3, 3);
+            this.alertsGridView.MultiSelect = false;
+            this.alertsGridView.Name = "alertsGridView";
+            this.alertsGridView.RowHeadersVisible = false;
+            this.alertsGridView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.alertsGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+            this.alertsGridView.Size = new System.Drawing.Size(368, 259);
+            this.alertsGridView.TabIndex = 0;
             // 
-            // actionName
+            // actionSettings
             // 
-            this.actionName.HeaderText = "Name";
-            this.actionName.Name = "actionName";
-            this.actionName.ReadOnly = true;
-            this.actionName.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.actionSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
+            this.actionSettings.Controls.Add(this.actionsGridView);
+            this.actionSettings.Location = new System.Drawing.Point(4, 22);
+            this.actionSettings.Name = "actionSettings";
+            this.actionSettings.Size = new System.Drawing.Size(374, 265);
+            this.actionSettings.TabIndex = 3;
+            this.actionSettings.Text = "Actions";
             // 
-            // channelPoints
+            // actionsGridView
             // 
-            this.channelPoints.HeaderText = "Channel Points";
-            this.channelPoints.Name = "channelPoints";
-            this.channelPoints.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            // 
-            // bits
-            // 
-            this.bits.HeaderText = "Bits";
-            this.bits.Name = "bits";
-            this.bits.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            // 
-            // donation
-            // 
-            this.donation.HeaderText = "Donation";
-            this.donation.Name = "donation";
-            this.donation.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.actionsGridView.AllowUserToAddRows = false;
+            this.actionsGridView.AllowUserToDeleteRows = false;
+            this.actionsGridView.AllowUserToResizeColumns = false;
+            this.actionsGridView.AllowUserToResizeRows = false;
+            dataGridViewCellStyle5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
+            this.actionsGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle5;
+            this.actionsGridView.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
+            this.actionsGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.actionsGridView.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
+            this.actionsGridView.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.actionsGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            this.actionsGridView.ColumnHeadersHeight = 20;
+            this.actionsGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            this.actionsGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridViewTextBoxColumn1,
+            this.AlertEnabled,
+            this.Duration,
+            this.Interval});
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle10.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
+            dataGridViewCellStyle10.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle10.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
+            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.actionsGridView.DefaultCellStyle = dataGridViewCellStyle10;
+            this.actionsGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnKeystroke;
+            this.actionsGridView.EnableHeadersVisualStyles = false;
+            this.actionsGridView.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
+            this.actionsGridView.Location = new System.Drawing.Point(3, 3);
+            this.actionsGridView.MultiSelect = false;
+            this.actionsGridView.Name = "actionsGridView";
+            this.actionsGridView.RowHeadersVisible = false;
+            this.actionsGridView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.actionsGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+            this.actionsGridView.Size = new System.Drawing.Size(368, 259);
+            this.actionsGridView.TabIndex = 1;
             // 
             // botActionFileDialog
             // 
             this.botActionFileDialog.FileName = "actions.txt";
+            this.botActionFileDialog.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+            this.botActionFileDialog.Title = "Select Bot Actions File";
             this.botActionFileDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.botActionFileDialog_FileOk);
+            // 
+            // alertFileDialog
+            // 
+            this.alertFileDialog.Filter = "mp3 files (*.mp3)|*.mp3|wav files (*.wav*)|*.wav*";
+            this.alertFileDialog.Title = "Select Alert Sound File";
+            this.alertFileDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.alertFileDialog_FileOk);
+            // 
+            // namesFileDialog
+            // 
+            this.namesFileDialog.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+            this.namesFileDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.namesFileDialog_FileOk);
+            // 
+            // dataGridViewTextBoxColumn1
+            // 
+            this.dataGridViewTextBoxColumn1.DataPropertyName = "Name";
+            dataGridViewCellStyle7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
+            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
+            this.dataGridViewTextBoxColumn1.DefaultCellStyle = dataGridViewCellStyle7;
+            this.dataGridViewTextBoxColumn1.HeaderText = "Name";
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            this.dataGridViewTextBoxColumn1.ReadOnly = true;
+            this.dataGridViewTextBoxColumn1.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            // 
+            // AlertEnabled
+            // 
+            this.AlertEnabled.DataPropertyName = "Enabled";
+            this.AlertEnabled.FalseValue = "false";
+            this.AlertEnabled.HeaderText = "Enabled";
+            this.AlertEnabled.IndeterminateValue = "false";
+            this.AlertEnabled.Name = "AlertEnabled";
+            this.AlertEnabled.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.AlertEnabled.TrueValue = "true";
+            this.AlertEnabled.Width = 48;
+            // 
+            // Duration
+            // 
+            this.Duration.DataPropertyName = "Duration";
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Duration.DefaultCellStyle = dataGridViewCellStyle8;
+            this.Duration.HeaderText = "Duration";
+            this.Duration.MaxInputLength = 8;
+            this.Duration.Name = "Duration";
+            this.Duration.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            // 
+            // Interval
+            // 
+            this.Interval.DataPropertyName = "Interval";
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Interval.DefaultCellStyle = dataGridViewCellStyle9;
+            this.Interval.HeaderText = "Interval";
+            this.Interval.MaxInputLength = 8;
+            this.Interval.Name = "Interval";
+            this.Interval.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            // 
+            // ActionName
+            // 
+            this.ActionName.DataPropertyName = "Name";
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
+            this.ActionName.DefaultCellStyle = dataGridViewCellStyle3;
+            this.ActionName.HeaderText = "Name";
+            this.ActionName.Name = "ActionName";
+            this.ActionName.ReadOnly = true;
+            this.ActionName.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            // 
+            // AlertPath
+            // 
+            this.AlertPath.DataPropertyName = "AlertPath";
+            this.AlertPath.HeaderText = "Alert Path";
+            this.AlertPath.Name = "AlertPath";
+            this.AlertPath.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.AlertPath.Width = 160;
+            // 
+            // Browse
+            // 
+            this.Browse.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Browse.HeaderText = "Browse";
+            this.Browse.Name = "Browse";
+            this.Browse.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.Browse.Text = "Browse";
+            this.Browse.UseColumnTextForButtonValue = true;
+            this.Browse.Width = 80;
             // 
             // KhaosSettingsPanel
             // 
@@ -285,14 +674,21 @@ namespace SotnRandoTools
             this.Size = new System.Drawing.Size(395, 368);
             this.Load += new System.EventHandler(this.KhaosSettingsPanel_Load);
             this.khaosTabs.ResumeLayout(false);
-            this.prefsTab.ResumeLayout(false);
+            this.generalTab.ResumeLayout(false);
+            this.generalSettingsBox.ResumeLayout(false);
+            this.generalSettingsBox.PerformLayout();
             this.audioBox.ResumeLayout(false);
             this.audioBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.volumeTrackBar)).EndInit();
+            this.inputTab.ResumeLayout(false);
+            this.namesBox.ResumeLayout(false);
+            this.namesBox.PerformLayout();
             this.botInputGroup.ResumeLayout(false);
             this.botInputGroup.PerformLayout();
-            this.pricingBuffsTab.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.actionPricesGridView)).EndInit();
+            this.alertsTab.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.alertsGridView)).EndInit();
+            this.actionSettings.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.actionsGridView)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -304,21 +700,49 @@ namespace SotnRandoTools
         private System.Windows.Forms.Label divider;
         private System.Windows.Forms.Button saveButton;
 		private System.Windows.Forms.TabControl khaosTabs;
-		private System.Windows.Forms.TabPage prefsTab;
-		private System.Windows.Forms.TabPage pricingBuffsTab;
-		private System.Windows.Forms.GroupBox botInputGroup;
-		private System.Windows.Forms.Label botCommandLabel;
-		private System.Windows.Forms.Button botCommandsBrowseButton;
-		private System.Windows.Forms.TextBox botCommandsPath;
+		private System.Windows.Forms.TabPage generalTab;
 		private System.Windows.Forms.GroupBox audioBox;
 		private System.Windows.Forms.CheckBox alertsCheckbox;
 		private System.Windows.Forms.Label volumeLabel;
 		private System.Windows.Forms.TrackBar volumeTrackBar;
 		private System.Windows.Forms.OpenFileDialog botActionFileDialog;
-		private System.Windows.Forms.DataGridView actionPricesGridView;
-		private System.Windows.Forms.DataGridViewTextBoxColumn actionName;
-		private System.Windows.Forms.DataGridViewTextBoxColumn channelPoints;
-		private System.Windows.Forms.DataGridViewTextBoxColumn bits;
-		private System.Windows.Forms.DataGridViewTextBoxColumn donation;
+		private System.Windows.Forms.TabPage inputTab;
+		private System.Windows.Forms.TabPage alertsTab;
+		private System.Windows.Forms.TabPage actionSettings;
+		private System.Windows.Forms.GroupBox botInputGroup;
+		private System.Windows.Forms.Button botCommandsBrowseButton;
+		private System.Windows.Forms.TextBox botCommandsPath;
+		private System.Windows.Forms.Label botCommandLabel;
+		private System.Windows.Forms.OpenFileDialog alertFileDialog;
+		private System.Windows.Forms.GroupBox generalSettingsBox;
+		private System.Windows.Forms.Label crippleLabel;
+		private System.Windows.Forms.Label weakenLabel;
+		private System.Windows.Forms.Label hasteLabel;
+		private System.Windows.Forms.Label thirstLabel;
+		private System.Windows.Forms.Label queueLabel;
+		private System.Windows.Forms.Label label2;
+		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.TextBox queueTextBox;
+		private System.Windows.Forms.TextBox thirstTextBox;
+		private System.Windows.Forms.TextBox weakenTextBox;
+		private System.Windows.Forms.TextBox hasteTextBox;
+		private System.Windows.Forms.TextBox crippleTextBox;
+		private System.Windows.Forms.TextBox pandoraMaxTextBox;
+		private System.Windows.Forms.TextBox pandoraMinTextBox;
+		private System.Windows.Forms.GroupBox namesBox;
+		private System.Windows.Forms.Button namesBrowseButton;
+		private System.Windows.Forms.TextBox namesPath;
+		private System.Windows.Forms.Label namesLabel;
+		private System.Windows.Forms.OpenFileDialog namesFileDialog;
+		private System.Windows.Forms.ToolTip valueToolTip;
+		private System.Windows.Forms.DataGridView alertsGridView;
+		private System.Windows.Forms.DataGridView actionsGridView;
+		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
+		private System.Windows.Forms.DataGridViewCheckBoxColumn AlertEnabled;
+		private System.Windows.Forms.DataGridViewTextBoxColumn Duration;
+		private System.Windows.Forms.DataGridViewTextBoxColumn Interval;
+		private System.Windows.Forms.DataGridViewTextBoxColumn ActionName;
+		private System.Windows.Forms.DataGridViewTextBoxColumn AlertPath;
+		private System.Windows.Forms.DataGridViewButtonColumn Browse;
 	}
 }

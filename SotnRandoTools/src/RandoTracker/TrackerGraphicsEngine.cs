@@ -37,6 +37,15 @@ namespace SotnRandoTools.RandoTracker
 		private int scale = 1;
 		private int progressionRelics = 0;
 		private bool vladProgression = true;
+		private ColorMatrix greyscaleColorMatrix = new ColorMatrix(
+			new float[][]
+			{
+				new float[] {.1f, .1f, .1f, 0, 0},
+				new float[] {.3f, .3f, .3f, 0, 0},
+				new float[] {.1f, .1f, .1f, 0, 0},
+				new float[] {0, 0, 0, 1, 0},
+				new float[] {0, 0, 0, 0, 1}
+			});
 
 		public TrackerGraphicsEngine(IGraphics formGraphics, List<Relic> relics, List<Item> progressionItems, List<Item> thrustSwords, IToolConfig toolConfig)
 		{
@@ -165,16 +174,6 @@ namespace SotnRandoTools.RandoTracker
 		private void GridRender()
 		{
 			formGraphics.Clear(DefaultBackground);
-
-			ColorMatrix greyscaleColorMatrix = new ColorMatrix(
-			new float[][]
-			{
-				new float[] {.1f, .1f, .1f, 0, 0},
-				new float[] {.3f, .3f, .3f, 0, 0},
-				new float[] {.1f, .1f, .1f, 0, 0},
-				new float[] {0, 0, 0, 1, 0},
-				new float[] {0, 0, 0, 0, 1}
-			});
 			ImageAttributes greyscaleAttributes = new ImageAttributes();
 			greyscaleAttributes.SetColorMatrix(greyscaleColorMatrix);
 

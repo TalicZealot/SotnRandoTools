@@ -2,13 +2,7 @@
 {
 	public static class Paths
 	{
-		public const string AlertRichterLaugh = "./ExternalTools/SotnRandoTools/Sounds/RichterLaugh.wav";
-		public const string AlertDeathLaugh = "./ExternalTools/SotnRandoTools/Sounds/DeathLaugh.wav";
-		public const string AlertLibrarianThankYou = "./ExternalTools/SotnRandoTools/Sounds/LibrarianThankYou.wav";
-		public const string AlertFairyPotion = "./ExternalTools/SotnRandoTools/Sounds/FairyPotion.wav";
-		public const string AlertMelty = "./ExternalTools/SotnRandoTools/Sounds/Melty.mp3";
-		public const string AlertZaWarudo = "./ExternalTools/SotnRandoTools/Sounds/ZaWarudo.wav";
-		public const string AlertAlucardWhat = "./ExternalTools/SotnRandoTools/Sounds/AlucardWhat.wav";
+		public const string ItemPickupSound = "./ExternalTools/SotnRandoTools/Sounds/Item.mp3";
 
 		public const string SourceLink = "https://github.com/TalicZealot/SotnRandoTools/";
 		public const string ReadmeLink = "https://github.com/TalicZealot/SotnRandoTools/blob/main/README.md";
@@ -31,6 +25,9 @@
 
 		public const string ImagesPath = "./ExternalTools/SotnRandoTools/Images/";
 		public const string TextboxImage = "./ExternalTools/SotnRandoTools/Images/SotnTextBox.png";
+		public const string IconSkull = "./ExternalTools/SotnRandoTools/Images/IconSkull.png";
+		public const string IconFairy = "./ExternalTools/SotnRandoTools/Images/IconFairy.png";
+		public const string IconEye = "./ExternalTools/SotnRandoTools/Images/IconEye.png";
 
 		public const string CasualPresetPath = "./ExternalTools/SotnRandoTools/Presets/casual.json";
 		public const string SafePresetPath = "./ExternalTools/SotnRandoTools/Presets/safe.json";

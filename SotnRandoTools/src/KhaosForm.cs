@@ -102,7 +102,7 @@ namespace SotnRandoTools
 			}
 			else
 			{
-				khaosControler.InflictRandomStatus();
+				khaosControler.KhaosStatus();
 			}
 		}
 		private void randomEquipmentButton_Click(object sender, EventArgs e)
@@ -114,7 +114,7 @@ namespace SotnRandoTools
 			else
 			{
 
-				khaosControler.RandomizeEquipment();
+				khaosControler.KhaosEquipment();
 			}
 		}
 		private void randomizeStatsButton_Click(object sender, EventArgs e)
@@ -126,7 +126,7 @@ namespace SotnRandoTools
 			else
 			{
 
-				khaosControler.RandomizeStats();
+				khaosControler.KhaosStats();
 			}
 		}
 		private void randomizeRelicsButton_Click(object sender, EventArgs e)
@@ -138,7 +138,7 @@ namespace SotnRandoTools
 			else
 			{
 
-				khaosControler.RandomizeRelics();
+				khaosControler.KhaosRelics();
 			}
 		}
 		private void pandorasBoxButton_Click(object sender, EventArgs e)
@@ -290,7 +290,7 @@ namespace SotnRandoTools
 			}
 			else
 			{
-				khaosControler.RandomLightHelp();
+				khaosControler.LightHelp();
 			}
 		}
 		private void mediumHelpButton_Click(object sender, EventArgs e)
@@ -302,7 +302,7 @@ namespace SotnRandoTools
 			else
 			{
 
-				khaosControler.RandomMediumHelp();
+				khaosControler.MediumHelp();
 			}
 		}
 		private void heavyHelpButton_Click(object sender, EventArgs e)
@@ -314,7 +314,7 @@ namespace SotnRandoTools
 			else
 			{
 
-				khaosControler.RandomHeavytHelp();
+				khaosControler.HeavytHelp();
 			}
 		}
 		private void battleOrdersButton_Click(object sender, EventArgs e)

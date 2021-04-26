@@ -182,18 +182,18 @@ namespace SotnRandoTools.RandoTracker
 		};
 		private List<Item> progressionItems = new List<Item>
 		{
-			new Item { Name = "GoldRing", Address = 0x097A7B, Value = 72 },
-			new Item { Name = "SilverRing", Address = 0x097A7C, Value = 73 },
-			new Item { Name = "SpikeBreaker", Address = 0x097A41, Value = 14 },
-			new Item { Name = "HolyGlasses", Address = 0x097A55, Value = 34 }
+			new Item { Name = "GoldRing", Value = 72 },
+			new Item { Name = "SilverRing", Value = 73 },
+			new Item { Name = "SpikeBreaker", Value = 14 },
+			new Item { Name = "HolyGlasses", Value = 34 }
 		};
 		private List<Item> thrustSwords = new List<Item>
 		{
-			new Item { Name = "Estoc", Address = 0x0979E9, Value = 95 },
-			new Item { Name = "Claymore", Address = 0x0979EC, Value = 98 },
-			new Item { Name = "Flamberge", Address = 0x0979EF, Value = 101 },
-			new Item { Name = "Zweihander", Address = 0x0979F1, Value = 103 },
-			new Item { Name = "ObsidianSword", Address = 0x0979F5, Value = 107 }
+			new Item { Name = "Estoc", Value = 95 },
+			new Item { Name = "Claymore", Value = 98 },
+			new Item { Name = "Flamberge", Value = 101 },
+			new Item { Name = "Zweihander", Value = 103 },
+			new Item { Name = "ObsidianSword", Value = 107 }
 		};
 
 		private string preset = "";
@@ -202,6 +202,7 @@ namespace SotnRandoTools.RandoTracker
 		private bool equipmentExtension = false;
 		private bool gameReset = true;
 		private bool secondCastle = false;
+		private bool restarted = false;
 
 		public Tracker(IGraphics? formGraphics, IToolConfig toolConfig, IWatchlistService watchlistService, IRenderingApi renderingApi, IGameApi gameApi, IAlucardApi alucardApi)
 		{
@@ -232,6 +233,7 @@ namespace SotnRandoTools.RandoTracker
 		public string SeedInfo { get; set; }
 
 		public TrackerGraphicsEngine GraphicsEngine { get; }
+
 		private void LoadLocks()
 		{
 			var casualLocations = JObject.Parse(File.ReadAllText(Paths.CasualPresetPath))["lockLocation"];
@@ -304,6 +306,8 @@ namespace SotnRandoTools.RandoTracker
 
 			if (gameApi.InAlucardMode())
 			{
+				restarted = false;
+
 				if (updatedSecondCastle != secondCastle && toolConfig.Tracker.Locations)
 				{
 					secondCastle = updatedSecondCastle;
@@ -332,10 +336,33 @@ namespace SotnRandoTools.RandoTracker
 			{
 				gameReset = true;
 			}
-			else if (gameApi.InPrologue())
+			else if (inGame && gameApi.InPrologue() && !restarted)
 			{
-				//have state bool
-				//reset defaults
+				ResetToDefaults();
+				DrawRelicsAndItems();
+				restarted = true;
+			}
+		}
+
+		private void ResetToDefaults()
+		{
+			roomCount = 2;
+			foreach (var relic in relics)
+			{
+				relic.Status = false;
+			}
+			foreach (var item in progressionItems)
+			{
+				item.Status = false;
+			}
+			foreach (var sword in thrustSwords)
+			{
+				sword.Status = false;
+			}
+			foreach (var location in locations)
+			{
+				location.Status = false;
+				location.AvailabilityColor = MapColor.Unavailable;
 			}
 		}
 
@@ -576,16 +603,16 @@ namespace SotnRandoTools.RandoTracker
 			{
 				if (watch.ChangeCount > 0)
 				{
-					string locationName = watch.Notes;
+					string locationName = watch.Notes.ToLower();
 					if (Char.IsDigit(watch.Notes.Last()))
 					{
 						locationName = locationName.Substring(0, locationName.Length - 1);
 					}
-					Location location = locations.Where(x => x.Name == locationName).FirstOrDefault();
+					Location location = locations.Where(x => x.Name.ToLower() == locationName.ToLower()).FirstOrDefault();
 
 					if (location != null && !location.Status && watch.Value > 0)
 					{
-						Room room = location.Rooms.Where(y => y.Name == watch.Notes).FirstOrDefault();
+						Room room = location.Rooms.Where(y => y.Name.ToLower() == watch.Notes.ToLower()).FirstOrDefault();
 						if (room != null)
 						{
 							foreach (int value in room.Values)
@@ -629,6 +656,11 @@ namespace SotnRandoTools.RandoTracker
 				}
 				if (location.AvailabilityColor == MapColor.Available)
 				{
+					continue;
+				}
+				if (location.OutOfLogicLocks.Count == 0)
+				{
+					location.AvailabilityColor = MapColor.Allowed;
 					continue;
 				}
 				foreach (var lockSet in location.OutOfLogicLocks)

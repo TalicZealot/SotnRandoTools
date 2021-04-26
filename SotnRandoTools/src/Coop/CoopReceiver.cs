@@ -5,6 +5,7 @@ using SotnApi.Constants.Values.Alucard;
 using SotnApi.Constants.Values.Alucard.Enums;
 using SotnApi.Interfaces;
 using SotnRandoTools.Configuration.Interfaces;
+using SotnRandoTools.Constants;
 using SotnRandoTools.Coop.Enums;
 using SotnRandoTools.Coop.Interfaces;
 using SotnRandoTools.Services;
@@ -52,6 +53,7 @@ namespace SotnRandoTools.Coop
 						watchlistService.UpdateWatchlist(watchlistService.CoopRelicWatches);
 						watchlistService.CoopRelicWatches.ClearChangeCounts();
 						notificationService.DisplayMessage(((Relic) index).ToString());
+						notificationService.PlayAlert(Paths.ItemPickupSound);
 						Console.WriteLine($"Received relic: {(Relic) index}");
 					}
 					break;
@@ -64,6 +66,7 @@ namespace SotnRandoTools.Coop
 				case MessageType.Item:
 					alucardApi.GrantItemByName(Equipment.Items[index]);
 					notificationService.DisplayMessage(Equipment.Items[index]);
+					notificationService.PlayAlert(Paths.ItemPickupSound);
 					Console.WriteLine($"Received item: {Equipment.Items[index]}");
 					break;
 				case MessageType.Effect:

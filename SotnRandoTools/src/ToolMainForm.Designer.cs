@@ -65,7 +65,7 @@ namespace SotnRandoTools
             this.autotrackerSelect.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.autotrackerSelect.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.autotrackerSelect.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.autotrackerSelect.Image = global::SotnRandoTools.Properties.Resources.Tracker1;
+            this.autotrackerSelect.Image = global::SotnRandoTools.Properties.Resources.Tracker;
             this.autotrackerSelect.Location = new System.Drawing.Point(12, 12);
             this.autotrackerSelect.Name = "autotrackerSelect";
             this.autotrackerSelect.Size = new System.Drawing.Size(88, 70);
@@ -133,7 +133,7 @@ namespace SotnRandoTools
             this.multiplayerSelect.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.multiplayerSelect.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.multiplayerSelect.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.multiplayerSelect.Image = global::SotnRandoTools.Properties.Resources.CoOpAlpha1;
+            this.multiplayerSelect.Image = global::SotnRandoTools.Properties.Resources.CoOp;
             this.multiplayerSelect.Location = new System.Drawing.Point(200, 12);
             this.multiplayerSelect.Name = "multiplayerSelect";
             this.multiplayerSelect.Size = new System.Drawing.Size(88, 70);
@@ -150,7 +150,7 @@ namespace SotnRandoTools
             this.khaosChatSelect.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.khaosChatSelect.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.khaosChatSelect.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.khaosChatSelect.Image = global::SotnRandoTools.Properties.Resources.Khaos21;
+            this.khaosChatSelect.Image = global::SotnRandoTools.Properties.Resources.Khaos;
             this.khaosChatSelect.Location = new System.Drawing.Point(106, 12);
             this.khaosChatSelect.Name = "khaosChatSelect";
             this.khaosChatSelect.Size = new System.Drawing.Size(88, 70);

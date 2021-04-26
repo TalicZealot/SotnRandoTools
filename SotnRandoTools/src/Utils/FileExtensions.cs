@@ -46,5 +46,22 @@ namespace SotnRandoTools.Utils
 			}
 			return lastLine;
 		}
+
+		public static string GetText(string fullPath)
+		{
+			if (fullPath is null) throw new ArgumentNullException(nameof(fullPath));
+			if (fullPath == "") throw new ArgumentException($"Parameter {nameof(fullPath)} is empty!");
+
+			string lastLine = "";
+			if (!File.Exists(fullPath))
+			{
+				return "";
+			}
+			if (WaitForFile(fullPath, retries))
+			{
+				lastLine = File.ReadAllText(fullPath);
+			}
+			return lastLine;
+		}
 	}
 }

@@ -7,7 +7,6 @@
 			Status = false;
 		}
 		public string? Name { get; set; }
-		public long Address { get; set; }
 		public uint Value { get; set; }
 		public bool Status { get; set; }
 	}

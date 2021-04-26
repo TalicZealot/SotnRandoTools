@@ -17,7 +17,7 @@ namespace SotnRandoTools
 {
 	[ExternalTool("Symphony of the Night Randomizer Tools", Description = "A collection of tools to enhance the SotN randomizer experience.", LoadAssemblyFiles = new[] { "./SotnRandoTools/SotnApi.dll", "./SotnRandoTools/SimpleTCP.dll" })]
 	[ExternalToolEmbeddedIcon("BizAlucard.ico")]
-	[ExternalToolApplicability.SingleSystem(CoreSystem.Playstation)]
+	[ExternalToolApplicability.SingleRom(CoreSystem.Playstation, "0DDCBC3D")]
 	public partial class ToolMainForm : ToolFormBase, IExternalToolForm
 	{
 		[RequiredService]
@@ -79,19 +79,33 @@ namespace SotnRandoTools
 		private const int PanelOffset = 130;
 		private const int UpdateCooldownFrames = 10;
 		private int cooldown = 0;
+		private List<IDictionary<string, object>> inputHistory = new();
 		public ToolMainForm()
 		{
 			InitializeComponent();
 			SuspendLayout();
 			ResumeLayout();
+			InitializeConfig();
+		}
+
+		private void InitializeConfig()
+		{
 			if (File.Exists(Paths.ConfigPath))
 			{
 				string configJson = File.ReadAllText(Paths.ConfigPath);
-				toolConfig = JsonConvert.DeserializeObject<ToolConfig>(configJson) ?? new ToolConfig();
+				toolConfig = JsonConvert.DeserializeObject<ToolConfig>(configJson,
+					new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace }) ?? new ToolConfig();
 			}
 			else
 			{
 				toolConfig = new ToolConfig();
+			}
+
+			KhaosConfig defaultKhaosConfig = new();
+
+			if (toolConfig.Khaos.Actions.Count != defaultKhaosConfig.Actions.Count)
+			{
+				toolConfig.Khaos.Actions = defaultKhaosConfig.Actions;
 			}
 		}
 
@@ -102,6 +116,7 @@ namespace SotnRandoTools
 		private void ToolMainForm_Load(object sender, EventArgs e)
 		{
 			this.Location = toolConfig.Location;
+			notificationService = new NotificationService(toolConfig, _maybeGuiAPI, _maybeClientAPI);
 
 			aboutPanel = new AboutPanel();
 			aboutPanel.Location = new Point(0, PanelOffset);
@@ -112,7 +127,7 @@ namespace SotnRandoTools
 			autotrackerSettingsPanel.Location = new Point(0, PanelOffset);
 			this.Controls.Add(autotrackerSettingsPanel);
 
-			khaosSettingsPanel = new KhaosSettingsPanel(toolConfig);
+			khaosSettingsPanel = new KhaosSettingsPanel(toolConfig, notificationService);
 			khaosSettingsPanel.Location = new Point(0, PanelOffset);
 			this.Controls.Add(khaosSettingsPanel);
 
@@ -120,6 +135,20 @@ namespace SotnRandoTools
 			coopSettingsPanel.Location = new Point(0, PanelOffset);
 			this.Controls.Add(coopSettingsPanel);
 
+			if (_memoryDomains is null)
+			{
+				string message = "Castlevania: Symphony of the Night must be open to use this tool";
+				string caption = "Error Rom Not Loaded";
+				MessageBoxButtons buttons = MessageBoxButtons.OK;
+				DialogResult result;
+
+				result = MessageBox.Show(message, caption, buttons);
+				if (result == System.Windows.Forms.DialogResult.OK)
+				{
+					this.Close();
+					return;
+				}
+			}
 			this.MainForm.CheatList.Load(_memoryDomains, Paths.CheatsPath, false);
 			this.MainForm.CheatList.DisableAll();
 
@@ -128,7 +157,6 @@ namespace SotnRandoTools
 			gameApi = new GameApi(_maybeMemAPI);
 			renderingApi = new RenderingApi(_maybeMemAPI);
 			watchlistService = new WatchlistService(_memoryDomains, _emu?.SystemId, GlobalConfig);
-			notificationService = new NotificationService(toolConfig, _maybeGuiAPI, _maybeClientAPI);
 		}
 
 		public override bool AskSaveChanges() => true;
@@ -138,6 +166,14 @@ namespace SotnRandoTools
 		public override void UpdateValues(ToolFormUpdateType type)
 		{
 			cooldown++;
+			if (khaosForm is not null || coopForm is not null)
+			{
+				inputHistory.Add(_maybeJoypadApi.Get());
+				if (inputHistory.Count > 120)
+				{
+					inputHistory.RemoveAt(0);
+				}
+			}
 			if (cooldown == UpdateCooldownFrames)
 			{
 				cooldown = 0;
