@@ -104,81 +104,81 @@ namespace SotnRandoTools.RandoTracker
 			new Location { Name = "DarkBlade", GuardedExtension = true, SecondCastle = true,  MapRow = 130, MapCol = 184,  Rooms = new List<Room>{ new Room { Name = "DarkBlade", Values = new int[] { 0x01 } }}},
 			new Location { Name = "Trio", GuardedExtension = true, SecondCastle = true,  MapRow = 258, MapCol = 344,  Rooms = new List<Room>
 			{ new Room { Name = "Trio1", Values = new int[] { 0x40 } }, new Room { Name = "Trio2", Values = new int[] { 0x01 } }}},
-			new Location { Name = "Walk Armor", EquipmentExtension = true, MapRow = 364, MapCol = 186, Rooms = new List<Room>{ new Room { Name = "Walk Armor", Values = new int[] { 0x1 }} }},
+			new Location { Name = "Walk armor", EquipmentExtension = true, MapRow = 364, MapCol = 186, Rooms = new List<Room>{ new Room { Name = "Walk armor", Values = new int[] { 0x1 }} }},
 			new Location { Name = "Icebrand", EquipmentExtension = true, MapRow = 364, MapCol = 194, Rooms = new List<Room>{ new Room { Name = "Icebrand", Values = new int[] { 0x40 }} }},
 			//new Location { Name = "Balroom Mask", EquipmentExtension = true, MapRow = 364, MapCol = 210, Rooms = new List<Room>{ new Room { Name = "Balroom Mask", Values = new int[] { 0x4 }} }},
 			new Location { Name = "Bloodstone", EquipmentExtension = true, MapRow = 364, MapCol = 226, Rooms = new List<Room>{ new Room { Name = "Bloodstone", Values = new int[] { 0x40 }} }},
-			new Location { Name = "Combat Knife", EquipmentExtension = true, MapRow = 348, MapCol = 250, Rooms = new List<Room>{ new Room { Name = "Combat Knife", Values = new int[] { 0x1 }} }},
+			new Location { Name = "Combat knife", EquipmentExtension = true, MapRow = 348, MapCol = 250, Rooms = new List<Room>{ new Room { Name = "Combat knife", Values = new int[] { 0x1 }} }},
 			new Location { Name = "Ring of Ares", EquipmentExtension = true, MapRow = 292, MapCol = 298, Rooms = new List<Room>{ new Room { Name = "Ring of Ares", Values = new int[] { 0x10 }} }},
-			new Location { Name = "Knuckle Duster", EquipmentExtension = true, MapRow = 300, MapCol = 322, Rooms = new List<Room>{ new Room { Name = "Knuckle Duster", Values = new int[] { 0x40 }} }},
+			new Location { Name = "Knuckle duster", EquipmentExtension = true, MapRow = 300, MapCol = 322, Rooms = new List<Room>{ new Room { Name = "Knuckle duster", Values = new int[] { 0x40 }} }},
 			new Location { Name = "Caverns Onyx", EquipmentExtension = true, MapRow = 292, MapCol = 370, Rooms = new List<Room>{ new Room { Name = "Caverns Onyx", Values = new int[] { 0x10 }} }},
 			//new Location { Name = "Scimitar", EquipmentExtension = true, MapRow = 276, MapCol = 362, Rooms = new List<Room>{ new Room { Name = "Scimitar", Values = new int[] { 0x10 }} }},
 			//new Location { Name = "Moonstone", EquipmentExtension = true, MapRow = 228, MapCol = 354, Rooms = new List<Room>{ new Room { Name = "Moonstone", Values = new int[] { 0x40 }} }},
 			//new Location { Name = "Claymore", EquipmentExtension = true, MapRow = 196, MapCol = 346, Rooms = new List<Room>{ new Room { Name = "Claymore", Values = new int[] { 0x1 }} }},
 			new Location { Name = "Bandanna", EquipmentExtension = true, MapRow = 180, MapCol = 282, Rooms = new List<Room>{ new Room { Name = "Bandanna", Values = new int[] { 0x1 }} }},
 			new Location { Name = "Nunchaku", EquipmentExtension = true, MapRow = 268, MapCol = 306, Rooms = new List<Room>{ new Room { Name = "Nunchaku", Values = new int[] { 0x4, 0x10 }} }},
-			new Location { Name = "Secret Boots", EquipmentExtension = true, MapRow = 276, MapCol = 194, Rooms = new List<Room>{ new Room { Name = "Secret Boots1", Values = new int[] { 0x1 }}, new Room { Name = "Secret Boots2", Values = new int[] { 0x1 }} }},
+			new Location { Name = "Secret Boots", EquipmentExtension = true, MapRow = 276, MapCol = 194, Rooms = new List<Room>{ new Room { Name = "Secret boots1", Values = new int[] { 0x1 }}, new Room { Name = "Secret boots2", Values = new int[] { 0x1 }} }},
 			//new Location { Name = "Herald Shield", EquipmentExtension = true, MapRow = 260, MapCol = 178, Rooms = new List<Room>{ new Room { Name = "Herald Shield", Values = new int[] { 0x4 }} }},
-			new Location { Name = "Holy Mail", EquipmentExtension = true, MapRow = 268, MapCol = 42, Rooms = new List<Room>{ new Room { Name = "Holy Mail", Values = new int[] { 0x10 }} }},
-			new Location { Name = "Jewel Sword", EquipmentExtension = true, MapRow = 292, MapCol = 82, Rooms = new List<Room>{ new Room { Name = "Jewel Sword", Values = new int[] { 0x4 }} }},
-			new Location { Name = "Hide Cuirass", EquipmentExtension = true, MapRow = 252, MapCol = 114, Rooms = new List<Room>{ new Room { Name = "Hide Cuirass", Values = new int[] { 0x4 }} }},
-			new Location { Name = "Leather Shield", EquipmentExtension = true, MapRow = 244, MapCol = 106, Rooms = new List<Room>{ new Room { Name = "Leather Shield", Values = new int[] { 0x10 }} }},
+			new Location { Name = "Holy mail", EquipmentExtension = true, MapRow = 268, MapCol = 42, Rooms = new List<Room>{ new Room { Name = "Holy mail", Values = new int[] { 0x10 }} }},
+			new Location { Name = "Jewel sword", EquipmentExtension = true, MapRow = 292, MapCol = 82, Rooms = new List<Room>{ new Room { Name = "Jewel sword", Values = new int[] { 0x4 }} }},
+			//new Location { Name = "Hide Cuirass", EquipmentExtension = true, MapRow = 252, MapCol = 114, Rooms = new List<Room>{ new Room { Name = "Hide Cuirass", Values = new int[] { 0x4 }} }},
+			//new Location { Name = "Leather Shield", EquipmentExtension = true, MapRow = 244, MapCol = 106, Rooms = new List<Room>{ new Room { Name = "Leather Shield", Values = new int[] { 0x10 }} }},
 			new Location { Name = "Sunglasses", EquipmentExtension = true, MapRow = 212, MapCol = 130, Rooms = new List<Room>{ new Room { Name = "Sunglasses", Values = new int[] { 0x40 }} }},
 			new Location { Name = "Basilard", EquipmentExtension = true, MapRow = 236, MapCol = 130, Rooms = new List<Room>{ new Room { Name = "Basilard", Values = new int[] { 0x40 }} }},
-			new Location { Name = "Cloth Cape", EquipmentExtension = true, MapRow = 196, MapCol = 82, Rooms = new List<Room>{ new Room { Name = "Cloth Cape", Values = new int[] { 0x4 }} }},
-			new Location { Name = "Mystic Pendant", EquipmentExtension = true, MapRow = 172, MapCol = 34, Rooms = new List<Room>{ new Room { Name = "Mystic Pendant1", Values = new int[] { 0x40 }}, new Room { Name = "Mystic Pendant2", Values = new int[] { 0x40 }} }},
+			new Location { Name = "Cloth cape", EquipmentExtension = true, MapRow = 196, MapCol = 82, Rooms = new List<Room>{ new Room { Name = "Cloth cape", Values = new int[] { 0x4 }} }},
+			new Location { Name = "Mystic pendant", EquipmentExtension = true, MapRow = 172, MapCol = 34, Rooms = new List<Room>{ new Room { Name = "Mystic pendant1", Values = new int[] { 0x40 }}, new Room { Name = "Mystic pendant2", Values = new int[] { 0x40 }} }},
 			new Location { Name = "Ankh of Life", EquipmentExtension = true, MapRow = 156, MapCol = 50, Rooms = new List<Room>{ new Room { Name = "Ankh of Life", Values = new int[] { 0x4, 0x1 }} }},
 			new Location { Name = "Morningstar", EquipmentExtension = true, MapRow = 132, MapCol = 66, Rooms = new List<Room>{ new Room { Name = "Morningstar1", Values = new int[] { 0x10 }}, new Room { Name = "Morningstar2", Values = new int[] { 0x10 }} }},
 			new Location { Name = "Goggles", EquipmentExtension = true, MapRow = 132, MapCol = 82, Rooms = new List<Room>{ new Room { Name = "Goggles", Values = new int[] { 0x4 }} }},
-			new Location { Name = "Silver Plate", EquipmentExtension = true, MapRow = 60, MapCol = 114, Rooms = new List<Room>{ new Room { Name = "Silver Plate", Values = new int[] { 0x4, 0x1 }} }},
+			new Location { Name = "Silver plate", EquipmentExtension = true, MapRow = 60, MapCol = 114, Rooms = new List<Room>{ new Room { Name = "Silver plate", Values = new int[] { 0x4, 0x1 }} }},
 			new Location { Name = "Cutlass", EquipmentExtension = true, MapRow = 44, MapCol = 218, Rooms = new List<Room>{ new Room { Name = "Cutlass1", Values = new int[] { 0x40 }}, new Room { Name = "Cutlass2", Values = new int[] { 0x1 }} }},
-			new Location { Name = "Platinum Mail", EquipmentExtension = true, MapRow = 12, MapCol = 282, Rooms = new List<Room>{ new Room { Name = "Platinum Mail", Values = new int[] { 0x1 }} }},
+			new Location { Name = "Platinum mail", EquipmentExtension = true, MapRow = 12, MapCol = 282, Rooms = new List<Room>{ new Room { Name = "Platinum mail", Values = new int[] { 0x1 }} }},
 			new Location { Name = "Falchion", EquipmentExtension = true, MapRow = 28, MapCol = 314, Rooms = new List<Room>{ new Room { Name = "Falchion", Values = new int[] { 0x1 }} }},
 			new Location { Name = "Gold plate", EquipmentExtension = true, MapRow = 76, MapCol = 394, Rooms = new List<Room>{ new Room { Name = "Gold plate", Values = new int[] { 0x10 }} }},
 			new Location { Name = "Bekatowa", EquipmentExtension = true, MapRow = 76, MapCol = 446, Rooms = new List<Room>{ new Room { Name = "Bekatowa1", Values = new int[] { 0x1, 0x4 }}, new Room { Name = "Bekatowa2", Values = new int[] { 0x1, 0x4 }} }},
 			new Location { Name = "Gladius", EquipmentExtension = true, MapRow = 148, MapCol = 474, Rooms = new List<Room>{ new Room { Name = "Gladius", Values = new int[] { 0x1 }} }},
-			new Location { Name = "Jewel Knuckles", EquipmentExtension = true, MapRow = 180, MapCol = 474, Rooms = new List<Room>{ new Room { Name = "Jewel Knuckles", Values = new int[] { 0x1 }} }},
-			new Location { Name = "Bronze Cuirass", EquipmentExtension = true, MapRow = 132, MapCol = 394, Rooms = new List<Room>{ new Room { Name = "Bronze Cuirass", Values = new int[] { 0x10 }} }},
-			new Location { Name = "Holy Rod", EquipmentExtension = true, MapRow = 108, MapCol = 402, Rooms = new List<Room>{ new Room { Name = "Holy Rod", Values = new int[] { 0x4 }} }},
+			new Location { Name = "Jewel knuckles", EquipmentExtension = true, MapRow = 180, MapCol = 474, Rooms = new List<Room>{ new Room { Name = "Jewel knuckles", Values = new int[] { 0x1 }} }},
+			new Location { Name = "Bronze cuirass", EquipmentExtension = true, MapRow = 132, MapCol = 394, Rooms = new List<Room>{ new Room { Name = "Bronze cuirass", Values = new int[] { 0x10 }} }},
+			new Location { Name = "Holy rod", EquipmentExtension = true, MapRow = 108, MapCol = 402, Rooms = new List<Room>{ new Room { Name = "Holy rod", Values = new int[] { 0x4 }} }},
 			new Location { Name = "Library Onyx", EquipmentExtension = true, MapRow = 132, MapCol = 378, Rooms = new List<Room>{ new Room { Name = "Library Onyx", Values = new int[] { 0x4 }} }},
-			new Location { Name = "Alucart Sword", EquipmentExtension = true, MapRow = 164, MapCol = 274, Rooms = new List<Room>{ new Room { Name = "Alucart Sword", Values = new int[] { 0x4 }} }},
+			new Location { Name = "Alucart Sword", EquipmentExtension = true, MapRow = 164, MapCol = 274, Rooms = new List<Room>{ new Room { Name = "Alucart sword", Values = new int[] { 0x4 }} }},
 			new Location { Name = "Broadsword", EquipmentExtension = true, MapRow = 140, MapCol = 258, Rooms = new List<Room>{ new Room { Name = "Broadsword", Values = new int[] { 0x40 }} }},
 			new Location { Name = "Estoc", EquipmentExtension = true, MapRow = 84, MapCol = 242, Rooms = new List<Room>{ new Room { Name = "Estoc", Values = new int[] { 0x4 }} }},
-			new Location { Name = "Olrox Garnet", EquipmentExtension = true, MapRow = 108, MapCol = 266, Rooms = new List<Room>{ new Room { Name = "Olrox Garnet", Values = new int[] { 0x10 }} }},
-			new Location { Name = "Holy Sword", EquipmentExtension = true, MapRow = 124, MapCol = 154, Rooms = new List<Room>{ new Room { Name = "Holy Sword", Values = new int[] { 0x1 }} }},
-			new Location { Name = "Knight Shield", EquipmentExtension = true, MapRow = 140, MapCol = 114, Rooms = new List<Room>{ new Room { Name = "Knight Shield", Values = new int[] { 0x1, 0x4 }} }},
-			new Location { Name = "Shield Rod", EquipmentExtension = true, MapRow = 156, MapCol = 106, Rooms = new List<Room>{ new Room { Name = "Shield Rod", Values = new int[] { 0x10 }} }},
-			new Location { Name = "Blood Cloak", EquipmentExtension = true, MapRow = 156, MapCol = 162, Rooms = new List<Room>{ new Room { Name = "Blood Cloak", Values = new int[] { 0x40 }} }},
-			new Location { Name = "Bastard Sword", EquipmentExtension = true, SecondCastle = true, MapRow = 386, MapCol = 240, Rooms = new List<Room>{ new Room { Name = "Bastard Sword", Values = new int[] { 0x4 }} }},
-			new Location { Name = "Royal Cloak", EquipmentExtension = true, SecondCastle = true, MapRow = 386, MapCol = 224, Rooms = new List<Room>{ new Room { Name = "Royal Cloak", Values = new int[] { 0x40 }} }},
-			new Location { Name = "Lightning Mail", EquipmentExtension = true, SecondCastle = true, MapRow = 346, MapCol = 192, Rooms = new List<Room>{ new Room { Name = "Lightning Mail", Values = new int[] { 0x40 }} }},
+			new Location { Name = "Olrox Garnet", EquipmentExtension = true, MapRow = 108, MapCol = 266, Rooms = new List<Room>{ new Room { Name = "Olrox garnet", Values = new int[] { 0x10 }} }},
+			new Location { Name = "Holy sword", EquipmentExtension = true, MapRow = 124, MapCol = 154, Rooms = new List<Room>{ new Room { Name = "Holy sword", Values = new int[] { 0x1 }} }},
+			new Location { Name = "Knight shield", EquipmentExtension = true, MapRow = 140, MapCol = 114, Rooms = new List<Room>{ new Room { Name = "Knight shield", Values = new int[] { 0x1, 0x4 }} }},
+			new Location { Name = "Shield rod", EquipmentExtension = true, MapRow = 156, MapCol = 106, Rooms = new List<Room>{ new Room { Name = "Shield rod", Values = new int[] { 0x10 }} }},
+			new Location { Name = "Blood cloak", EquipmentExtension = true, MapRow = 156, MapCol = 162, Rooms = new List<Room>{ new Room { Name = "Blood cloak", Values = new int[] { 0x40 }} }},
+			new Location { Name = "Bastard Sword", EquipmentExtension = true, SecondCastle = true, MapRow = 386, MapCol = 240, Rooms = new List<Room>{ new Room { Name = "Bastard sword", Values = new int[] { 0x4 }} }},
+			new Location { Name = "Royal cloak", EquipmentExtension = true, SecondCastle = true, MapRow = 386, MapCol = 224, Rooms = new List<Room>{ new Room { Name = "Royal cloak", Values = new int[] { 0x40 }} }},
+			new Location { Name = "Lightning mail", EquipmentExtension = true, SecondCastle = true, MapRow = 346, MapCol = 192, Rooms = new List<Room>{ new Room { Name = "Lightning mail", Values = new int[] { 0x40 }} }},
 			new Location { Name = "Sword of Dawn", EquipmentExtension = true, SecondCastle = true, MapRow = 346, MapCol = 256, Rooms = new List<Room>{ new Room { Name = "Sword of Dawn1", Values = new int[] { 0x40 }}, new Room { Name = "Sword of Dawn2", Values = new int[] { 0x1 }} }},
-			new Location { Name = "Moon Rod", EquipmentExtension = true, SecondCastle = true, MapRow = 346, MapCol = 168, Rooms = new List<Room>{ new Room { Name = "Moon Rod", Values = new int[] { 0x10 }} }},
+			new Location { Name = "Moon rod", EquipmentExtension = true, SecondCastle = true, MapRow = 346, MapCol = 168, Rooms = new List<Room>{ new Room { Name = "Moon rod", Values = new int[] { 0x10 }} }},
 			new Location { Name = "Sunstone", EquipmentExtension = true, SecondCastle = true, MapRow = 322, MapCol = 112, Rooms = new List<Room>{ new Room { Name = "Sunstone", Values = new int[] { 0x4 }} }},
 			new Location { Name = "Luminus", EquipmentExtension = true, SecondCastle = true, MapRow = 328, MapCol = 64, Rooms = new List<Room>{ new Room { Name = "Luminus", Values = new int[] { 0x10, 0x40 }} }},
-			new Location { Name = "Dragon Helm", EquipmentExtension = true, SecondCastle = true, MapRow = 346, MapCol = 32, Rooms = new List<Room>{ new Room { Name = "Dragon Helm", Values = new int[] { 0x40 }} }},
+			new Location { Name = "Dragon helm", EquipmentExtension = true, SecondCastle = true, MapRow = 346, MapCol = 32, Rooms = new List<Room>{ new Room { Name = "Dragon helm", Values = new int[] { 0x40 }} }},
 			new Location { Name = "Shotel", EquipmentExtension = true, SecondCastle = true, MapRow = 218, MapCol = 32, Rooms = new List<Room>{ new Room { Name = "Shotel", Values = new int[] { 0x40 }} }},
 			new Location { Name = "Badelaire", EquipmentExtension = true, SecondCastle = true, MapRow = 290, MapCol = 104, Rooms = new List<Room>{ new Room { Name = "Badelaire", Values = new int[] { 0x10 }} }},
-			new Location { Name = "Staurolite", EquipmentExtension = true, SecondCastle = true, MapRow = 264, MapCol = 118, Rooms = new List<Room>{ new Room { Name = "Staurolite", Values = new int[] { 0x40 }} }},
+			new Location { Name = "Staurolite", EquipmentExtension = true, SecondCastle = true, MapRow = 264, MapCol = 120, Rooms = new List<Room>{ new Room { Name = "Staurolite", Values = new int[] { 0x40 }} }},
 			new Location { Name = "Forbidden Library Opal", EquipmentExtension = true, SecondCastle = true, MapRow = 274, MapCol = 110, Rooms = new List<Room>{ new Room { Name = "Forbidden Library Opal", Values = new int[] { 0x04 }} }},
 			new Location { Name = "Reverse Caverns Diamond", EquipmentExtension = true, SecondCastle = true, MapRow = 218, MapCol = 224, Rooms = new List<Room>{ new Room { Name = "Reverse Caverns Diamond", Values = new int[] { 0x40 }} }},
 			new Location { Name = "Reverse Caverns Opal", EquipmentExtension = true, SecondCastle = true, MapRow = 178, MapCol = 208, Rooms = new List<Room>{ new Room { Name = "Reverse Caverns Opal", Values = new int[] { 0x4 }} }},
 			new Location { Name = "Reverse Caverns Garnet", EquipmentExtension = true, SecondCastle = true, MapRow = 138, MapCol = 328, Rooms = new List<Room>{ new Room { Name = "Reverse Caverns Garnet", Values = new int[] { 0x10 }} }},
-			new Location { Name = "Osafune Katana", EquipmentExtension = true, SecondCastle = true, MapRow = 98, MapCol = 304, Rooms = new List<Room>{ new Room { Name = "Osafune Katana", Values = new int[] { 0x4 }} }},
-			new Location { Name = "Alucard Shield", EquipmentExtension = true, SecondCastle = true, MapRow = 98, MapCol = 440, Rooms = new List<Room>{ new Room { Name = "Alucard Shield", Values = new int[] { 0x1 }} }},
-			new Location { Name = "Alucard Sword", EquipmentExtension = true, SecondCastle = true, MapRow = 82, MapCol = 272, Rooms = new List<Room>{ new Room { Name = "Alucard Sword", Values = new int[] { 0x4 }} }},
+			new Location { Name = "Osafune katana", EquipmentExtension = true, SecondCastle = true, MapRow = 98, MapCol = 304, Rooms = new List<Room>{ new Room { Name = "Osafune katana", Values = new int[] { 0x4 }} }},
+			new Location { Name = "Alucard shield", EquipmentExtension = true, SecondCastle = true, MapRow = 98, MapCol = 440, Rooms = new List<Room>{ new Room { Name = "Alucard shield", Values = new int[] { 0x1 }} }},
+			new Location { Name = "Alucard sword", EquipmentExtension = true, SecondCastle = true, MapRow = 82, MapCol = 272, Rooms = new List<Room>{ new Room { Name = "Alucard sword", Values = new int[] { 0x4 }} }},
 			new Location { Name = "Necklace of J", EquipmentExtension = true, SecondCastle = true, MapRow = 34, MapCol = 312, Rooms = new List<Room>{ new Room { Name = "Necklace of J", Values = new int[] { 0x1 }} }},
 			new Location { Name = "Floating Catacombs Diamond", EquipmentExtension = true, SecondCastle = true, MapRow = 34, MapCol = 320, Rooms = new List<Room>{ new Room { Name = "Floating Catacombs Diamond", Values = new int[] { 0x40 }} }},
 			new Location { Name = "Talwar", EquipmentExtension = true, SecondCastle = true, MapRow = 346, MapCol = 352, Rooms = new List<Room>{ new Room { Name = "Talwar1", Values = new int[] { 0x1 }}, new Room { Name = "Talwar2", Values = new int[] { 0x40 }} }},
-			new Location { Name = "Twilight Cloak", EquipmentExtension = true, SecondCastle = true, MapRow = 314, MapCol = 440, Rooms = new List<Room>{ new Room { Name = "Twilight Cloak", Values = new int[] { 0x4 }} }},
-			new Location { Name = "Alucard Mail", EquipmentExtension = true, SecondCastle = true, MapRow = 290, MapCol = 240, Rooms = new List<Room>{ new Room { Name = "Alucard Mail", Values = new int[] { 0x4 }} }},
+			new Location { Name = "Twilight cloak", EquipmentExtension = true, SecondCastle = true, MapRow = 314, MapCol = 440, Rooms = new List<Room>{ new Room { Name = "Twilight cloak", Values = new int[] { 0x4 }} }},
+			new Location { Name = "Alucard Mail", EquipmentExtension = true, SecondCastle = true, MapRow = 290, MapCol = 240, Rooms = new List<Room>{ new Room { Name = "Alucard mail", Values = new int[] { 0x4 }} }},
 			new Location { Name = "Sword of Hador", EquipmentExtension = true, SecondCastle = true, MapRow = 258, MapCol = 248, Rooms = new List<Room>{ new Room { Name = "Sword of Hador", Values = new int[] { 0x1 }} }},
-			new Location { Name = "Fury Plate", EquipmentExtension = true, SecondCastle = true, MapRow = 274, MapCol = 352, Rooms = new List<Room>{ new Room { Name = "Fury Plate", Values = new int[] { 0x40 }} }},
+			new Location { Name = "Fury Plate", EquipmentExtension = true, SecondCastle = true, MapRow = 274, MapCol = 352, Rooms = new List<Room>{ new Room { Name = "Fury plate", Values = new int[] { 0x40 }} }},
 			new Location { Name = "Gram", EquipmentExtension = true, SecondCastle = true, MapRow = 242, MapCol = 344, Rooms = new List<Room>{ new Room { Name = "Gram", Values = new int[] { 0x1 }} }},
-			new Location { Name = "Goddess Shield", EquipmentExtension = true, SecondCastle = true, MapRow = 186, MapCol = 376, Rooms = new List<Room>{ new Room { Name = "Goddess Shield", Values = new int[] { 0x1 }} }},
+			new Location { Name = "Goddess shield", EquipmentExtension = true, SecondCastle = true, MapRow = 186, MapCol = 376, Rooms = new List<Room>{ new Room { Name = "Goddess shield", Values = new int[] { 0x1 }} }},
 			new Location { Name = "Katana", EquipmentExtension = true, SecondCastle = true, MapRow = 146, MapCol = 408, Rooms = new List<Room>{ new Room { Name = "Katana", Values = new int[] { 0x1 }} }},
 			new Location { Name = "Talisman", EquipmentExtension = true, SecondCastle = true, MapRow = 138, MapCol = 344, Rooms = new List<Room>{ new Room { Name = "Talisman", Values = new int[] { 0x1 }} }},
-			new Location { Name = "Beryl Circlet", EquipmentExtension = true, SecondCastle = true, MapRow = 106, MapCol = 424, Rooms = new List<Room>{ new Room { Name = "Beryl Circlet", Values = new int[] { 0x10 }} }},
+			new Location { Name = "Beryl circlet", EquipmentExtension = true, SecondCastle = true, MapRow = 106, MapCol = 424, Rooms = new List<Room>{ new Room { Name = "Beryl circlet", Values = new int[] { 0x10 }} }},
 		};
 		private List<Item> progressionItems = new List<Item>
 		{
@@ -221,7 +221,7 @@ namespace SotnRandoTools.RandoTracker
 
 			if (toolConfig.Tracker.Locations)
 			{
-				LoadLocks();
+				InitializeAllLocks();
 				CheckReachability();
 			}
 			trackerGraphicsEngine = new TrackerGraphicsEngine(formGraphics, relics, progressionItems, thrustSwords, toolConfig);
@@ -233,63 +233,6 @@ namespace SotnRandoTools.RandoTracker
 		public string SeedInfo { get; set; }
 
 		public TrackerGraphicsEngine GraphicsEngine { get; }
-
-		private void LoadLocks()
-		{
-			var casualLocations = JObject.Parse(File.ReadAllText(Paths.CasualPresetPath))["lockLocation"];
-			foreach (var location in casualLocations)
-			{
-				string name = location["location"].ToString().Replace(" ", String.Empty).ToLower();
-				var trackerLocation = locations.Where(x => x.Name.Replace(" ", String.Empty).ToLower() == name).FirstOrDefault();
-				if (trackerLocation != null)
-				{
-					foreach (var lockSet in location["locks"])
-					{
-						trackerLocation.Locks.Add(lockSet.ToString().Replace(" ", String.Empty).ToLower().Split('+'));
-					}
-				}
-				else
-				{
-					Console.WriteLine($"Could not find location {name}.");
-				}
-			}
-
-			var safeLocations = JObject.Parse(File.ReadAllText(Paths.SafePresetPath))["lockLocation"];
-			foreach (var location in safeLocations)
-			{
-				string name = location["location"].ToString().Replace(" ", String.Empty).ToLower();
-				var trackerLocation = locations.Where(x => x.Name.Replace(" ", String.Empty).ToLower() == name).FirstOrDefault();
-				if (trackerLocation != null)
-				{
-					foreach (var lockSet in location["locks"])
-					{
-						trackerLocation.Locks.Add(lockSet.ToString().Replace(" ", String.Empty).ToLower().Split('+'));
-					}
-				}
-				else
-				{
-					Console.WriteLine($"Could not find location {name}.");
-				}
-			}
-
-			var speedrunLocations = JObject.Parse(File.ReadAllText(Paths.SpeedrunPresetPath))["lockLocation"];
-			foreach (var location in speedrunLocations)
-			{
-				string name = location["location"].ToString().Replace(" ", String.Empty).ToLower();
-				var trackerLocation = locations.Where(x => x.Name.Replace(" ", String.Empty).ToLower() == name).FirstOrDefault();
-				if (trackerLocation != null)
-				{
-					foreach (var lockSet in location["locks"])
-					{
-						trackerLocation.OutOfLogicLocks.Add(lockSet.ToString().Replace(" ", String.Empty).ToLower().Split('+'));
-					}
-				}
-				else
-				{
-					Console.WriteLine($"Could not find location {name}.");
-				}
-			}
-		}
 
 		public void DrawRelicsAndItems()
 		{
@@ -341,6 +284,41 @@ namespace SotnRandoTools.RandoTracker
 				ResetToDefaults();
 				DrawRelicsAndItems();
 				restarted = true;
+			}
+		}
+
+		private void InitializeAllLocks()
+		{
+			LoadLocksAsd(Paths.CasualPresetPath, false);
+			LoadLocksAsd(Paths.SafePresetPath, false);
+			LoadLocksAsd(Paths.SpeedrunPresetPath, true);
+		}
+
+		private void LoadLocksAsd(string presetFilePath, bool outOfLogic)
+		{
+			var presetLocations = JObject.Parse(File.ReadAllText(presetFilePath))["lockLocation"];
+			foreach (var location in presetLocations)
+			{
+				string name = location["location"].ToString().Replace(" ", String.Empty).ToLower();
+				var trackerLocation = locations.Where(x => x.Name.Replace(" ", String.Empty).ToLower() == name).FirstOrDefault();
+				if (trackerLocation != null)
+				{
+					foreach (var lockSet in location["locks"])
+					{
+						if (outOfLogic)
+						{
+							trackerLocation.OutOfLogicLocks.Add(lockSet.ToString().Replace(" ", String.Empty).ToLower().Split('+'));
+						}
+						else
+						{
+							trackerLocation.Locks.Add(lockSet.ToString().Replace(" ", String.Empty).ToLower().Split('+'));
+						}
+					}
+				}
+				else
+				{
+					Console.WriteLine($"Could not find location {name}.");
+				}
 			}
 		}
 
@@ -544,10 +522,10 @@ namespace SotnRandoTools.RandoTracker
 			ColorMapRoom(index, (uint) MapColor.Clear, locations[index].SecondCastle);
 			foreach (var room in locations[index].Rooms)
 			{
-				Watch roomWatch = watchlistService.SafeLocationWatches.Where(x => x.Notes == room.Name).FirstOrDefault();
+				Watch roomWatch = watchlistService.SafeLocationWatches.Where(x => x.Notes.ToLower() == room.Name.ToLower()).FirstOrDefault();
 				if (roomWatch is null)
 				{
-					roomWatch = watchlistService.EquipmentLocationWatches.Where(x => x.Notes == room.Name).FirstOrDefault();
+					roomWatch = watchlistService.EquipmentLocationWatches.Where(x => x.Notes.ToLower() == room.Name.ToLower()).FirstOrDefault();
 				}
 				gameApi.SetRoomToUnvisited(roomWatch.Address);
 			}
@@ -711,29 +689,6 @@ namespace SotnRandoTools.RandoTracker
 			}
 
 			return false;
-		}
-
-		private void RestartToDefaults()
-		{
-			foreach (var relic in relics)
-			{
-				relic.Status = false;
-			}
-
-			foreach (var location in locations)
-			{
-				location.Status = false;
-			}
-
-			foreach (var item in progressionItems)
-			{
-				item.Status = false;
-			}
-
-			foreach (var item in thrustSwords)
-			{
-				item.Status = false;
-			}
 		}
 	}
 }

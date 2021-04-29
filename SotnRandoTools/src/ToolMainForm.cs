@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using BizHawk.Client.Common;
 using BizHawk.Client.EmuHawk;
@@ -12,6 +13,7 @@ using SotnApi;
 using SotnRandoTools.Configuration;
 using SotnRandoTools.Constants;
 using SotnRandoTools.Services;
+using SotnRandoTools.Utils;
 
 namespace SotnRandoTools
 {
@@ -68,6 +70,7 @@ namespace SotnRandoTools
 		private ToolConfig toolConfig;
 		private WatchlistService? watchlistService;
 		private NotificationService? notificationService;
+		private InputService? inputService;
 		private TrackerForm? trackerForm;
 		private KhaosForm? khaosForm;
 		private CoopForm? coopForm;
@@ -79,7 +82,6 @@ namespace SotnRandoTools
 		private const int PanelOffset = 130;
 		private const int UpdateCooldownFrames = 10;
 		private int cooldown = 0;
-		private List<IDictionary<string, object>> inputHistory = new();
 		public ToolMainForm()
 		{
 			InitializeComponent();
@@ -104,6 +106,16 @@ namespace SotnRandoTools
 			KhaosConfig defaultKhaosConfig = new();
 
 			if (toolConfig.Khaos.Actions.Count != defaultKhaosConfig.Actions.Count)
+			{
+				toolConfig.Khaos.Actions = defaultKhaosConfig.Actions;
+			}
+
+			var duplicateActions = toolConfig.Khaos.Actions.GroupBy(x => x.Name)
+			  .Where(g => g.Count() > 1)
+			  .Select(y => y.Key)
+			  .ToList();
+
+			if (duplicateActions.Count > 0)
 			{
 				toolConfig.Khaos.Actions = defaultKhaosConfig.Actions;
 			}
@@ -157,6 +169,7 @@ namespace SotnRandoTools
 			gameApi = new GameApi(_maybeMemAPI);
 			renderingApi = new RenderingApi(_maybeMemAPI);
 			watchlistService = new WatchlistService(_memoryDomains, _emu?.SystemId, GlobalConfig);
+			inputService = new InputService(_maybeJoypadApi, alucardApi);
 		}
 
 		public override bool AskSaveChanges() => true;
@@ -165,15 +178,8 @@ namespace SotnRandoTools
 
 		public override void UpdateValues(ToolFormUpdateType type)
 		{
+			inputService.UpdateInputs();
 			cooldown++;
-			if (khaosForm is not null || coopForm is not null)
-			{
-				inputHistory.Add(_maybeJoypadApi.Get());
-				if (inputHistory.Count > 120)
-				{
-					inputHistory.RemoveAt(0);
-				}
-			}
 			if (cooldown == UpdateCooldownFrames)
 			{
 				cooldown = 0;

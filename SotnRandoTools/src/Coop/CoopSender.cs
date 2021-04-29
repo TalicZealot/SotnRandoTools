@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using BizHawk.Client.Common;
 using SotnApi.Constants.Values.Alucard;
