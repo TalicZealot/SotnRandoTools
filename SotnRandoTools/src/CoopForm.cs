@@ -23,7 +23,7 @@ namespace SotnRandoTools
 		private CoopViewModel coopViewModel = new CoopViewModel();
 		private bool addressValidated = false;
 
-		public CoopForm(IToolConfig toolConfig, IWatchlistService watchlistService, IGameApi gameApi, IAlucardApi alucardApi, IJoypadApi joypadApi, INotificationService notificationService)
+		public CoopForm(IToolConfig toolConfig, IWatchlistService watchlistService, IInputService inputService, IGameApi gameApi, IAlucardApi alucardApi, IJoypadApi joypadApi, INotificationService notificationService)
 		{
 			if (toolConfig is null) throw new ArgumentNullException(nameof(toolConfig));
 			if (watchlistService is null) throw new ArgumentNullException(nameof(watchlistService));
@@ -36,7 +36,7 @@ namespace SotnRandoTools
 
 			this.coopReceiver = new CoopReceiver(toolConfig, gameApi, alucardApi, notificationService, watchlistService);
 			this.coopMessanger = new CoopMessanger(toolConfig, coopReceiver, coopViewModel);
-			this.coopSender = new CoopSender(toolConfig, watchlistService, gameApi, alucardApi, joypadApi, coopMessanger);
+			this.coopSender = new CoopSender(toolConfig, watchlistService, inputService, gameApi, alucardApi, joypadApi, coopMessanger);
 			InitializeComponent();
 			SuspendLayout();
 			ResumeLayout();

@@ -7,20 +7,21 @@ using SotnRandoTools.Services.Models;
 
 namespace SotnRandoTools.Services
 {
-	public class InputService
+	public class InputService : IInputService
 	{
 		private readonly IJoypadApi joypadApi;
 		private readonly IAlucardApi alucardApi;
 		private List<Dictionary<string, object>> inputHistory = new();
 		private List<Dictionary<string, bool>> moveHistory = new();
-		private Input dragonPunch = new Input { 
-			MotionSequence = new List<Dictionary<string, object>> 
+		private Input dragonPunch = new Input
+		{
+			MotionSequence = new List<Dictionary<string, object>>
 			{
 				new Dictionary<string, object> {["P1 Forward"] = true, ["P1 Down"] = false},
 				new Dictionary<string, object> {["P1 Forward"] = false, ["P1 Down"] = true},
 				new Dictionary<string, object> {["P1 Forward"] = true, ["P1 Down"] = true}
 			},
-			Activator = new Dictionary<string, object> {["P1 L2"] = true }
+			Activator = new Dictionary<string, object> { ["P1 L2"] = true }
 		};
 		private Input halfCircle = new Input
 		{
@@ -99,6 +100,26 @@ namespace SotnRandoTools.Services
 					}
 
 					if (moveHistory[i]["DP"] == true)
+					{
+						return true;
+					}
+				}
+				return false;
+			}
+		}
+
+		public bool RegisteredHcf
+		{
+			get
+			{
+				for (int i = 0; i < 11; i++)
+				{
+					if (i >= moveHistory.Count)
+					{
+						return false;
+					}
+
+					if (moveHistory[i]["HCF"] == true)
 					{
 						return true;
 					}

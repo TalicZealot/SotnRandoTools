@@ -18,22 +18,25 @@ namespace SotnRandoTools.Coop
 		private readonly IGameApi gameApi;
 		private readonly IAlucardApi alucardApi;
 		private readonly IWatchlistService watchlistService;
+		private readonly IInputService inputService;
 		private readonly IJoypadApi joypadApi;
 		private readonly ICoopMessanger coopMessanger;
 
 		private bool selectPressed = false;
 		private bool circlePressed = false;
 
-		public CoopSender(IToolConfig toolConfig, IWatchlistService watchlistService, IGameApi gameApi, IAlucardApi alucardApi, IJoypadApi joypadApi, ICoopMessanger coopMessanger)
+		public CoopSender(IToolConfig toolConfig, IWatchlistService watchlistService, IInputService inputService, IGameApi gameApi, IAlucardApi alucardApi, IJoypadApi joypadApi, ICoopMessanger coopMessanger)
 		{
 			if (toolConfig is null) throw new ArgumentNullException(nameof(toolConfig));
 			if (watchlistService is null) throw new ArgumentNullException(nameof(watchlistService));
+			if (inputService is null) throw new ArgumentNullException(nameof(inputService));
 			if (gameApi is null) throw new ArgumentNullException(nameof(gameApi));
 			if (alucardApi is null) throw new ArgumentNullException(nameof(alucardApi));
 			if (joypadApi is null) throw new ArgumentNullException(nameof(joypadApi));
 			if (coopMessanger is null) throw new ArgumentNullException(nameof(coopMessanger));
 			this.toolConfig = toolConfig;
 			this.watchlistService = watchlistService;
+			this.inputService = inputService;
 			this.gameApi = gameApi;
 			this.alucardApi = alucardApi;
 			this.joypadApi = joypadApi;
@@ -156,6 +159,37 @@ namespace SotnRandoTools.Coop
 			else if (Convert.ToBoolean(pressed["P1 Circle"]) == false)
 			{
 				circlePressed = false;
+
+				if (!gameApi.IsInMenu() && inputService.RegisteredHcf)
+				{
+					string item = "Manna prism";
+					if (!alucardApi.HasItemInInventory(item))
+					{
+						Console.WriteLine($"Player doesn't have any {item}!");
+						return;
+					}
+					alucardApi.TakeOneItemByName(item);
+					ushort indexData = (ushort) Equipment.Items.IndexOf(item);
+					coopMessanger.SendData(MessageType.Effect, BitConverter.GetBytes(indexData));
+					alucardApi.ActivatePotion(Potion.Mannaprism);
+					Console.WriteLine($"Sending assist: {item}");
+
+				}
+				else if (!gameApi.IsInMenu() && inputService.RegisteredDp)
+				{
+					string item = "Potion";
+					if (!alucardApi.HasItemInInventory(item))
+					{
+						Console.WriteLine($"Player doesn't have any {item}!");
+						return;
+					}
+
+					alucardApi.TakeOneItemByName(item);
+					ushort indexData = (ushort) Equipment.Items.IndexOf(item);
+					coopMessanger.SendData(MessageType.Effect, BitConverter.GetBytes(indexData));
+					alucardApi.ActivatePotion(Potion.Potion);
+					Console.WriteLine($"Sending assist: {item}");
+				}
 			}
 		}
 

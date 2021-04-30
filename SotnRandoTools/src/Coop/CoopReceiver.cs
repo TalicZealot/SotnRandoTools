@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using BizHawk.Client.Common;
 using SotnApi.Constants.Values.Alucard;
@@ -9,6 +10,7 @@ using SotnRandoTools.Constants;
 using SotnRandoTools.Coop.Enums;
 using SotnRandoTools.Coop.Interfaces;
 using SotnRandoTools.Services;
+using MethodInvoker = System.Windows.Forms.MethodInvoker;
 
 namespace SotnRandoTools.Coop
 {
@@ -19,6 +21,8 @@ namespace SotnRandoTools.Coop
 		private readonly IAlucardApi alucardApi;
 		private readonly INotificationService notificationService;
 		private readonly IWatchlistService watchlistService;
+		private Queue<MethodInvoker> queuedMessages = new();
+		private System.Timers.Timer messageTimer = new();
 
 		public CoopReceiver(IToolConfig toolConfig, IGameApi gameApi, IAlucardApi alucardApi, INotificationService notificationService, IWatchlistService watchlistService)
 		{
@@ -32,9 +36,18 @@ namespace SotnRandoTools.Coop
 			this.alucardApi = alucardApi;
 			this.notificationService = notificationService;
 			this.watchlistService = watchlistService;
+
+			messageTimer.Elapsed += ExecuteMessage;
+			messageTimer.Interval = 1 * 500;
+			messageTimer.Start();
 		}
 
-		public void ProcessMessage(byte[] data)
+		public void EnqueMessage(byte[] data)
+		{
+			queuedMessages.Enqueue(new MethodInvoker(() => ProcessMessage(data)));
+		}
+
+		private void ProcessMessage(byte[] data)
 		{
 			MessageType type = (MessageType) data[0];
 			ushort index = BitConverter.ToUInt16(data, 1);
@@ -49,18 +62,18 @@ namespace SotnRandoTools.Coop
 				case MessageType.Relic:
 					if (!alucardApi.HasRelic((Relic) index))
 					{
-						alucardApi.GrantRelic((Relic) index);
 						watchlistService.UpdateWatchlist(watchlistService.CoopRelicWatches);
 						watchlistService.CoopRelicWatches.ClearChangeCounts();
+						alucardApi.GrantRelic((Relic) index);
 						notificationService.DisplayMessage(((Relic) index).ToString());
 						notificationService.PlayAlert(Paths.ItemPickupSound);
 						Console.WriteLine($"Received relic: {(Relic) index}");
 					}
 					break;
 				case MessageType.Location:
-					gameApi.SetRoomValue(watchlistService.CoopLocationWatches[indexByte].Address, dataByte);
 					watchlistService.UpdateWatchlist(watchlistService.CoopLocationWatches);
 					watchlistService.CoopLocationWatches.ClearChangeCounts();
+					gameApi.SetRoomValue(watchlistService.CoopLocationWatches[indexByte].Address, dataByte);
 					Console.WriteLine($"Received location: {watchlistService.CoopLocationWatches[indexByte].Notes}");
 					break;
 				case MessageType.Item:
@@ -73,23 +86,23 @@ namespace SotnRandoTools.Coop
 					DecodeAssist(Equipment.Items[index]);
 					break;
 				case MessageType.WarpFirstCastle:
-					alucardApi.GrantFirstCastleWarp((Warp) index);
 					watchlistService.UpdateWatchlist(watchlistService.WarpsAndShortcutsWatches);
 					watchlistService.WarpsAndShortcutsWatches.ClearChangeCounts();
+					alucardApi.GrantFirstCastleWarp((Warp) index);
 					notificationService.DisplayMessage($"Received warp: {(Warp) index}");
 					Console.WriteLine($"Received warp: {(Warp) index}");
 					break;
 				case MessageType.WarpSecondCastle:
-					alucardApi.GrantSecondCastleWarp((Warp) index);
 					watchlistService.UpdateWatchlist(watchlistService.WarpsAndShortcutsWatches);
 					watchlistService.WarpsAndShortcutsWatches.ClearChangeCounts();
+					alucardApi.GrantSecondCastleWarp((Warp) index);
 					notificationService.DisplayMessage($"Received warp: Inverted {(Warp) index}");
 					Console.WriteLine($"Received warp: Inverted {(Warp) index}");
 					break;
 				case MessageType.Shortcut:
-					DecodeShortcut((Shortcut) index);
 					watchlistService.UpdateWatchlist(watchlistService.WarpsAndShortcutsWatches);
 					watchlistService.WarpsAndShortcutsWatches.ClearChangeCounts();
+					DecodeShortcut((Shortcut) index);
 					break;
 				case MessageType.Settings:
 					DecodeSettings((int) index);
@@ -98,6 +111,18 @@ namespace SotnRandoTools.Coop
 					break;
 				default:
 					break;
+			}
+		}
+
+		private void ExecuteMessage(object sender, System.Timers.ElapsedEventArgs e)
+		{
+			//check if alucard is in marble gallery crash room
+			if (gameApi.InAlucardMode())
+			{
+				if (queuedMessages.Count > 0)
+				{
+					queuedMessages.Dequeue()();
+				}
 			}
 		}
 

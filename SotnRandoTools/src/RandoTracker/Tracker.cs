@@ -70,7 +70,7 @@ namespace SotnRandoTools.RandoTracker
 			new Location { Name = "SkillOfWolf",  MapRow = 228, MapCol = 122,  Rooms = new List<Room>{ new Room { Name = "SkillOfWolf", Values = new int[] { 0x01 } }}},
 			new Location { Name = "FormOfMist",  MapRow = 140, MapCol = 170,  Rooms = new List<Room>{ new Room { Name = "FormOfMist", Values = new int[] { 0x04, 0x10 } }}},
 			new Location { Name = "PowerOfMist",  MapRow = 36, MapCol = 250,  Rooms = new List<Room>
-			{ new Room { Name = "PowerOfMist1", Values = new int[] { 0x01 } }, new Room { Name = "PowerOfMist2", Values = new int[] { 0x01 } }}},
+			{ new Room { Name = "PowerOfMist1", Values = new int[] { 0x01 } }, new Room { Name = "PowerOfMist2", Values = new int[] { 0x01 } }, new Room { Name = "PowerOfMist3", Values = new int[] { 0x40 } }}},
 			new Location { Name = "CubeOfZoe",  MapRow = 252, MapCol = 154,  Rooms = new List<Room>{ new Room { Name = "CubeOfZoe", Values = new int[] { 0x01, 0x04 } }}},
 			new Location { Name = "SpiritOrb",  MapRow = 214, MapCol = 202,  Rooms = new List<Room>
 			{ new Room { Name = "SpiritOrb1", Values = new int[] { 0x10 } }, new Room { Name = "SpiritOrb2", Values = new int[] { 0x04 } }}},

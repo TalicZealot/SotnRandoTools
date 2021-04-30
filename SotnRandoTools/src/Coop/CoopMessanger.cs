@@ -179,6 +179,7 @@ namespace SotnRandoTools.Coop
 
 		private void ClientConnected(object sender, ClientConnectedEventArgs e)
 		{
+			coopViewModel.Message = "Client connected";
 			Console.WriteLine($"Client has connected successfully.");
 			connectedClientAddress = e.IpPort;
 			Console.WriteLine($"Sending settings...");
@@ -197,7 +198,7 @@ namespace SotnRandoTools.Coop
 
 		private void DataReceived(object sender, DataReceivedEventArgs e)
 		{
-			coopReceiver.ProcessMessage(e.Data);
+			coopReceiver.EnqueMessage(e.Data);
 		}
 
 		private void SendSettings()

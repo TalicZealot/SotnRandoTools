@@ -2,6 +2,6 @@
 {
 	public interface ICoopReceiver
 	{
-		void ProcessMessage(byte[] data);
+		void EnqueMessage(byte[] data);
 	}
 }

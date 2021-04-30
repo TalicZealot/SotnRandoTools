@@ -499,11 +499,11 @@ namespace SotnRandoTools.Khaos
 					notificationService.DisplayMessage($"{user} gave you a {item}");
 					break;
 				case 2:
-					alucardApi.ActivatePotion(Potion.Elexir);
+					alucardApi.ActivatePotion(Potion.Elixir);
 					notificationService.DisplayMessage($"{user} healed you");
 					break;
 				case 3:
-					alucardApi.ActivatePotion(Potion.ManaPrism);
+					alucardApi.ActivatePotion(Potion.Mannaprism);
 					notificationService.DisplayMessage($"{user} used a Mana Prism");
 					break;
 				default:

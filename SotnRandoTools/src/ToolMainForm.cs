@@ -255,12 +255,12 @@ namespace SotnRandoTools
 			if (coopForm is not null && gameApi is not null && alucardApi is not null && watchlistService is not null && _maybeJoypadApi is not null)
 			{
 				coopForm.Close();
-				coopForm = new CoopForm(toolConfig, watchlistService, gameApi, alucardApi, _maybeJoypadApi, notificationService);
+				coopForm = new CoopForm(toolConfig, watchlistService, inputService, gameApi, alucardApi, _maybeJoypadApi, notificationService);
 				coopForm.Show();
 			}
 			else if (coopForm is null && gameApi is not null && alucardApi is not null && watchlistService is not null && _maybeJoypadApi is not null)
 			{
-				coopForm = new CoopForm(toolConfig, watchlistService, gameApi, alucardApi, _maybeJoypadApi, notificationService);
+				coopForm = new CoopForm(toolConfig, watchlistService, inputService, gameApi, alucardApi, _maybeJoypadApi, notificationService);
 				coopForm.Show();
 			}
 		}
