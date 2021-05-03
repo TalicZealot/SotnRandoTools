@@ -143,7 +143,7 @@ namespace SotnRandoTools.Khaos
 			"JewelOfOpen",
 			"MermanStatue"
 		};
-		private string[] subscribers =
+		private string[]? subscribers =
 		{
 		};
 
@@ -212,21 +212,22 @@ namespace SotnRandoTools.Khaos
 			{
 				botFileWatcher.EnableRaisingEvents = true;
 			}
+			else
+			{
+				return;
+			}
 			if (File.Exists(toolConfig.Khaos.NamesFilePath))
 			{
-				subscribers = FileExtensions.GetText(toolConfig.Khaos.NamesFilePath).Split(',');
+				subscribers = FileExtensions.GetLines(toolConfig.Khaos.NamesFilePath);
 			}
 			actionTimer.Start();
 			fastActionTimer.Start();
-			if (subscribers.Length > 0)
+			if (subscribers is not null && subscribers.Length > 0)
 			{
 				OverwriteBossNames(subscribers);
 			}
 			Cheat faerieScroll = cheats.GetCheatByName("FaerieScroll");
 			faerieScroll.Enable();
-			gameApi.OverwriteString(Strings.FleaMan, "Kappa");
-			gameApi.OverwriteString(Strings.Shaft, "Talic");
-			gameApi.OverwriteString(Strings.Dracula, "3snoW");
 			notificationService.DisplayMessage($"Khaos started");
 		}
 
@@ -247,14 +248,16 @@ namespace SotnRandoTools.Khaos
 		{
 			Random rnd = new Random();
 			subscribers = subscribers.OrderBy(x => rnd.Next()).ToArray();
+			var randomizedBosses = Strings.BossNameAddresses.OrderBy(x => rnd.Next());
 			int i = 0;
-			foreach (var boss in Strings.BossNameAddresses)
+			foreach (var boss in randomizedBosses)
 			{
 				if (i == subscribers.Length)
 				{
 					break;
 				}
 				gameApi.OverwriteString(boss.Value, subscribers[i]);
+				Console.WriteLine($"{boss.Key} renamed to {subscribers[i]}");
 				i++;
 			}
 		}
@@ -349,6 +352,12 @@ namespace SotnRandoTools.Khaos
 
 			notificationService.DisplayMessage($"{user} used Thirst");
 			notificationService.DequeueAction();
+			notificationService.AddTimer(new Services.Models.ActionTimer
+			{
+				Name = KhaosActionNames.Thirst,
+				Type = Enums.ActionType.Debuff,
+				Duration = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.Thirst).FirstOrDefault().Duration
+			});
 			Alert("Thirst");
 		}
 		public void Weaken(string user = "Khaos")
@@ -384,8 +393,15 @@ namespace SotnRandoTools.Khaos
 		{
 			SetSpeed(toolConfig.Khaos.CrippleFactor);
 			crippleTimer.Start();
+			hasteTimer.Stop();
 			notificationService.DisplayMessage($"{user} used Cripple");
 			notificationService.DequeueAction();
+			notificationService.AddTimer(new Services.Models.ActionTimer
+			{
+				Name = KhaosActionNames.Cripple,
+				Type = Enums.ActionType.Debuff,
+				Duration = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.Cripple).FirstOrDefault().Duration
+			});
 			Alert("Cripple");
 		}
 		public void BloodMana(string user = "Khaos")
@@ -396,6 +412,12 @@ namespace SotnRandoTools.Khaos
 			bloodManaTickTimer.Start();
 			notificationService.DisplayMessage($"{user} used Blood Mana");
 			notificationService.DequeueAction();
+			notificationService.AddTimer(new Services.Models.ActionTimer
+			{
+				Name = KhaosActionNames.BloodMana,
+				Type = Enums.ActionType.Debuff,
+				Duration = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.BloodMana).FirstOrDefault().Duration
+			});
 			Alert("Blood Mana");
 		}
 		public void HonestGamer(string user = "Khaos")
@@ -572,6 +594,12 @@ namespace SotnRandoTools.Khaos
 			magicianTimer.Start();
 			notificationService.DisplayMessage($"{user} activated Magician mode");
 			notificationService.DequeueAction();
+			notificationService.AddTimer(new Services.Models.ActionTimer
+			{
+				Name = KhaosActionNames.Magician,
+				Type = Enums.ActionType.Buff,
+				Duration = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.Magician).FirstOrDefault().Duration
+			});
 			Alert("Magician");
 		}
 		public void ZaWarudo(string user = "Khaos")
@@ -585,6 +613,12 @@ namespace SotnRandoTools.Khaos
 
 			notificationService.DisplayMessage($"{user} used ZA WARUDO");
 			notificationService.DequeueAction();
+			notificationService.AddTimer(new Services.Models.ActionTimer
+			{
+				Name = KhaosActionNames.ZaWarudo,
+				Type = Enums.ActionType.Buff,
+				Duration = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.ZaWarudo).FirstOrDefault().Duration
+			});
 			Alert("ZA WARUDO");
 		}
 		public void MeltyBlood(string user = "Khaos")
@@ -596,6 +630,12 @@ namespace SotnRandoTools.Khaos
 			meltyTimer.Start();
 			notificationService.DisplayMessage($"{user} activated Melty Blood");
 			notificationService.DequeueAction();
+			notificationService.AddTimer(new Services.Models.ActionTimer
+			{
+				Name = KhaosActionNames.MeltyBlood,
+				Type = Enums.ActionType.Buff,
+				Duration = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.MeltyBlood).FirstOrDefault().Duration
+			});
 			Alert("Melty Blood");
 		}
 		public void FourBeasts(string user = "Khaos")
@@ -610,9 +650,14 @@ namespace SotnRandoTools.Khaos
 		public void Haste(string user = "Khaos")
 		{
 			SetSpeed(toolConfig.Khaos.HasteFactor);
+			crippleTimer.Stop();
 			hasteTimer.Start();
-			notificationService.DisplayMessage($"{user} used Haste");
+			notificationService.DisplayMessage($"{user} used {KhaosActionNames.Haste}");
 			notificationService.DequeueAction();
+			notificationService.AddTimer(new Services.Models.ActionTimer {
+			Name = KhaosActionNames.Haste, 
+			Type = Enums.ActionType.Buff, 
+			Duration = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.Haste).FirstOrDefault().Duration});
 			Alert("Haste");
 		}
 		#endregion
@@ -864,7 +909,7 @@ namespace SotnRandoTools.Khaos
 			actionTimer.Interval = 2 * (1 * 1000);
 
 			honestGamerTimer.Elapsed += HonestGamerOff;
-			honestGamerTimer.Interval = 1 * (60 * 1000);
+			honestGamerTimer.Interval = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.HonestGamer).FirstOrDefault().Duration.TotalMilliseconds; ;
 			subweaponsOnlyTimer.Elapsed += SubweaponsOnlyOff;
 			subweaponsOnlyTimer.Interval = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.SubweaponsOnly).FirstOrDefault().Duration.TotalMilliseconds;
 			crippleTimer.Elapsed += CrippleOff;
@@ -1167,7 +1212,7 @@ namespace SotnRandoTools.Khaos
 				{
 					bannedEnemies.Add(new Actor(actorApi.GetActor(bannedEnemy)));
 				}
-				long enemy = actorApi.FindEnemy(1, gameApi.SecondCastle ? 100 : 30, new int[] {26, 16, 18, 22});
+				long enemy = actorApi.FindEnemy(1, gameApi.SecondCastle ? 100 : 30, new int[] {26, 16, 18, 22, 100, 550});
 				if (enemy > 0)
 				{
 					hordeEnemy = new Actor(actorApi.GetActor(enemy));
@@ -1193,6 +1238,12 @@ namespace SotnRandoTools.Khaos
 				{
 					hordeTimer.Stop();
 					hordeTimer.Interval = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.KhaosHorde).FirstOrDefault().Duration.TotalMilliseconds;
+					notificationService.AddTimer(new Services.Models.ActionTimer
+					{
+						Name = KhaosActionNames.KhaosHorde,
+						Type = Enums.ActionType.Debuff,
+						Duration = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.KhaosHorde).FirstOrDefault().Duration
+					});
 					hordeTimer.Start();
 				}
 				hordeEnemy.Xpos = (ushort) rnd.Next(10, 245);

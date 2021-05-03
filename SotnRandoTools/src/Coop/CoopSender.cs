@@ -6,6 +6,7 @@ using SotnApi.Constants.Values.Alucard;
 using SotnApi.Constants.Values.Alucard.Enums;
 using SotnApi.Interfaces;
 using SotnRandoTools.Configuration.Interfaces;
+using SotnRandoTools.Constants;
 using SotnRandoTools.Coop.Enums;
 using SotnRandoTools.Coop.Interfaces;
 using SotnRandoTools.Services;
@@ -19,27 +20,24 @@ namespace SotnRandoTools.Coop
 		private readonly IAlucardApi alucardApi;
 		private readonly IWatchlistService watchlistService;
 		private readonly IInputService inputService;
-		private readonly IJoypadApi joypadApi;
 		private readonly ICoopMessanger coopMessanger;
 
 		private bool selectPressed = false;
 		private bool circlePressed = false;
 
-		public CoopSender(IToolConfig toolConfig, IWatchlistService watchlistService, IInputService inputService, IGameApi gameApi, IAlucardApi alucardApi, IJoypadApi joypadApi, ICoopMessanger coopMessanger)
+		public CoopSender(IToolConfig toolConfig, IWatchlistService watchlistService, IInputService inputService, IGameApi gameApi, IAlucardApi alucardApi, ICoopMessanger coopMessanger)
 		{
 			if (toolConfig is null) throw new ArgumentNullException(nameof(toolConfig));
 			if (watchlistService is null) throw new ArgumentNullException(nameof(watchlistService));
 			if (inputService is null) throw new ArgumentNullException(nameof(inputService));
 			if (gameApi is null) throw new ArgumentNullException(nameof(gameApi));
 			if (alucardApi is null) throw new ArgumentNullException(nameof(alucardApi));
-			if (joypadApi is null) throw new ArgumentNullException(nameof(joypadApi));
 			if (coopMessanger is null) throw new ArgumentNullException(nameof(coopMessanger));
 			this.toolConfig = toolConfig;
 			this.watchlistService = watchlistService;
 			this.inputService = inputService;
 			this.gameApi = gameApi;
 			this.alucardApi = alucardApi;
-			this.joypadApi = joypadApi;
 			this.coopMessanger = coopMessanger;
 		}
 
@@ -82,8 +80,7 @@ namespace SotnRandoTools.Coop
 
 		private void UpdateSendItem()
 		{
-			var pressed = joypadApi.Get();
-			if (Convert.ToBoolean(pressed["P1 Select"]) == true && selectPressed == false && gameApi.IsInMenu() && gameApi.EquipMenuOpen())
+			if (inputService.ButtonPressed(PlaystationInputKeys.Select) && selectPressed == false && gameApi.IsInMenu() && gameApi.EquipMenuOpen())
 			{
 				selectPressed = true;
 				string item = alucardApi.GetSelectedItemName();
@@ -99,7 +96,7 @@ namespace SotnRandoTools.Coop
 					Console.WriteLine($"Player doesn't have any {item}!");
 				}
 			}
-			else if (Convert.ToBoolean(pressed["P1 Select"]) == false)
+			else if (!inputService.ButtonPressed(PlaystationInputKeys.Select))
 			{
 				selectPressed = false;
 			}
@@ -107,8 +104,7 @@ namespace SotnRandoTools.Coop
 
 		private void UpdateSendRelic()
 		{
-			var pressed = joypadApi.Get();
-			if (Convert.ToBoolean(pressed["P1 Select"]) == true && selectPressed == false && gameApi.IsInMenu() && gameApi.RelicMenuOpen())
+			if (inputService.ButtonPressed(PlaystationInputKeys.Select) && selectPressed == false && gameApi.IsInMenu() && gameApi.RelicMenuOpen())
 			{
 				selectPressed = true;
 				Relic relic = alucardApi.GetSelectedRelic();
@@ -124,7 +120,7 @@ namespace SotnRandoTools.Coop
 					Console.WriteLine($"Player doesn't have {relic}.");
 				}
 			}
-			else if (Convert.ToBoolean(pressed["P1 Select"]) == false)
+			else if (!inputService.ButtonPressed(PlaystationInputKeys.Select))
 			{
 				selectPressed = false;
 			}
@@ -132,8 +128,7 @@ namespace SotnRandoTools.Coop
 
 		private void UpdateAssist()
 		{
-			var pressed = joypadApi.Get();
-			if (Convert.ToBoolean(pressed["P1 Circle"]) == true && circlePressed == false && gameApi.IsInMenu() && gameApi.EquipMenuOpen())
+			if (inputService.ButtonPressed(PlaystationInputKeys.Circle) && circlePressed == false && gameApi.IsInMenu() && gameApi.EquipMenuOpen())
 			{
 				circlePressed = true;
 				string item = alucardApi.GetSelectedItemName();
@@ -156,11 +151,11 @@ namespace SotnRandoTools.Coop
 					Console.WriteLine($"Item {item} can't be used for an assist.");
 				}
 			}
-			else if (Convert.ToBoolean(pressed["P1 Circle"]) == false)
+			else if (!inputService.ButtonPressed(PlaystationInputKeys.Circle))
 			{
 				circlePressed = false;
 
-				if (!gameApi.IsInMenu() && inputService.RegisteredHcf)
+				if (!gameApi.IsInMenu() && inputService.RegisteredMove(InputKeys.HalfCircleForward))
 				{
 					string item = "Manna prism";
 					if (!alucardApi.HasItemInInventory(item))
@@ -175,7 +170,7 @@ namespace SotnRandoTools.Coop
 					Console.WriteLine($"Sending assist: {item}");
 
 				}
-				else if (!gameApi.IsInMenu() && inputService.RegisteredDp)
+				else if (!gameApi.IsInMenu() && inputService.RegisteredMove(InputKeys.DragonPunch))
 				{
 					string item = "Potion";
 					if (!alucardApi.HasItemInInventory(item))

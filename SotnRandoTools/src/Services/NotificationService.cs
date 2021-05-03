@@ -9,6 +9,7 @@ using BizHawk.Client.Common;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Constants;
 using SotnRandoTools.Khaos.Enums;
+using SotnRandoTools.Services.Models;
 
 namespace SotnRandoTools.Services
 {
@@ -21,12 +22,14 @@ namespace SotnRandoTools.Services
 		private readonly IEmuClientApi clientAPI;
 
 		private System.Timers.Timer messageTimer;
+		private System.Timers.Timer countdownTimer;
 		private Image textbox;
 		private Image iconSkull;
 		private Image iconFairy;
 		private Image iconEye;
 		private System.Windows.Media.MediaPlayer audioPlayer = new();
 		private List<ActionType> actionQueue = new();
+		private List<ActionTimer> actionTimers = new();
 
 		public NotificationService(IToolConfig toolConfig, IGuiApi guiApi, IEmuClientApi clientAPI)
 		{
@@ -39,7 +42,11 @@ namespace SotnRandoTools.Services
 
 			messageTimer = new System.Timers.Timer();
 			messageTimer.Interval = NotificationTime;
-			messageTimer.Elapsed += ClearMessages;
+			messageTimer.Elapsed += ClearMessage;
+			countdownTimer = new System.Timers.Timer();
+			countdownTimer.Interval = 1000;
+			countdownTimer.Elapsed += DecrementTimers;
+			countdownTimer.Start();
 			textbox = Image.FromFile(Paths.TextboxImage);
 			iconSkull = Image.FromFile(Paths.IconSkull);
 			iconFairy = Image.FromFile(Paths.IconFairy);
@@ -115,7 +122,7 @@ namespace SotnRandoTools.Services
 		public void AddAction(ActionType action)
 		{
 			actionQueue.Add(action);
-			DrawQueue();
+			DrawUI();
 		}
 
 		public void DequeueAction()
@@ -126,11 +133,17 @@ namespace SotnRandoTools.Services
 			}
 		}
 
-		private void DrawQueue()
+		public void AddTimer(ActionTimer timer)
+		{
+			actionTimers.Add(timer);
+		}
+
+		private void DrawUI()
 		{
 			int bufferWidth = clientAPI.BufferWidth();
 			int scale = clientAPI.GetWindowSize();
-			if (bufferWidth == 800)
+			bool pixelPro = bufferWidth == 800;
+			if (pixelPro)
 			{
 				scale *= 2;
 			}
@@ -173,18 +186,57 @@ namespace SotnRandoTools.Services
 					}
 					col++;
 				}
-			});
 
+				xpos = pixelPro ? (int) (screenWidth * 0.17) : (int) (screenWidth * 0.05);
+				ypos = (int) (screenHeight * 0.15);
+				row = 0;
+				int fontSize = 8 * scale;
+
+				foreach (var timer in actionTimers)
+				{
+					row++;
+					switch (timer.Type)
+					{
+						case ActionType.Khaotic:
+							guiApi.DrawImage(scaledIconEye, xpos + (1 * scale), ypos + (row * scaledIconEye.Height) + (1 * scale), scaledIconEye.Width, scaledIconEye.Height, true);
+							break;
+						case ActionType.Debuff:
+							guiApi.DrawImage(scaledIconSkull, xpos + (1 * scale), ypos + (row * scaledIconSkull.Height) + (1 * scale), scaledIconSkull.Width, scaledIconSkull.Height, true);
+							break;
+						case ActionType.Buff:
+							guiApi.DrawImage(scaledIconFairy, xpos + (1 * scale), ypos + (row * scaledIconFairy.Height) + (1 * scale), scaledIconFairy.Width, scaledIconFairy.Height, true);
+							break;
+						default:
+							break;
+					}
+					guiApi.DrawString(xpos + (scaledIconEye.Width) + (1 * scale), ypos + (row * scaledIconEye.Height) + (4 * scale), timer.Name + " " + timer.Duration.ToString(@"mm\:ss"), Color.White, null, fontSize, "Arial", "bold");
+				}
+			});
 		}
 
-		private void ClearMessages(object sender, ElapsedEventArgs e)
+		private void ClearMessage(object sender, ElapsedEventArgs e)
 		{
 			guiApi.WithSurface(DisplaySurfaceID.Client, () =>
 			{
 				guiApi.ClearGraphics();
 			});
 			messageTimer.Stop();
-			DrawQueue();
+		}
+
+		private void DecrementTimers(object sender, ElapsedEventArgs e)
+		{
+			foreach (var timer in actionTimers)
+			{
+				timer.Duration -= TimeSpan.FromSeconds(1);
+				if (timer.Duration.TotalSeconds <= 1)
+				{
+					actionTimers.Remove(timer);
+				}
+			}
+			if (!messageTimer.Enabled)
+			{
+				DrawUI();
+			}
 		}
 
 		private Bitmap ResizeImage(Image image, int width, int height)

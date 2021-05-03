@@ -80,7 +80,7 @@ namespace SotnRandoTools
 		private AboutPanel? aboutPanel;
 		private string _windowTitle = "Symphony of the Night Randomizer Tools";
 		private const int PanelOffset = 130;
-		private const int UpdateCooldownFrames = 10;
+		private const int UpdateCooldownFrames = 5;
 		private int cooldown = 0;
 		public ToolMainForm()
 		{

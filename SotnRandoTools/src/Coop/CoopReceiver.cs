@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using BizHawk.Client.Common;
 using SotnApi.Constants.Values.Alucard;
 using SotnApi.Constants.Values.Alucard.Enums;
+using SotnApi.Constants.Values.Game;
 using SotnApi.Interfaces;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Constants;
@@ -38,7 +39,7 @@ namespace SotnRandoTools.Coop
 			this.watchlistService = watchlistService;
 
 			messageTimer.Elapsed += ExecuteMessage;
-			messageTimer.Interval = 1 * 500;
+			messageTimer.Interval = 1 * 100;
 			messageTimer.Start();
 		}
 
@@ -62,18 +63,18 @@ namespace SotnRandoTools.Coop
 				case MessageType.Relic:
 					if (!alucardApi.HasRelic((Relic) index))
 					{
+						alucardApi.GrantRelic((Relic) index);
 						watchlistService.UpdateWatchlist(watchlistService.CoopRelicWatches);
 						watchlistService.CoopRelicWatches.ClearChangeCounts();
-						alucardApi.GrantRelic((Relic) index);
 						notificationService.DisplayMessage(((Relic) index).ToString());
 						notificationService.PlayAlert(Paths.ItemPickupSound);
 						Console.WriteLine($"Received relic: {(Relic) index}");
 					}
 					break;
 				case MessageType.Location:
+					gameApi.SetRoomValue(watchlistService.CoopLocationWatches[indexByte].Address, dataByte);
 					watchlistService.UpdateWatchlist(watchlistService.CoopLocationWatches);
 					watchlistService.CoopLocationWatches.ClearChangeCounts();
-					gameApi.SetRoomValue(watchlistService.CoopLocationWatches[indexByte].Address, dataByte);
 					Console.WriteLine($"Received location: {watchlistService.CoopLocationWatches[indexByte].Notes}");
 					break;
 				case MessageType.Item:
@@ -86,27 +87,26 @@ namespace SotnRandoTools.Coop
 					DecodeAssist(Equipment.Items[index]);
 					break;
 				case MessageType.WarpFirstCastle:
+					alucardApi.GrantFirstCastleWarp((Warp) index);
 					watchlistService.UpdateWatchlist(watchlistService.WarpsAndShortcutsWatches);
 					watchlistService.WarpsAndShortcutsWatches.ClearChangeCounts();
-					alucardApi.GrantFirstCastleWarp((Warp) index);
 					notificationService.DisplayMessage($"Received warp: {(Warp) index}");
 					Console.WriteLine($"Received warp: {(Warp) index}");
 					break;
 				case MessageType.WarpSecondCastle:
+					alucardApi.GrantSecondCastleWarp((Warp) index);
 					watchlistService.UpdateWatchlist(watchlistService.WarpsAndShortcutsWatches);
 					watchlistService.WarpsAndShortcutsWatches.ClearChangeCounts();
-					alucardApi.GrantSecondCastleWarp((Warp) index);
 					notificationService.DisplayMessage($"Received warp: Inverted {(Warp) index}");
 					Console.WriteLine($"Received warp: Inverted {(Warp) index}");
 					break;
 				case MessageType.Shortcut:
+					DecodeShortcut((Shortcut) index);
 					watchlistService.UpdateWatchlist(watchlistService.WarpsAndShortcutsWatches);
 					watchlistService.WarpsAndShortcutsWatches.ClearChangeCounts();
-					DecodeShortcut((Shortcut) index);
 					break;
 				case MessageType.Settings:
 					DecodeSettings((int) index);
-					notificationService.DisplayMessage("Connected");
 					Console.WriteLine($"Received co-op settings from host.");
 					break;
 				default:
@@ -116,8 +116,9 @@ namespace SotnRandoTools.Coop
 
 		private void ExecuteMessage(object sender, System.Timers.ElapsedEventArgs e)
 		{
-			//check if alucard is in marble gallery crash room
-			if (gameApi.InAlucardMode())
+			//avoid marble gallery softlock
+			bool insideMarbleGalleryDoorRooms = (gameApi.Room == Various.MarbleGalleryDoorToCavernsRoom || gameApi.Room == Various.MarbleGalleryBlueDoorRoom) && (gameApi.Area == Various.MarbleGalleryArea);
+			if (gameApi.InAlucardMode() && !insideMarbleGalleryDoorRooms)
 			{
 				if (queuedMessages.Count > 0)
 				{

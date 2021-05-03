@@ -36,7 +36,7 @@ namespace SotnRandoTools
 
 			this.coopReceiver = new CoopReceiver(toolConfig, gameApi, alucardApi, notificationService, watchlistService);
 			this.coopMessanger = new CoopMessanger(toolConfig, coopReceiver, coopViewModel);
-			this.coopSender = new CoopSender(toolConfig, watchlistService, inputService, gameApi, alucardApi, joypadApi, coopMessanger);
+			this.coopSender = new CoopSender(toolConfig, watchlistService, inputService, gameApi, alucardApi, coopMessanger);
 			InitializeComponent();
 			SuspendLayout();
 			ResumeLayout();

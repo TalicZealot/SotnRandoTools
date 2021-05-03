@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using BizHawk.Client.Common;
 using SotnApi.Interfaces;
+using SotnRandoTools.Constants;
 using SotnRandoTools.Services.Models;
 
 namespace SotnRandoTools.Services
@@ -17,23 +18,23 @@ namespace SotnRandoTools.Services
 		{
 			MotionSequence = new List<Dictionary<string, object>>
 			{
-				new Dictionary<string, object> {["P1 Forward"] = true, ["P1 Down"] = false},
-				new Dictionary<string, object> {["P1 Forward"] = false, ["P1 Down"] = true},
-				new Dictionary<string, object> {["P1 Forward"] = true, ["P1 Down"] = true}
+				new Dictionary<string, object> {[InputKeys.Forward] = true, [PlaystationInputKeys.Down] = false},
+				new Dictionary<string, object> {[InputKeys.Forward] = false, [PlaystationInputKeys.Down] = true},
+				new Dictionary<string, object> {[InputKeys.Forward] = true, [PlaystationInputKeys.Down] = true}
 			},
-			Activator = new Dictionary<string, object> { ["P1 L2"] = true }
+			Activator = new Dictionary<string, object> { [PlaystationInputKeys.L2] = true }
 		};
 		private Input halfCircle = new Input
 		{
 			MotionSequence = new List<Dictionary<string, object>>
 			{
-				new Dictionary<string, object> {["P1 Back"] = true, ["P1 Down"] = false},
-				new Dictionary<string, object> {["P1 Forward"] = true, ["P1 Down"] = true},
-				new Dictionary<string, object> {["P1 Forward"] = false, ["P1 Down"] = true},
-				new Dictionary<string, object> {["P1 Back"] = true, ["P1 Down"] = true},
-				new Dictionary<string, object> {["P1 Forward"] = true, ["P1 Down"] = false}
+				new Dictionary<string, object> {[InputKeys.Back] = true, [PlaystationInputKeys.Up] = false},
+				new Dictionary<string, object> {[InputKeys.Forward] = true, [PlaystationInputKeys.Up] = true},
+				new Dictionary<string, object> {[InputKeys.Forward] = false, [PlaystationInputKeys.Up] = true},
+				new Dictionary<string, object> {[InputKeys.Back] = true, [PlaystationInputKeys.Up] = true},
+				new Dictionary<string, object> {[InputKeys.Forward] = true, [PlaystationInputKeys.Up] = false}
 			},
-			Activator = new Dictionary<string, object> { ["P1 L2"] = true }
+			Activator = new Dictionary<string, object> { [PlaystationInputKeys.L2] = true }
 		};
 
 		public InputService(IJoypadApi joypadApi, IAlucardApi alucardApi)
@@ -54,32 +55,32 @@ namespace SotnRandoTools.Services
 
 			if (alucardApi.FacingLeft)
 			{
-				inputHistory[inputHistory.Count - 1].Add("P1 Forward", Convert.ToBoolean(inputHistory[inputHistory.Count - 1]["P1 Left"]));
-				inputHistory[inputHistory.Count - 1].Add("P1 Back", Convert.ToBoolean(inputHistory[inputHistory.Count - 1]["P1 Right"]));
+				inputHistory[inputHistory.Count - 1].Add(InputKeys.Forward, Convert.ToBoolean(inputHistory[inputHistory.Count - 1][PlaystationInputKeys.Left]));
+				inputHistory[inputHistory.Count - 1].Add(InputKeys.Back, Convert.ToBoolean(inputHistory[inputHistory.Count - 1][PlaystationInputKeys.Right]));
 			}
 			else
 			{
-				inputHistory[inputHistory.Count - 1].Add("P1 Forward", Convert.ToBoolean(inputHistory[inputHistory.Count - 1]["P1 Right"]));
-				inputHistory[inputHistory.Count - 1].Add("P1 Back", Convert.ToBoolean(inputHistory[inputHistory.Count - 1]["P1 Left"]));
+				inputHistory[inputHistory.Count - 1].Add(InputKeys.Forward, Convert.ToBoolean(inputHistory[inputHistory.Count - 1][PlaystationInputKeys.Right]));
+				inputHistory[inputHistory.Count - 1].Add(InputKeys.Back, Convert.ToBoolean(inputHistory[inputHistory.Count - 1][PlaystationInputKeys.Left]));
 			}
 
 			moveHistory.Add(new Dictionary<string, bool>());
 			if (ReadInput(dragonPunch, 30))
 			{
-				moveHistory[moveHistory.Count - 1].Add("DP", true);
+				moveHistory[moveHistory.Count - 1].Add(InputKeys.DragonPunch, true);
 			}
 			else
 			{
-				moveHistory[moveHistory.Count - 1].Add("DP", false);
+				moveHistory[moveHistory.Count - 1].Add(InputKeys.DragonPunch, false);
 			}
 
 			if (ReadInput(halfCircle, 30))
 			{
-				moveHistory[moveHistory.Count - 1].Add("HCF", true);
+				moveHistory[moveHistory.Count - 1].Add(InputKeys.HalfCircleForward, true);
 			}
 			else
 			{
-				moveHistory[moveHistory.Count - 1].Add("HCF", false);
+				moveHistory[moveHistory.Count - 1].Add(InputKeys.HalfCircleForward, false);
 			}
 
 			if (moveHistory.Count > 120)
@@ -88,44 +89,38 @@ namespace SotnRandoTools.Services
 			}
 		}
 
-		public bool RegisteredDp
+		public bool RegisteredMove(string moveName)
 		{
-			get
+			for (int i = 0; i < 11; i++)
 			{
-				for (int i = 0; i < 11; i++)
+				if (moveHistory.Count < 10)
 				{
-					if (i >= moveHistory.Count)
-					{
-						return false;
-					}
-
-					if (moveHistory[i]["DP"] == true)
-					{
-						return true;
-					}
+					return false;
 				}
-				return false;
+
+				if (moveHistory[moveHistory.Count - 1 - i][moveName] == true)
+				{
+					return true;
+				}
 			}
+			return false;
 		}
 
-		public bool RegisteredHcf
+		public bool ButtonPressed(string button)
 		{
-			get
+			for (int i = 0; i < 11; i++)
 			{
-				for (int i = 0; i < 11; i++)
+				if (inputHistory.Count < 10)
 				{
-					if (i >= moveHistory.Count)
-					{
-						return false;
-					}
-
-					if (moveHistory[i]["HCF"] == true)
-					{
-						return true;
-					}
+					return false;
 				}
-				return false;
+
+				if (Convert.ToBoolean(inputHistory[inputHistory.Count - 1 - i][button]) == true)
+				{
+					return true;
+				}
 			}
+			return false;
 		}
 
 		private bool ReadInput(Input moveInput, uint bufferSize)
