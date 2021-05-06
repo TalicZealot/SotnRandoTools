@@ -95,7 +95,7 @@ namespace SotnRandoTools.RandoTracker
 
 		public void CalculateGrid(int width, int height)
 		{
-			/* TODO
+			/* TODO variable grid
              if taller reserve 2 rows
              if wider reserve 2 columns
              */
@@ -106,7 +106,7 @@ namespace SotnRandoTools.RandoTracker
 			vladRelicSlots = new List<Rectangle>();
 			progressionItemSlots = new List<Rectangle>();
 
-			int relicCount = 24;
+			int relicCount = 25;
 			if (toolConfig.Tracker.ProgressionRelicsOnly)
 			{
 				relicCount = progressionRelics - 5;
@@ -114,7 +114,7 @@ namespace SotnRandoTools.RandoTracker
 			int row = 0;
 			int col = 0;
 
-			for (int i = 0; i < relicCount + 2; i++)
+			for (int i = 0; i < relicCount + 1; i++)
 			{
 				if (col == Columns)
 				{

@@ -140,6 +140,11 @@ namespace SotnRandoTools.Services
 
 		private void DrawUI()
 		{
+			if (actionQueue.Count == 0 && actionTimers.Count == 0)
+			{
+				return;
+			}
+
 			int bufferWidth = clientAPI.BufferWidth();
 			int scale = clientAPI.GetWindowSize();
 			bool pixelPro = bufferWidth == 800;

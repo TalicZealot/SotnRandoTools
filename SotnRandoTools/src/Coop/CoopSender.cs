@@ -15,6 +15,8 @@ namespace SotnRandoTools.Coop
 {
 	public class CoopSender
 	{
+		private const int UpdateRate = 5;
+
 		private readonly IToolConfig toolConfig;
 		private readonly IGameApi gameApi;
 		private readonly IAlucardApi alucardApi;
@@ -80,7 +82,7 @@ namespace SotnRandoTools.Coop
 
 		private void UpdateSendItem()
 		{
-			if (inputService.ButtonPressed(PlaystationInputKeys.Select) && selectPressed == false && gameApi.IsInMenu() && gameApi.EquipMenuOpen())
+			if (inputService.ButtonPressed(PlaystationInputKeys.Select, UpdateRate) && selectPressed == false && gameApi.IsInMenu() && gameApi.EquipMenuOpen())
 			{
 				selectPressed = true;
 				string item = alucardApi.GetSelectedItemName();
@@ -96,7 +98,7 @@ namespace SotnRandoTools.Coop
 					Console.WriteLine($"Player doesn't have any {item}!");
 				}
 			}
-			else if (!inputService.ButtonPressed(PlaystationInputKeys.Select))
+			else if (!inputService.ButtonPressed(PlaystationInputKeys.Select, UpdateRate))
 			{
 				selectPressed = false;
 			}
@@ -104,7 +106,7 @@ namespace SotnRandoTools.Coop
 
 		private void UpdateSendRelic()
 		{
-			if (inputService.ButtonPressed(PlaystationInputKeys.Select) && selectPressed == false && gameApi.IsInMenu() && gameApi.RelicMenuOpen())
+			if (inputService.ButtonPressed(PlaystationInputKeys.Select, UpdateRate) && selectPressed == false && gameApi.IsInMenu() && gameApi.RelicMenuOpen())
 			{
 				selectPressed = true;
 				Relic relic = alucardApi.GetSelectedRelic();
@@ -120,7 +122,7 @@ namespace SotnRandoTools.Coop
 					Console.WriteLine($"Player doesn't have {relic}.");
 				}
 			}
-			else if (!inputService.ButtonPressed(PlaystationInputKeys.Select))
+			else if (!inputService.ButtonPressed(PlaystationInputKeys.Select, UpdateRate))
 			{
 				selectPressed = false;
 			}
@@ -128,7 +130,7 @@ namespace SotnRandoTools.Coop
 
 		private void UpdateAssist()
 		{
-			if (inputService.ButtonPressed(PlaystationInputKeys.Circle) && circlePressed == false && gameApi.IsInMenu() && gameApi.EquipMenuOpen())
+			if (inputService.ButtonPressed(PlaystationInputKeys.Circle, UpdateRate) && circlePressed == false && gameApi.IsInMenu() && gameApi.EquipMenuOpen())
 			{
 				circlePressed = true;
 				string item = alucardApi.GetSelectedItemName();
@@ -151,11 +153,11 @@ namespace SotnRandoTools.Coop
 					Console.WriteLine($"Item {item} can't be used for an assist.");
 				}
 			}
-			else if (!inputService.ButtonPressed(PlaystationInputKeys.Circle))
+			else if (!inputService.ButtonPressed(PlaystationInputKeys.Circle, UpdateRate))
 			{
 				circlePressed = false;
 
-				if (!gameApi.IsInMenu() && inputService.RegisteredMove(InputKeys.HalfCircleForward))
+				if (!gameApi.IsInMenu() && inputService.RegisteredMove(InputKeys.DragonPunch, UpdateRate))
 				{
 					string item = "Manna prism";
 					if (!alucardApi.HasItemInInventory(item))
@@ -170,7 +172,7 @@ namespace SotnRandoTools.Coop
 					Console.WriteLine($"Sending assist: {item}");
 
 				}
-				else if (!gameApi.IsInMenu() && inputService.RegisteredMove(InputKeys.DragonPunch))
+				else if (!gameApi.IsInMenu() && inputService.RegisteredMove(InputKeys.HalfCircleForward, UpdateRate))
 				{
 					string item = "Potion";
 					if (!alucardApi.HasItemInInventory(item))
@@ -207,16 +209,12 @@ namespace SotnRandoTools.Coop
 
 		private void UpdateLocations()
 		{
-			watchlistService.UpdateWatchlist(watchlistService.CoopLocationWatches);
 			for (int i = 0; i < watchlistService.CoopLocationWatches.Count; i++)
 			{
 				if (watchlistService.CoopLocationWatches[i].ChangeCount > 0)
 				{
-					if (watchlistService.CoopLocationWatches[i].Value > 0)
-					{
-						coopMessanger.SendData(MessageType.Location, new byte[] { (byte) i, (byte) watchlistService.CoopLocationWatches[i].Value });
-						Console.WriteLine($"Sending Location: {watchlistService.CoopLocationWatches[i].Notes}");
-					}
+					coopMessanger.SendData(MessageType.Location, new byte[] { (byte) i, (byte) watchlistService.CoopLocationValues[i] });
+					Console.WriteLine($"Sending Location: {watchlistService.CoopLocationWatches[i].Notes}");
 				}
 			}
 			watchlistService.CoopLocationWatches.ClearChangeCounts();

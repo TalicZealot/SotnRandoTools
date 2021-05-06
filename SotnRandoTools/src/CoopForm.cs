@@ -80,6 +80,7 @@ namespace SotnRandoTools
 		public void UpdateCoop()
 		{
 			coopSender.Update();
+			coopReceiver.ExecuteMessage();
 		}
 
 		private void CoopForm_Load(object sender, EventArgs e)

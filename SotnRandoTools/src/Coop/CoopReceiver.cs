@@ -38,7 +38,6 @@ namespace SotnRandoTools.Coop
 			this.notificationService = notificationService;
 			this.watchlistService = watchlistService;
 
-			messageTimer.Elapsed += ExecuteMessage;
 			messageTimer.Interval = 1 * 100;
 			messageTimer.Start();
 		}
@@ -73,8 +72,7 @@ namespace SotnRandoTools.Coop
 					break;
 				case MessageType.Location:
 					gameApi.SetRoomValue(watchlistService.CoopLocationWatches[indexByte].Address, dataByte);
-					watchlistService.UpdateWatchlist(watchlistService.CoopLocationWatches);
-					watchlistService.CoopLocationWatches.ClearChangeCounts();
+					watchlistService.CoopLocationValues[indexByte] = dataByte;
 					Console.WriteLine($"Received location: {watchlistService.CoopLocationWatches[indexByte].Notes}");
 					break;
 				case MessageType.Item:
@@ -114,7 +112,7 @@ namespace SotnRandoTools.Coop
 			}
 		}
 
-		private void ExecuteMessage(object sender, System.Timers.ElapsedEventArgs e)
+		public void ExecuteMessage()
 		{
 			//avoid marble gallery softlock
 			bool insideMarbleGalleryDoorRooms = (gameApi.Room == Various.MarbleGalleryDoorToCavernsRoom || gameApi.Room == Various.MarbleGalleryBlueDoorRoom) && (gameApi.Area == Various.MarbleGalleryArea);
@@ -184,94 +182,49 @@ namespace SotnRandoTools.Coop
 			switch (shortcut)
 			{
 				case Shortcut.OuterWallElevator:
-					if (alucardApi.OuterWallElevator == false)
-					{
-						alucardApi.OuterWallElevator = true;
-					}
+					alucardApi.OuterWallElevator = true;
 					break;
 				case Shortcut.AlchemyElevator:
-					if (alucardApi.AlchemyElevator == false)
-					{
-						alucardApi.AlchemyElevator = true;
-					}
+					alucardApi.AlchemyElevator = true;
 					break;
 				case Shortcut.EntranceToMarble:
-					if (alucardApi.EntranceToMarble == false)
-					{
-						alucardApi.EntranceToMarble = true;
-					}
+					alucardApi.EntranceToMarble = true;
 					break;
 				case Shortcut.ChapelStatue:
-					if (alucardApi.ChapelStatue == false)
-					{
-						alucardApi.ChapelStatue = true;
-					}
+					alucardApi.ChapelStatue = true;
 					break;
 				case Shortcut.ColosseumElevator:
-					if (alucardApi.ColosseumElevator == false)
-					{
-						alucardApi.ColosseumElevator = true;
-					}
+					alucardApi.ColosseumElevator = true;
 					break;
 				case Shortcut.ColosseumToChapel:
-					if (alucardApi.ColosseumToChapel == false)
-					{
-						alucardApi.ColosseumToChapel = true;
-					}
+					alucardApi.ColosseumToChapel = true;
 					break;
 				case Shortcut.MarbleBlueDoor:
-					if (alucardApi.MarbleBlueDoor == false)
-					{
-						alucardApi.MarbleBlueDoor = true;
-					}
+					alucardApi.MarbleBlueDoor = true;
 					break;
 				case Shortcut.CavernsSwitchAndBridge:
-					if (alucardApi.CavernsSwitchAndBridge == false)
-					{
-						alucardApi.CavernsSwitchAndBridge = true;
-					}
+					alucardApi.CavernsSwitchAndBridge = true;
 					break;
 				case Shortcut.EntranceToCaverns:
-					if (alucardApi.EntranceToCaverns == false)
-					{
-						alucardApi.EntranceToCaverns = true;
-					}
+					alucardApi.EntranceToCaverns = true;
 					break;
 				case Shortcut.EntranceWarp:
-					if (alucardApi.EntranceWarp == false)
-					{
-						alucardApi.EntranceWarp = true;
-					}
+					alucardApi.EntranceWarp = true;
 					break;
 				case Shortcut.FirstClockRoomDoor:
-					if (alucardApi.FirstClockRoomDoor == false)
-					{
-						alucardApi.FirstClockRoomDoor = true;
-					}
+					alucardApi.FirstClockRoomDoor = true;
 					break;
 				case Shortcut.SecondClockRoomDoor:
-					if (alucardApi.SecondClockRoomDoor == false)
-					{
-						alucardApi.SecondClockRoomDoor = true;
-					}
+					alucardApi.SecondClockRoomDoor = true;
 					break;
 				case Shortcut.FirstDemonButton:
-					if (alucardApi.FirstDemonButton == false)
-					{
-						alucardApi.FirstDemonButton = true;
-					}
+					alucardApi.FirstDemonButton = true;
 					break;
 				case Shortcut.SecondDemonButton:
-					if (alucardApi.SecondDemonButton == false)
-					{
-						alucardApi.SecondDemonButton = true;
-					}
+					alucardApi.SecondDemonButton = true;
 					break;
 				case Shortcut.KeepStairs:
-					if (alucardApi.KeepStairs == false)
-					{
-						alucardApi.KeepStairs = true;
-					}
+					alucardApi.KeepStairs = true;
 					break;
 				default:
 					Console.WriteLine($"Shortcut {shortcut} not found!");

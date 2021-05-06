@@ -1,7 +1,8 @@
 # Symphony of the Night Randomizer Tools
 
-A collection of tools to enhance the [Castlevania:Symphony of the Night Randomizer](https://sotn.io) experience. 
 [![(latest) release | GitHub](https://img.shields.io/github/release/TalicZealot/SotnRandoTools.svg?logo=github&logoColor=333333&style=popout)](https://github.com/TalicZealot/SotnRandoTools/releases/latest)
+
+A collection of tools to enhance the [Castlevania:Symphony of the Night Randomizer](https://sotn.io) experience.
 
 This tool and the accompanying library and app are open source. The idea is to implement these features with the perspective of SotN players and provide the source for other developers to learn from and contribute just like the randomizer itself.
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using BizHawk.Client.Common;
 using BizHawk.Emulation.Common;
 using SotnRandoTools.Constants;
@@ -19,6 +20,7 @@ namespace SotnRandoTools.Services
 		private WatchList progressionItemWatches;
 		private WatchList thrustSwordWatches;
 		private WatchList warpsAndShortcutsWatches;
+		private int[] coopLocationValues;
 
 		public WatchlistService(IMemoryDomains? memoryDomains, string? systemId, Config GlobalConfig)
 		{
@@ -50,6 +52,13 @@ namespace SotnRandoTools.Services
 			coopLocationWatches.Load(Paths.EquipmentLocationWatchesPath, true);
 			CoopLocationWatches = coopLocationWatches;
 
+			coopLocationValues = new int[coopLocationWatches.WatchCount];
+			for (int i = 0; i < coopLocationValues.Length; i++)
+			{
+				coopLocationValues[i] = 0;
+			}
+			CoopLocationValues = coopLocationValues;
+
 			progressionItemWatches = new WatchList(this.memoryDomains, this.systemId);
 			progressionItemWatches.Load(Paths.ProgressionItemWatchesPath, false);
 			ProgressionItemWatches = progressionItemWatches;
@@ -68,6 +77,7 @@ namespace SotnRandoTools.Services
 		public WatchList SafeLocationWatches { get; }
 		public WatchList EquipmentLocationWatches { get; }
 		public WatchList CoopLocationWatches { get; }
+		public int[] CoopLocationValues { get; }
 		public WatchList ProgressionItemWatches { get; }
 		public WatchList ThrustSwordWatches { get; }
 		public WatchList WarpsAndShortcutsWatches { get; }

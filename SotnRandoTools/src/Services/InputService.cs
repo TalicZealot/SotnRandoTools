@@ -89,9 +89,9 @@ namespace SotnRandoTools.Services
 			}
 		}
 
-		public bool RegisteredMove(string moveName)
+		public bool RegisteredMove(string moveName, int frames)
 		{
-			for (int i = 0; i < 11; i++)
+			for (int i = 0; i < frames; i++)
 			{
 				if (moveHistory.Count < 10)
 				{
@@ -106,9 +106,9 @@ namespace SotnRandoTools.Services
 			return false;
 		}
 
-		public bool ButtonPressed(string button)
+		public bool ButtonPressed(string button, int frames)
 		{
-			for (int i = 0; i < 11; i++)
+			for (int i = 0; i < frames; i++)
 			{
 				if (inputHistory.Count < 10)
 				{
@@ -221,7 +221,6 @@ namespace SotnRandoTools.Services
 					}
 				}
 			}
-
 			return directionalInput;
 		}
 	}

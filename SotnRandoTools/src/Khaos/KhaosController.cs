@@ -287,8 +287,6 @@ namespace SotnRandoTools.Khaos
 
 			Alert("Khaos Status");
 		}
-
-
 		public void KhaosEquipment(string user = "Khaos")
 		{
 			RandomizeEquipmentSlots();
@@ -339,7 +337,6 @@ namespace SotnRandoTools.Khaos
 
 
 			notificationService.DisplayMessage($"{user} gambled {goldSpent} gold for {item}");
-			notificationService.DequeueAction();
 			Alert("Gamble");
 		}
 		#endregion
@@ -374,16 +371,20 @@ namespace SotnRandoTools.Khaos
 			alucardApi.Lck = (uint) (alucardApi.Lck * toolConfig.Khaos.WeakenFactor);
 			uint newLevel = (uint) (alucardApi.Level * toolConfig.Khaos.WeakenFactor);
 			alucardApi.Level = newLevel;
-			uint newExperience;
-			if (newLevel <= StatsValues.ExperienceValues.Length)
+			uint newExperience = 0;
+			if (newLevel <= StatsValues.ExperienceValues.Length && newLevel > 1)
 			{
 				newExperience = (uint)StatsValues.ExperienceValues[(int)newLevel - 1];
 			}
-			else
+			else if (newLevel > 1)
 			{
 				newExperience = (uint) StatsValues.ExperienceValues[StatsValues.ExperienceValues.Length - 1];
 			}
-			alucardApi.Experiecne = newExperience;
+			if (newLevel > 1)
+			{
+				alucardApi.Level = newLevel;
+				alucardApi.Experiecne = newExperience;
+			}
 
 			notificationService.DisplayMessage($"{user} used Weaken");
 			notificationService.DequeueAction();
@@ -428,6 +429,12 @@ namespace SotnRandoTools.Khaos
 			honestGamerTimer.Start();
 			notificationService.DisplayMessage($"{user} used Honest Gamer");
 			notificationService.DequeueAction();
+			notificationService.AddTimer(new Services.Models.ActionTimer
+			{
+				Name = KhaosActionNames.HonestGamer,
+				Type = Enums.ActionType.Debuff,
+				Duration = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.HonestGamer).FirstOrDefault().Duration
+			});
 			Alert("Honest Gamer");
 
 		}
@@ -452,6 +459,12 @@ namespace SotnRandoTools.Khaos
 			subweaponsOnlyTimer.Start();
 			notificationService.DisplayMessage($"{user} used Subweapons Only");
 			notificationService.DequeueAction();
+			notificationService.AddTimer(new Services.Models.ActionTimer
+			{
+				Name = KhaosActionNames.SubweaponsOnly,
+				Type = Enums.ActionType.Debuff,
+				Duration = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.SubweaponsOnly).FirstOrDefault().Duration
+			});
 			Alert("Subweapons Only");
 		}
 		public void Bankrupt(string user = "Khaos")
@@ -571,6 +584,7 @@ namespace SotnRandoTools.Khaos
 		}
 		public void Vampire(string user = "Khaos")
 		{
+			//TODO change to timed effect with cheat
 			alucardApi.DarkMetamorphasisTimer = 0xD;
 			alucardApi.ActivatePotion(Potion.AttackPotion);
 			notificationService.DisplayMessage($"{user} used Vampire");
@@ -640,6 +654,7 @@ namespace SotnRandoTools.Khaos
 		}
 		public void FourBeasts(string user = "Khaos")
 		{
+			//TODO change to timed effect with cheat
 			alucardApi.InvincibilityTimer = 0xD;
 			alucardApi.AttackPotionTimer = 0xD;
 			alucardApi.ShineTimer = 0xD;
@@ -733,8 +748,7 @@ namespace SotnRandoTools.Khaos
 					commandAction = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.Gamble).FirstOrDefault();
 					if (commandAction is not null && commandAction.Enabled)
 					{
-						queuedActions.Enqueue(new MethodInvoker(() => Gamble(user)));
-						notificationService.AddAction(Enums.ActionType.Khaotic);
+						queuedFastActions.Enqueue(new MethodInvoker(() => Gamble(user)));
 					}
 					break;
 				#endregion
@@ -815,7 +829,6 @@ namespace SotnRandoTools.Khaos
 					if (commandAction is not null && commandAction.Enabled)
 					{
 						queuedFastActions.Enqueue(new MethodInvoker(() => Endurance(user)));
-						notificationService.AddAction(Enums.ActionType.Debuff);
 					}
 					break;
 				#endregion

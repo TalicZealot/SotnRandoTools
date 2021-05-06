@@ -29,7 +29,7 @@ namespace SotnRandoTools.RandoTracker
 		private List<Relic> relics = new List<Relic>
 		{
 				new Relic { Name = "SoulOfBat", Progression = true},
-				new Relic { Name = "FireOfBat", Progression = true},
+				new Relic { Name = "FireOfBat", Progression = false},
 				new Relic { Name = "EchoOfBat", Progression = true},
 				new Relic { Name = "ForceOfEcho", Progression = false},
 				new Relic { Name = "SoulOfWolf", Progression = true},
@@ -577,6 +577,7 @@ namespace SotnRandoTools.RandoTracker
 
 		private void CheckRooms(WatchList watchlist)
 		{
+
 			foreach (var watch in watchlist)
 			{
 				if (watch.ChangeCount > 0)
@@ -598,6 +599,13 @@ namespace SotnRandoTools.RandoTracker
 								if ((watch.Value & value) == value)
 								{
 									location.Status = true;
+									Watch coopWatch = watchlistService.CoopLocationWatches.Where(cw => cw.Address == watch.Address).FirstOrDefault();
+									int watchIndex = watchlistService.CoopLocationWatches.IndexOf(coopWatch);
+									if (coopWatch is not null && watchlistService.CoopLocationValues[watchIndex] == 0)
+									{
+										coopWatch.Update(PreviousType.LastFrame);
+										watchlistService.CoopLocationValues[watchIndex] = value;
+									}
 									ClearMapLocation(locations.IndexOf(location));
 								}
 							}

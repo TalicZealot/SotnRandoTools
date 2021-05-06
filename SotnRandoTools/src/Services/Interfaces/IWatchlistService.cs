@@ -1,4 +1,5 @@
-﻿using BizHawk.Client.Common;
+﻿using System.Collections.Generic;
+using BizHawk.Client.Common;
 
 namespace SotnRandoTools.Services
 {
@@ -10,6 +11,7 @@ namespace SotnRandoTools.Services
 		WatchList CoopRelicWatches { get; }
 		WatchList SafeLocationWatches { get; }
 		WatchList CoopLocationWatches { get; }
+		int[] CoopLocationValues { get; }
 		WatchList ThrustSwordWatches { get; }
 		WatchList WarpsAndShortcutsWatches { get; }
 
