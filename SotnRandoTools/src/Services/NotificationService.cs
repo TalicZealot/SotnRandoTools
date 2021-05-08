@@ -30,6 +30,7 @@ namespace SotnRandoTools.Services
 		private System.Windows.Media.MediaPlayer audioPlayer = new();
 		private List<ActionType> actionQueue = new();
 		private List<ActionTimer> actionTimers = new();
+		private bool surfaceLocked = false;
 
 		public NotificationService(IToolConfig toolConfig, IGuiApi guiApi, IEmuClientApi clientAPI)
 		{
@@ -64,6 +65,11 @@ namespace SotnRandoTools.Services
 
 		public void DisplayMessage(string message)
 		{
+			if (surfaceLocked)
+			{
+				return;
+			}
+
 			int bufferWidth = clientAPI.BufferWidth();
 			int scale = clientAPI.GetWindowSize();
 			if (bufferWidth == 800)
@@ -84,12 +90,14 @@ namespace SotnRandoTools.Services
 				fontSize--;
 			}
 
+			surfaceLocked = true;
 			guiApi.WithSurface(DisplaySurfaceID.Client, () =>
 			{
 				guiApi.ClearGraphics();
 				guiApi.DrawImage(scaledTextbox, xpos, ypos, scaledTextbox.Width, scaledTextbox.Height, true);
 				guiApi.DrawString(xpos + (int) (scaledTextbox.Width / 2), ypos + (11 * scale), message, Color.White, null, fontSize, "Arial", "bold", "center", "center");
 			});
+			surfaceLocked = false;
 
 			messageTimer.Start();
 		}
@@ -140,7 +148,7 @@ namespace SotnRandoTools.Services
 
 		private void DrawUI()
 		{
-			if (actionQueue.Count == 0 && actionTimers.Count == 0)
+			if (surfaceLocked || (actionQueue.Count == 0 && actionTimers.Count == 0))
 			{
 				return;
 			}
@@ -164,6 +172,7 @@ namespace SotnRandoTools.Services
 			int col = 0;
 			int row = 0;
 
+			surfaceLocked = true;
 			guiApi.WithSurface(DisplaySurfaceID.Client, () =>
 			{
 				guiApi.ClearGraphics();
@@ -217,14 +226,17 @@ namespace SotnRandoTools.Services
 					guiApi.DrawString(xpos + (scaledIconEye.Width) + (1 * scale), ypos + (row * scaledIconEye.Height) + (4 * scale), timer.Name + " " + timer.Duration.ToString(@"mm\:ss"), Color.White, null, fontSize, "Arial", "bold");
 				}
 			});
+			surfaceLocked = false;
 		}
 
 		private void ClearMessage(object sender, ElapsedEventArgs e)
 		{
+			surfaceLocked = true;
 			guiApi.WithSurface(DisplaySurfaceID.Client, () =>
 			{
 				guiApi.ClearGraphics();
 			});
+			surfaceLocked = false;
 			messageTimer.Stop();
 		}
 

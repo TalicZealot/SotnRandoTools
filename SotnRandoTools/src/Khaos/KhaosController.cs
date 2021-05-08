@@ -156,7 +156,6 @@ namespace SotnRandoTools.Khaos
 		private System.Timers.Timer subweaponsOnlyTimer = new();
 		private System.Timers.Timer crippleTimer = new();
 		private System.Timers.Timer bloodManaTimer = new();
-		private System.Timers.Timer bloodManaTickTimer = new();
 		private System.Timers.Timer thirstTimer = new();
 		private System.Timers.Timer thirstTickTimer = new();
 		private System.Timers.Timer hordeTimer = new();
@@ -410,7 +409,6 @@ namespace SotnRandoTools.Khaos
 			storedMana = alucardApi.CurrentMp;
 			bloodManaActive = true;
 			bloodManaTimer.Start();
-			bloodManaTickTimer.Start();
 			notificationService.DisplayMessage($"{user} used Blood Mana");
 			notificationService.DequeueAction();
 			notificationService.AddTimer(new Services.Models.ActionTimer
@@ -897,7 +895,7 @@ namespace SotnRandoTools.Khaos
 					commandAction = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.ZaWarudo).FirstOrDefault();
 					if (commandAction is not null && commandAction.Enabled)
 					{
-						queuedActions.Enqueue(new MethodInvoker(() => ZaWarudo(user)));
+						queuedFastActions.Enqueue(new MethodInvoker(() => ZaWarudo(user)));
 						notificationService.AddAction(Enums.ActionType.Buff);
 					}
 					break;
@@ -929,8 +927,6 @@ namespace SotnRandoTools.Khaos
 			crippleTimer.Interval = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.Cripple).FirstOrDefault().Duration.TotalMilliseconds;
 			bloodManaTimer.Elapsed += BloodManaOff;
 			bloodManaTimer.Interval = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.BloodMana).FirstOrDefault().Duration.TotalMilliseconds;
-			bloodManaTickTimer.Elapsed += BloodManaUpdate;
-			bloodManaTickTimer.Interval = 100;
 			thirstTimer.Elapsed += ThirstOff;
 			thirstTimer.Interval = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.Thirst).FirstOrDefault().Duration.TotalMilliseconds;
 			thirstTickTimer.Elapsed += ThirstDrain;
@@ -1010,8 +1006,8 @@ namespace SotnRandoTools.Khaos
 			uint statPool = str + con + intel + lck > 28 ? str + con + intel + lck - 28 : str + con + intel + lck;
 			uint offset = (uint) (rnd.NextDouble() * statPool);
 
-			int statPoolRoll = rnd.Next(1, 3);
-			if (statPoolRoll > 1)
+			int statPoolRoll = rnd.Next(1, 4);
+			if (statPoolRoll == 2)
 			{
 				statPool = statPool + offset;
 			}
@@ -1042,8 +1038,8 @@ namespace SotnRandoTools.Khaos
 			}
 			offset = (uint) (rnd.NextDouble() * pointsPool);
 
-			int pointsRoll = rnd.Next(1, 3);
-			if (pointsRoll > 1)
+			int pointsRoll = rnd.Next(1, 4);
+			if (pointsRoll == 2)
 			{
 				pointsPool = pointsPool + offset;
 			}
@@ -1119,7 +1115,7 @@ namespace SotnRandoTools.Khaos
 			}
 			foreach (var relic in relics)
 			{
-				if (rnd.Next(0, 2) > 0)
+				if (rnd.Next(0, 2) > 0 && (int)relic < 25)
 				{
 					alucardApi.GrantRelic((Relic) relic);
 				}
@@ -1161,16 +1157,15 @@ namespace SotnRandoTools.Khaos
 		}
 		#endregion
 		#region Debuff events
-		private void BloodManaUpdate(Object sender, EventArgs e)
+		private void BloodManaUpdate()
 		{
-			if (spentMana > 1)
+			if (spentMana > 0)
 			{
-				alucardApi.CurrentMp += (uint) spentMana;
-
 				uint currentHp = alucardApi.CurrentHp;
 				if (currentHp > spentMana)
 				{
 					alucardApi.CurrentHp -= (uint) spentMana;
+					alucardApi.CurrentMp += (uint) spentMana;
 				}
 				else
 				{
@@ -1182,7 +1177,6 @@ namespace SotnRandoTools.Khaos
 		{
 			bloodManaActive = false;
 			bloodManaTimer.Stop();
-			bloodManaTickTimer.Stop();
 		}
 		private void ThirstDrain(Object sender, EventArgs e)
 		{
@@ -1293,7 +1287,7 @@ namespace SotnRandoTools.Khaos
 
 			Actor? boss = null;
 
-			long enemy = actorApi.FindEnemy(gameApi.SecondCastle ? 886 : 199, 2000);
+			long enemy = actorApi.FindEnemy(gameApi.SecondCastle ? 886 : 199, 1999);
 			if (enemy > 0)
 			{
 				boss = new Actor(actorApi.GetActor(enemy));
@@ -1425,8 +1419,13 @@ namespace SotnRandoTools.Khaos
 		private void CheckManaUsage()
 		{
 			uint currentMana = alucardApi.CurrentMp;
-			spentMana = (int) storedMana - (int) currentMana;
+			spentMana = 0;
+			if (currentMana < storedMana)
+			{
+				spentMana = (int) storedMana - (int) currentMana;
+			}
 			storedMana = currentMana;
+			BloodManaUpdate();
 		}
 		private void CheckExperience()
 		{

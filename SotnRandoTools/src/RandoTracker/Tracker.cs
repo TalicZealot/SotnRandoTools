@@ -149,7 +149,7 @@ namespace SotnRandoTools.RandoTracker
 			new Location { Name = "Knight shield", EquipmentExtension = true, MapRow = 140, MapCol = 114, Rooms = new List<Room>{ new Room { Name = "Knight shield", Values = new int[] { 0x1, 0x4 }} }},
 			new Location { Name = "Shield rod", EquipmentExtension = true, MapRow = 156, MapCol = 106, Rooms = new List<Room>{ new Room { Name = "Shield rod", Values = new int[] { 0x10 }} }},
 			new Location { Name = "Blood cloak", EquipmentExtension = true, MapRow = 156, MapCol = 162, Rooms = new List<Room>{ new Room { Name = "Blood cloak", Values = new int[] { 0x40 }} }},
-			new Location { Name = "Bastard Sword", EquipmentExtension = true, SecondCastle = true, MapRow = 386, MapCol = 240, Rooms = new List<Room>{ new Room { Name = "Bastard sword", Values = new int[] { 0x4 }} }},
+			new Location { Name = "Bastard sword", EquipmentExtension = true, SecondCastle = true, MapRow = 386, MapCol = 240, Rooms = new List<Room>{ new Room { Name = "Bastard sword", Values = new int[] { 0x4 }} }},
 			new Location { Name = "Royal cloak", EquipmentExtension = true, SecondCastle = true, MapRow = 386, MapCol = 224, Rooms = new List<Room>{ new Room { Name = "Royal cloak", Values = new int[] { 0x40 }} }},
 			new Location { Name = "Lightning mail", EquipmentExtension = true, SecondCastle = true, MapRow = 346, MapCol = 192, Rooms = new List<Room>{ new Room { Name = "Lightning mail", Values = new int[] { 0x40 }} }},
 			new Location { Name = "Sword of Dawn", EquipmentExtension = true, SecondCastle = true, MapRow = 346, MapCol = 256, Rooms = new List<Room>{ new Room { Name = "Sword of Dawn1", Values = new int[] { 0x40 }}, new Room { Name = "Sword of Dawn2", Values = new int[] { 0x1 }} }},
@@ -279,7 +279,7 @@ namespace SotnRandoTools.RandoTracker
 			{
 				gameReset = true;
 			}
-			else if (inGame && gameApi.InPrologue() && !restarted)
+			else if (gameApi.InPrologue() && !restarted)
 			{
 				ResetToDefaults();
 				DrawRelicsAndItems();
@@ -599,7 +599,7 @@ namespace SotnRandoTools.RandoTracker
 								if ((watch.Value & value) == value)
 								{
 									location.Status = true;
-									Watch coopWatch = watchlistService.CoopLocationWatches.Where(cw => cw.Address == watch.Address).FirstOrDefault();
+									Watch coopWatch = watchlistService.CoopLocationWatches.Where(cw => cw.Notes == watch.Notes).FirstOrDefault();
 									int watchIndex = watchlistService.CoopLocationWatches.IndexOf(coopWatch);
 									if (coopWatch is not null && watchlistService.CoopLocationValues[watchIndex] == 0)
 									{
