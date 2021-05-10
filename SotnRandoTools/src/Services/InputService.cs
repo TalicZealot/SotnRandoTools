@@ -65,7 +65,7 @@ namespace SotnRandoTools.Services
 			}
 
 			moveHistory.Add(new Dictionary<string, bool>());
-			if (ReadInput(dragonPunch, 30))
+			if (ReadInput(dragonPunch, Globals.InputBufferSize))
 			{
 				moveHistory[moveHistory.Count - 1].Add(InputKeys.DragonPunch, true);
 			}
@@ -74,7 +74,7 @@ namespace SotnRandoTools.Services
 				moveHistory[moveHistory.Count - 1].Add(InputKeys.DragonPunch, false);
 			}
 
-			if (ReadInput(halfCircle, 30))
+			if (ReadInput(halfCircle, Globals.InputBufferSize))
 			{
 				moveHistory[moveHistory.Count - 1].Add(InputKeys.HalfCircleForward, true);
 			}

@@ -4,8 +4,8 @@
 	{
 		public const string KhaosStatus = "Khaos Status";
 		public const string KhaosEquipment = "Khaos Equipment";
-		public const string KhaosStats= "Khaos Stats";
-		public const string KhaosRelics= "Khaos Relics";
+		public const string KhaosStats = "Khaos Stats";
+		public const string KhaosRelics = "Khaos Relics";
 		public const string PandorasBox = "Pandora's Box";
 		public const string Gamble = "Gamble";
 		public const string Bankrupt = "Bankrupt";
@@ -18,7 +18,7 @@
 		public const string Thirst = "Thirst";
 		public const string KhaosHorde = "Khaos Horde";
 		public const string Endurance = "Endurance";
-		public const string Vampire = "Vampire"; 
+		public const string Vampire = "Vampire";
 		public const string LightHelp = "Light Help";
 		public const string MediumHelp = "Medium Help";
 		public const string HeavyHelp = "Heavy Help";

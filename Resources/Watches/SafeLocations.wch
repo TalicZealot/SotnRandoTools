@@ -9,6 +9,7 @@ SystemID PSX
 06BCD9	b	u	0	MainRAM	FormOfMist
 06BC0B	b	u	0	MainRAM	PowerOfMist1
 06BC1B	b	u	0	MainRAM	PowerOfMist2
+06BC0C	b	h	0	MainRAM	PowerOfMist3
 06BDB8	b	u	0	MainRAM	CubeOfZoe
 06BD7A	b	u	0	MainRAM	SpiritOrb1
 06BD6A	b	u	0	MainRAM	SpiritOrb2

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using BizHawk.Client.Common;
 using BizHawk.Emulation.Common;
 using SotnRandoTools.Constants;

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using BizHawk.Client.Common;
 using SotnApi.Constants.Values.Alucard;
 using SotnApi.Constants.Values.Alucard.Enums;
 using SotnApi.Constants.Values.Game;
@@ -65,7 +64,7 @@ namespace SotnRandoTools.Coop
 						alucardApi.GrantRelic((Relic) index);
 						watchlistService.UpdateWatchlist(watchlistService.CoopRelicWatches);
 						watchlistService.CoopRelicWatches.ClearChangeCounts();
-						notificationService.DisplayMessage(((Relic) index).ToString());
+						notificationService.AddMessage(((Relic) index).ToString());
 						notificationService.PlayAlert(Paths.ItemPickupSound);
 						Console.WriteLine($"Received relic: {(Relic) index}");
 					}
@@ -77,7 +76,7 @@ namespace SotnRandoTools.Coop
 					break;
 				case MessageType.Item:
 					alucardApi.GrantItemByName(Equipment.Items[index]);
-					notificationService.DisplayMessage(Equipment.Items[index]);
+					notificationService.AddMessage(Equipment.Items[index]);
 					notificationService.PlayAlert(Paths.ItemPickupSound);
 					Console.WriteLine($"Received item: {Equipment.Items[index]}");
 					break;
@@ -88,14 +87,14 @@ namespace SotnRandoTools.Coop
 					alucardApi.GrantFirstCastleWarp((Warp) index);
 					watchlistService.UpdateWatchlist(watchlistService.WarpsAndShortcutsWatches);
 					watchlistService.WarpsAndShortcutsWatches.ClearChangeCounts();
-					notificationService.DisplayMessage($"Received warp: {(Warp) index}");
+					notificationService.AddMessage($"Received warp: {(Warp) index}");
 					Console.WriteLine($"Received warp: {(Warp) index}");
 					break;
 				case MessageType.WarpSecondCastle:
 					alucardApi.GrantSecondCastleWarp((Warp) index);
 					watchlistService.UpdateWatchlist(watchlistService.WarpsAndShortcutsWatches);
 					watchlistService.WarpsAndShortcutsWatches.ClearChangeCounts();
-					notificationService.DisplayMessage($"Received warp: Inverted {(Warp) index}");
+					notificationService.AddMessage($"Received warp: Inverted {(Warp) index}");
 					Console.WriteLine($"Received warp: Inverted {(Warp) index}");
 					break;
 				case MessageType.Shortcut:
@@ -231,7 +230,7 @@ namespace SotnRandoTools.Coop
 					return;
 			}
 
-			notificationService.DisplayMessage(shortcut.ToString());
+			notificationService.AddMessage(shortcut.ToString());
 			Console.WriteLine($"Received shortcut: {shortcut}");
 		}
 

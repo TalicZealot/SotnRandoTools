@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Drawing;
-using System.Collections.Generic;
 using System.Windows.Forms;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Services;
-using System.Linq;
 
 namespace SotnRandoTools
 {
@@ -66,7 +64,7 @@ namespace SotnRandoTools
 		}
 		private void alertFileDialog_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
 		{
-			alertsGridView.Rows[(int)alertFileDialog.Tag].Cells[1].Value = alertFileDialog.FileName;
+			alertsGridView.Rows[(int) alertFileDialog.Tag].Cells[1].Value = alertFileDialog.FileName;
 		}
 
 		private void saveButton_Click(object sender, EventArgs e)
@@ -207,7 +205,7 @@ namespace SotnRandoTools
 			bool result = Int32.TryParse(thirstTextBox.Text, out thirstDrain);
 			if (result)
 			{
-				toolConfig.Khaos.ThirstDrainPerSecond = (uint)thirstDrain;
+				toolConfig.Khaos.ThirstDrainPerSecond = (uint) thirstDrain;
 			}
 			thirstTextBox.BackColor = Color.White;
 			this.valueToolTip.Active = false;

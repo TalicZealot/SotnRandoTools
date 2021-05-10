@@ -24,7 +24,7 @@
 * Honest Gamer: The honorable SotN Alucards don't abuse spells. Mana locked to 5mp for a period. Gets put into the command queue.
   * command honest
 * Subweapons Only: Can only use subweapons for combat for a period. Gives Alucard Cube of Zoe, a subweapon and 200 hearts. Gets put into the command queue.
-  * command subonly
+  * command subsonly
 * Cripple: Not so fast! Speed set to 75% for a period. Gets put into the command queue.
   * command cripple
 * Blood Mana: Spells now cost HP instead of mana. Gets put into the command queue.

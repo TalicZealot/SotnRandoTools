@@ -135,7 +135,7 @@
     ]
   }, {
     "location": "Falchion",
-    "comment": "Requires at least Leap Ston",
+    "comment": "Requires at least Leap Stone",
     "locks": [
       "Soul of Bat",
       "Leap Stone",
@@ -161,8 +161,9 @@
     ]
   }, {
     "location": "Holy rod",
-    "comment": "Requires at least Gravity Boots",
+    "comment": "Requires at least Leap Stone",
     "locks": [
+      "Leap Stone",
       "Soul of Bat",
       "Gravity Boots",
       "Form of Mist + Power of Mist"
@@ -275,6 +276,7 @@
     "location": "Caverns Onyx",
     "comment": "Requires Jewel of Open + at least Leap Stone",
     "locks": [
+      "Jewel of Open + Merman Statue",
       "Jewel of Open + Soul of Bat",
       "Jewel of Open + Holy Symbol + Leap Stone",
       "Jewel of Open + Form of Mist + Power of Mist"
@@ -337,8 +339,7 @@
     "locks": [
       "Jewel of Open + Soul of Bat",
       "Jewel of Open + Leap Stone",
-      "Jewel of Open + Form of Mist + Power of Mist",
-      "Jewel of Open + Soul of Wolf + Power of Wolf"
+      "Jewel of Open + Form of Mist + Power of Mist"
     ],
     "comment": "Access must also give at least Leap Stone",
     "escapeRequires": [

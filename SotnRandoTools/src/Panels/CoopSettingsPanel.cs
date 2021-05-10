@@ -83,7 +83,7 @@ namespace SotnRandoTools
 
 		private void sendAssistsCheckbox_CheckedChanged(object sender, EventArgs e)
 		{
-			toolConfig.Coop.SendAssists  = sendAssistsCheckbox.Checked;
+			toolConfig.Coop.SendAssists = sendAssistsCheckbox.Checked;
 		}
 
 		private void shareLocationsCheckbox_CheckedChanged(object sender, EventArgs e)

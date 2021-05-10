@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using BizHawk.Client.Common;
 using SotnApi.Constants.Values.Alucard;
 using SotnApi.Constants.Values.Alucard.Enums;
 using SotnApi.Interfaces;
@@ -15,8 +13,6 @@ namespace SotnRandoTools.Coop
 {
 	public class CoopSender
 	{
-		private const int UpdateRate = 5;
-
 		private readonly IToolConfig toolConfig;
 		private readonly IGameApi gameApi;
 		private readonly IAlucardApi alucardApi;
@@ -82,7 +78,7 @@ namespace SotnRandoTools.Coop
 
 		private void UpdateSendItem()
 		{
-			if (inputService.ButtonPressed(PlaystationInputKeys.Select, UpdateRate) && selectPressed == false && gameApi.IsInMenu() && gameApi.EquipMenuOpen())
+			if (inputService.ButtonPressed(PlaystationInputKeys.Select, Globals.UpdateCooldownFrames) && selectPressed == false && gameApi.IsInMenu() && gameApi.EquipMenuOpen())
 			{
 				selectPressed = true;
 				string item = alucardApi.GetSelectedItemName();
@@ -98,7 +94,7 @@ namespace SotnRandoTools.Coop
 					Console.WriteLine($"Player doesn't have any {item}!");
 				}
 			}
-			else if (!inputService.ButtonPressed(PlaystationInputKeys.Select, UpdateRate))
+			else if (!inputService.ButtonPressed(PlaystationInputKeys.Select, Globals.UpdateCooldownFrames))
 			{
 				selectPressed = false;
 			}
@@ -106,7 +102,7 @@ namespace SotnRandoTools.Coop
 
 		private void UpdateSendRelic()
 		{
-			if (inputService.ButtonPressed(PlaystationInputKeys.Select, UpdateRate) && selectPressed == false && gameApi.IsInMenu() && gameApi.RelicMenuOpen())
+			if (inputService.ButtonPressed(PlaystationInputKeys.Select, Globals.UpdateCooldownFrames) && selectPressed == false && gameApi.IsInMenu() && gameApi.RelicMenuOpen())
 			{
 				selectPressed = true;
 				Relic relic = alucardApi.GetSelectedRelic();
@@ -122,7 +118,7 @@ namespace SotnRandoTools.Coop
 					Console.WriteLine($"Player doesn't have {relic}.");
 				}
 			}
-			else if (!inputService.ButtonPressed(PlaystationInputKeys.Select, UpdateRate))
+			else if (!inputService.ButtonPressed(PlaystationInputKeys.Select, Globals.UpdateCooldownFrames))
 			{
 				selectPressed = false;
 			}
@@ -130,7 +126,7 @@ namespace SotnRandoTools.Coop
 
 		private void UpdateAssist()
 		{
-			if (inputService.ButtonPressed(PlaystationInputKeys.Circle, UpdateRate) && circlePressed == false && gameApi.IsInMenu() && gameApi.EquipMenuOpen())
+			if (inputService.ButtonPressed(PlaystationInputKeys.Circle, Globals.UpdateCooldownFrames) && circlePressed == false && gameApi.IsInMenu() && gameApi.EquipMenuOpen())
 			{
 				circlePressed = true;
 				string item = alucardApi.GetSelectedItemName();
@@ -153,11 +149,11 @@ namespace SotnRandoTools.Coop
 					Console.WriteLine($"Item {item} can't be used for an assist.");
 				}
 			}
-			else if (!inputService.ButtonPressed(PlaystationInputKeys.Circle, UpdateRate))
+			else if (!inputService.ButtonPressed(PlaystationInputKeys.Circle, Globals.UpdateCooldownFrames))
 			{
 				circlePressed = false;
 
-				if (!gameApi.IsInMenu() && inputService.RegisteredMove(InputKeys.DragonPunch, UpdateRate))
+				if (!gameApi.IsInMenu() && inputService.RegisteredMove(InputKeys.DragonPunch, Globals.UpdateCooldownFrames))
 				{
 					string item = "Manna prism";
 					if (!alucardApi.HasItemInInventory(item))
@@ -172,7 +168,7 @@ namespace SotnRandoTools.Coop
 					Console.WriteLine($"Sending assist: {item}");
 
 				}
-				else if (!gameApi.IsInMenu() && inputService.RegisteredMove(InputKeys.HalfCircleForward, UpdateRate))
+				else if (!gameApi.IsInMenu() && inputService.RegisteredMove(InputKeys.HalfCircleForward, Globals.UpdateCooldownFrames))
 				{
 					string item = "Potion";
 					if (!alucardApi.HasItemInInventory(item))

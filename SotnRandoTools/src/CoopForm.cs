@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -48,7 +46,7 @@ namespace SotnRandoTools
 		{
 			if (e.PropertyName == "Message")
 			{
-				notificationService.DisplayMessage(coopViewModel.Message);
+				notificationService.AddMessage(coopViewModel.Message);
 				return;
 			}
 

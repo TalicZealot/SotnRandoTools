@@ -6,7 +6,7 @@ namespace SotnRandoTools.Services
 	public interface INotificationService
 	{
 		double Volume { set; }
-		void DisplayMessage(string message);
+		void AddMessage(string message);
 		void AddAction(ActionType action);
 		void DequeueAction();
 		void AddTimer(ActionTimer timer);

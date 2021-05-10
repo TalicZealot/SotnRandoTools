@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using BizHawk.Client.Common;
+﻿using BizHawk.Client.Common;
 
 namespace SotnRandoTools.Services
 {

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace SotnRandoTools.Services
+﻿namespace SotnRandoTools.Services
 {
 	public interface IInputService
 	{

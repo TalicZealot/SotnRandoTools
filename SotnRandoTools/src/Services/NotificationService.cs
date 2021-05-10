@@ -28,9 +28,10 @@ namespace SotnRandoTools.Services
 		private Image iconFairy;
 		private Image iconEye;
 		private System.Windows.Media.MediaPlayer audioPlayer = new();
+		private List<string> messageQueue = new();
 		private List<ActionType> actionQueue = new();
 		private List<ActionTimer> actionTimers = new();
-		private bool surfaceLocked = false;
+		private bool cleared = false;
 
 		public NotificationService(IToolConfig toolConfig, IGuiApi guiApi, IEmuClientApi clientAPI)
 		{
@@ -43,7 +44,8 @@ namespace SotnRandoTools.Services
 
 			messageTimer = new System.Timers.Timer();
 			messageTimer.Interval = NotificationTime;
-			messageTimer.Elapsed += ClearMessage;
+			messageTimer.Elapsed += DequeueMessage;
+			messageTimer.Start();
 			countdownTimer = new System.Timers.Timer();
 			countdownTimer.Interval = 1000;
 			countdownTimer.Elapsed += DecrementTimers;
@@ -61,45 +63,6 @@ namespace SotnRandoTools.Services
 			{
 				audioPlayer.Volume = value;
 			}
-		}
-
-		public void DisplayMessage(string message)
-		{
-			if (surfaceLocked)
-			{
-				return;
-			}
-
-			int bufferWidth = clientAPI.BufferWidth();
-			int scale = clientAPI.GetWindowSize();
-			if (bufferWidth == 800)
-			{
-				scale *= 2;
-			}
-
-			Image scaledTextbox = ResizeImage(textbox, textbox.Width * scale, textbox.Height * scale);
-
-			int screenWidth = clientAPI.ScreenWidth();
-			int screenHeight = clientAPI.ScreenHeight();
-			int xpos = (int) (screenWidth * 0.45);
-			int ypos = (int) (screenHeight * 0.1);
-
-			int fontSize = 11 * scale;
-			while (TextRenderer.MeasureText(message, new Font("Arial", fontSize)).Width > (scaledTextbox.Width - (20 * scale)))
-			{
-				fontSize--;
-			}
-
-			surfaceLocked = true;
-			guiApi.WithSurface(DisplaySurfaceID.Client, () =>
-			{
-				guiApi.ClearGraphics();
-				guiApi.DrawImage(scaledTextbox, xpos, ypos, scaledTextbox.Width, scaledTextbox.Height, true);
-				guiApi.DrawString(xpos + (int) (scaledTextbox.Width / 2), ypos + (11 * scale), message, Color.White, null, fontSize, "Arial", "bold", "center", "center");
-			});
-			surfaceLocked = false;
-
-			messageTimer.Start();
 		}
 
 		public void PlayAlert(string url)
@@ -133,6 +96,16 @@ namespace SotnRandoTools.Services
 			DrawUI();
 		}
 
+		public void AddMessage(string message)
+		{
+			messageQueue.Add(message);
+			if (messageQueue.Count == 1)
+			{
+				messageTimer.Stop();
+				messageTimer.Start();
+			}
+		}
+
 		public void DequeueAction()
 		{
 			if (actionQueue.Count > 0)
@@ -148,11 +121,19 @@ namespace SotnRandoTools.Services
 
 		private void DrawUI()
 		{
-			if (surfaceLocked || (actionQueue.Count == 0 && actionTimers.Count == 0))
+			if (actionQueue.Count == 0 && actionTimers.Count == 0 && messageQueue.Count == 0)
 			{
+				if (!cleared)
+				{
+					guiApi.WithSurface(DisplaySurfaceID.Client, () =>
+					{
+						guiApi.ClearGraphics();
+					});
+				}
+				cleared = true;
 				return;
 			}
-
+			cleared = false;
 			int bufferWidth = clientAPI.BufferWidth();
 			int scale = clientAPI.GetWindowSize();
 			bool pixelPro = bufferWidth == 800;
@@ -160,7 +141,9 @@ namespace SotnRandoTools.Services
 			{
 				scale *= 2;
 			}
+			int fontSize = 11 * scale;
 
+			Image scaledTextbox = ResizeImage(textbox, textbox.Width * scale, textbox.Height * scale);
 			Image scaledIconSkull = ResizeImage(iconSkull, iconSkull.Width * scale, iconSkull.Height * scale);
 			Image scaledIconFairy = ResizeImage(iconFairy, iconFairy.Width * scale, iconFairy.Height * scale);
 			Image scaledIconEye = ResizeImage(iconEye, iconEye.Width * scale, iconEye.Height * scale);
@@ -172,72 +155,92 @@ namespace SotnRandoTools.Services
 			int col = 0;
 			int row = 0;
 
-			surfaceLocked = true;
 			guiApi.WithSurface(DisplaySurfaceID.Client, () =>
 			{
 				guiApi.ClearGraphics();
-
-				foreach (var action in actionQueue)
+				if (messageQueue.Count > 0)
 				{
-					if (col > 8)
+					while (TextRenderer.MeasureText(messageQueue[0], new Font("Arial", fontSize)).Width > (scaledTextbox.Width - (20 * scale)))
 					{
-						col = 0;
-						row++;
+						fontSize--;
 					}
-					switch (action)
-					{
-						case ActionType.Khaotic:
-							guiApi.DrawImage(scaledIconEye, xpos + (col * scaledIconEye.Width) + (1 * scale), ypos + (row * scaledIconEye.Height) + (1 * scale), scaledIconEye.Width, scaledIconEye.Height, true);
-							break;
-						case ActionType.Debuff:
-							guiApi.DrawImage(scaledIconSkull, xpos + (col * scaledIconSkull.Width) + (1 * scale), ypos + (row * scaledIconSkull.Height) + (1 * scale), scaledIconSkull.Width, scaledIconSkull.Height, true);
-							break;
-						case ActionType.Buff:
-							guiApi.DrawImage(scaledIconFairy, xpos + (col * scaledIconFairy.Width) + (1 * scale), ypos + (row * scaledIconFairy.Height) + (1 * scale), scaledIconFairy.Width, scaledIconFairy.Height, true);
-							break;
-						default:
-							break;
-					}
-					col++;
+					DrawMessage(messageQueue[0], scale, scaledTextbox, xpos, ypos, fontSize);
+				}
+				else
+				{
+					DrawQueue(scale, scaledIconSkull, scaledIconFairy, scaledIconEye, xpos, ypos, ref col, ref row);
 				}
 
 				xpos = pixelPro ? (int) (screenWidth * 0.17) : (int) (screenWidth * 0.05);
 				ypos = (int) (screenHeight * 0.15);
 				row = 0;
-				int fontSize = 8 * scale;
-
-				foreach (var timer in actionTimers)
-				{
-					row++;
-					switch (timer.Type)
-					{
-						case ActionType.Khaotic:
-							guiApi.DrawImage(scaledIconEye, xpos + (1 * scale), ypos + (row * scaledIconEye.Height) + (1 * scale), scaledIconEye.Width, scaledIconEye.Height, true);
-							break;
-						case ActionType.Debuff:
-							guiApi.DrawImage(scaledIconSkull, xpos + (1 * scale), ypos + (row * scaledIconSkull.Height) + (1 * scale), scaledIconSkull.Width, scaledIconSkull.Height, true);
-							break;
-						case ActionType.Buff:
-							guiApi.DrawImage(scaledIconFairy, xpos + (1 * scale), ypos + (row * scaledIconFairy.Height) + (1 * scale), scaledIconFairy.Width, scaledIconFairy.Height, true);
-							break;
-						default:
-							break;
-					}
-					guiApi.DrawString(xpos + (scaledIconEye.Width) + (1 * scale), ypos + (row * scaledIconEye.Height) + (4 * scale), timer.Name + " " + timer.Duration.ToString(@"mm\:ss"), Color.White, null, fontSize, "Arial", "bold");
-				}
+				fontSize = 8 * scale;
+				DrawTimers(scale, fontSize, scaledIconSkull, scaledIconFairy, scaledIconEye, xpos, ypos, ref row);
 			});
-			surfaceLocked = false;
 		}
 
-		private void ClearMessage(object sender, ElapsedEventArgs e)
+		private void DrawMessage(string message, int scale, Image scaledTextbox, int xpos, int ypos, int fontSize)
 		{
-			surfaceLocked = true;
-			guiApi.WithSurface(DisplaySurfaceID.Client, () =>
+			guiApi.DrawImage(scaledTextbox, xpos, ypos, scaledTextbox.Width, scaledTextbox.Height, true);
+			guiApi.DrawString(xpos + (int) (scaledTextbox.Width / 2), ypos + (11 * scale), message, Color.White, null, fontSize, "Arial", "bold", "center", "center");
+		}
+
+		private void DrawQueue(int scale, Image scaledIconSkull, Image scaledIconFairy, Image scaledIconEye, int xpos, int ypos, ref int col, ref int row)
+		{
+			foreach (var action in actionQueue)
 			{
-				guiApi.ClearGraphics();
-			});
-			surfaceLocked = false;
-			messageTimer.Stop();
+				if (col > 8)
+				{
+					col = 0;
+					row++;
+				}
+				switch (action)
+				{
+					case ActionType.Khaotic:
+						guiApi.DrawImage(scaledIconEye, xpos + (col * scaledIconEye.Width) + (1 * scale), ypos + (row * scaledIconEye.Height) + (1 * scale), scaledIconEye.Width, scaledIconEye.Height, true);
+						break;
+					case ActionType.Debuff:
+						guiApi.DrawImage(scaledIconSkull, xpos + (col * scaledIconSkull.Width) + (1 * scale), ypos + (row * scaledIconSkull.Height) + (1 * scale), scaledIconSkull.Width, scaledIconSkull.Height, true);
+						break;
+					case ActionType.Buff:
+						guiApi.DrawImage(scaledIconFairy, xpos + (col * scaledIconFairy.Width) + (1 * scale), ypos + (row * scaledIconFairy.Height) + (1 * scale), scaledIconFairy.Width, scaledIconFairy.Height, true);
+						break;
+					default:
+						break;
+				}
+				col++;
+			}
+		}
+
+		private void DrawTimers(int scale, int fontSize, Image scaledIconSkull, Image scaledIconFairy, Image scaledIconEye, int xpos, int ypos, ref int row)
+		{
+			foreach (var timer in actionTimers)
+			{
+				row++;
+				switch (timer.Type)
+				{
+					case ActionType.Khaotic:
+						guiApi.DrawImage(scaledIconEye, xpos + (1 * scale), ypos + (row * scaledIconEye.Height) + (1 * scale), scaledIconEye.Width, scaledIconEye.Height, true);
+						break;
+					case ActionType.Debuff:
+						guiApi.DrawImage(scaledIconSkull, xpos + (1 * scale), ypos + (row * scaledIconSkull.Height) + (1 * scale), scaledIconSkull.Width, scaledIconSkull.Height, true);
+						break;
+					case ActionType.Buff:
+						guiApi.DrawImage(scaledIconFairy, xpos + (1 * scale), ypos + (row * scaledIconFairy.Height) + (1 * scale), scaledIconFairy.Width, scaledIconFairy.Height, true);
+						break;
+					default:
+						break;
+				}
+				guiApi.DrawString(xpos + (scaledIconEye.Width) + (1 * scale), ypos + (row * scaledIconEye.Height) + (4 * scale), timer.Name + " " + timer.Duration.ToString(@"mm\:ss"), Color.White, null, fontSize, "Arial", "bold");
+			}
+		}
+
+		private void DequeueMessage(object sender, ElapsedEventArgs e)
+		{
+			if (messageQueue.Count > 0)
+			{
+				messageQueue.RemoveAt(0);
+			}
 		}
 
 		private void DecrementTimers(object sender, ElapsedEventArgs e)
@@ -245,15 +248,12 @@ namespace SotnRandoTools.Services
 			foreach (var timer in actionTimers)
 			{
 				timer.Duration -= TimeSpan.FromSeconds(1);
-				if (timer.Duration.TotalSeconds <= 1)
+				if (timer.Duration.TotalSeconds < 1)
 				{
 					actionTimers.Remove(timer);
 				}
 			}
-			if (!messageTimer.Enabled)
-			{
-				DrawUI();
-			}
+			DrawUI();
 		}
 
 		private Bitmap ResizeImage(Image image, int width, int height)

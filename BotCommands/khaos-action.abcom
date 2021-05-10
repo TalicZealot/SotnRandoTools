@@ -1,1 +1,0 @@
-{"Command":"!khaos-action","Permission":"Moderator","Info":"","Group":"GENERAL","Response":"$savetofile(\"D:\\actions.txt\",\"$msg\")","Cooldown":0,"UserCooldown":0,"Cost":0,"Count":0,"Usage":"SC","Enabled":true,"SoundFile":"","FKSoundFile":null}

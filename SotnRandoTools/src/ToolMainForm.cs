@@ -13,7 +13,6 @@ using SotnApi;
 using SotnRandoTools.Configuration;
 using SotnRandoTools.Constants;
 using SotnRandoTools.Services;
-using SotnRandoTools.Utils;
 
 namespace SotnRandoTools
 {
@@ -80,7 +79,6 @@ namespace SotnRandoTools
 		private AboutPanel? aboutPanel;
 		private string _windowTitle = "Symphony of the Night Randomizer Tools";
 		private const int PanelOffset = 130;
-		private const int UpdateCooldownFrames = 5;
 		private int cooldown = 0;
 		public ToolMainForm()
 		{
@@ -178,9 +176,12 @@ namespace SotnRandoTools
 
 		public override void UpdateValues(ToolFormUpdateType type)
 		{
-			inputService.UpdateInputs();
+			if (coopForm is not null)
+			{
+				inputService.UpdateInputs();
+			}
 			cooldown++;
-			if (cooldown == UpdateCooldownFrames)
+			if (cooldown == Globals.UpdateCooldownFrames)
 			{
 				cooldown = 0;
 				if (trackerForm is not null)

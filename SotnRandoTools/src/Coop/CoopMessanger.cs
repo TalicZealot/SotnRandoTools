@@ -90,7 +90,7 @@ namespace SotnRandoTools.Coop
 				coopViewModel.ServerStarted = false;
 				return;
 			}
-			
+
 			string myIP = WebRequests.getExternalIP().Replace("\n", "");
 			System.Windows.Forms.Clipboard.SetText(myIP + ":" + port);
 			toolConfig.Coop.InitiateServerSettings();

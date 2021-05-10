@@ -1,84 +1,84 @@
 SystemID PSX
-06BE99	b	u	0	MainRAM	Walk Armor
+06BE99	b	u	0	MainRAM	Walk armor
 06BE9A	b	u	0	MainRAM	Icebrand
-06BE9A	b	u	0	MainRAM	Balroom Mask
+06BE9A	b	u	0	MainRAM	Balroom mask
 06BE9B	b	u	0	MainRAM	Bloodstone
-06BE7B	b	u	0	MainRAM	Combat Knife
+06BE7B	b	u	0	MainRAM	Combat knife
 06BE0D	b	u	0	MainRAM	Ring of Ares
-06BE0E	b	u	0	MainRAM	Knuckle Duster
+06BE0E	b	u	0	MainRAM	Knuckle duster
 06BE0F	b	u	0	MainRAM	Caverns Onyx
 06BDEF	b	u	0	MainRAM	Scimitar
 06BD8F	b	u	0	MainRAM	Moonstone
 06BD4E	b	u	0	MainRAM	Claymore
-06BD2C	b	u	0	MainRAM	Bandana
+06BD2C	b	u	0	MainRAM	Bandanna
 06BDCD	b	u	0	MainRAM	Nunchaku
-06BDE9	b	u	0	MainRAM	Secret Boots1
-06BDD9	b	u	0	MainRAM	Secret Boots2
-06BDC9	b	u	0	MainRAM	Herald Shield
-06BDD5	b	u	0	MainRAM	Holy Mail
-06BE06	b	u	0	MainRAM	Jewel Sword
-06BDB7	b	u	0	MainRAM	Hide Cuirass
-06BDA7	b	u	0	MainRAM	Leather Shield
+06BDE9	b	u	0	MainRAM	Secret boots1
+06BDD9	b	u	0	MainRAM	Secret boots2
+06BDC9	b	u	0	MainRAM	Herald shield
+06BDD5	b	u	0	MainRAM	Holy mail
+06BE06	b	u	0	MainRAM	Jewel sword
+06BDB7	b	u	0	MainRAM	Hide cuirass
+06BDA7	b	u	0	MainRAM	Leather shield
 06BD68	b	u	0	MainRAM	Sunglasses
 06BD98	b	u	0	MainRAM	Basilard
-06BD46	b	u	0	MainRAM	Cloth Cape
-06BD15	b	u	0	MainRAM	Mystic Pendant1
-06BD25	b	u	0	MainRAM	Mystic Pendant2
+06BD46	b	u	0	MainRAM	Cloth cape
+06BD15	b	u	0	MainRAM	Mystic pendant1
+06BD25	b	u	0	MainRAM	Mystic pendant2
 06BCF5	b	u	0	MainRAM	Ankh of Life
 06BCC6	b	u	0	MainRAM	Morningstar1
 06BCD6	b	u	0	MainRAM	Morningstar2
 06BCC6	b	u	0	MainRAM	Goggles
-06BC47	b	u	0	MainRAM	Silver Plate
+06BC47	b	u	0	MainRAM	Silver plate
 06BC2B	b	u	0	MainRAM	Cutlass1
 06BC2A	b	u	0	MainRAM	Cutlass2
-06BBDC	b	u	0	MainRAM	Platinum Mail
+06BBDC	b	u	0	MainRAM	Platinum mail
 06BBFD	b	u	0	MainRAM	Falchion
-06BC60	b	u	0	MainRAM	Gold Plate
+06BC60	b	u	0	MainRAM	Gold plate
 06BC61	b	u	0	MainRAM	Bekatowa1
 06BC51	b	u	0	MainRAM	Bekatowa2
 06BCF2	b	u	0	MainRAM	Gladius
-06BD32	b	u	0	MainRAM	Jewel Knuckles
-06BCD0	b	u	0	MainRAM	Bronze Cuirass
-06BCA0	b	u	0	MainRAM	Holy Rod
+06BD32	b	u	0	MainRAM	Jewel knuckles
+06BCD0	b	u	0	MainRAM	Bronze cuirass
+06BCA0	b	u	0	MainRAM	Holy rod
 06BCCF	b	u	0	MainRAM	Library Onyx
-06BD0C	b	u	0	MainRAM	Alucart Sword
+06BD0C	b	u	0	MainRAM	Alucart sword
 06BCDC	b	u	0	MainRAM	Broadsword
 06BC6B	b	u	0	MainRAM	Estoc
 06BC9C	b	u	0	MainRAM	Olrox Garnet
-06BCB8	b	u	0	MainRAM	Holy Sword
-06BCD7	b	u	0	MainRAM	Knight Shield
-06BCF7	b	u	0	MainRAM	Shield Rod
-06BCF9	b	u	0	MainRAM	Blood Cloak
-06C30B	b	u	0	MainRAM	Bastard Sword
-06C30B	b	u	0	MainRAM	Royal Cloak
-06C2BA	b	u	0	MainRAM	Lightning Mail
-06C2BC	b	u	0	MainRAM	Sword of Dawn1
-06C2BB	b	u	0	MainRAM	Sword of Dawn2
-06C2B9	b	u	0	MainRAM	Moon Rod
+06BCB8	b	u	0	MainRAM	Holy sword
+06BCD7	b	u	0	MainRAM	Knight shield
+06BCF7	b	u	0	MainRAM	Shield rod
+06BCF9	b	u	0	MainRAM	Blood cloak
+06C30B	b	u	0	MainRAM	Bastard sword
+06C30B	b	u	0	MainRAM	Royal cloak
+06C2BA	b	u	0	MainRAM	Lightning mail
+06C2BC	b	u	0	MainRAM	Sword of dawn1
+06C2BB	b	u	0	MainRAM	Sword of dawn2
+06C2B9	b	u	0	MainRAM	Moon rod
 06C287	b	u	0	MainRAM	Sunstone
 06C296	b	u	0	MainRAM	Luminus
-06C2B5	b	u	0	MainRAM	Dragon Helm
+06C2B5	b	u	0	MainRAM	Dragon helm
 06C1B5	b	u	0	MainRAM	Shotel
 06C247	b	u	0	MainRAM	Badelaire
 06C227	b	u	0	MainRAM	Forbidden Library Opal
-06C218	b	u	0	MainRAM	Staroulite
+06C218	b	u	0	MainRAM	Staurolite
 06C1BB	b	u	0	MainRAM	Reverse Caverns Diamond
 06C16A	b	u	0	MainRAM	Reverse Caverns Opal
 06C11E	b	u	0	MainRAM	Reverse Caverns Garnet
-06C0CD	b	u	0	MainRAM	Osafune Katana
-06C0D1	b	u	0	MainRAM	Alucard Shield
-06C0AC	b	u	0	MainRAM	Alucard Sword
+06C0CD	b	u	0	MainRAM	Osafune katana
+06C0D1	b	u	0	MainRAM	Alucard shield
+06C0AC	b	u	0	MainRAM	Alucard sword
 06C04D	b	u	0	MainRAM	Necklace of J
 06C04E	b	u	0	MainRAM	Floating Catacombs Diamond
 06C2AE	b	u	0	MainRAM	Talwar1
 06C2AF	b	u	0	MainRAM	Talwar2
-06C281	b	u	0	MainRAM	Twilight Cloak
-06C24B	b	u	0	MainRAM	Alucard Mail
+06C281	b	u	0	MainRAM	Twilight cloak
+06C24B	b	u	0	MainRAM	Alucard mail
 06C20B	b	u	0	MainRAM	Sword of Hador
-06C22F	b	u	0	MainRAM	Fury Plate
+06C22F	b	u	0	MainRAM	Fury plate
 06C1EE	b	u	0	MainRAM	Gram
-06C17F	b	u	0	MainRAM	Goddess Shield
+06C17F	b	u	0	MainRAM	Goddess shield
 06C130	b	u	0	MainRAM	Katana
 06C11E	b	u	0	MainRAM	Talisman
-06C0E1	b	u	0	MainRAM	Beryl Circlet
+06C0E1	b	u	0	MainRAM	Beryl circlet
 
