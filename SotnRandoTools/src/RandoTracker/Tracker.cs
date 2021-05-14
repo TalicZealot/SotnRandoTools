@@ -464,7 +464,10 @@ namespace SotnRandoTools.RandoTracker
 		{
 			string seedName = gameApi.ReadSeedName();
 			preset = gameApi.ReadPresetName();
-			preset = preset.Replace(" tournament", String.Empty);
+			if (preset == "tournament")
+			{
+				preset = "custom";
+			}
 			SeedInfo = seedName + "(" + preset + ")";
 			switch (preset)
 			{

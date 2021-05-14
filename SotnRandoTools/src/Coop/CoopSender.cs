@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using SotnApi.Constants.Values.Alucard;
 using SotnApi.Constants.Values.Alucard.Enums;
 using SotnApi.Interfaces;
@@ -46,11 +48,7 @@ namespace SotnRandoTools.Coop
 				return;
 			}
 
-			if (toolConfig.Coop.ConnectionSendRelics)
-			{
-				UpdateSendRelic();
-			}
-			else
+			if (toolConfig.Coop.ConnectionShareRelics)
 			{
 				UpdateRelics();
 			}
@@ -58,6 +56,7 @@ namespace SotnRandoTools.Coop
 			if (toolConfig.Coop.ConnectionShareWarps)
 			{
 				UpdateWarpsAndShortcuts();
+				UpdateSendAllWarps();
 			}
 
 			if (toolConfig.Coop.ConnectionSendItems)
@@ -92,30 +91,6 @@ namespace SotnRandoTools.Coop
 				else
 				{
 					Console.WriteLine($"Player doesn't have any {item}!");
-				}
-			}
-			else if (!inputService.ButtonPressed(PlaystationInputKeys.Select, Globals.UpdateCooldownFrames))
-			{
-				selectPressed = false;
-			}
-		}
-
-		private void UpdateSendRelic()
-		{
-			if (inputService.ButtonPressed(PlaystationInputKeys.Select, Globals.UpdateCooldownFrames) && selectPressed == false && gameApi.IsInMenu() && gameApi.RelicMenuOpen())
-			{
-				selectPressed = true;
-				Relic relic = alucardApi.GetSelectedRelic();
-				ushort indexData = (ushort) relic;
-				if (alucardApi.HasRelic(relic))
-				{
-					alucardApi.TakeRelic(relic);
-					coopMessanger.SendData(MessageType.Relic, BitConverter.GetBytes(indexData));
-					Console.WriteLine($"Sending relic: {relic}");
-				}
-				else
-				{
-					Console.WriteLine($"Player doesn't have {relic}.");
 				}
 			}
 			else if (!inputService.ButtonPressed(PlaystationInputKeys.Select, Globals.UpdateCooldownFrames))
@@ -216,40 +191,6 @@ namespace SotnRandoTools.Coop
 			watchlistService.CoopLocationWatches.ClearChangeCounts();
 		}
 
-		private void UpdateProgressionItems()
-		{
-			watchlistService.UpdateWatchlist(watchlistService.ProgressionItemWatches);
-			for (int i = 0; i < watchlistService.ProgressionItemWatches.Count; i++)
-			{
-				if (watchlistService.ProgressionItemWatches[i].ChangeCount > 0)
-				{
-					if (watchlistService.ProgressionItemWatches[i].Value > 0)
-					{
-						coopMessanger.SendData(MessageType.Item, new byte[] { 0xFF, 0xFF });
-						Console.WriteLine($"Sending item: {watchlistService.ProgressionItemWatches[i].Notes}");
-					}
-				}
-			}
-			watchlistService.ProgressionItemWatches.ClearChangeCounts();
-		}
-
-		private void UpdateThrustSwords()
-		{
-			watchlistService.UpdateWatchlist(watchlistService.ThrustSwordWatches);
-			for (int i = 0; i < watchlistService.ThrustSwordWatches.Count; i++)
-			{
-				if (watchlistService.ThrustSwordWatches[i].ChangeCount > 0)
-				{
-					if (watchlistService.ThrustSwordWatches[i].Value > 0)
-					{
-						coopMessanger.SendData(MessageType.Item, new byte[] { 0xFF, 0xFF });
-						Console.WriteLine($"Sending item: {watchlistService.ThrustSwordWatches[i].Notes}");
-					}
-				}
-			}
-			watchlistService.ThrustSwordWatches.ClearChangeCounts();
-		}
-
 		private void UpdateWarpsAndShortcuts()
 		{
 			watchlistService.UpdateWatchlist(watchlistService.WarpsAndShortcutsWatches);
@@ -282,6 +223,37 @@ namespace SotnRandoTools.Coop
 				}
 			}
 			watchlistService.WarpsAndShortcutsWatches.ClearChangeCounts();
+		}
+
+		private void UpdateSendAllWarps()
+		{
+			if (inputService.ButtonPressed(PlaystationInputKeys.Select, Globals.UpdateCooldownFrames) && selectPressed == false && gameApi.IsInMenu() && gameApi.RelicMenuOpen())
+			{
+				selectPressed = true;
+				var warpsFirstCastle = watchlistService.WarpsAndShortcutsWatches.Where(w => w.Notes == "WarpsFirstCastle").FirstOrDefault().Value;
+				var warpsSecondCastle = watchlistService.WarpsAndShortcutsWatches.Where(w => w.Notes == "WarpsSecondCastle").FirstOrDefault().Value;
+
+				coopMessanger.SendData(MessageType.WarpFirstCastle, new byte[] { 0, (byte) warpsFirstCastle });
+				coopMessanger.SendData(MessageType.WarpSecondCastle, new byte[] { 0, (byte) warpsSecondCastle });
+
+				int shortcuts = 0;
+				for (int i = 2; i < watchlistService.WarpsAndShortcutsWatches.Count; i++)
+				{
+					if (watchlistService.WarpsAndShortcutsWatches[i].Value > 0)
+					{
+						shortcuts = shortcuts | (int) (ShortcutFlags) Enum.Parse(typeof(ShortcutFlags), watchlistService.WarpsAndShortcutsWatches[i].Notes);
+					}
+				}
+				//avoid TCP congestion
+				Thread.Sleep(500);
+				coopMessanger.SendData(MessageType.Shortcut, BitConverter.GetBytes((ushort) shortcuts));
+
+				Console.WriteLine($"Sending warps and shortcuts.");
+			}
+			else if (!inputService.ButtonPressed(PlaystationInputKeys.Select, Globals.UpdateCooldownFrames))
+			{
+				selectPressed = false;
+			}
 		}
 	}
 }

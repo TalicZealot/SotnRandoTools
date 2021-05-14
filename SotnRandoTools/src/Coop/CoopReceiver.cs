@@ -84,6 +84,15 @@ namespace SotnRandoTools.Coop
 					DecodeAssist(Equipment.Items[index]);
 					break;
 				case MessageType.WarpFirstCastle:
+					if (indexByte == 0)
+					{
+						alucardApi.WarpsFirstCastle = dataByte;
+						watchlistService.UpdateWatchlist(watchlistService.WarpsAndShortcutsWatches);
+						watchlistService.WarpsAndShortcutsWatches.ClearChangeCounts();
+						notificationService.AddMessage($"Received warps and shortcuts.");
+						Console.WriteLine($"Received first castle warps.");
+						break;
+					}
 					alucardApi.GrantFirstCastleWarp((Warp) index);
 					watchlistService.UpdateWatchlist(watchlistService.WarpsAndShortcutsWatches);
 					watchlistService.WarpsAndShortcutsWatches.ClearChangeCounts();
@@ -91,6 +100,14 @@ namespace SotnRandoTools.Coop
 					Console.WriteLine($"Received warp: {(Warp) index}");
 					break;
 				case MessageType.WarpSecondCastle:
+					if (indexByte == 0)
+					{
+						alucardApi.WarpsSecondCastle = dataByte;
+						watchlistService.UpdateWatchlist(watchlistService.WarpsAndShortcutsWatches);
+						watchlistService.WarpsAndShortcutsWatches.ClearChangeCounts();
+						Console.WriteLine($"Received second castle warps.");
+						break;
+					}
 					alucardApi.GrantSecondCastleWarp((Warp) index);
 					watchlistService.UpdateWatchlist(watchlistService.WarpsAndShortcutsWatches);
 					watchlistService.WarpsAndShortcutsWatches.ClearChangeCounts();
@@ -98,7 +115,14 @@ namespace SotnRandoTools.Coop
 					Console.WriteLine($"Received warp: Inverted {(Warp) index}");
 					break;
 				case MessageType.Shortcut:
-					DecodeShortcut((Shortcut) index);
+					if (index > Enum.GetNames(typeof(Shortcut)).Length - 1)
+					{
+						DecodeShortcuts(index);
+					}
+					else
+					{
+						DecodeShortcut((Shortcut) index);
+					}
 					watchlistService.UpdateWatchlist(watchlistService.WarpsAndShortcutsWatches);
 					watchlistService.WarpsAndShortcutsWatches.ClearChangeCounts();
 					break;
@@ -126,13 +150,13 @@ namespace SotnRandoTools.Coop
 
 		private void DecodeSettings(int settings)
 		{
-			if ((settings & (int) SettingsFlags.SendRelics) == (int) SettingsFlags.SendRelics)
+			if ((settings & (int) SettingsFlags.ShareRelics) == (int) SettingsFlags.ShareRelics)
 			{
-				toolConfig.Coop.ConnectionSendRelics = true;
+				toolConfig.Coop.ConnectionShareRelics = true;
 			}
 			else
 			{
-				toolConfig.Coop.ConnectionSendRelics = false;
+				toolConfig.Coop.ConnectionShareRelics = false;
 			}
 			if ((settings & (int) SettingsFlags.ShareWarps) == (int) SettingsFlags.ShareWarps)
 			{
@@ -141,14 +165,6 @@ namespace SotnRandoTools.Coop
 			else
 			{
 				toolConfig.Coop.ConnectionShareWarps = false;
-			}
-			if ((settings & (int) SettingsFlags.ShareShortcuts) == (int) SettingsFlags.ShareShortcuts)
-			{
-				toolConfig.Coop.ConnectionShareShortcuts = true; ;
-			}
-			else
-			{
-				toolConfig.Coop.ConnectionShareShortcuts = false;
 			}
 			if ((settings & (int) SettingsFlags.SendItems) == (int) SettingsFlags.SendItems)
 			{
@@ -232,6 +248,85 @@ namespace SotnRandoTools.Coop
 
 			notificationService.AddMessage(shortcut.ToString());
 			Console.WriteLine($"Received shortcut: {shortcut}");
+		}
+
+		private void DecodeShortcuts(int flags)
+		{
+			if ((flags & (int) ShortcutFlags.OuterWallElevator) == (int) ShortcutFlags.OuterWallElevator)
+			{
+				alucardApi.OuterWallElevator = true;
+				Console.WriteLine($"Received shortcut: {ShortcutFlags.OuterWallElevator}");
+			}
+			if ((flags & (int) ShortcutFlags.AlchemyElevator) == (int) ShortcutFlags.AlchemyElevator)
+			{
+				alucardApi.AlchemyElevator = true;
+				Console.WriteLine($"Received shortcut: {ShortcutFlags.AlchemyElevator}");
+			}
+			if ((flags & (int) ShortcutFlags.EntranceToMarble) == (int) ShortcutFlags.EntranceToMarble)
+			{
+				alucardApi.EntranceToMarble = true;
+				Console.WriteLine($"Received shortcut: {ShortcutFlags.EntranceToMarble}");
+			}
+			if ((flags & (int) ShortcutFlags.ChapelStatue) == (int) ShortcutFlags.ChapelStatue)
+			{
+				alucardApi.ChapelStatue = true;
+				Console.WriteLine($"Received shortcut: {ShortcutFlags.ChapelStatue}");
+			}
+			if ((flags & (int) ShortcutFlags.ColosseumElevator) == (int) ShortcutFlags.ColosseumElevator)
+			{
+				alucardApi.ColosseumElevator = true;
+				Console.WriteLine($"Received shortcut: {ShortcutFlags.ColosseumElevator}");
+			}
+			if ((flags & (int) ShortcutFlags.ColosseumToChapel) == (int) ShortcutFlags.ColosseumToChapel)
+			{
+				alucardApi.ColosseumToChapel = true;
+				Console.WriteLine($"Received shortcut: {ShortcutFlags.ColosseumToChapel}");
+			}
+			if ((flags & (int) ShortcutFlags.MarbleBlueDoor) == (int) ShortcutFlags.MarbleBlueDoor)
+			{
+				alucardApi.MarbleBlueDoor = true;
+				Console.WriteLine($"Received shortcut: {ShortcutFlags.MarbleBlueDoor}");
+			}
+			if ((flags & (int) ShortcutFlags.CavernsSwitchAndBridge) == (int) ShortcutFlags.CavernsSwitchAndBridge)
+			{
+				alucardApi.CavernsSwitchAndBridge = true;
+				Console.WriteLine($"Received shortcut: {ShortcutFlags.CavernsSwitchAndBridge}");
+			}
+			if ((flags & (int) ShortcutFlags.EntranceToCaverns) == (int) ShortcutFlags.EntranceToCaverns)
+			{
+				alucardApi.EntranceToCaverns = true;
+				Console.WriteLine($"Received shortcut: {ShortcutFlags.EntranceToCaverns}");
+			}
+			if ((flags & (int) ShortcutFlags.EntranceWarp) == (int) ShortcutFlags.EntranceWarp)
+			{
+				alucardApi.EntranceWarp = true;
+				Console.WriteLine($"Received shortcut: {ShortcutFlags.EntranceWarp}");
+			}
+			if ((flags & (int) ShortcutFlags.FirstClockRoomDoor) == (int) ShortcutFlags.FirstClockRoomDoor)
+			{
+				alucardApi.FirstClockRoomDoor = true;
+				Console.WriteLine($"Received shortcut: {ShortcutFlags.FirstClockRoomDoor}");
+			}
+			if ((flags & (int) ShortcutFlags.SecondClockRoomDoor) == (int) ShortcutFlags.SecondClockRoomDoor)
+			{
+				alucardApi.SecondClockRoomDoor = true;
+				Console.WriteLine($"Received shortcut: {ShortcutFlags.SecondClockRoomDoor}");
+			}
+			if ((flags & (int) ShortcutFlags.FirstDemonButton) == (int) ShortcutFlags.FirstDemonButton)
+			{
+				alucardApi.FirstDemonButton = true;
+				Console.WriteLine($"Received shortcut: {ShortcutFlags.FirstDemonButton}");
+			}
+			if ((flags & (int) ShortcutFlags.SecondDemonButton) == (int) ShortcutFlags.SecondDemonButton)
+			{
+				alucardApi.SecondDemonButton = true;
+				Console.WriteLine($"Received shortcut: {ShortcutFlags.SecondDemonButton}");
+			}
+			if ((flags & (int) ShortcutFlags.KeepStairs) == (int) ShortcutFlags.KeepStairs)
+			{
+				alucardApi.KeepStairs = true;
+				Console.WriteLine($"Received shortcut: {ShortcutFlags.KeepStairs}");
+			}
 		}
 
 		private void DecodeAssist(string item)

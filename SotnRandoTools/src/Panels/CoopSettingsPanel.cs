@@ -20,7 +20,6 @@ namespace SotnRandoTools
 		{
 			sendItemsCheckbox.Checked = toolConfig.Coop.SendItems;
 			shareWarpsCheckbox.Checked = toolConfig.Coop.ShareWarps;
-			shareShortcutsCheckbox.Checked = toolConfig.Coop.ShareShortcuts;
 			sendAssistsCheckbox.Checked = toolConfig.Coop.SendAssists;
 			shareLocationsCheckbox.Checked = toolConfig.Coop.ShareLocations;
 
@@ -28,27 +27,12 @@ namespace SotnRandoTools
 			portTextBox.Text = toolConfig.Coop.DefaultPort.ToString();
 			serverTextBox.Text = toolConfig.Coop.DefaultServer;
 
-			shareRelicsRadio.Checked = toolConfig.Coop.ShareRelics;
-			sendRelicsRadio.Checked = toolConfig.Coop.SendRelics;
+			sendRelicsCheckbox.Checked = toolConfig.Coop.ShareRelics;
 		}
 
 		private void saveButton_Click(object sender, EventArgs e)
 		{
 			toolConfig.SaveConfig();
-		}
-
-		private void shareRelicsRadio_CheckedChanged(object sender, EventArgs e)
-		{
-			if (shareRelicsRadio.Checked)
-			{
-				toolConfig.Coop.ShareRelics = true;
-				toolConfig.Coop.SendRelics = false;
-			}
-			else
-			{
-				toolConfig.Coop.ShareRelics = false;
-				toolConfig.Coop.SendRelics = true;
-			}
 		}
 
 		private void sendItemsCheckbox_CheckedChanged(object sender, EventArgs e)
@@ -63,7 +47,6 @@ namespace SotnRandoTools
 
 		private void shareShortcutsCheckbox_CheckedChanged(object sender, EventArgs e)
 		{
-			toolConfig.Coop.ShareShortcuts = shareShortcutsCheckbox.Checked;
 		}
 
 		private void portTextBox_TextChanged(object sender, EventArgs e)
@@ -89,6 +72,11 @@ namespace SotnRandoTools
 		private void shareLocationsCheckbox_CheckedChanged(object sender, EventArgs e)
 		{
 			toolConfig.Coop.ShareLocations = shareLocationsCheckbox.Checked;
+		}
+
+		private void sendRelicsCheckbox_CheckedChanged(object sender, EventArgs e)
+		{
+			toolConfig.Coop.ShareRelics = sendRelicsCheckbox.Checked;
 		}
 	}
 }

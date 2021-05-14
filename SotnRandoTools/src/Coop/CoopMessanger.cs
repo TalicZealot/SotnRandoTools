@@ -204,17 +204,13 @@ namespace SotnRandoTools.Coop
 		private void SendSettings()
 		{
 			int settings = 0;
-			if (toolConfig.Coop.SendRelics)
+			if (toolConfig.Coop.ShareRelics)
 			{
-				settings = settings | (int) SettingsFlags.SendRelics;
+				settings = settings | (int) SettingsFlags.ShareRelics;
 			}
 			if (toolConfig.Coop.ShareWarps)
 			{
 				settings = settings | (int) SettingsFlags.ShareWarps;
-			}
-			if (toolConfig.Coop.ShareShortcuts)
-			{
-				settings = settings | (int) SettingsFlags.ShareShortcuts;
 			}
 			if (toolConfig.Coop.SendItems)
 			{

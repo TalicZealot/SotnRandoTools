@@ -429,7 +429,7 @@ namespace SotnRandoTools.Khaos
 		public void HonestGamer(string user = "Khaos")
 		{
 			Cheat manaCheat = cheats.GetCheatByName("Mana");
-			manaCheat.PokeValue(5);
+			manaCheat.PokeValue(2);
 			manaCheat.Enable();
 			honestGamerTimer.Start();
 			notificationService.AddMessage($"{user} used Honest Gamer");
@@ -455,11 +455,10 @@ namespace SotnRandoTools.Khaos
 			alucardApi.CurrentHearts = 200;
 			alucardApi.ActivatePotion(Potion.SmartPotion);
 			alucardApi.GrantRelic(Relic.CubeOfZoe);
-			HonestGamer();
 			Cheat curse = cheats.GetCheatByName("CurseTimer");
 			curse.Enable();
 			Cheat manaCheat = cheats.GetCheatByName("Mana");
-			manaCheat.PokeValue(5);
+			manaCheat.PokeValue(0);
 			manaCheat.Enable();
 			subweaponsOnlyTimer.Start();
 			notificationService.AddMessage($"{user} used Subweapons Only");

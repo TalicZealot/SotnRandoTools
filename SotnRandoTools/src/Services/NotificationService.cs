@@ -15,7 +15,7 @@ namespace SotnRandoTools.Services
 {
 	public class NotificationService : INotificationService
 	{
-		const int NotificationTime = 5 * 1000;
+		const int NotificationTime = 4 * 1000;
 
 		private readonly IGuiApi guiApi;
 		private readonly IToolConfig toolConfig;
