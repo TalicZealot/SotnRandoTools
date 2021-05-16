@@ -178,6 +178,9 @@ namespace SotnRandoTools.Khaos
 		private uint storedMana = 0;
 		private int spentMana = 0;
 		private bool bloodManaActive = false;
+		private bool hasteActive = false;
+		private bool crippleActive = false;
+		private Queue<MethodInvoker> speedActions = new();
 
 		private FileSystemWatcher botFileWatcher = new FileSystemWatcher();
 
@@ -230,8 +233,8 @@ namespace SotnRandoTools.Khaos
 			{
 				OverwriteBossNames(subscribers);
 			}
-			Cheat faerieScroll = cheats.GetCheatByName("FaerieScroll");
-			faerieScroll.Enable();
+			StartCheats();
+
 			notificationService.AddMessage($"Khaos started");
 		}
 
@@ -398,9 +401,15 @@ namespace SotnRandoTools.Khaos
 		}
 		public void Cripple(string user = "Khaos")
 		{
+			if (crippleActive || hasteActive)
+			{
+				speedActions.Enqueue(new MethodInvoker(() => Cripple(user)));
+				notificationService.AddMessage($"Cripple delayed");
+				return;
+			}
+			crippleActive = true;
 			SetSpeed(toolConfig.Khaos.CrippleFactor);
 			crippleTimer.Start();
-			hasteTimer.Stop();
 			notificationService.AddMessage($"{user} used Cripple");
 			notificationService.DequeueAction();
 			notificationService.AddTimer(new Services.Models.ActionTimer
@@ -693,9 +702,16 @@ namespace SotnRandoTools.Khaos
 		}
 		public void Haste(string user = "Khaos")
 		{
+			if (crippleActive || hasteActive)
+			{
+				speedActions.Enqueue(new MethodInvoker(() => Haste(user)));
+				notificationService.AddMessage($"Haste delayed");
+				return;
+			}
+
 			SetSpeed(toolConfig.Khaos.HasteFactor);
-			crippleTimer.Stop();
 			hasteTimer.Start();
+			hasteActive = true;
 			notificationService.AddMessage($"{user} used {KhaosActionNames.Haste}");
 			notificationService.DequeueAction();
 			notificationService.AddTimer(new Services.Models.ActionTimer
@@ -1011,6 +1027,11 @@ namespace SotnRandoTools.Khaos
 				{
 					queuedFastActions.Dequeue()();
 				}
+
+				if (speedActions.Count > 0 && !crippleActive && !hasteActive)
+				{
+					speedActions.Dequeue()();
+				}
 			}
 		}
 
@@ -1320,6 +1341,7 @@ namespace SotnRandoTools.Khaos
 		{
 			SetSpeed();
 			crippleTimer.Stop();
+			crippleActive = false;
 		}
 		private void EnduranceSpawn(Object sender, EventArgs e)
 		{
@@ -1355,6 +1377,7 @@ namespace SotnRandoTools.Khaos
 
 				boss.Xpos = (ushort) rnd.Next(70, 170);
 				boss.Palette = (ushort) (boss.Palette + rnd.Next(1, 10));
+				boss.Hp *= 2;
 				actorApi.SpawnActor(boss);
 				enduranceSpawnTimer.Stop();
 			}
@@ -1480,9 +1503,29 @@ namespace SotnRandoTools.Khaos
 		{
 			SetSpeed();
 			hasteTimer.Stop();
+			hasteActive = false;
 		}
 		#endregion
 
+		private void StartCheats()
+		{
+			Cheat faerieScroll = cheats.GetCheatByName("FaerieScroll");
+			faerieScroll.Enable();
+			Cheat batCardXp = cheats.GetCheatByName("BatCardXp");
+			batCardXp.Enable();
+			Cheat ghostCardXp = cheats.GetCheatByName("GhostCardXp");
+			ghostCardXp.Enable();
+			Cheat faerieCardXp = cheats.GetCheatByName("FaerieCardXp");
+			faerieCardXp.Enable();
+			Cheat demonCardXp = cheats.GetCheatByName("DemonCardXp");
+			demonCardXp.Enable();
+			Cheat swordCardXp = cheats.GetCheatByName("SwordCardXp");
+			swordCardXp.Enable();
+			Cheat spriteCardXp = cheats.GetCheatByName("SpriteCardXp");
+			spriteCardXp.Enable();
+			Cheat noseDevilCardXp = cheats.GetCheatByName("NoseDevilCardXp");
+			noseDevilCardXp.Enable();
+		}
 		private void SetSpeed(float factor = 1)
 		{
 			bool slow = factor < 1;
@@ -1512,6 +1555,12 @@ namespace SotnRandoTools.Khaos
 		private void CheckExperience()
 		{
 			uint currentExperiecne = alucardApi.Experiecne;
+			//gainedExperiecne = (int) currentExperiecne - (int) storedExperiecne;
+			//storedExperiecne = currentExperiecne;
+		}
+		private void CheckWingsmashActive()
+		{
+			//bool wingsmashActive = alucardApi.Action == SotnApi.Constants.Values.Alucard.States.Bat;
 			//gainedExperiecne = (int) currentExperiecne - (int) storedExperiecne;
 			//storedExperiecne = currentExperiecne;
 		}

@@ -104,8 +104,13 @@ namespace SotnRandoTools.Coop
 		{
 			if (server is not null && server.IsListening)
 			{
-				coopViewModel.ServerStarted = false;
+				foreach (var client in server.GetClients())
+				{
+					server.DisconnectClient(client);
+				}
 				server.Stop();
+				coopViewModel.ServerStarted = false;
+				connectedClientAddress = "";
 				coopViewModel.Message = "Server stopped";
 			}
 		}
@@ -135,6 +140,22 @@ namespace SotnRandoTools.Coop
 			else
 			{
 				Console.WriteLine("No connection!");
+			}
+		}
+
+		public bool IsConnected()
+		{
+			if (server is not null && connectedClientAddress != "")
+			{
+				return true;
+			}
+			else if (client is not null && client.IsConnected)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
 			}
 		}
 

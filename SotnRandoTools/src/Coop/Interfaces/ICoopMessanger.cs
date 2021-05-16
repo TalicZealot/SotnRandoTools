@@ -10,5 +10,6 @@ namespace SotnRandoTools.Coop.Interfaces
 		void StopServer();
 		void DisposeAll();
 		void SendData(MessageType type, byte[] data);
+		bool IsConnected();
 	}
 }
