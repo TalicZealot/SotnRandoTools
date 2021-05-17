@@ -89,7 +89,7 @@ namespace SotnRandoTools.Khaos
 			"Topaz circlet",
 			"Beryl circlet",
 			"Fury plate",
-			"Jopseph's cloak",
+			"Joseph's cloak",
 			"Twilight cloak",
 			"Moonstone",
 			"Turquoise",
@@ -515,6 +515,12 @@ namespace SotnRandoTools.Khaos
 		{
 			Random rnd = new Random();
 			string item = lightHelpItems[rnd.Next(0, lightHelpItems.Length)];
+			int rolls = 0;
+			while (alucardApi.HasItemInInventory(item) && rolls < 10)
+			{
+				item = lightHelpItems[rnd.Next(0, lightHelpItems.Length)];
+				rolls++;
+			}
 
 			int roll = rnd.Next(1, 4);
 			switch (roll)
@@ -540,6 +546,12 @@ namespace SotnRandoTools.Khaos
 		{
 			Random rnd = new Random();
 			string item = mediumHelpItems[rnd.Next(0, mediumHelpItems.Length)];
+			int rolls = 0;
+			while (alucardApi.HasItemInInventory(item) && rolls < 10)
+			{
+				item = mediumHelpItems[rnd.Next(0, mediumHelpItems.Length)];
+				rolls++;
+			}
 
 			int roll = rnd.Next(1, 4);
 			switch (roll)
@@ -565,6 +577,13 @@ namespace SotnRandoTools.Khaos
 		{
 			Random rnd = new Random();
 			string item = heavyHelpItems[rnd.Next(0, heavyHelpItems.Length)];
+			int rolls = 0;
+			while (alucardApi.HasItemInInventory(item) && rolls < 10)
+			{
+				item = heavyHelpItems[rnd.Next(0, heavyHelpItems.Length)];
+				rolls++;
+			}
+
 			int relic = rnd.Next(0, progressionRelics.Length);
 
 			int roll = rnd.Next(1, 3);
@@ -581,6 +600,7 @@ namespace SotnRandoTools.Khaos
 				}
 				relic = rnd.Next(0, progressionRelics.Length);
 			}
+
 			switch (roll)
 			{
 				case 1:
@@ -726,7 +746,7 @@ namespace SotnRandoTools.Khaos
 
 		public void Update()
 		{
-			if (bloodManaActive)
+			if (gameApi.InAlucardMode() && bloodManaActive)
 			{
 				CheckManaUsage();
 			}
@@ -1284,7 +1304,7 @@ namespace SotnRandoTools.Khaos
 				{
 					bannedEnemies.Add(new Actor(actorApi.GetActor(bannedEnemy)));
 				}
-				long enemy = actorApi.FindEnemy(1, gameApi.SecondCastle ? 100 : 30, new int[] { 26, 16, 18, 22, 100, 550 });
+				long enemy = actorApi.FindEnemy(1, gameApi.SecondCastle ? 100 : 30, new int[] { 26, 16, 18, 22, 100, 550, 80});
 				if (enemy > 0)
 				{
 					hordeEnemy = new Actor(actorApi.GetActor(enemy));
@@ -1530,13 +1550,21 @@ namespace SotnRandoTools.Khaos
 		{
 			bool slow = factor < 1;
 			bool fast = factor > 1;
+
+			uint horizontalWhole = fast == true ? (uint) (DefaultSpeeds.WalkingWhole * (factor * 2)) : (uint) (DefaultSpeeds.WalkingWhole * factor);
+			uint horizontalFract = (uint) (DefaultSpeeds.WalkingFract * factor);
+
 			alucardApi.WingsmashHorizontalSpeed = (uint) (DefaultSpeeds.WingsmashHorizontal * factor);
-			alucardApi.WalkingWholeSpeed = fast == true ? (uint) (DefaultSpeeds.WalkingWhole * (factor * 2)) : (uint) (DefaultSpeeds.WalkingWhole * factor);
-			alucardApi.WalkingFractSpeed = (uint) (DefaultSpeeds.WalkingFract * factor);
-			alucardApi.JumpingHorizontalWholeSpeed = fast == true ? (uint) (DefaultSpeeds.WalkingWhole * (factor * 2)) : (uint) (DefaultSpeeds.WalkingWhole * factor);
-			alucardApi.JumpingHorizontalFractSpeed = (uint) (DefaultSpeeds.WalkingFract * factor);
-			alucardApi.FallingHorizontalWholeSpeed = fast == true ? (uint) (DefaultSpeeds.WalkingWhole * (factor * 2)) : (uint) (DefaultSpeeds.WalkingWhole * factor);
-			alucardApi.FallingHorizontalFractSpeed = (uint) (DefaultSpeeds.WalkingFract * factor);
+			alucardApi.WalkingWholeSpeed = horizontalWhole;
+			alucardApi.WalkingFractSpeed = horizontalFract;
+			alucardApi.JumpingHorizontalWholeSpeed = horizontalWhole;
+			alucardApi.JumpingHorizontalFractSpeed = horizontalFract;
+			alucardApi.JumpingAttackLeftHorizontalWholeSpeed = (uint)(0xFF - horizontalWhole);
+			alucardApi.JumpingAttackLeftHorizontalFractSpeed = horizontalFract;
+			alucardApi.JumpingAttackRightHorizontalWholeSpeed = horizontalWhole;
+			alucardApi.JumpingAttackRightHorizontalFractSpeed = horizontalFract;
+			alucardApi.FallingHorizontalWholeSpeed = horizontalWhole;
+			alucardApi.FallingHorizontalFractSpeed = horizontalFract;
 			alucardApi.WolfDashTopRightSpeed = (sbyte) Math.Floor(DefaultSpeeds.WolfDashTopRight * factor);
 			alucardApi.WolfDashTopLeftSpeed = (sbyte) Math.Ceiling(DefaultSpeeds.WolfDashTopLeft * factor);
 			alucardApi.BackdashDecel = slow == true ? DefaultSpeeds.BackdashDecelSlow : DefaultSpeeds.BackdashDecel;
