@@ -224,8 +224,7 @@ namespace SotnRandoTools
 				coopForm.Dispose();
 			}
 
-			var date = new DateTime();
-			using(StreamWriter w = File.AppendText(Paths.LogsPath + date.ToString("dd-MM-yy hh-mm-ss") + ".txt"))
+			using(StreamWriter w = File.AppendText(Paths.LogsPath + DateTime.Now.ToString("dd-MM-yy hh-mm-ss") + ".txt"))
 			{
 				w.Write(log.ToString());
 			}

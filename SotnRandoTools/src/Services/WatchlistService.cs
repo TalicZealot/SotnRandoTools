@@ -51,7 +51,7 @@ namespace SotnRandoTools.Services
 			coopLocationWatches.Load(Paths.EquipmentLocationWatchesPath, true);
 			CoopLocationWatches = coopLocationWatches;
 
-			coopLocationValues = new int[coopLocationWatches.WatchCount];
+			coopLocationValues = new int[coopLocationWatches.Count];
 			for (int i = 0; i < coopLocationValues.Length; i++)
 			{
 				coopLocationValues[i] = 0;

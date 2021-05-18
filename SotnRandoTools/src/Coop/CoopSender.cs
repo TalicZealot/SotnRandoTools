@@ -197,7 +197,8 @@ namespace SotnRandoTools.Coop
 			{
 				if (watchlistService.CoopLocationWatches[i].ChangeCount > 0)
 				{
-					queuedMessages.Enqueue(new MethodInvoker(() => { coopMessanger.SendData(MessageType.Location, new byte[] { (byte) i, (byte) watchlistService.CoopLocationValues[i] }); }));
+					var data = new byte[] { (byte) i, (byte) watchlistService.CoopLocationValues[i] };
+					queuedMessages.Enqueue(new MethodInvoker(() => { coopMessanger.SendData(MessageType.Location, data); }));
 					Console.WriteLine($"Sending Location: {watchlistService.CoopLocationWatches[i].Notes} with value {(byte) watchlistService.CoopLocationValues[i]}");
 				}
 			}
@@ -243,13 +244,14 @@ namespace SotnRandoTools.Coop
 			if (inputService.ButtonPressed(PlaystationInputKeys.Select, Globals.UpdateCooldownFrames) && selectPressed == false && gameApi.IsInMenu() && gameApi.RelicMenuOpen())
 			{
 				selectPressed = true;
-				var warpsFirstCastle = watchlistService.WarpsAndShortcutsWatches.Where(w => w.Notes == "WarpsFirstCastle").FirstOrDefault().Value;
-				var warpsSecondCastle = watchlistService.WarpsAndShortcutsWatches.Where(w => w.Notes == "WarpsSecondCastle").FirstOrDefault().Value;
+				var warpsFirstCastle = new byte[] { 0, (byte) watchlistService.WarpsAndShortcutsWatches.Where(w => w.Notes == "WarpsFirstCastle").FirstOrDefault().Value };
+				var warpsSecondCastle = new byte[] { 0, (byte) watchlistService.WarpsAndShortcutsWatches.Where(w => w.Notes == "WarpsSecondCastle").FirstOrDefault().Value };
 
-				queuedMessages.Enqueue(new MethodInvoker(() => { coopMessanger.SendData(MessageType.WarpFirstCastle, new byte[] { 0, (byte) warpsFirstCastle }); }));
-				Console.WriteLine($"Sending first castle warps with value {(byte) warpsFirstCastle}");
-				queuedMessages.Enqueue(new MethodInvoker(() => { coopMessanger.SendData(MessageType.WarpSecondCastle, new byte[] { 0, (byte) warpsSecondCastle }); }));
-				Console.WriteLine($"Sending second castle warps with value {(byte) warpsSecondCastle}");
+
+				queuedMessages.Enqueue(new MethodInvoker(() => { coopMessanger.SendData(MessageType.WarpFirstCastle, warpsFirstCastle); }));
+				Console.WriteLine($"Sending first castle warps with value {warpsFirstCastle[1]}");
+				queuedMessages.Enqueue(new MethodInvoker(() => { coopMessanger.SendData(MessageType.WarpSecondCastle, warpsSecondCastle); }));
+				Console.WriteLine($"Sending second castle warps with value {warpsSecondCastle[1]}");
 
 				int shortcuts = 0;
 				for (int i = 2; i < watchlistService.WarpsAndShortcutsWatches.Count; i++)

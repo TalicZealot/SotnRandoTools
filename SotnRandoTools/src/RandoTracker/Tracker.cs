@@ -519,9 +519,6 @@ namespace SotnRandoTools.RandoTracker
 					GraphicsEngine.CalculateGrid(toolConfig.Tracker.Width, toolConfig.Tracker.Height);
 					GraphicsEngine.Render();
 					break;
-				case "casual":
-					guardedExtension = false;
-					break;
 				case "og":
 					guardedExtension = false;
 					break;
