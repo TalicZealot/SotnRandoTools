@@ -198,7 +198,7 @@ namespace SotnRandoTools.Coop
 				if (watchlistService.CoopLocationWatches[i].ChangeCount > 0)
 				{
 					queuedMessages.Enqueue(new MethodInvoker(() => { coopMessanger.SendData(MessageType.Location, new byte[] { (byte) i, (byte) watchlistService.CoopLocationValues[i] }); }));
-					Console.WriteLine($"Sending Location: {watchlistService.CoopLocationWatches[i].Notes}");
+					Console.WriteLine($"Sending Location: {watchlistService.CoopLocationWatches[i].Notes} with value {(byte) watchlistService.CoopLocationValues[i]}");
 				}
 			}
 			watchlistService.CoopLocationWatches.ClearChangeCounts();
@@ -217,14 +217,14 @@ namespace SotnRandoTools.Coop
 						{
 							int difference = watchlistService.WarpsAndShortcutsWatches[i].Previous ^ watchlistService.WarpsAndShortcutsWatches[i].Value;
 							queuedMessages.Enqueue(new MethodInvoker(() => { coopMessanger.SendData(MessageType.WarpFirstCastle, BitConverter.GetBytes((ushort) difference)); }));
-							Console.WriteLine($"Sending first castle warp.");
+							Console.WriteLine($"Sending first castle warp {difference}.");
 
 						}
 						else if (watchlistService.WarpsAndShortcutsWatches[i].Notes == "WarpsSecondCastle")
 						{
 							int difference = watchlistService.WarpsAndShortcutsWatches[i].Previous ^ watchlistService.WarpsAndShortcutsWatches[i].Value;
 							queuedMessages.Enqueue(new MethodInvoker(() => { coopMessanger.SendData(MessageType.WarpSecondCastle, BitConverter.GetBytes((ushort) difference)); }));
-							Console.WriteLine($"Sending second castle warp.");
+							Console.WriteLine($"Sending second castle warp {difference}.");
 						}
 						else
 						{
@@ -247,7 +247,9 @@ namespace SotnRandoTools.Coop
 				var warpsSecondCastle = watchlistService.WarpsAndShortcutsWatches.Where(w => w.Notes == "WarpsSecondCastle").FirstOrDefault().Value;
 
 				queuedMessages.Enqueue(new MethodInvoker(() => { coopMessanger.SendData(MessageType.WarpFirstCastle, new byte[] { 0, (byte) warpsFirstCastle }); }));
+				Console.WriteLine($"Sending first castle warps with value {(byte) warpsFirstCastle}");
 				queuedMessages.Enqueue(new MethodInvoker(() => { coopMessanger.SendData(MessageType.WarpSecondCastle, new byte[] { 0, (byte) warpsSecondCastle }); }));
+				Console.WriteLine($"Sending second castle warps with value {(byte) warpsSecondCastle}");
 
 				int shortcuts = 0;
 				for (int i = 2; i < watchlistService.WarpsAndShortcutsWatches.Count; i++)
@@ -258,8 +260,7 @@ namespace SotnRandoTools.Coop
 					}
 				}
 				queuedMessages.Enqueue(new MethodInvoker(() => { coopMessanger.SendData(MessageType.Shortcut, BitConverter.GetBytes((ushort) shortcuts)); }));
-
-				Console.WriteLine($"Sending warps and shortcuts.");
+				Console.WriteLine($"Sending shortcuts with flags {(ushort) shortcuts}");
 			}
 			else if (!inputService.ButtonPressed(PlaystationInputKeys.Select, Globals.UpdateCooldownFrames))
 			{

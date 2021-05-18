@@ -42,6 +42,7 @@ namespace SotnRandoTools
             this.alwaysOnTopCheckBox = new System.Windows.Forms.CheckBox();
             this.optionsGroup = new System.Windows.Forms.GroupBox();
             this.locationsCheckbox = new System.Windows.Forms.CheckBox();
+            this.replaysCheckBox = new System.Windows.Forms.CheckBox();
             this.relicDisplayGroup.SuspendLayout();
             this.layoutGroup.SuspendLayout();
             this.windowGroup.SuspendLayout();
@@ -178,6 +179,7 @@ namespace SotnRandoTools
             // 
             // optionsGroup
             // 
+            this.optionsGroup.Controls.Add(this.replaysCheckBox);
             this.optionsGroup.Controls.Add(this.locationsCheckbox);
             this.optionsGroup.ForeColor = System.Drawing.Color.White;
             this.optionsGroup.Location = new System.Drawing.Point(206, 56);
@@ -197,6 +199,17 @@ namespace SotnRandoTools
             this.locationsCheckbox.Text = "Track locations";
             this.locationsCheckbox.UseVisualStyleBackColor = true;
             this.locationsCheckbox.CheckedChanged += new System.EventHandler(this.locationsCheckbox_CheckedChanged);
+            // 
+            // replaysCheckBox
+            // 
+            this.replaysCheckBox.AutoSize = true;
+            this.replaysCheckBox.Location = new System.Drawing.Point(6, 44);
+            this.replaysCheckBox.Name = "replaysCheckBox";
+            this.replaysCheckBox.Size = new System.Drawing.Size(88, 17);
+            this.replaysCheckBox.TabIndex = 1;
+            this.replaysCheckBox.Text = "Save replays";
+            this.replaysCheckBox.UseVisualStyleBackColor = true;
+            this.replaysCheckBox.CheckedChanged += new System.EventHandler(this.replaysCheckBox_CheckedChanged);
             // 
             // AutotrackerSettingsPanel
             // 
@@ -243,5 +256,6 @@ namespace SotnRandoTools
         private System.Windows.Forms.CheckBox alwaysOnTopCheckBox;
 		private System.Windows.Forms.GroupBox optionsGroup;
 		private System.Windows.Forms.CheckBox locationsCheckbox;
+		private System.Windows.Forms.CheckBox replaysCheckBox;
 	}
 }

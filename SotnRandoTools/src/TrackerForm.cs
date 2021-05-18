@@ -88,8 +88,12 @@ namespace SotnRandoTools
 			}
 		}
 
-		private void TrackerForm_FormClosed(object sender, FormClosedEventArgs e)
+		private void TrackerForm_FormClosing(object sender, FormClosingEventArgs e)
 		{
+			if (toolConfig.Tracker.SaveReplays)
+			{
+				tracker.SaveReplay();
+			}
 		}
 	}
 }

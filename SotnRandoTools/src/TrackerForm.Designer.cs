@@ -43,7 +43,7 @@ namespace SotnRandoTools
             this.Name = "TrackerForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Autotracker";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.TrackerForm_FormClosed);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.TrackerForm_FormClosing);
             this.Load += new System.EventHandler(this.TrackerForm_Load);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.TrackerForm_Paint);
             this.Move += new System.EventHandler(this.TrackerForm_Move);

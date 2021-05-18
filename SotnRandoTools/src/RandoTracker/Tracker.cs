@@ -203,6 +203,9 @@ namespace SotnRandoTools.RandoTracker
 		private bool gameReset = true;
 		private bool secondCastle = false;
 		private bool restarted = false;
+		private int cooldown = 0;
+		private MapLocation room = new MapLocation { X = 0, Y = 0};
+		private List<string> replay = new();
 
 		public Tracker(IGraphics? formGraphics, IToolConfig toolConfig, IWatchlistService watchlistService, IRenderingApi renderingApi, IGameApi gameApi, IAlucardApi alucardApi)
 		{
@@ -250,6 +253,7 @@ namespace SotnRandoTools.RandoTracker
 			if (gameApi.InAlucardMode())
 			{
 				restarted = false;
+				cooldown++;
 
 				if (updatedSecondCastle != secondCastle && toolConfig.Tracker.Locations)
 				{
@@ -274,6 +278,18 @@ namespace SotnRandoTools.RandoTracker
 				{
 					SetMapLocations();
 				}
+				if (cooldown == 50)
+				{
+					cooldown = 0;
+					int currentMapX = (int)alucardApi.MapX;
+					int currentMapY = (int)alucardApi.MapY;
+					if (room.X != currentMapX || room.Y != currentMapY)
+					{
+						room.X = currentMapX;
+						room.Y = currentMapY;
+						replay.Add($"{room.X}:{room.Y}");
+					}
+				}
 			}
 			else if (!inGame)
 			{
@@ -284,6 +300,17 @@ namespace SotnRandoTools.RandoTracker
 				ResetToDefaults();
 				DrawRelicsAndItems();
 				restarted = true;
+			}
+		}
+
+		public void SaveReplay()
+		{
+			using (StreamWriter w = File.AppendText(Paths.ReplaysPath + SeedInfo + ".txt"))
+			{
+				foreach (var line in replay)
+				{
+					w.WriteLine(line);
+				}
 			}
 		}
 
@@ -380,6 +407,7 @@ namespace SotnRandoTools.RandoTracker
 					if (watchlistService.RelicWatches[i].Value > 0)
 					{
 						relics[i].Status = true;
+						replay.Add(relics[i].Name);
 					}
 					else
 					{
@@ -464,11 +492,12 @@ namespace SotnRandoTools.RandoTracker
 		{
 			string seedName = gameApi.ReadSeedName();
 			preset = gameApi.ReadPresetName();
-			if (preset == "tournament")
+			if (preset == "tournament" || preset == "")
 			{
 				preset = "custom";
 			}
 			SeedInfo = seedName + "(" + preset + ")";
+			Console.WriteLine("Randomizer seed information: " + SeedInfo);
 			switch (preset)
 			{
 				case "adventure":

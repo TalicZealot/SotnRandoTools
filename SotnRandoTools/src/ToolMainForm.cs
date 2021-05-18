@@ -80,6 +80,8 @@ namespace SotnRandoTools
 		private string _windowTitle = "Symphony of the Night Randomizer Tools";
 		private const int PanelOffset = 130;
 		private int cooldown = 0;
+		private StringWriter log = new ();
+
 		public ToolMainForm()
 		{
 			InitializeComponent();
@@ -168,6 +170,8 @@ namespace SotnRandoTools
 			renderingApi = new RenderingApi(_maybeMemAPI);
 			watchlistService = new WatchlistService(_memoryDomains, _emu?.SystemId, GlobalConfig);
 			inputService = new InputService(_maybeJoypadApi, alucardApi);
+
+			Console.SetOut(log);
 		}
 
 		public override bool AskSaveChanges() => true;
@@ -218,6 +222,12 @@ namespace SotnRandoTools
 			{
 				coopForm.Close();
 				coopForm.Dispose();
+			}
+
+			var date = new DateTime();
+			using(StreamWriter w = File.AppendText(Paths.LogsPath + date.ToString("dd-MM-yy hh-mm-ss") + ".txt"))
+			{
+				w.Write(log.ToString());
 			}
 		}
 

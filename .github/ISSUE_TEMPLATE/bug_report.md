@@ -20,8 +20,12 @@ easier it is to reproduce the bug.
 Open the Black Marble Gallery save on the attached virtual memory card and go
 right, then...
 
-# Additional context or screenshot:
+# Additional context, screenshot or log file from /ExternalTools/SotnRandoTools/Logs/:
 Add any other context about the problem here or post a screenshot if there is a visual bug.
+Note: The log file is named in the following format: dd-MM-yy hh-mm-ss
+If you are not sure which log is the correct one you can open it and search for `Randomizer seed information` and look for the correct seed.
+
+# SotnRandoTools version:
 
 # BizHawk version:
 

@@ -72,7 +72,7 @@ namespace SotnRandoTools.Coop
 				case MessageType.Location:
 					gameApi.SetRoomValue(watchlistService.CoopLocationWatches[indexByte].Address, dataByte);
 					watchlistService.CoopLocationValues[indexByte] = dataByte;
-					Console.WriteLine($"Received location: {watchlistService.CoopLocationWatches[indexByte].Notes}");
+					Console.WriteLine($"Received location: {watchlistService.CoopLocationWatches[indexByte].Notes} with value {dataByte}");
 					break;
 				case MessageType.Item:
 					alucardApi.GrantItemByName(Equipment.Items[index]);
@@ -90,7 +90,7 @@ namespace SotnRandoTools.Coop
 						watchlistService.UpdateWatchlist(watchlistService.WarpsAndShortcutsWatches);
 						watchlistService.WarpsAndShortcutsWatches.ClearChangeCounts();
 						notificationService.AddMessage($"Received warps and shortcuts.");
-						Console.WriteLine($"Received first castle warps.");
+						Console.WriteLine($"Received first castle warps with value {dataByte}");
 						break;
 					}
 					alucardApi.GrantFirstCastleWarp((Warp) index);
@@ -105,7 +105,7 @@ namespace SotnRandoTools.Coop
 						alucardApi.WarpsSecondCastle = dataByte;
 						watchlistService.UpdateWatchlist(watchlistService.WarpsAndShortcutsWatches);
 						watchlistService.WarpsAndShortcutsWatches.ClearChangeCounts();
-						Console.WriteLine($"Received second castle warps.");
+						Console.WriteLine($"Received second castle warps with value {dataByte}");
 						break;
 					}
 					alucardApi.GrantSecondCastleWarp((Warp) index);
@@ -128,7 +128,7 @@ namespace SotnRandoTools.Coop
 					break;
 				case MessageType.Settings:
 					DecodeSettings((int) index);
-					Console.WriteLine($"Received co-op settings from host.");
+					Console.WriteLine($"Received co-op settings from host with value {index}.");
 					break;
 				default:
 					break;

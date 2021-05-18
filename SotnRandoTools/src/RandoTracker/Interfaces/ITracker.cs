@@ -5,5 +5,6 @@
 		TrackerGraphicsEngine GraphicsEngine { get; }
 		void DrawRelicsAndItems();
 		void Update();
+		void SaveReplay();
 	}
 }

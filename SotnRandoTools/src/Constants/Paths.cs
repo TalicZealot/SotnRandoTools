@@ -29,6 +29,9 @@
 		public const string IconFairy = "./ExternalTools/SotnRandoTools/Images/IconFairy.png";
 		public const string IconEye = "./ExternalTools/SotnRandoTools/Images/IconEye.png";
 
+		public const string LogsPath = "./ExternalTools/SotnRandoTools/Logs/";
+		public const string ReplaysPath = "./ExternalTools/SotnRandoTools/Replays/";
+
 		public const string CasualPresetPath = "./ExternalTools/SotnRandoTools/Presets/casual.json";
 		public const string SafePresetPath = "./ExternalTools/SotnRandoTools/Presets/safe.json";
 		public const string SpeedrunPresetPath = "./ExternalTools/SotnRandoTools/Presets/speedrun.json";
