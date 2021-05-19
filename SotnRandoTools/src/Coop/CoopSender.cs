@@ -199,7 +199,7 @@ namespace SotnRandoTools.Coop
 				{
 					var data = new byte[] { (byte) i, (byte) watchlistService.CoopLocationValues[i] };
 					queuedMessages.Enqueue(new MethodInvoker(() => { coopMessanger.SendData(MessageType.Location, data); }));
-					Console.WriteLine($"Sending Location: {watchlistService.CoopLocationWatches[i].Notes} with value {(byte) watchlistService.CoopLocationValues[i]}");
+					Console.WriteLine($"Sending Location: {watchlistService.CoopLocationWatches[i].Notes} with value {(byte) watchlistService.CoopLocationValues[i]} at index {i}");
 				}
 			}
 			watchlistService.CoopLocationWatches.ClearChangeCounts();

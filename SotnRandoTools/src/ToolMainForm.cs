@@ -224,9 +224,13 @@ namespace SotnRandoTools
 				coopForm.Dispose();
 			}
 
-			using(StreamWriter w = File.AppendText(Paths.LogsPath + DateTime.Now.ToString("dd-MM-yy hh-mm-ss") + ".txt"))
+			string logPath = Paths.LogsPath + DateTime.Now.ToString("dd-MM-yy hh-mm-ss") + ".txt";
+			if (!File.Exists(logPath))
 			{
-				w.Write(log.ToString());
+				using (StreamWriter w = File.AppendText(logPath))
+				{
+					w.Write(log.ToString());
+				}
 			}
 		}
 

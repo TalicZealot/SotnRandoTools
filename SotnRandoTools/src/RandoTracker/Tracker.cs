@@ -407,7 +407,7 @@ namespace SotnRandoTools.RandoTracker
 					if (watchlistService.RelicWatches[i].Value > 0)
 					{
 						relics[i].Status = true;
-						replay.Add(relics[i].Name);
+						replay.Add("Relic:" + relics[i].Name);
 					}
 					else
 					{
@@ -628,12 +628,23 @@ namespace SotnRandoTools.RandoTracker
 								if ((watch.Value & value) == value)
 								{
 									location.Status = true;
-									Watch coopWatch = watchlistService.CoopLocationWatches.Where(cw => cw.Notes == watch.Notes).FirstOrDefault();
-									int watchIndex = watchlistService.CoopLocationWatches.IndexOf(coopWatch);
+									Watch? coopWatch = null;
+									int watchIndex = 0;
+									for (int i = 0; i < watchlistService.CoopLocationWatches.Count; i++)
+									{
+										if (watchlistService.CoopLocationWatches[i].Notes == watch.Notes)
+										{
+											coopWatch = watchlistService.CoopLocationWatches[i];
+											watchIndex = i;
+											break;
+										}
+									}
+
 									if (coopWatch is not null && watchlistService.CoopLocationValues[watchIndex] == 0)
 									{
 										coopWatch.Update(PreviousType.LastFrame);
 										watchlistService.CoopLocationValues[watchIndex] = value;
+										Console.WriteLine($"{coopWatch.Notes} at index {watchIndex} value {watchlistService.CoopLocationValues[watchIndex]}");
 									}
 									ClearMapLocation(locations.IndexOf(location));
 								}

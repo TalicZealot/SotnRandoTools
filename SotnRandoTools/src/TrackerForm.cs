@@ -63,6 +63,11 @@ namespace SotnRandoTools
 
 		private void TrackerForm_Resize(object sender, EventArgs e)
 		{
+			if (this.Location.X < 0)
+			{
+				return;
+			}
+
 			if (this.Width > toolConfig.Tracker.Width || this.Height > toolConfig.Tracker.Height)
 			{
 				internalGraphics = this.CreateGraphics();
