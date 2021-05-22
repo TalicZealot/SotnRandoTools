@@ -16,6 +16,7 @@ namespace SotnRandoTools.Services
 	public class NotificationService : INotificationService
 	{
 		const int NotificationTime = 4 * 1000;
+		const int NotificationTimeFast = 1 * 1000;
 
 		private readonly IGuiApi guiApi;
 		private readonly IToolConfig toolConfig;
@@ -103,6 +104,14 @@ namespace SotnRandoTools.Services
 			{
 				messageTimer.Stop();
 				messageTimer.Start();
+			}
+			if (messageQueue.Count > 1)
+			{
+				messageTimer.Interval = NotificationTimeFast;
+			}
+			else
+			{
+				messageTimer.Interval = NotificationTime;
 			}
 		}
 

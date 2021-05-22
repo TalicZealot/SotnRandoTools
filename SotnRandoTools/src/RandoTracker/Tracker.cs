@@ -281,14 +281,7 @@ namespace SotnRandoTools.RandoTracker
 				if (cooldown == 50)
 				{
 					cooldown = 0;
-					int currentMapX = (int)alucardApi.MapX;
-					int currentMapY = (int)alucardApi.MapY;
-					if (room.X != currentMapX || room.Y != currentMapY)
-					{
-						room.X = currentMapX;
-						room.Y = currentMapY;
-						replay.Add($"{room.X}:{room.Y}");
-					}
+					SaveReplayLine();
 				}
 			}
 			else if (!inGame)
@@ -407,7 +400,6 @@ namespace SotnRandoTools.RandoTracker
 					if (watchlistService.RelicWatches[i].Value > 0)
 					{
 						relics[i].Status = true;
-						replay.Add("Relic:" + relics[i].Name);
 					}
 					else
 					{
@@ -625,9 +617,11 @@ namespace SotnRandoTools.RandoTracker
 						{
 							foreach (int value in room.Values)
 							{
+								Console.WriteLine($"Tracker: {location.Name} change, value = {value}");
 								if ((watch.Value & value) == value)
 								{
 									location.Status = true;
+									Console.WriteLine($"Tracker: {location.Name} checked.");
 									Watch? coopWatch = null;
 									int watchIndex = 0;
 									for (int i = 0; i < watchlistService.CoopLocationWatches.Count; i++)
@@ -644,7 +638,7 @@ namespace SotnRandoTools.RandoTracker
 									{
 										coopWatch.Update(PreviousType.LastFrame);
 										watchlistService.CoopLocationValues[watchIndex] = value;
-										Console.WriteLine($"{coopWatch.Notes} at index {watchIndex} value {watchlistService.CoopLocationValues[watchIndex]}");
+										Console.WriteLine($"Added {coopWatch.Notes} at index {watchIndex} value {watchlistService.CoopLocationValues[watchIndex]} to coopValues.");
 									}
 									ClearMapLocation(locations.IndexOf(location));
 								}
@@ -737,6 +731,27 @@ namespace SotnRandoTools.RandoTracker
 			}
 
 			return false;
+		}
+
+		private void SaveReplayLine()
+		{
+			int currentMapX = (int) alucardApi.MapX;
+			int currentMapY = (int) alucardApi.MapY;
+			if (room.X != currentMapX || room.Y != currentMapY)
+			{
+				room.X = currentMapX;
+				room.Y = currentMapY;
+				string line = $"{room.X}:{room.Y}";
+				foreach (var relic in relics)
+				{
+					line += ":" + (relic.Status ? "1" : 0);
+				}
+				foreach (var item in progressionItems)
+				{
+					line += ":" + (item.Status ? "1" : 0);
+				}
+				replay.Add(line);
+			}
 		}
 	}
 }

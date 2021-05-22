@@ -1023,7 +1023,10 @@ namespace SotnRandoTools.Khaos
 
 		private void ExecuteAction(Object sender, EventArgs e)
 		{
-			if (gameApi.InAlucardMode() && gameApi.CanMenu() && alucardApi.CurrentHp > 5)
+			uint mapX = alucardApi.MapX;
+			uint mapY = alucardApi.MapY;
+			bool keepRichterRoom = (mapX == 32 && mapY == 8) || (mapX == 33 && mapY == 8);
+			if (gameApi.InAlucardMode() && gameApi.CanMenu() && alucardApi.CurrentHp > 3 && !gameApi.CanSave() && !keepRichterRoom)
 			{
 				if (queuedActions.Count > 0)
 				{
@@ -1041,7 +1044,10 @@ namespace SotnRandoTools.Khaos
 		}
 		private void ExecuteFastAction(Object sender, EventArgs e)
 		{
-			if (gameApi.InAlucardMode() && gameApi.CanMenu() && alucardApi.CurrentHp > 5)
+			uint mapX = alucardApi.MapX;
+			uint mapY = alucardApi.MapY;
+			bool keepRichterRoom = (mapX == 32 && mapY == 8) || (mapX == 33 && mapY == 8);
+			if (gameApi.InAlucardMode() && gameApi.CanMenu() && alucardApi.CurrentHp > 3 && !gameApi.CanSave() && !keepRichterRoom)
 			{
 				if (queuedFastActions.Count > 0)
 				{
