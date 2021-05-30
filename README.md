@@ -44,6 +44,7 @@ The Select button is used to send the currently highlighted item in the inventor
 The Circle button is used to perform an assist action. Using a potion in your inventory and activating it for the other player.
 
 ## Khaos
+Video setup guide: [https://www.youtube.com/watch?v=cDUYwATR7k8](https://www.youtube.com/watch?v=cDUYwATR7k8)
 Khaos is in an alpha stage at the moment. I am still working on implementing the in-game effects and making them stable. In order to engage in chat interaction you must set up StreamlabsChatbot with their internal custom currency. Then add commands that will fill the input text file, that Khaos reads. Improt the command group, then edit the file paths and prices to your preferences: [https://raw.githubusercontent.com/TalicZealot/SotnRandoTools/main/BotCommands/KhaosCommands.abcomg](https://raw.githubusercontent.com/TalicZealot/SotnRandoTools/main/BotCommands/KhaosCommands.abcomg) `right click > Save Link As...`
 
 ## Useful links
