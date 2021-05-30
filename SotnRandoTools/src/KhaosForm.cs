@@ -14,27 +14,18 @@ namespace SotnRandoTools
 		private readonly ICheatCollectionAdapter adaptedCheats;
 		private readonly KhaosController khaosControler;
 		private readonly IToolConfig toolConfig;
-		private readonly IGameApi gameApi;
-		private readonly IAlucardApi alucardApi;
-		private readonly IActorApi actorApi;
 		private bool started = false;
 
-		public KhaosForm(IToolConfig toolConfig, CheatCollection cheats, IGameApi gameApi, IAlucardApi alucardApi, IActorApi actorApi, INotificationService notificationService)
+		public KhaosForm(IToolConfig toolConfig, CheatCollection cheats, IGameApi gameApi, IAlucardApi alucardApi, IActorApi actorApi, INotificationService notificationService, IInputService inputService)
 		{
 			if (toolConfig is null) throw new ArgumentNullException(nameof(toolConfig));
 			if (cheats is null) throw new ArgumentNullException(nameof(cheats));
 			if (toolConfig is null) throw new ArgumentNullException(nameof(toolConfig));
-			if (gameApi is null) throw new ArgumentNullException(nameof(gameApi));
-			if (alucardApi is null) throw new ArgumentNullException(nameof(alucardApi));
-			if (actorApi is null) throw new ArgumentNullException(nameof(actorApi));
 			if (cheats == null) throw new ArgumentNullException(nameof(cheats));
 			this.toolConfig = toolConfig;
-			this.gameApi = gameApi;
-			this.alucardApi = alucardApi;
-			this.actorApi = actorApi;
 
 			adaptedCheats = new CheatCollectionAdapter(cheats);
-			khaosControler = new KhaosController(toolConfig, gameApi, alucardApi, actorApi, adaptedCheats, notificationService);
+			khaosControler = new KhaosController(toolConfig, gameApi, alucardApi, actorApi, adaptedCheats, notificationService, inputService);
 
 			InitializeComponent();
 			SuspendLayout();

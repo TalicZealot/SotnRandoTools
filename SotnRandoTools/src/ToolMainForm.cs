@@ -180,7 +180,7 @@ namespace SotnRandoTools
 
 		public override void UpdateValues(ToolFormUpdateType type)
 		{
-			if (coopForm is not null)
+			if (coopForm is not null || khaosForm is not null)
 			{
 				inputService.UpdateInputs();
 			}
@@ -254,12 +254,12 @@ namespace SotnRandoTools
 			if (khaosForm is not null && gameApi is not null && alucardApi is not null && actorApi is not null)
 			{
 				khaosForm.Close();
-				khaosForm = new KhaosForm(toolConfig, this.MainForm.CheatList, gameApi, alucardApi, actorApi, notificationService);
+				khaosForm = new KhaosForm(toolConfig, this.MainForm.CheatList, gameApi, alucardApi, actorApi, notificationService, inputService);
 				khaosForm.Show();
 			}
 			else if (khaosForm is null && gameApi is not null && alucardApi is not null && actorApi is not null)
 			{
-				khaosForm = new KhaosForm(toolConfig, this.MainForm.CheatList, gameApi, alucardApi, actorApi, notificationService);
+				khaosForm = new KhaosForm(toolConfig, this.MainForm.CheatList, gameApi, alucardApi, actorApi, notificationService, inputService);
 				khaosForm.Show();
 			}
 		}

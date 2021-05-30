@@ -36,6 +36,16 @@ namespace SotnRandoTools.Services
 			},
 			Activator = new Dictionary<string, object> { [PlaystationInputKeys.L2] = true }
 		};
+		private Input dash = new Input
+		{
+			MotionSequence = new List<Dictionary<string, object>>
+			{
+				new Dictionary<string, object> {[InputKeys.Forward] = true},
+				new Dictionary<string, object> {[InputKeys.Forward] = false},
+				new Dictionary<string, object> {[InputKeys.Forward] = true}
+			},
+			Activator = null
+		};
 
 		public InputService(IJoypadApi joypadApi, IAlucardApi alucardApi)
 		{
@@ -83,6 +93,15 @@ namespace SotnRandoTools.Services
 				moveHistory[moveHistory.Count - 1].Add(InputKeys.HalfCircleForward, false);
 			}
 
+			if (ReadInput(dash, Globals.InputBufferSize))
+			{
+				moveHistory[moveHistory.Count - 1].Add(InputKeys.Dash, true);
+			}
+			else
+			{
+				moveHistory[moveHistory.Count - 1].Add(InputKeys.Dash, false);
+			}
+
 			if (moveHistory.Count > 120)
 			{
 				moveHistory.RemoveAt(0);
@@ -123,6 +142,19 @@ namespace SotnRandoTools.Services
 			return false;
 		}
 
+		public bool ButtonHeld(string button)
+		{
+			if (inputHistory.Count < 1)
+			{
+				return false;
+			}
+			if (Convert.ToBoolean(inputHistory[inputHistory.Count - 1][button]) == true)
+			{
+				return true;
+			}
+			return false;
+		}
+
 		private bool ReadInput(Input moveInput, uint bufferSize)
 		{
 			if (moveInput is null) throw new ArgumentNullException(nameof(moveInput));
@@ -133,17 +165,21 @@ namespace SotnRandoTools.Services
 			bool keyUp = true;
 			bool directionalInput = false;
 			bool pressed = true;
+			KeyValuePair<string, Object>[]? requiredActivator = null;
 
-			var requiredActivator = moveInput.Activator.Where(pair => Convert.ToBoolean(pair.Value)).ToArray();
-			foreach (var pair in requiredActivator)
+			if (moveInput.Activator is not null)
 			{
-				if (inputHistory.Count > 0 && !Convert.ToBoolean(inputHistory[inputHistory.Count - 1][pair.Key]))
+				requiredActivator = moveInput.Activator.Where(pair => Convert.ToBoolean(pair.Value)).ToArray();
+				foreach (var pair in requiredActivator)
 				{
-					return false;
-				}
-				else if (inputHistory.Count == 0)
-				{
-					return false;
+					if (inputHistory.Count > 0 && !Convert.ToBoolean(inputHistory[inputHistory.Count - 1][pair.Key]))
+					{
+						return false;
+					}
+					else if (inputHistory.Count == 0)
+					{
+						return false;
+					}
 				}
 			}
 
@@ -153,7 +189,7 @@ namespace SotnRandoTools.Services
 
 				if (inputBuffer > bufferSize)
 				{
-					return false;
+					inputIndex = 0;
 				}
 
 				if (!keyUp && inputIndex > 0)
@@ -205,7 +241,7 @@ namespace SotnRandoTools.Services
 
 				pressed = true;
 
-				if (directionalInput && i < inputHistory.Count - 1)
+				if (directionalInput && i < inputHistory.Count - 1 && requiredActivator is not null)
 				{
 					foreach (var pair in requiredActivator)
 					{

@@ -4,6 +4,7 @@
 	{
 		bool RegisteredMove(string moveName, int frames);
 		bool ButtonPressed(string button, int frames);
+		bool ButtonHeld(string button);
 		void UpdateInputs();
 	}
 }

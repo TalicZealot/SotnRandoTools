@@ -3,6 +3,16 @@
 	public static class Paths
 	{
 		public const string ItemPickupSound = "./ExternalTools/SotnRandoTools/Sounds/Item.mp3";
+		public const string AlucardWhatSound = "./ExternalTools/SotnRandoTools/Sounds/AlucardWhat.mp3";
+		public const string LibrarianThankYouSound = "./ExternalTools/SotnRandoTools/Sounds/LibrarianThankYou.mp3";
+		public const string DeathLaughSound = "./ExternalTools/SotnRandoTools/Sounds/DeathLaugh.mp3";
+		public const string RichterLaughSound = "./ExternalTools/SotnRandoTools/Sounds/RichterLaugh.mp3";
+		public const string FairyPotionSound = "./ExternalTools/SotnRandoTools/Sounds/FairyPotion.mp3";
+		public const string MeltySound = "./ExternalTools/SotnRandoTools/Sounds/Melty.mp3";
+		public const string ZaWarudoSound = "./ExternalTools/SotnRandoTools/Sounds/ZaWarudo.mp3";
+
+		public const string BotActionsFilePath = "./ExternalTools/SotnRandoTools/Khaos/actions.txt";
+		public const string NamesFilePath = "./ExternalTools/SotnRandoTools/Khaos/names.txt";
 
 		public const string SourceLink = "https://github.com/TalicZealot/SotnRandoTools/";
 		public const string ReadmeLink = "https://github.com/TalicZealot/SotnRandoTools/blob/main/README.md";

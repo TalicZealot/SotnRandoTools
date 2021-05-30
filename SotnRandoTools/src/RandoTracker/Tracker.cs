@@ -309,12 +309,12 @@ namespace SotnRandoTools.RandoTracker
 
 		private void InitializeAllLocks()
 		{
-			LoadLocksAsd(Paths.CasualPresetPath, false);
-			LoadLocksAsd(Paths.SafePresetPath, false);
-			LoadLocksAsd(Paths.SpeedrunPresetPath, true);
+			LoadLocks(Paths.CasualPresetPath, false);
+			LoadLocks(Paths.SafePresetPath, false);
+			LoadLocks(Paths.SpeedrunPresetPath, true);
 		}
 
-		private void LoadLocksAsd(string presetFilePath, bool outOfLogic)
+		private void LoadLocks(string presetFilePath, bool outOfLogic)
 		{
 			var presetLocations = JObject.Parse(File.ReadAllText(presetFilePath))["lockLocation"];
 			foreach (var location in presetLocations)

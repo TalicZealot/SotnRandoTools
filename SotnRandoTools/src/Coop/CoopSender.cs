@@ -90,7 +90,7 @@ namespace SotnRandoTools.Coop
 
 		private void UpdateSendItem()
 		{
-			if (inputService.ButtonPressed(PlaystationInputKeys.Select, Globals.UpdateCooldownFrames) && selectPressed == false && gameApi.IsInMenu() && gameApi.EquipMenuOpen())
+			if (inputService.ButtonPressed(PlaystationInputKeys.R3, Globals.UpdateCooldownFrames) && selectPressed == false && gameApi.IsInMenu() && gameApi.EquipMenuOpen())
 			{
 				selectPressed = true;
 				string item = alucardApi.GetSelectedItemName();

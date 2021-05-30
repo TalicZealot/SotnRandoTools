@@ -26,6 +26,7 @@ namespace SotnRandoTools.Khaos
 		private readonly IActorApi actorApi;
 		private readonly ICheatCollectionAdapter cheats;
 		private readonly INotificationService notificationService;
+		private readonly IInputService inputService;
 
 		private string[] lightHelpItems =
 		{
@@ -152,6 +153,7 @@ namespace SotnRandoTools.Khaos
 		private Timer actionTimer = new Timer();
 		private Timer fastActionTimer = new Timer();
 
+		#region Timers
 		private System.Timers.Timer honestGamerTimer = new();
 		private System.Timers.Timer subweaponsOnlyTimer = new();
 		private System.Timers.Timer crippleTimer = new();
@@ -167,9 +169,13 @@ namespace SotnRandoTools.Khaos
 		private System.Timers.Timer fourBeastsTimer = new();
 		private System.Timers.Timer zawarudoTimer = new();
 		private System.Timers.Timer hasteTimer = new();
+		private System.Timers.Timer hasteOverdriveTimer = new();
+		private System.Timers.Timer hasteOverdriveOffTimer = new();
+		#endregion
 
 		private uint hordeZone = 0;
 		private uint hordeZone2 = 0;
+		private int enduranceCount = 0;
 		private uint enduranceRoomX = 0;
 		private uint enduranceRoomY = 0;
 		private List<Actor> bannedBosses = new();
@@ -179,12 +185,14 @@ namespace SotnRandoTools.Khaos
 		private int spentMana = 0;
 		private bool bloodManaActive = false;
 		private bool hasteActive = false;
+		private bool hasteSpeedOn = false;
+		private bool overdriveOn = false;
 		private bool crippleActive = false;
 		private Queue<MethodInvoker> speedActions = new();
 
 		private FileSystemWatcher botFileWatcher = new FileSystemWatcher();
 
-		public KhaosController(IToolConfig toolConfig, IGameApi gameApi, IAlucardApi alucardApi, IActorApi actorApi, ICheatCollectionAdapter cheats, INotificationService notificationService)
+		public KhaosController(IToolConfig toolConfig, IGameApi gameApi, IAlucardApi alucardApi, IActorApi actorApi, ICheatCollectionAdapter cheats, INotificationService notificationService, IInputService inputService)
 		{
 			if (toolConfig is null) throw new ArgumentNullException(nameof(toolConfig));
 			if (gameApi is null) throw new ArgumentNullException(nameof(gameApi));
@@ -192,12 +200,14 @@ namespace SotnRandoTools.Khaos
 			if (actorApi is null) throw new ArgumentNullException(nameof(actorApi));
 			if (cheats == null) throw new ArgumentNullException(nameof(cheats));
 			if (notificationService == null) throw new ArgumentNullException(nameof(notificationService));
+			if (inputService is null) throw new ArgumentNullException(nameof(inputService));
 			this.toolConfig = toolConfig;
 			this.gameApi = gameApi;
 			this.alucardApi = alucardApi;
 			this.actorApi = actorApi;
 			this.cheats = cheats;
 			this.notificationService = notificationService;
+			this.inputService = inputService;
 
 			if (File.Exists(toolConfig.Khaos.BotActionsFilePath))
 			{
@@ -237,7 +247,6 @@ namespace SotnRandoTools.Khaos
 
 			notificationService.AddMessage($"Khaos started");
 		}
-
 		public void StopKhaos()
 		{
 			if (File.Exists(toolConfig.Khaos.BotActionsFilePath))
@@ -250,7 +259,6 @@ namespace SotnRandoTools.Khaos
 			faerieScroll.Disable();
 			notificationService.AddMessage($"Khaos stopped");
 		}
-
 		public void OverwriteBossNames(string[] subscribers)
 		{
 			Random rnd = new Random();
@@ -438,7 +446,8 @@ namespace SotnRandoTools.Khaos
 		public void HonestGamer(string user = "Khaos")
 		{
 			Cheat manaCheat = cheats.GetCheatByName("Mana");
-			manaCheat.PokeValue(2);
+			alucardApi.TakeRelic(Relic.GasCloud);
+			manaCheat.PokeValue(5);
 			manaCheat.Enable();
 			honestGamerTimer.Start();
 			notificationService.AddMessage($"{user} used Honest Gamer");
@@ -464,10 +473,11 @@ namespace SotnRandoTools.Khaos
 			alucardApi.CurrentHearts = 200;
 			alucardApi.ActivatePotion(Potion.SmartPotion);
 			alucardApi.GrantRelic(Relic.CubeOfZoe);
+			alucardApi.TakeRelic(Relic.GasCloud);
 			Cheat curse = cheats.GetCheatByName("CurseTimer");
 			curse.Enable();
 			Cheat manaCheat = cheats.GetCheatByName("Mana");
-			manaCheat.PokeValue(0);
+			manaCheat.PokeValue(5);
 			manaCheat.Enable();
 			subweaponsOnlyTimer.Start();
 			notificationService.AddMessage($"{user} used Subweapons Only");
@@ -505,6 +515,7 @@ namespace SotnRandoTools.Khaos
 		{
 			enduranceRoomX = gameApi.MapXPos;
 			enduranceRoomY = gameApi.MapYPos;
+			enduranceCount++;
 			enduranceSpawnTimer.Start();
 			notificationService.AddMessage($"{user} used Endurance");
 			Alert("Endurance");
@@ -729,7 +740,7 @@ namespace SotnRandoTools.Khaos
 				return;
 			}
 
-			SetSpeed(toolConfig.Khaos.HasteFactor);
+			SetHasteStaticSpeeds();
 			hasteTimer.Start();
 			hasteActive = true;
 			notificationService.AddMessage($"{user} used {KhaosActionNames.Haste}");
@@ -749,6 +760,10 @@ namespace SotnRandoTools.Khaos
 			if (gameApi.InAlucardMode() && bloodManaActive)
 			{
 				CheckManaUsage();
+			}
+			if (gameApi.InAlucardMode())
+			{
+				CheckDashInput();
 			}
 		}
 		public void EnqueueAction(string command)
@@ -1019,8 +1034,11 @@ namespace SotnRandoTools.Khaos
 			zawarudoTimer.Interval = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.ZaWarudo).FirstOrDefault().Duration.TotalMilliseconds;
 			hasteTimer.Elapsed += HasteOff;
 			hasteTimer.Interval = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.Haste).FirstOrDefault().Duration.TotalMilliseconds;
+			hasteOverdriveTimer.Elapsed += OverdriveOn;
+			hasteOverdriveTimer.Interval = (2 * 1000);
+			hasteOverdriveOffTimer.Elapsed += OverdriveOff;
+			hasteOverdriveOffTimer.Interval = (2 * 1000);
 		}
-
 		private void ExecuteAction(Object sender, EventArgs e)
 		{
 			uint mapX = alucardApi.MapX;
@@ -1405,7 +1423,13 @@ namespace SotnRandoTools.Khaos
 				boss.Palette = (ushort) (boss.Palette + rnd.Next(1, 10));
 				boss.Hp *= 2;
 				actorApi.SpawnActor(boss);
-				enduranceSpawnTimer.Stop();
+				enduranceCount--;
+				enduranceRoomX = roomX;
+				enduranceRoomY = roomY;
+				if (enduranceCount == 0)
+				{
+					enduranceSpawnTimer.Stop();
+				}
 			}
 			else
 			{
@@ -1530,6 +1554,53 @@ namespace SotnRandoTools.Khaos
 			SetSpeed();
 			hasteTimer.Stop();
 			hasteActive = false;
+			hasteSpeedOn = false;
+			hasteOverdriveOffTimer.Start();
+		}
+		private void SetHasteStaticSpeeds()
+		{
+			float factor = toolConfig.Khaos.HasteFactor;
+			alucardApi.WingsmashHorizontalSpeed = (uint) (DefaultSpeeds.WingsmashHorizontal * (factor / 2.5));
+			alucardApi.WolfDashTopRightSpeed = (sbyte) Math.Floor(DefaultSpeeds.WolfDashTopRight * factor);
+			alucardApi.WolfDashTopLeftSpeed = (sbyte) Math.Ceiling(DefaultSpeeds.WolfDashTopLeft * factor);
+		}
+		private void ToggleHasteDynamicSpeeds(float factor = 1)
+		{
+			uint horizontalWhole = (uint) (DefaultSpeeds.WalkingWhole * factor);
+			uint horizontalFract = (uint) (DefaultSpeeds.WalkingFract * factor);
+
+			alucardApi.WalkingWholeSpeed = horizontalWhole;
+			alucardApi.WalkingFractSpeed = horizontalFract;
+			alucardApi.JumpingHorizontalWholeSpeed = horizontalWhole;
+			alucardApi.JumpingHorizontalFractSpeed = horizontalFract;
+			alucardApi.JumpingAttackLeftHorizontalWholeSpeed = (uint) (0xFF - horizontalWhole);
+			alucardApi.JumpingAttackLeftHorizontalFractSpeed = horizontalFract;
+			alucardApi.JumpingAttackRightHorizontalWholeSpeed = horizontalWhole;
+			alucardApi.JumpingAttackRightHorizontalFractSpeed = horizontalFract;
+			alucardApi.FallingHorizontalWholeSpeed = horizontalWhole;
+			alucardApi.FallingHorizontalFractSpeed = horizontalFract;
+		}
+		private void OverdriveOn(object sender, System.Timers.ElapsedEventArgs e)
+		{
+			Cheat VisualEffectPaletteCheat = cheats.GetCheatByName("VisualEffectPalette");
+			VisualEffectPaletteCheat.PokeValue(33126);
+			VisualEffectPaletteCheat.Enable();
+			Cheat VisualEffectTimerCheat = cheats.GetCheatByName("VisualEffectTimer");
+			VisualEffectTimerCheat.PokeValue(30);
+			VisualEffectTimerCheat.Enable();
+			alucardApi.WingsmashHorizontalSpeed = (uint) (DefaultSpeeds.WingsmashHorizontal * (toolConfig.Khaos.HasteFactor / 1.8));
+			overdriveOn = true;
+			hasteOverdriveTimer.Stop();
+		}
+		private void OverdriveOff(object sender, System.Timers.ElapsedEventArgs e)
+		{
+			Cheat VisualEffectPaletteCheat = cheats.GetCheatByName("VisualEffectPalette");
+			VisualEffectPaletteCheat.Disable();
+			Cheat VisualEffectTimerCheat = cheats.GetCheatByName("VisualEffectTimer");
+			VisualEffectTimerCheat.Disable();
+			alucardApi.WingsmashHorizontalSpeed = (uint) (DefaultSpeeds.WingsmashHorizontal);
+			overdriveOn = false;
+			hasteOverdriveOffTimer.Stop();
 		}
 		#endregion
 
@@ -1557,7 +1628,7 @@ namespace SotnRandoTools.Khaos
 			bool slow = factor < 1;
 			bool fast = factor > 1;
 
-			uint horizontalWhole = fast == true ? (uint) (DefaultSpeeds.WalkingWhole * (factor * 2)) : (uint) (DefaultSpeeds.WalkingWhole * factor);
+			uint horizontalWhole = (uint) (DefaultSpeeds.WalkingWhole * factor);
 			uint horizontalFract = (uint) (DefaultSpeeds.WalkingFract * factor);
 
 			alucardApi.WingsmashHorizontalSpeed = (uint) (DefaultSpeeds.WingsmashHorizontal * factor);
@@ -1585,6 +1656,25 @@ namespace SotnRandoTools.Khaos
 			}
 			storedMana = currentMana;
 			BloodManaUpdate();
+		}
+		private void CheckDashInput()
+		{
+			if (inputService.RegisteredMove(InputKeys.Dash, Globals.UpdateCooldownFrames) && !hasteSpeedOn && hasteActive)
+			{
+				ToggleHasteDynamicSpeeds(toolConfig.Khaos.HasteFactor);
+				hasteSpeedOn = true;
+				hasteOverdriveTimer.Start();
+			}
+			else if (!inputService.ButtonHeld(InputKeys.Forward) && hasteSpeedOn)
+			{
+				ToggleHasteDynamicSpeeds();
+				hasteSpeedOn = false;
+				hasteOverdriveTimer.Stop();
+				if (overdriveOn)
+				{
+					hasteOverdriveOffTimer.Start();
+				}
+			}
 		}
 		private void CheckExperience()
 		{

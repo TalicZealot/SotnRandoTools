@@ -12,8 +12,10 @@
 		public const string Cross = "P1 Cross";
 		public const string L1 = "P1 L1";
 		public const string L2 = "P1 L2";
+		public const string L3 = "P1 L3";
 		public const string R1 = "P1 R1";
 		public const string R2 = "P1 R2";
+		public const string R3 = "P1 R3";
 		public const string Select = "P1 Select";
 		public const string Start = "P1 Start";
 	}

@@ -7,5 +7,6 @@
 
 		public const string DragonPunch = "DP";
 		public const string HalfCircleForward = "HCF";
+		public const string Dash = "Dash";
 	}
 }
