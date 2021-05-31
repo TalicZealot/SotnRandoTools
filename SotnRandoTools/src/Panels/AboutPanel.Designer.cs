@@ -42,6 +42,7 @@ namespace SotnRandoTools
             this.sotnApiLink = new System.Windows.Forms.LinkLabel();
             this.updaterLink = new System.Windows.Forms.LinkLabel();
             this.randoLink = new System.Windows.Forms.LinkLabel();
+            this.patchNotesLink = new System.Windows.Forms.LinkLabel();
             this.SuspendLayout();
             // 
             // autotrackerPanelTitle
@@ -192,11 +193,28 @@ namespace SotnRandoTools
             this.randoLink.VisitedLinkColor = System.Drawing.Color.Cyan;
             this.randoLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.randoLink_LinkClicked);
             // 
+            // patchNotesLink
+            // 
+            this.patchNotesLink.ActiveLinkColor = System.Drawing.Color.Maroon;
+            this.patchNotesLink.AutoSize = true;
+            this.patchNotesLink.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.patchNotesLink.LinkColor = System.Drawing.Color.DodgerBlue;
+            this.patchNotesLink.Location = new System.Drawing.Point(146, 100);
+            this.patchNotesLink.Name = "patchNotesLink";
+            this.patchNotesLink.Size = new System.Drawing.Size(98, 18);
+            this.patchNotesLink.TabIndex = 12;
+            this.patchNotesLink.TabStop = true;
+            this.patchNotesLink.Text = "Patch Notes";
+            this.patchNotesLink.Visible = false;
+            this.patchNotesLink.VisitedLinkColor = System.Drawing.Color.Cyan;
+            this.patchNotesLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.patchNotesLink_LinkClicked);
+            // 
             // AboutPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
+            this.Controls.Add(this.patchNotesLink);
             this.Controls.Add(this.randoLink);
             this.Controls.Add(this.updaterLink);
             this.Controls.Add(this.sotnApiLink);
@@ -232,5 +250,6 @@ namespace SotnRandoTools
 		private System.Windows.Forms.LinkLabel sotnApiLink;
 		private System.Windows.Forms.LinkLabel updaterLink;
 		private System.Windows.Forms.LinkLabel randoLink;
+		private System.Windows.Forms.LinkLabel patchNotesLink;
 	}
 }

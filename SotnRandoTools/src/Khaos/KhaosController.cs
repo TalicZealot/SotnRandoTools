@@ -743,6 +743,7 @@ namespace SotnRandoTools.Khaos
 			SetHasteStaticSpeeds();
 			hasteTimer.Start();
 			hasteActive = true;
+			Console.WriteLine($"{user} used {KhaosActionNames.Haste}");
 			notificationService.AddMessage($"{user} used {KhaosActionNames.Haste}");
 			notificationService.DequeueAction();
 			notificationService.AddTimer(new Services.Models.ActionTimer
@@ -1561,8 +1562,12 @@ namespace SotnRandoTools.Khaos
 		{
 			float factor = toolConfig.Khaos.HasteFactor;
 			alucardApi.WingsmashHorizontalSpeed = (uint) (DefaultSpeeds.WingsmashHorizontal * (factor / 2.5));
-			alucardApi.WolfDashTopRightSpeed = (sbyte) Math.Floor(DefaultSpeeds.WolfDashTopRight * factor);
-			alucardApi.WolfDashTopLeftSpeed = (sbyte) Math.Ceiling(DefaultSpeeds.WolfDashTopLeft * factor);
+			alucardApi.WolfDashTopRightSpeed = (sbyte) Math.Floor(DefaultSpeeds.WolfDashTopRight * (factor / 2));
+			alucardApi.WolfDashTopLeftSpeed = (sbyte) Math.Ceiling((sbyte) DefaultSpeeds.WolfDashTopLeft * (factor / 2));
+			Console.WriteLine("Set speeds:");
+			Console.WriteLine($"Wingsmash: {(uint) (DefaultSpeeds.WingsmashHorizontal * (factor / 2.5))}");
+			Console.WriteLine($"Wolf dash right: {(sbyte) Math.Floor(DefaultSpeeds.WolfDashTopRight * (factor / 2))}");
+			Console.WriteLine($"Wolf dash left: {(sbyte) Math.Ceiling((sbyte) DefaultSpeeds.WolfDashTopLeft * (factor / 2))}");
 		}
 		private void ToggleHasteDynamicSpeeds(float factor = 1)
 		{
@@ -1645,6 +1650,7 @@ namespace SotnRandoTools.Khaos
 			alucardApi.WolfDashTopRightSpeed = (sbyte) Math.Floor(DefaultSpeeds.WolfDashTopRight * factor);
 			alucardApi.WolfDashTopLeftSpeed = (sbyte) Math.Ceiling(DefaultSpeeds.WolfDashTopLeft * factor);
 			alucardApi.BackdashDecel = slow == true ? DefaultSpeeds.BackdashDecelSlow : DefaultSpeeds.BackdashDecel;
+			Console.WriteLine($"Set all speeds with factor {factor}");
 		}
 		private void CheckManaUsage()
 		{

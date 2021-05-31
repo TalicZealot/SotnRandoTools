@@ -35,6 +35,7 @@ namespace SotnRandoTools
 			}
 			else
 			{
+				patchNotesLink.Visible = true;
 				this.versionLabel.Text += " ✔️";
 				this.upToDateToolTip.SetToolTip(versionLabel, "Up to date!");
 				this.upToDateToolTip.ToolTipIcon = ToolTipIcon.None;
@@ -82,6 +83,12 @@ namespace SotnRandoTools
 		{
 			donateLink.LinkVisited = true;
 			Process.Start(Paths.DonateLink);
+		}
+
+		private void patchNotesLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		{
+			patchNotesLink.LinkVisited = true;
+			Process.Start(Paths.LatestReleaseUrl);
 		}
 	}
 }
