@@ -12,7 +12,7 @@ namespace SotnRandoTools
 	public partial class KhaosForm : Form
 	{
 		private readonly ICheatCollectionAdapter adaptedCheats;
-		private readonly KhaosController khaosControler;
+		private KhaosController? khaosControler;
 		private readonly IToolConfig toolConfig;
 		private bool started = false;
 
@@ -34,7 +34,10 @@ namespace SotnRandoTools
 
 		public void UpdateKhaosValues()
 		{
-			khaosControler.Update();
+			if (khaosControler is not null)
+			{
+				khaosControler.Update();
+			}
 		}
 
 		private void Khaos_Load(object sender, EventArgs e)
@@ -391,5 +394,15 @@ namespace SotnRandoTools
 		}
 		#endregion
 
+		private void KhaosForm_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			if (started)
+			{
+				started = false;
+				khaosControler.StopKhaos();
+				startButton.Text = "Start";
+			}
+			khaosControler = null;
+		}
 	}
 }

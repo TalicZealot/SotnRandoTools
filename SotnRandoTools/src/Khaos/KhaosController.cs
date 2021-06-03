@@ -1044,8 +1044,8 @@ namespace SotnRandoTools.Khaos
 		{
 			uint mapX = alucardApi.MapX;
 			uint mapY = alucardApi.MapY;
-			bool keepRichterRoom = (mapX == 32 && mapY == 8) || (mapX == 33 && mapY == 8);
-			if (gameApi.InAlucardMode() && gameApi.CanMenu() && alucardApi.CurrentHp > 3 && !gameApi.CanSave() && !keepRichterRoom)
+			bool keepRichterRoom = ((mapX >= 31 && mapX <=34) && mapY == 8);
+			if (gameApi.InAlucardMode() && gameApi.CanMenu() && alucardApi.CurrentHp > 0 && !gameApi.CanSave() && !keepRichterRoom)
 			{
 				if (queuedActions.Count > 0)
 				{
@@ -1065,8 +1065,8 @@ namespace SotnRandoTools.Khaos
 		{
 			uint mapX = alucardApi.MapX;
 			uint mapY = alucardApi.MapY;
-			bool keepRichterRoom = (mapX == 32 && mapY == 8) || (mapX == 33 && mapY == 8);
-			if (gameApi.InAlucardMode() && gameApi.CanMenu() && alucardApi.CurrentHp > 3 && !gameApi.CanSave() && !keepRichterRoom)
+			bool keepRichterRoom = ((mapX >= 31 && mapX <= 34) && mapY == 8);
+			if (gameApi.InAlucardMode() && gameApi.CanMenu() && alucardApi.CurrentHp > 0 && !gameApi.CanSave() && !keepRichterRoom)
 			{
 				if (queuedFastActions.Count > 0)
 				{
@@ -1314,7 +1314,11 @@ namespace SotnRandoTools.Khaos
 		private void HordeSpawn(Object sender, EventArgs e)
 		{
 			Random rnd = new Random();
-			if (!gameApi.InAlucardMode() || !gameApi.CanMenu() || alucardApi.CurrentHp < 5)
+
+			uint mapX = alucardApi.MapX;
+			uint mapY = alucardApi.MapY;
+			bool keepRichterRoom = ((mapX >= 31 && mapX <= 34) && mapY == 8);
+			if (!gameApi.InAlucardMode() || !gameApi.CanMenu() || alucardApi.CurrentHp > 0 || gameApi.CanSave() || keepRichterRoom)
 			{
 				return;
 			}
@@ -1710,8 +1714,7 @@ namespace SotnRandoTools.Khaos
 		}
 		private void OnBotFileChanged(object sender, FileSystemEventArgs e)
 		{
-			string lastLine = FileExtensions.GetLastLine(toolConfig.Khaos.BotActionsFilePath);
-			EnqueueAction(lastLine);
+			EnqueueAction(FileExtensions.GetLastLine(toolConfig.Khaos.BotActionsFilePath));
 		}
 	}
 }

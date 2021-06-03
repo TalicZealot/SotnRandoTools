@@ -25,6 +25,7 @@ namespace SotnRandoTools.Coop
 		private readonly ICoopMessanger coopMessanger;
 		private Queue<MethodInvoker> queuedMessages = new();
 
+		private bool r3Pressed = false;
 		private bool selectPressed = false;
 		private bool circlePressed = false;
 
@@ -90,9 +91,9 @@ namespace SotnRandoTools.Coop
 
 		private void UpdateSendItem()
 		{
-			if (inputService.ButtonPressed(PlaystationInputKeys.R3, Globals.UpdateCooldownFrames) && selectPressed == false && gameApi.IsInMenu() && gameApi.EquipMenuOpen())
+			if (inputService.ButtonPressed(PlaystationInputKeys.R3, Globals.UpdateCooldownFrames) && r3Pressed == false && gameApi.IsInMenu() && gameApi.EquipMenuOpen())
 			{
-				selectPressed = true;
+				r3Pressed = true;
 				string item = alucardApi.GetSelectedItemName();
 				if (!item.Contains("empty hand") && !item.Contains("-") && alucardApi.HasItemInInventory(item))
 				{
@@ -106,9 +107,9 @@ namespace SotnRandoTools.Coop
 					Console.WriteLine($"Player doesn't have any {item}!");
 				}
 			}
-			else if (!inputService.ButtonPressed(PlaystationInputKeys.Select, Globals.UpdateCooldownFrames))
+			else if (!inputService.ButtonPressed(PlaystationInputKeys.R3, Globals.UpdateCooldownFrames))
 			{
-				selectPressed = false;
+				r3Pressed = false;
 			}
 		}
 

@@ -22,8 +22,9 @@ namespace SotnRandoTools.Utils
 					IEquatable<string> fs = File.ReadLines(fullPath).FirstOrDefault();
 					return true;
 				}
-				catch (IOException)
+				catch (IOException e)
 				{
+					Console.WriteLine(e.Message + "with code: " + e.HResult);
 					Thread.Sleep(50);
 				}
 			}

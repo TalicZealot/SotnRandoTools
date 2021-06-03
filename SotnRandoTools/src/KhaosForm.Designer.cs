@@ -31,6 +31,7 @@ namespace SotnRandoTools
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(KhaosForm));
             this.controlBox = new System.Windows.Forms.GroupBox();
+            this.enduranceButton = new System.Windows.Forms.Button();
             this.hasteButton = new System.Windows.Forms.Button();
             this.subsonlyButton = new System.Windows.Forms.Button();
             this.hordeButton = new System.Windows.Forms.Button();
@@ -60,7 +61,6 @@ namespace SotnRandoTools
             this.randomEquipmentButton = new System.Windows.Forms.Button();
             this.randomStatusButton = new System.Windows.Forms.Button();
             this.startButton = new System.Windows.Forms.Button();
-            this.enduranceButton = new System.Windows.Forms.Button();
             this.controlBox.SuspendLayout();
             this.modePanel.SuspendLayout();
             this.SuspendLayout();
@@ -103,6 +103,21 @@ namespace SotnRandoTools
             this.controlBox.TabIndex = 0;
             this.controlBox.TabStop = false;
             this.controlBox.Text = "Manual Control Panel";
+            // 
+            // enduranceButton
+            // 
+            this.enduranceButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
+            this.enduranceButton.FlatAppearance.BorderSize = 2;
+            this.enduranceButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
+            this.enduranceButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
+            this.enduranceButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.enduranceButton.Location = new System.Drawing.Point(146, 385);
+            this.enduranceButton.Name = "enduranceButton";
+            this.enduranceButton.Size = new System.Drawing.Size(134, 26);
+            this.enduranceButton.TabIndex = 26;
+            this.enduranceButton.Text = "Endurance";
+            this.enduranceButton.UseVisualStyleBackColor = true;
+            this.enduranceButton.Click += new System.EventHandler(this.enduranceButton_Click);
             // 
             // hasteButton
             // 
@@ -530,23 +545,10 @@ namespace SotnRandoTools
             this.startButton.UseVisualStyleBackColor = true;
             this.startButton.Click += new System.EventHandler(this.startButton_Click);
             // 
-            // enduranceButton
-            // 
-            this.enduranceButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
-            this.enduranceButton.FlatAppearance.BorderSize = 2;
-            this.enduranceButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
-            this.enduranceButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
-            this.enduranceButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.enduranceButton.Location = new System.Drawing.Point(146, 385);
-            this.enduranceButton.Name = "enduranceButton";
-            this.enduranceButton.Size = new System.Drawing.Size(134, 26);
-            this.enduranceButton.TabIndex = 26;
-            this.enduranceButton.Text = "Endurance";
-            this.enduranceButton.UseVisualStyleBackColor = true;
-            this.enduranceButton.Click += new System.EventHandler(this.enduranceButton_Click);
-            // 
             // KhaosForm
             // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
             this.ClientSize = new System.Drawing.Size(450, 498);
             this.Controls.Add(this.startButton);
@@ -558,6 +560,7 @@ namespace SotnRandoTools
             this.Name = "KhaosForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Khaos";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.KhaosForm_FormClosing);
             this.Load += new System.EventHandler(this.Khaos_Load);
             this.Move += new System.EventHandler(this.KhaosForm_Move);
             this.controlBox.ResumeLayout(false);
