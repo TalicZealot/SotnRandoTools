@@ -1318,7 +1318,7 @@ namespace SotnRandoTools.Khaos
 			uint mapX = alucardApi.MapX;
 			uint mapY = alucardApi.MapY;
 			bool keepRichterRoom = ((mapX >= 31 && mapX <= 34) && mapY == 8);
-			if (!gameApi.InAlucardMode() || !gameApi.CanMenu() || alucardApi.CurrentHp > 0 || gameApi.CanSave() || keepRichterRoom)
+			if (!gameApi.InAlucardMode() || !gameApi.CanMenu() || alucardApi.CurrentHp < 5 || gameApi.CanSave() || keepRichterRoom)
 			{
 				return;
 			}

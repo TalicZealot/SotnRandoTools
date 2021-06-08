@@ -41,12 +41,17 @@ namespace SotnRandoTools
             this.windowGroup = new System.Windows.Forms.GroupBox();
             this.alwaysOnTopCheckBox = new System.Windows.Forms.CheckBox();
             this.optionsGroup = new System.Windows.Forms.GroupBox();
-            this.locationsCheckbox = new System.Windows.Forms.CheckBox();
             this.replaysCheckBox = new System.Windows.Forms.CheckBox();
+            this.locationsCheckbox = new System.Windows.Forms.CheckBox();
+            this.customSeedGroup = new System.Windows.Forms.GroupBox();
+            this.customLocationsGuardedRadio = new System.Windows.Forms.RadioButton();
+            this.customLocationsEquipmentRadio = new System.Windows.Forms.RadioButton();
+            this.customLocationsClassicRadio = new System.Windows.Forms.RadioButton();
             this.relicDisplayGroup.SuspendLayout();
             this.layoutGroup.SuspendLayout();
             this.windowGroup.SuspendLayout();
             this.optionsGroup.SuspendLayout();
+            this.customSeedGroup.SuspendLayout();
             this.SuspendLayout();
             // 
             // autotrackerPanelTitle
@@ -189,17 +194,6 @@ namespace SotnRandoTools
             this.optionsGroup.TabStop = false;
             this.optionsGroup.Text = "Options";
             // 
-            // locationsCheckbox
-            // 
-            this.locationsCheckbox.AutoSize = true;
-            this.locationsCheckbox.Location = new System.Drawing.Point(6, 21);
-            this.locationsCheckbox.Name = "locationsCheckbox";
-            this.locationsCheckbox.Size = new System.Drawing.Size(97, 17);
-            this.locationsCheckbox.TabIndex = 0;
-            this.locationsCheckbox.Text = "Track locations";
-            this.locationsCheckbox.UseVisualStyleBackColor = true;
-            this.locationsCheckbox.CheckedChanged += new System.EventHandler(this.locationsCheckbox_CheckedChanged);
-            // 
             // replaysCheckBox
             // 
             this.replaysCheckBox.AutoSize = true;
@@ -211,11 +205,72 @@ namespace SotnRandoTools
             this.replaysCheckBox.UseVisualStyleBackColor = true;
             this.replaysCheckBox.CheckedChanged += new System.EventHandler(this.replaysCheckBox_CheckedChanged);
             // 
+            // locationsCheckbox
+            // 
+            this.locationsCheckbox.AutoSize = true;
+            this.locationsCheckbox.Location = new System.Drawing.Point(6, 21);
+            this.locationsCheckbox.Name = "locationsCheckbox";
+            this.locationsCheckbox.Size = new System.Drawing.Size(97, 17);
+            this.locationsCheckbox.TabIndex = 0;
+            this.locationsCheckbox.Text = "Track locations";
+            this.locationsCheckbox.UseVisualStyleBackColor = true;
+            this.locationsCheckbox.CheckedChanged += new System.EventHandler(this.locationsCheckbox_CheckedChanged);
+            // 
+            // customSeedGroup
+            // 
+            this.customSeedGroup.Controls.Add(this.customLocationsClassicRadio);
+            this.customSeedGroup.Controls.Add(this.customLocationsEquipmentRadio);
+            this.customSeedGroup.Controls.Add(this.customLocationsGuardedRadio);
+            this.customSeedGroup.ForeColor = System.Drawing.Color.White;
+            this.customSeedGroup.Location = new System.Drawing.Point(206, 149);
+            this.customSeedGroup.Name = "customSeedGroup";
+            this.customSeedGroup.Size = new System.Drawing.Size(182, 96);
+            this.customSeedGroup.TabIndex = 7;
+            this.customSeedGroup.TabStop = false;
+            this.customSeedGroup.Text = "Custom Seed Locations";
+            // 
+            // customLocationsGuardedRadio
+            // 
+            this.customLocationsGuardedRadio.AutoSize = true;
+            this.customLocationsGuardedRadio.Location = new System.Drawing.Point(6, 20);
+            this.customLocationsGuardedRadio.Name = "customLocationsGuardedRadio";
+            this.customLocationsGuardedRadio.Size = new System.Drawing.Size(66, 17);
+            this.customLocationsGuardedRadio.TabIndex = 1;
+            this.customLocationsGuardedRadio.TabStop = true;
+            this.customLocationsGuardedRadio.Text = "Guarded";
+            this.customLocationsGuardedRadio.UseVisualStyleBackColor = true;
+            this.customLocationsGuardedRadio.CheckedChanged += new System.EventHandler(this.customLocationsGuardedRadio_CheckedChanged);
+            // 
+            // customLocationsEquipmentRadio
+            // 
+            this.customLocationsEquipmentRadio.AutoSize = true;
+            this.customLocationsEquipmentRadio.Location = new System.Drawing.Point(6, 43);
+            this.customLocationsEquipmentRadio.Name = "customLocationsEquipmentRadio";
+            this.customLocationsEquipmentRadio.Size = new System.Drawing.Size(75, 17);
+            this.customLocationsEquipmentRadio.TabIndex = 2;
+            this.customLocationsEquipmentRadio.TabStop = true;
+            this.customLocationsEquipmentRadio.Text = "Equipment";
+            this.customLocationsEquipmentRadio.UseVisualStyleBackColor = true;
+            this.customLocationsEquipmentRadio.CheckedChanged += new System.EventHandler(this.customLocationsEquipmentRadio_CheckedChanged);
+            // 
+            // customLocationsClassicRadio
+            // 
+            this.customLocationsClassicRadio.AutoSize = true;
+            this.customLocationsClassicRadio.Location = new System.Drawing.Point(6, 66);
+            this.customLocationsClassicRadio.Name = "customLocationsClassicRadio";
+            this.customLocationsClassicRadio.Size = new System.Drawing.Size(57, 17);
+            this.customLocationsClassicRadio.TabIndex = 3;
+            this.customLocationsClassicRadio.TabStop = true;
+            this.customLocationsClassicRadio.Text = "Classic";
+            this.customLocationsClassicRadio.UseVisualStyleBackColor = true;
+            this.customLocationsClassicRadio.CheckedChanged += new System.EventHandler(this.customLocationsClassicRadio_CheckedChanged);
+            // 
             // AutotrackerSettingsPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
+            this.Controls.Add(this.customSeedGroup);
             this.Controls.Add(this.optionsGroup);
             this.Controls.Add(this.windowGroup);
             this.Controls.Add(this.layoutGroup);
@@ -236,6 +291,8 @@ namespace SotnRandoTools
             this.windowGroup.PerformLayout();
             this.optionsGroup.ResumeLayout(false);
             this.optionsGroup.PerformLayout();
+            this.customSeedGroup.ResumeLayout(false);
+            this.customSeedGroup.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -257,5 +314,9 @@ namespace SotnRandoTools
 		private System.Windows.Forms.GroupBox optionsGroup;
 		private System.Windows.Forms.CheckBox locationsCheckbox;
 		private System.Windows.Forms.CheckBox replaysCheckBox;
+		private System.Windows.Forms.GroupBox customSeedGroup;
+		private System.Windows.Forms.RadioButton customLocationsClassicRadio;
+		private System.Windows.Forms.RadioButton customLocationsEquipmentRadio;
+		private System.Windows.Forms.RadioButton customLocationsGuardedRadio;
 	}
 }

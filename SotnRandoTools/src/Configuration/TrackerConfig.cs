@@ -11,6 +11,9 @@ namespace SotnRandoTools.Configuration
 			AlwaysOnTop = false;
 			Locations = true;
 			SaveReplays = true;
+			CustomLocationsGuarded = true;
+			CustomLocationsEquipment = false;
+			CustomLocationsClassic = false;
 			Width = 300;
 			Height = 470;
 		}
@@ -19,6 +22,9 @@ namespace SotnRandoTools.Configuration
 		public bool AlwaysOnTop { get; set; }
 		public bool Locations { get; set; }
 		public bool SaveReplays { get; set; }
+		public bool CustomLocationsGuarded { get; set; }
+		public bool CustomLocationsEquipment { get; set; }
+		public bool CustomLocationsClassic { get; set; }
 		public int Width { get; set; }
 		public int Height { get; set; }
 		public Point Location { get; set; }

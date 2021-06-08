@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 using SotnRandoTools.Constants;
 using SotnRandoTools.Utils;
@@ -45,6 +46,7 @@ namespace SotnRandoTools
 
 		private void updateButton_Click(object sender, EventArgs e)
 		{
+			//handled in main form
 			if (this.UpdateButton_Click != null)
 				this.UpdateButton_Click(this, e);
 		}
@@ -87,8 +89,9 @@ namespace SotnRandoTools
 
 		private void patchNotesLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
+			string path = Directory.GetCurrentDirectory();
 			patchNotesLink.LinkVisited = true;
-			Process.Start(Paths.LatestReleaseUrl);
+			Process.Start(path + Paths.ChangeLogPath);
 		}
 	}
 }

@@ -203,7 +203,6 @@ namespace SotnRandoTools.RandoTracker
 		private bool gameReset = true;
 		private bool secondCastle = false;
 		private bool restarted = false;
-		private int cooldown = 0;
 		private MapLocation room = new MapLocation { X = 0, Y = 0};
 		private List<string> replay = new();
 
@@ -253,7 +252,7 @@ namespace SotnRandoTools.RandoTracker
 			if (gameApi.InAlucardMode())
 			{
 				restarted = false;
-				cooldown++;
+				SaveReplayLine();
 
 				if (updatedSecondCastle != secondCastle && toolConfig.Tracker.Locations)
 				{
@@ -278,11 +277,6 @@ namespace SotnRandoTools.RandoTracker
 				{
 					SetMapLocations();
 				}
-				if (cooldown == 50)
-				{
-					cooldown = 0;
-					SaveReplayLine();
-				}
 			}
 			else if (!inGame)
 			{
@@ -293,17 +287,6 @@ namespace SotnRandoTools.RandoTracker
 				ResetToDefaults();
 				DrawRelicsAndItems();
 				restarted = true;
-			}
-		}
-
-		public void SaveReplay()
-		{
-			using (StreamWriter w = File.AppendText(Paths.ReplaysPath + SeedInfo + ".txt"))
-			{
-				foreach (var line in replay)
-				{
-					w.WriteLine(line);
-				}
 			}
 		}
 
@@ -481,6 +464,7 @@ namespace SotnRandoTools.RandoTracker
 		}
 
 		private void getSeedData()
+
 		{
 			string seedName = gameApi.ReadSeedName();
 			preset = gameApi.ReadPresetName();
@@ -494,29 +478,37 @@ namespace SotnRandoTools.RandoTracker
 			{
 				case "adventure":
 					equipmentExtension = true;
-					relics.Where(x => x.Name == "CubeOfZoe").FirstOrDefault().Progression = true;
-					relics.Where(x => x.Name == "DemonCard").FirstOrDefault().Progression = true;
-					relics.Where(x => x.Name == "NoseDevilCard").FirstOrDefault().Progression = true;
-					GraphicsEngine.SetProgression();
-					GraphicsEngine.CalculateGrid(toolConfig.Tracker.Width, toolConfig.Tracker.Height);
-					GraphicsEngine.Render();
+					SetEquipmentProgression();
 					break;
 				case "glitch":
 					equipmentExtension = true;
-					relics.Where(x => x.Name == "CubeOfZoe").FirstOrDefault().Progression = true;
-					relics.Where(x => x.Name == "DemonCard").FirstOrDefault().Progression = true;
-					relics.Where(x => x.Name == "NoseDevilCard").FirstOrDefault().Progression = true;
 					relics[25].Progression = false;
-					GraphicsEngine.SetProgression();
-					GraphicsEngine.CalculateGrid(toolConfig.Tracker.Width, toolConfig.Tracker.Height);
-					GraphicsEngine.Render();
+					SetEquipmentProgression();
 					break;
 				case "og":
 					guardedExtension = false;
 					break;
+				case "custom":
+					guardedExtension = toolConfig.Tracker.CustomLocationsGuarded;
+					equipmentExtension = toolConfig.Tracker.CustomLocationsEquipment;
+					if (equipmentExtension)
+					{
+						SetEquipmentProgression();
+					}
+					break;
 				default:
 					break;
 			}
+		}
+
+		private void SetEquipmentProgression()
+		{
+			relics.Where(x => x.Name == "CubeOfZoe").FirstOrDefault().Progression = true;
+			relics.Where(x => x.Name == "DemonCard").FirstOrDefault().Progression = true;
+			relics.Where(x => x.Name == "NoseDevilCard").FirstOrDefault().Progression = true;
+			GraphicsEngine.SetProgression();
+			GraphicsEngine.CalculateGrid(toolConfig.Tracker.Width, toolConfig.Tracker.Height);
+			GraphicsEngine.Render();
 		}
 
 		private void SetMapLocations()
@@ -737,20 +729,56 @@ namespace SotnRandoTools.RandoTracker
 		{
 			int currentMapX = (int) alucardApi.MapX;
 			int currentMapY = (int) alucardApi.MapY;
-			if (room.X != currentMapX || room.Y != currentMapY)
+
+			if (currentMapY == 44 && currentMapX < 19)
+			{
+				return;
+			}
+
+			if (currentMapX < 2 && currentMapY < 3)
+			{
+				return;
+			}
+
+			if (room.X != currentMapX || room.Y != currentMapY && currentMapX < 200)
 			{
 				room.X = currentMapX;
 				room.Y = currentMapY;
 				string line = $"{room.X}:{room.Y}";
+				line += secondCastle ? ":1" : ":0";
 				foreach (var relic in relics)
 				{
-					line += ":" + (relic.Status ? "1" : 0);
+					line += ":" + (relic.Status ? 1 : 0);
 				}
 				foreach (var item in progressionItems)
 				{
-					line += ":" + (item.Status ? "1" : 0);
+					line += ":" + (item.Status ? 1 : 0);
 				}
 				replay.Add(line);
+			}
+		}
+
+		public void SaveReplay()
+		{
+			if (replay.Count < 10)
+			{
+				return;
+			}
+
+			string replayPath = Paths.ReplaysPath + SeedInfo + ".sotnr";
+			int version = 2;
+			while (File.Exists(replayPath))
+			{
+				replayPath = Paths.ReplaysPath + SeedInfo + "(" + version + ")" + ".sotnr";
+				version++;
+			}
+
+			using (StreamWriter w = File.AppendText(replayPath))
+			{
+				foreach (var line in replay)
+				{
+					w.WriteLine(line);
+				}
 			}
 		}
 	}

@@ -41,6 +41,7 @@
 
 		public const string LogsPath = "./ExternalTools/SotnRandoTools/Logs/";
 		public const string ReplaysPath = "./ExternalTools/SotnRandoTools/Replays/";
+		public const string ChangeLogPath = @"\ExternalTools\SotnRandoTools\ChangeLog.txt";
 
 		public const string CasualPresetPath = "./ExternalTools/SotnRandoTools/Presets/casual.json";
 		public const string SafePresetPath = "./ExternalTools/SotnRandoTools/Presets/safe.json";
