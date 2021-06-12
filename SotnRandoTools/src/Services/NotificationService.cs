@@ -94,7 +94,6 @@ namespace SotnRandoTools.Services
 		public void AddAction(ActionType action)
 		{
 			actionQueue.Add(action);
-			DrawUI();
 		}
 
 		public void AddMessage(string message)

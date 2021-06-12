@@ -203,8 +203,7 @@ namespace SotnRandoTools.RandoTracker
 		private bool gameReset = true;
 		private bool secondCastle = false;
 		private bool restarted = false;
-		private MapLocation room = new MapLocation { X = 0, Y = 0};
-		private List<string> replay = new();
+		private List<MapLocation> replay = new();
 
 		public Tracker(IGraphics? formGraphics, IToolConfig toolConfig, IWatchlistService watchlistService, IRenderingApi renderingApi, IGameApi gameApi, IAlucardApi alucardApi)
 		{
@@ -730,32 +729,59 @@ namespace SotnRandoTools.RandoTracker
 			int currentMapX = (int) alucardApi.MapX;
 			int currentMapY = (int) alucardApi.MapY;
 
-			if (currentMapY == 44 && currentMapX < 19)
+			if ((currentMapY == 44 && currentMapX < 19) || (currentMapX < 2 && currentMapY < 3) || currentMapX > 200 || currentMapY > 200)
 			{
 				return;
 			}
 
-			if (currentMapX < 2 && currentMapY < 3)
+			if (replay.Count == 0 || (replay[replay.Count - 1].X != currentMapX || replay[replay.Count - 1].Y != currentMapY))
 			{
-				return;
+				replay.Add(new MapLocation { X = currentMapX, Y = currentMapY });
 			}
 
-			if (room.X != currentMapX || room.Y != currentMapY && currentMapX < 200)
+			var room = replay[replay.Count - 1];
+			room.Time++;
+			room.SecondCastle = secondCastle ? 1 : 0;
+			room.Relics = EncodeRelics();
+			room.ProgressionItems = EncodeItems();
+		}
+
+		private int EncodeItems()
+		{
+			int itemsNumber = 0;
+			for (int i = 0; i < progressionItems.Count + 1; i++)
 			{
-				room.X = currentMapX;
-				room.Y = currentMapY;
-				string line = $"{room.X}:{room.Y}";
-				line += secondCastle ? ":1" : ":0";
-				foreach (var relic in relics)
+				if (i < progressionItems.Count && progressionItems[i].Status)
 				{
-					line += ":" + (relic.Status ? 1 : 0);
+					itemsNumber |= (int) Math.Pow(2, i);
 				}
-				foreach (var item in progressionItems)
+				else
 				{
-					line += ":" + (item.Status ? 1 : 0);
+					foreach (var sword in thrustSwords)
+					{
+						if (sword.Status)
+						{
+							itemsNumber |= (int) Math.Pow(2, i);
+							break;
+						}
+					}
 				}
-				replay.Add(line);
 			}
+
+			return itemsNumber;
+		}
+
+		private int EncodeRelics()
+		{
+			int relicsNumber = 0;
+			for (int i = 0; i < relics.Count; i++)
+			{
+				if (relics[i].Status)
+				{
+					relicsNumber |= (int) Math.Pow(2, i);
+				}
+			}
+			return relicsNumber;
 		}
 
 		public void SaveReplay()
@@ -775,8 +801,9 @@ namespace SotnRandoTools.RandoTracker
 
 			using (StreamWriter w = File.AppendText(replayPath))
 			{
-				foreach (var line in replay)
+				foreach (var room in replay)
 				{
+					string line = $"{room.X}:{room.Y}:{Math.Ceiling((double)(room.Time / 10))}:{room.SecondCastle}:{room.Relics}:{room.ProgressionItems}";
 					w.WriteLine(line);
 				}
 			}

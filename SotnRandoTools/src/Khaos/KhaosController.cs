@@ -1333,7 +1333,7 @@ namespace SotnRandoTools.Khaos
 				{
 					bannedEnemies.Add(new Actor(actorApi.GetActor(bannedEnemy)));
 				}
-				long enemy = actorApi.FindEnemy(1, gameApi.SecondCastle ? 100 : 30, new int[] { 26, 16, 18, 22, 100, 550, 80});
+				long enemy = actorApi.FindEnemy(1, gameApi.SecondCastle ? 100 : 30, new int[] { 26, 16, 18, 22, 100, 550, 80, 88});
 				if (enemy > 0)
 				{
 					hordeEnemy = new Actor(actorApi.GetActor(enemy));
