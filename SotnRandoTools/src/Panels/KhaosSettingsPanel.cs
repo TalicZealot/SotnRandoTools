@@ -130,7 +130,7 @@ namespace SotnRandoTools
 			string boxText = crippleTextBox.Text.Replace("%", "");
 			int cripplePercentage;
 			bool result = Int32.TryParse(boxText, out cripplePercentage);
-			if (!result)
+			if (!result || cripplePercentage < 0 || cripplePercentage > 90)
 			{
 				this.crippleTextBox.Text = "";
 				this.crippleTextBox.BackColor = Color.Red;
@@ -159,7 +159,7 @@ namespace SotnRandoTools
 			string boxText = hasteTextBox.Text.Replace("%", "");
 			int hastePercentage;
 			bool result = Int32.TryParse(boxText, out hastePercentage);
-			if (!result)
+			if (!result || hastePercentage < 100 || hastePercentage > 1000)
 			{
 				this.hasteTextBox.Text = "";
 				this.hasteTextBox.BackColor = Color.Red;
@@ -188,7 +188,7 @@ namespace SotnRandoTools
 			string boxText = weakenTextBox.Text.Replace("%", "");
 			int weakenPercentage;
 			bool result = Int32.TryParse(boxText, out weakenPercentage);
-			if (!result)
+			if (!result || weakenPercentage < 10 || weakenPercentage > 90)
 			{
 				this.weakenTextBox.Text = "";
 				this.weakenTextBox.BackColor = Color.Red;
@@ -215,7 +215,7 @@ namespace SotnRandoTools
 		{
 			int thirstDrain;
 			bool result = Int32.TryParse(thirstTextBox.Text, out thirstDrain);
-			if (!result)
+			if (!result || thirstDrain < 1 || thirstDrain > 100)
 			{
 				this.thirstTextBox.Text = "";
 				this.thirstTextBox.BackColor = Color.Red;
@@ -242,7 +242,7 @@ namespace SotnRandoTools
 		{
 			int pandoraMinItems;
 			bool result = Int32.TryParse(pandoraMinTextBox.Text, out pandoraMinItems);
-			if (!result && pandoraMinItems > 0)
+			if (!result || pandoraMinItems < 0 || pandoraMinItems > 100)
 			{
 				this.pandoraMinTextBox.Text = "";
 				this.pandoraMinTextBox.BackColor = Color.Red;
@@ -269,7 +269,7 @@ namespace SotnRandoTools
 		{
 			int pandoraMaxItems;
 			bool result = Int32.TryParse(pandoraMaxTextBox.Text, out pandoraMaxItems);
-			if (!result && pandoraMaxItems < 257)
+			if (!result || pandoraMaxItems < 1 || pandoraMaxItems > 100)
 			{
 				this.pandoraMaxTextBox.Text = "";
 				this.pandoraMaxTextBox.BackColor = Color.Red;
@@ -295,8 +295,10 @@ namespace SotnRandoTools
 		private void queueTextBox_Validating(object sender, System.ComponentModel.CancelEventArgs e)
 		{
 			TimeSpan queueInterval;
+			TimeSpan minSpan = new TimeSpan(0, 0, 1);
+			TimeSpan maxSpan = new TimeSpan(0, 10, 0);
 			bool result = TimeSpan.TryParse(queueTextBox.Text, out queueInterval);
-			if (!result)
+			if (!result || queueInterval < minSpan || queueInterval > maxSpan)
 			{
 				this.queueTextBox.Text = "";
 				this.queueTextBox.BackColor = Color.Red;

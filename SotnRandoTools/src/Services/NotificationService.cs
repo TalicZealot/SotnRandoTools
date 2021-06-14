@@ -9,6 +9,7 @@ using BizHawk.Client.Common;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Constants;
 using SotnRandoTools.Khaos.Enums;
+using SotnRandoTools.Khaos.Models;
 using SotnRandoTools.Services.Models;
 
 namespace SotnRandoTools.Services
@@ -30,7 +31,6 @@ namespace SotnRandoTools.Services
 		private Image iconEye;
 		private System.Windows.Media.MediaPlayer audioPlayer = new();
 		private List<string> messageQueue = new();
-		private List<ActionType> actionQueue = new();
 		private List<ActionTimer> actionTimers = new();
 		private bool cleared = false;
 
@@ -56,6 +56,7 @@ namespace SotnRandoTools.Services
 			iconFairy = Image.FromFile(Paths.IconFairy);
 			iconEye = Image.FromFile(Paths.IconEye);
 			audioPlayer.Volume = (double) toolConfig.Khaos.Volume / 10F;
+			ActionQueue = new();
 		}
 
 		public double Volume
@@ -65,6 +66,8 @@ namespace SotnRandoTools.Services
 				audioPlayer.Volume = value;
 			}
 		}
+
+		public List<QueuedAction> ActionQueue { get; set; }
 
 		public void PlayAlert(string url)
 		{
@@ -91,11 +94,6 @@ namespace SotnRandoTools.Services
 			}
 		}
 
-		public void AddAction(ActionType action)
-		{
-			actionQueue.Add(action);
-		}
-
 		public void AddMessage(string message)
 		{
 			messageQueue.Add(message);
@@ -114,14 +112,6 @@ namespace SotnRandoTools.Services
 			}
 		}
 
-		public void DequeueAction()
-		{
-			if (actionQueue.Count > 0)
-			{
-				actionQueue.RemoveAt(0);
-			}
-		}
-
 		public void AddTimer(ActionTimer timer)
 		{
 			actionTimers.Add(timer);
@@ -129,7 +119,7 @@ namespace SotnRandoTools.Services
 
 		private void DrawUI()
 		{
-			if (actionQueue.Count == 0 && actionTimers.Count == 0 && messageQueue.Count == 0)
+			if (ActionQueue.Count == 0 && actionTimers.Count == 0 && messageQueue.Count == 0)
 			{
 				if (!cleared)
 				{
@@ -141,6 +131,7 @@ namespace SotnRandoTools.Services
 				cleared = true;
 				return;
 			}
+
 			cleared = false;
 			int bufferWidth = clientAPI.BufferWidth();
 			int scale = clientAPI.GetWindowSize();
@@ -195,14 +186,14 @@ namespace SotnRandoTools.Services
 
 		private void DrawQueue(int scale, Image scaledIconSkull, Image scaledIconFairy, Image scaledIconEye, int xpos, int ypos, ref int col, ref int row)
 		{
-			foreach (var action in actionQueue)
+			foreach (var action in ActionQueue)
 			{
 				if (col > 8)
 				{
 					col = 0;
 					row++;
 				}
-				switch (action)
+				switch (action.Type)
 				{
 					case ActionType.Khaotic:
 						guiApi.DrawImage(scaledIconEye, xpos + (col * scaledIconEye.Width) + (1 * scale), ypos + (row * scaledIconEye.Height) + (1 * scale), scaledIconEye.Width, scaledIconEye.Height, true);

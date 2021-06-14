@@ -203,6 +203,7 @@ namespace SotnRandoTools.RandoTracker
 		private bool gameReset = true;
 		private bool secondCastle = false;
 		private bool restarted = false;
+		private bool relicOrItemCollected = false;
 		private List<MapLocation> replay = new();
 
 		public Tracker(IGraphics? formGraphics, IToolConfig toolConfig, IWatchlistService watchlistService, IRenderingApi renderingApi, IGameApi gameApi, IAlucardApi alucardApi)
@@ -247,11 +248,11 @@ namespace SotnRandoTools.RandoTracker
 
 			bool inGame = gameApi.Status == Status.InGame;
 			bool updatedSecondCastle = gameApi.SecondCastle;
+			relicOrItemCollected = false;
 
 			if (gameApi.InAlucardMode())
 			{
 				restarted = false;
-				SaveReplayLine();
 
 				if (updatedSecondCastle != secondCastle && toolConfig.Tracker.Locations)
 				{
@@ -262,6 +263,7 @@ namespace SotnRandoTools.RandoTracker
 				UpdateRelics();
 				UpdateProgressionItems();
 				UpdateThrustSwords();
+				SaveReplayLine();
 
 				if (toolConfig.Tracker.Locations)
 				{
@@ -382,6 +384,7 @@ namespace SotnRandoTools.RandoTracker
 					if (watchlistService.RelicWatches[i].Value > 0)
 					{
 						relics[i].Status = true;
+						relicOrItemCollected = true;
 					}
 					else
 					{
@@ -407,6 +410,7 @@ namespace SotnRandoTools.RandoTracker
 					if (watchlistService.ProgressionItemWatches[i].Value > 0)
 					{
 						progressionItems[i].Status = true;
+						relicOrItemCollected = true;
 					}
 					else
 					{
@@ -447,6 +451,7 @@ namespace SotnRandoTools.RandoTracker
 					if (watchlistService.ThrustSwordWatches[i].Value > 0)
 					{
 						thrustSwords[i].Status = true;
+						relicOrItemCollected = true;
 					}
 					else
 					{
@@ -736,14 +741,24 @@ namespace SotnRandoTools.RandoTracker
 
 			if (replay.Count == 0 || (replay[replay.Count - 1].X != currentMapX || replay[replay.Count - 1].Y != currentMapY))
 			{
-				replay.Add(new MapLocation { X = currentMapX, Y = currentMapY });
+				if (replay.Count == 0)
+				{
+					replay.Add(new MapLocation { X = currentMapX, Y = currentMapY, Relics = 0, ProgressionItems = 0 });
+				}
+				else
+				{
+					replay.Add(new MapLocation { X = currentMapX, Y = currentMapY, Relics = replay[replay.Count - 1].Relics, ProgressionItems = replay[replay.Count - 1].ProgressionItems });
+				}
 			}
 
 			var room = replay[replay.Count - 1];
 			room.Time++;
 			room.SecondCastle = secondCastle ? 1 : 0;
-			room.Relics = EncodeRelics();
-			room.ProgressionItems = EncodeItems();
+			if (relicOrItemCollected)
+			{
+				room.Relics = EncodeRelics();
+				room.ProgressionItems = EncodeItems();
+			}
 		}
 
 		private int EncodeItems()

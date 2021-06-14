@@ -12,6 +12,8 @@ using SotnApi.Interfaces;
 using SotnApi.Models;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Constants;
+using SotnRandoTools.Khaos.Enums;
+using SotnRandoTools.Khaos.Models;
 using SotnRandoTools.Services;
 using SotnRandoTools.Services.Adapters;
 using SotnRandoTools.Utils;
@@ -148,7 +150,7 @@ namespace SotnRandoTools.Khaos
 		{
 		};
 
-		private Queue<MethodInvoker> queuedActions = new();
+		private List<QueuedAction> queuedActions = new();
 		private Queue<MethodInvoker> queuedFastActions = new();
 		private Timer actionTimer = new Timer();
 		private Timer fastActionTimer = new Timer();
@@ -179,16 +181,70 @@ namespace SotnRandoTools.Khaos
 		private uint enduranceRoomX = 0;
 		private uint enduranceRoomY = 0;
 		private List<Actor> bannedBosses = new();
-		private Actor? hordeEnemy = null;
+		private List<Actor> hordeEnemies = new();
 		private List<Actor> bannedEnemies = new();
+		private List<int> bannedHordeEnemies = new List<int> { 26, 16, 18, 22, 100, 550, 80, 88 };
+		private List<SearchableActor> allowedHordeEnemies = new List<SearchableActor>
+		{
+#region Entrance
+			new SearchableActor { Hp = 1, Sprite = 25776 , Damage = 14},  //Zombie
+			new SearchableActor { Hp = 1, Sprite = 25188 , Damage = 16},  //Bat
+			new SearchableActor { Hp = 10, Sprite = 19232 , Damage = 13}, //Merman
+			new SearchableActor { Hp = 10, Sprite = 11852 , Damage = 14}, //Merman2
+#endregion
+#region AlchemyLab
+			new SearchableActor { Hp = 9, Sprite = 24516 , Damage = 2},   //Skeleton
+			new SearchableActor { Hp = 9, Sprite = 31064 , Damage = 8},   //Red Skeleton
+			new SearchableActor { Hp = 24, Sprite = 21864 , Damage = 10}, //Bloody Zombie
+			#endregion
+#region MarbleGallery
+			new SearchableActor { Hp = 20, Sprite = 48588 , Damage = 4},  //Table
+			new SearchableActor { Hp = 12, Sprite = 30320 , Damage = 5},  //Slinger
+			new SearchableActor { Hp = 20, Sprite = 26360 , Damage = 8},  //Marionette
+			new SearchableActor { Hp = 11, Sprite = 51080 , Damage = 9},  //Fleaman
+			#endregion
+#region OuterWall
+			new SearchableActor { Hp = 20, Sprite = 14964 , Damage = 12}, //Spear Guard
+			new SearchableActor { Hp = 10, Sprite = 1432 , Damage = 12},  //Skeleton Archer
+			new SearchableActor { Hp = 12, Sprite = 22572 , Damage = 12}, //Medusa Head
+			new SearchableActor { Hp = 24, Sprite = 60200 , Damage = 12}, //Bone Musket
+			new SearchableActor { Hp = 9, Sprite = 54896 , Damage = 2},   //Skeleton
+			#endregion
+#region Library
+			new SearchableActor { Hp = 11, Sprite = 772 , Damage = 9},    //Fleaman
+			new SearchableActor { Hp = 12, Sprite = 56172 , Damage = 10}, //Thornweed
+#endregion
+#region ClockTower
+
+#endregion
+#region Keep
+
+#endregion
+#region Olrox
+
+#endregion
+#region Colosseum
+
+#endregion
+#region Caverns
+
+#endregion
+#region Mines
+
+#endregion
+#region Catacombs
+
+#endregion
+		};
 		private uint storedMana = 0;
 		private int spentMana = 0;
+		private bool speedLocked = false;
+		private bool manaLocked = false;
+		private bool invincibilityLocked = false;
 		private bool bloodManaActive = false;
 		private bool hasteActive = false;
 		private bool hasteSpeedOn = false;
 		private bool overdriveOn = false;
-		private bool crippleActive = false;
-		private Queue<MethodInvoker> speedActions = new();
 
 		private FileSystemWatcher botFileWatcher = new FileSystemWatcher();
 
@@ -221,6 +277,7 @@ namespace SotnRandoTools.Khaos
 			}
 
 			InitializeTimers();
+			notificationService.ActionQueue = queuedActions;
 		}
 
 		public void StartKhaos()
@@ -306,21 +363,18 @@ namespace SotnRandoTools.Khaos
 		{
 			RandomizeEquipmentSlots();
 			notificationService.AddMessage($"{user} used Khaos Equipment");
-			notificationService.DequeueAction();
 			Alert("Khaos Equipment");
 		}
 		public void KhaosStats(string user = "Khaos")
 		{
 			RandomizeStatsActivate();
 			notificationService.AddMessage($"{user} used Khaos Stats");
-			notificationService.DequeueAction();
 			Alert("Khaos Stats");
 		}
 		public void KhaosRelics(string user = "Khaos")
 		{
 			RandomizeRelicsActivate();
 			notificationService.AddMessage($"{user} used Khaos Relics");
-			notificationService.DequeueAction();
 			Alert("Khaos Relics");
 		}
 		public void PandorasBox(string user = "Khaos")
@@ -333,7 +387,6 @@ namespace SotnRandoTools.Khaos
 			RandomizeSubweapon();
 			gameApi.RespawnBosses();
 			notificationService.AddMessage($"{user} opened Pandora's Box");
-			notificationService.DequeueAction();
 			Alert("Pandora's Box");
 		}
 		public void Gamble(string user = "Khaos")
@@ -365,7 +418,6 @@ namespace SotnRandoTools.Khaos
 			thirstTickTimer.Start();
 
 			notificationService.AddMessage($"{user} used Thirst");
-			notificationService.DequeueAction();
 			notificationService.AddTimer(new Services.Models.ActionTimer
 			{
 				Name = KhaosActionNames.Thirst,
@@ -404,22 +456,14 @@ namespace SotnRandoTools.Khaos
 			}
 
 			notificationService.AddMessage($"{user} used Weaken");
-			notificationService.DequeueAction();
 			Alert("Weaken");
 		}
 		public void Cripple(string user = "Khaos")
 		{
-			if (crippleActive || hasteActive)
-			{
-				speedActions.Enqueue(new MethodInvoker(() => Cripple(user)));
-				notificationService.AddMessage($"Cripple delayed");
-				return;
-			}
-			crippleActive = true;
+			speedLocked = true;
 			SetSpeed(toolConfig.Khaos.CrippleFactor);
 			crippleTimer.Start();
 			notificationService.AddMessage($"{user} used Cripple");
-			notificationService.DequeueAction();
 			notificationService.AddTimer(new Services.Models.ActionTimer
 			{
 				Name = KhaosActionNames.Cripple,
@@ -434,7 +478,6 @@ namespace SotnRandoTools.Khaos
 			bloodManaActive = true;
 			bloodManaTimer.Start();
 			notificationService.AddMessage($"{user} used Blood Mana");
-			notificationService.DequeueAction();
 			notificationService.AddTimer(new Services.Models.ActionTimer
 			{
 				Name = KhaosActionNames.BloodMana,
@@ -445,13 +488,13 @@ namespace SotnRandoTools.Khaos
 		}
 		public void HonestGamer(string user = "Khaos")
 		{
-			Cheat manaCheat = cheats.GetCheatByName("Mana");
 			alucardApi.TakeRelic(Relic.GasCloud);
+			manaLocked = true;
+			Cheat manaCheat = cheats.GetCheatByName("Mana");
 			manaCheat.PokeValue(5);
 			manaCheat.Enable();
 			honestGamerTimer.Start();
 			notificationService.AddMessage($"{user} used Honest Gamer");
-			notificationService.DequeueAction();
 			notificationService.AddTimer(new Services.Models.ActionTimer
 			{
 				Name = KhaosActionNames.HonestGamer,
@@ -476,12 +519,12 @@ namespace SotnRandoTools.Khaos
 			alucardApi.TakeRelic(Relic.GasCloud);
 			Cheat curse = cheats.GetCheatByName("CurseTimer");
 			curse.Enable();
+			manaLocked = true;
 			Cheat manaCheat = cheats.GetCheatByName("Mana");
 			manaCheat.PokeValue(5);
 			manaCheat.Enable();
 			subweaponsOnlyTimer.Start();
 			notificationService.AddMessage($"{user} used Subweapons Only");
-			notificationService.DequeueAction();
 			notificationService.AddTimer(new Services.Models.ActionTimer
 			{
 				Name = KhaosActionNames.SubweaponsOnly,
@@ -494,7 +537,6 @@ namespace SotnRandoTools.Khaos
 		{
 			BankruptActivate();
 			notificationService.AddMessage($"{user} used Bankrupt");
-			notificationService.DequeueAction();
 			Alert("Bankrupt");
 		}
 		public void RespawnBosses(string user = "Khaos")
@@ -508,7 +550,6 @@ namespace SotnRandoTools.Khaos
 			hordeTimer.Start();
 			hordeSpawnTimer.Start();
 			notificationService.AddMessage($"{user} summoned the Horde");
-			notificationService.DequeueAction();
 			Alert("Khaos Horde");
 		}
 		public void Endurance(string user = "Khaos")
@@ -652,7 +693,6 @@ namespace SotnRandoTools.Khaos
 			alucardApi.CurrentMp = alucardApi.MaxtMp;
 			alucardApi.ActivatePotion(Potion.ShieldPotion);
 			notificationService.AddMessage($"{user} used Battle Orders");
-			notificationService.DequeueAction();
 			Alert("Battle Orders");
 		}
 		public void Magician(string user = "Khaos")
@@ -661,9 +701,9 @@ namespace SotnRandoTools.Khaos
 			Cheat manaCheat = cheats.GetCheatByName("Mana");
 			manaCheat.PokeValue(99);
 			manaCheat.Enable();
+			manaLocked = true;
 			magicianTimer.Start();
 			notificationService.AddMessage($"{user} activated Magician mode");
-			notificationService.DequeueAction();
 			notificationService.AddTimer(new Services.Models.ActionTimer
 			{
 				Name = KhaosActionNames.Magician,
@@ -682,7 +722,6 @@ namespace SotnRandoTools.Khaos
 			zawarudoTimer.Start();
 
 			notificationService.AddMessage($"{user} used ZA WARUDO");
-			notificationService.DequeueAction();
 			notificationService.AddTimer(new Services.Models.ActionTimer
 			{
 				Name = KhaosActionNames.ZaWarudo,
@@ -699,7 +738,6 @@ namespace SotnRandoTools.Khaos
 			height.Enable();
 			meltyTimer.Start();
 			notificationService.AddMessage($"{user} activated Melty Blood");
-			notificationService.DequeueAction();
 			notificationService.AddTimer(new Services.Models.ActionTimer
 			{
 				Name = KhaosActionNames.MeltyBlood,
@@ -713,6 +751,7 @@ namespace SotnRandoTools.Khaos
 			Cheat invincibilityCheat = cheats.GetCheatByName("Invincibility");
 			invincibilityCheat.PokeValue(1);
 			invincibilityCheat.Enable();
+			invincibilityLocked = true;
 			Cheat attackPotionCheat = cheats.GetCheatByName("AttackPotion");
 			attackPotionCheat.PokeValue(1);
 			attackPotionCheat.Enable();
@@ -722,7 +761,6 @@ namespace SotnRandoTools.Khaos
 			fourBeastsTimer.Start();
 
 			notificationService.AddMessage($"{user} used Four Beasts");
-			notificationService.DequeueAction();
 			notificationService.AddTimer(new Services.Models.ActionTimer
 			{
 				Name = KhaosActionNames.FourBeasts,
@@ -733,19 +771,12 @@ namespace SotnRandoTools.Khaos
 		}
 		public void Haste(string user = "Khaos")
 		{
-			if (crippleActive || hasteActive)
-			{
-				speedActions.Enqueue(new MethodInvoker(() => Haste(user)));
-				notificationService.AddMessage($"Haste delayed");
-				return;
-			}
-
 			SetHasteStaticSpeeds();
 			hasteTimer.Start();
 			hasteActive = true;
+			speedLocked = true;
 			Console.WriteLine($"{user} used {KhaosActionNames.Haste}");
 			notificationService.AddMessage($"{user} used {KhaosActionNames.Haste}");
-			notificationService.DequeueAction();
 			notificationService.AddTimer(new Services.Models.ActionTimer
 			{
 				Name = KhaosActionNames.Haste,
@@ -799,32 +830,28 @@ namespace SotnRandoTools.Khaos
 					commandAction = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.KhaosEquipment).FirstOrDefault();
 					if (commandAction is not null && commandAction.Enabled)
 					{
-						queuedActions.Enqueue(new MethodInvoker(() => KhaosEquipment(user)));
-						notificationService.AddAction(Enums.ActionType.Khaotic);
+						queuedActions.Add(new QueuedAction { Name = "Khaos Equipment", Type = ActionType.Khaotic, Invoker = new MethodInvoker(() => KhaosEquipment(user)) });
 					}
 					break;
 				case "kstats":
 					commandAction = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.KhaosStats).FirstOrDefault();
 					if (commandAction is not null && commandAction.Enabled)
 					{
-						queuedActions.Enqueue(new MethodInvoker(() => KhaosStats(user)));
-						notificationService.AddAction(Enums.ActionType.Khaotic);
+						queuedActions.Add(new QueuedAction { Name = "Khaos Stats", Type = ActionType.Khaotic, Invoker = new MethodInvoker(() => KhaosStats(user)) });
 					}
 					break;
 				case "krelics":
 					commandAction = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.KhaosRelics).FirstOrDefault();
 					if (commandAction is not null && commandAction.Enabled)
 					{
-						queuedActions.Enqueue(new MethodInvoker(() => KhaosRelics(user)));
-						notificationService.AddAction(Enums.ActionType.Khaotic);
+						queuedActions.Add(new QueuedAction { Name = "Khaos Relics", Type = ActionType.Khaotic, Invoker = new MethodInvoker(() => KhaosRelics(user)) });
 					}
 					break;
 				case "pandora":
 					commandAction = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.PandorasBox).FirstOrDefault();
 					if (commandAction is not null && commandAction.Enabled)
 					{
-						queuedActions.Enqueue(new MethodInvoker(() => PandorasBox(user)));
-						notificationService.AddAction(Enums.ActionType.Khaotic);
+						queuedActions.Add(new QueuedAction { Name = "Pandora's Box", Type = ActionType.Khaotic, Invoker = new MethodInvoker(() => PandorasBox(user)) });
 					}
 					break;
 				case "gamble":
@@ -840,16 +867,14 @@ namespace SotnRandoTools.Khaos
 					commandAction = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.Bankrupt).FirstOrDefault();
 					if (commandAction is not null && commandAction.Enabled)
 					{
-						queuedActions.Enqueue(new MethodInvoker(() => Bankrupt(user)));
-						notificationService.AddAction(Enums.ActionType.Debuff);
+						queuedActions.Add(new QueuedAction { Name = "Bankrupt", Invoker = new MethodInvoker(() => Bankrupt(user)) });
 					}
 					break;
 				case "weaken":
 					commandAction = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.Weaken).FirstOrDefault();
 					if (commandAction is not null && commandAction.Enabled)
 					{
-						queuedActions.Enqueue(new MethodInvoker(() => Weaken(user)));
-						notificationService.AddAction(Enums.ActionType.Debuff);
+						queuedActions.Add(new QueuedAction { Name = "Weaken", Invoker = new MethodInvoker(() => Weaken(user)) });
 					}
 					break;
 				case "respawnbosses":
@@ -863,48 +888,42 @@ namespace SotnRandoTools.Khaos
 					commandAction = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.HonestGamer).FirstOrDefault();
 					if (commandAction is not null && commandAction.Enabled)
 					{
-						queuedActions.Enqueue(new MethodInvoker(() => HonestGamer(user)));
-						notificationService.AddAction(Enums.ActionType.Debuff);
+						queuedActions.Add(new QueuedAction { Name = "Honest Gamer", LocksMana = true, Invoker = new MethodInvoker(() => HonestGamer(user)) });
 					}
 					break;
 				case "subsonly":
 					commandAction = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.SubweaponsOnly).FirstOrDefault();
 					if (commandAction is not null && commandAction.Enabled)
 					{
-						queuedActions.Enqueue(new MethodInvoker(() => SubweaponsOnly(user)));
-						notificationService.AddAction(Enums.ActionType.Debuff);
+						queuedActions.Add(new QueuedAction { Name = "Subweapons Only", LocksMana = true, Invoker = new MethodInvoker(() => SubweaponsOnly(user)) });
 					}
 					break;
 				case "cripple":
 					commandAction = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.Cripple).FirstOrDefault();
 					if (commandAction is not null && commandAction.Enabled)
 					{
-						queuedActions.Enqueue(new MethodInvoker(() => Cripple(user)));
-						notificationService.AddAction(Enums.ActionType.Debuff);
+						queuedActions.Add(new QueuedAction { Name = "Cripple", LocksSpeed = true, Invoker = new MethodInvoker(() => Cripple(user)) });
 					}
 					break;
 				case "bloodmana":
 					commandAction = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.BloodMana).FirstOrDefault();
 					if (commandAction is not null && commandAction.Enabled)
 					{
-						queuedActions.Enqueue(new MethodInvoker(() => BloodMana(user)));
-						notificationService.AddAction(Enums.ActionType.Debuff);
+						queuedActions.Add(new QueuedAction { Name = "Blood Mana", Invoker = new MethodInvoker(() => BloodMana(user)) });
 					}
 					break;
 				case "thirst":
 					commandAction = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.Thirst).FirstOrDefault();
 					if (commandAction is not null && commandAction.Enabled)
 					{
-						queuedActions.Enqueue(new MethodInvoker(() => Thirst(user)));
-						notificationService.AddAction(Enums.ActionType.Debuff);
+						queuedActions.Add(new QueuedAction { Name = "Thirst", Invoker = new MethodInvoker(() => Thirst(user)) });
 					}
 					break;
 				case "horde":
 					commandAction = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.KhaosHorde).FirstOrDefault();
 					if (commandAction is not null && commandAction.Enabled)
 					{
-						queuedActions.Enqueue(new MethodInvoker(() => Horde(user)));
-						notificationService.AddAction(Enums.ActionType.Debuff);
+						queuedActions.Add(new QueuedAction { Name = "Horde", Invoker = new MethodInvoker(() => Horde(user)) });
 					}
 					break;
 				case "endurance":
@@ -948,32 +967,28 @@ namespace SotnRandoTools.Khaos
 					commandAction = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.BattleOrders).FirstOrDefault();
 					if (commandAction is not null && commandAction.Enabled)
 					{
-						queuedActions.Enqueue(new MethodInvoker(() => BattleOrders(user)));
-						notificationService.AddAction(Enums.ActionType.Buff);
+						queuedActions.Add(new QueuedAction { Name = "Battle Orders", Type = ActionType.Buff, Invoker = new MethodInvoker(() => BattleOrders(user)) });
 					}
 					break;
 				case "magician":
 					commandAction = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.Magician).FirstOrDefault();
 					if (commandAction is not null && commandAction.Enabled)
 					{
-						queuedActions.Enqueue(new MethodInvoker(() => Magician(user)));
-						notificationService.AddAction(Enums.ActionType.Buff);
+						queuedActions.Add(new QueuedAction { Name = "Magician", Type = ActionType.Buff, LocksMana = true, Invoker = new MethodInvoker(() => Magician(user)) });
 					}
 					break;
 				case "melty":
 					commandAction = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.MeltyBlood).FirstOrDefault();
 					if (commandAction is not null && commandAction.Enabled)
 					{
-						queuedActions.Enqueue(new MethodInvoker(() => MeltyBlood(user)));
-						notificationService.AddAction(Enums.ActionType.Buff);
+						queuedActions.Add(new QueuedAction { Name = "MeltyBlood", Type = ActionType.Buff, Invoker = new MethodInvoker(() => MeltyBlood(user)) });
 					}
 					break;
 				case "fourbeasts":
 					commandAction = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.FourBeasts).FirstOrDefault();
 					if (commandAction is not null && commandAction.Enabled)
 					{
-						queuedActions.Enqueue(new MethodInvoker(() => FourBeasts(user)));
-						notificationService.AddAction(Enums.ActionType.Buff);
+						queuedActions.Add(new QueuedAction { Name = "Four Beasts", Type = ActionType.Buff, LocksInvincibility = true, Invoker = new MethodInvoker(() => FourBeasts(user)) });
 					}
 					break;
 				case "zawarudo":
@@ -981,15 +996,13 @@ namespace SotnRandoTools.Khaos
 					if (commandAction is not null && commandAction.Enabled)
 					{
 						queuedFastActions.Enqueue(new MethodInvoker(() => ZaWarudo(user)));
-						notificationService.AddAction(Enums.ActionType.Buff);
 					}
 					break;
 				case "haste":
 					commandAction = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.Haste).FirstOrDefault();
 					if (commandAction is not null && commandAction.Enabled)
 					{
-						queuedActions.Enqueue(new MethodInvoker(() => Haste(user)));
-						notificationService.AddAction(Enums.ActionType.Buff);
+						queuedActions.Add(new QueuedAction { Name = "Haste", Type = ActionType.Buff, LocksSpeed = true, Invoker = new MethodInvoker(() => Haste(user)) });
 					}
 					break;
 				default:
@@ -1049,7 +1062,28 @@ namespace SotnRandoTools.Khaos
 			{
 				if (queuedActions.Count > 0)
 				{
-					queuedActions.Dequeue()();
+					int index = 0;
+
+					for (int i = 0; i < queuedActions.Count; i++)
+					{
+						index = i;
+						if (queuedActions[i].LocksSpeed && speedLocked)
+						{
+							continue;
+						}
+						if (queuedActions[i].LocksMana && manaLocked)
+						{
+							continue;
+						}
+						if (queuedActions[i].LocksInvincibility && invincibilityLocked)
+						{
+							continue;
+						}
+						break;
+					}
+
+					queuedActions[index].Invoker();
+					queuedActions.RemoveAt(index);
 					if (actionTimer.Interval < toolConfig.Khaos.QueueInterval.TotalMilliseconds)
 					{
 						actionTimer.Interval = (int) toolConfig.Khaos.QueueInterval.TotalMilliseconds;
@@ -1071,11 +1105,6 @@ namespace SotnRandoTools.Khaos
 				if (queuedFastActions.Count > 0)
 				{
 					queuedFastActions.Dequeue()();
-				}
-
-				if (speedActions.Count > 0 && !crippleActive && !hasteActive)
-				{
-					speedActions.Dequeue()();
 				}
 			}
 		}
@@ -1306,7 +1335,7 @@ namespace SotnRandoTools.Khaos
 		}
 		private void HordeOff(Object sender, EventArgs e)
 		{
-			hordeEnemy = null;
+			hordeEnemies.RemoveRange(0, hordeEnemies.Count);
 			hordeTimer.Interval = 5 * (60 * 1000);
 			hordeTimer.Stop();
 			hordeSpawnTimer.Stop();
@@ -1326,35 +1355,18 @@ namespace SotnRandoTools.Khaos
 			uint zone = gameApi.Zone;
 			uint zone2 = gameApi.Zone2;
 
-			if (hordeZone != zone || hordeZone2 != zone2 || hordeEnemy == null)
+			if (hordeZone != zone || hordeZone2 != zone2 || hordeEnemies.Count == 0)
 			{
-				long bannedEnemy = actorApi.FindEnemy(gameApi.SecondCastle ? 101 : 31, 10000);
-				if (bannedEnemy > 0)
-				{
-					bannedEnemies.Add(new Actor(actorApi.GetActor(bannedEnemy)));
-				}
-				long enemy = actorApi.FindEnemy(1, gameApi.SecondCastle ? 100 : 30, new int[] { 26, 16, 18, 22, 100, 550, 80, 88});
-				if (enemy > 0)
-				{
-					hordeEnemy = new Actor(actorApi.GetActor(enemy));
-					hordeEnemy.Palette = (ushort) (hordeEnemy.Palette + rnd.Next(1, 10));
-					foreach (Actor bannedEnemyActor in bannedEnemies)
-					{
-						if (hordeEnemy.Damage == bannedEnemyActor.Damage && hordeEnemy.HitboxHeight == bannedEnemyActor.HitboxHeight)
-						{
-							hordeEnemy = null;
-						}
-					}
-				}
-				else
-				{
-					hordeEnemy = null;
-				}
+				hordeEnemies.RemoveRange(0, hordeEnemies.Count);
+				FindHordeEnemy();
 				hordeZone = zone;
 				hordeZone2 = zone2;
 			}
-			else if (hordeEnemy is not null)
+			else if (hordeEnemies.Count > 0)
 			{
+				FindHordeEnemy();
+				int enemyIndex = rnd.Next(0, hordeEnemies.Count);
+				Console.WriteLine($"Selected index: {enemyIndex} from count: {hordeEnemies.Count}");
 				if (hordeTimer.Interval == 5 * (60 * 1000))
 				{
 					hordeTimer.Stop();
@@ -1367,21 +1379,62 @@ namespace SotnRandoTools.Khaos
 					});
 					hordeTimer.Start();
 				}
-				hordeEnemy.Xpos = (ushort) rnd.Next(10, 245);
-				hordeEnemy.Ypos = (ushort) rnd.Next(10, 245);
-				actorApi.SpawnActor(hordeEnemy);
+				hordeEnemies[enemyIndex].Xpos = (ushort) rnd.Next(10, 245);
+				hordeEnemies[enemyIndex].Ypos = (ushort) rnd.Next(10, 245);
+				hordeEnemies[enemyIndex].Palette += (ushort) rnd.Next(1, 10);
+				actorApi.SpawnActor(hordeEnemies[enemyIndex]);
 			}
+		}
+		private bool FindHordeEnemy()
+		{
+			Random rnd = new Random();
+			long bannedEnemy = actorApi.FindEnemy(gameApi.SecondCastle ? 101 : 31, 10000);
+			Actor bannedActor = new Actor(actorApi.GetActor(bannedEnemy));
+			if (bannedEnemy > 0 && bannedEnemies.Where(e => e.Hp == bannedActor.Hp && e.Damage == bannedActor.Damage).Count() < 1)
+			{
+				bannedEnemies.Add(bannedActor);
+				Console.WriteLine($"Added banned enemy with hp: {bannedActor.Hp}");
+			}
+			List<int> areaBannedEnemies = new();
+			foreach (var be in bannedEnemies)
+			{
+				areaBannedEnemies.Add(be.Hp);
+			}
+			areaBannedEnemies.AddRange(bannedHordeEnemies);
+
+			long enemy = actorApi.FindEnemy(1, gameApi.SecondCastle ? 100 : 30, areaBannedEnemies.ToArray());
+
+			if (enemy > 0)
+			{
+				Actor? hordeEnemy = new Actor(actorApi.GetActor(enemy));
+				foreach (Actor bannedEnemyActor in bannedEnemies)
+				{
+					if (hordeEnemy.Damage == bannedEnemyActor.Damage && hordeEnemy.HitboxHeight == bannedEnemyActor.HitboxHeight)
+					{
+						hordeEnemy = null;
+					}
+				}
+				if (hordeEnemy is  not null && hordeEnemies.Where(e => e.Hp == hordeEnemy.Hp && e.Damage == hordeEnemy.Damage).Count() < 1)
+				{
+					hordeEnemies.Add(hordeEnemy);
+					Console.WriteLine($"Added horde enemy with hp: {hordeEnemy.Hp} sprite: {hordeEnemy.Sprite} damage: {hordeEnemy.Damage}");
+					return true;
+				}
+			}
+			return false;
 		}
 		private void HonestGamerOff(Object sender, EventArgs e)
 		{
 			Cheat manaCheat = cheats.GetCheatByName("Mana");
 			manaCheat.Disable();
+			manaLocked = false;
 			honestGamerTimer.Stop();
 		}
 		private void SubweaponsOnlyOff(object sender, EventArgs e)
 		{
 			Cheat curse = cheats.GetCheatByName("CurseTimer");
 			curse.Disable();
+			manaLocked = false;
 			Cheat manaCheat = cheats.GetCheatByName("Mana");
 			manaCheat.Disable();
 			subweaponsOnlyTimer.Stop();
@@ -1390,7 +1443,7 @@ namespace SotnRandoTools.Khaos
 		{
 			SetSpeed();
 			crippleTimer.Stop();
-			crippleActive = false;
+			speedLocked = false;
 		}
 		private void EnduranceSpawn(Object sender, EventArgs e)
 		{
@@ -1406,9 +1459,10 @@ namespace SotnRandoTools.Khaos
 			Actor? boss = null;
 
 			long bannedBoss = actorApi.FindEnemy(2000, 2000);
-			if (bannedBoss > 0)
+			Actor bannedBossFoundActor = new Actor(actorApi.GetActor(bannedBoss));
+			if (bannedBoss > 0 && bannedBosses.Where(e => e.Hp == bannedBossFoundActor.Hp && e.Damage == bannedBossFoundActor.Damage).Count() < 1)
 			{
-				bannedBosses.Add(new Actor(actorApi.GetActor(bannedBoss)));
+				bannedBosses.Add(bannedBossFoundActor);
 			}
 
 			long enemy = actorApi.FindEnemy(gameApi.SecondCastle ? 886 : 199, 1999);
@@ -1525,9 +1579,9 @@ namespace SotnRandoTools.Khaos
 		}
 		private void MagicianOff(Object sender, EventArgs e)
 		{
-			//int potion
 			Cheat manaCheat = cheats.GetCheatByName("Mana");
 			manaCheat.Disable();
+			manaLocked = false;
 			magicianTimer.Stop();
 		}
 		private void MeltyBloodOff(Object sender, EventArgs e)
@@ -1542,6 +1596,7 @@ namespace SotnRandoTools.Khaos
 		{
 			Cheat invincibilityCheat = cheats.GetCheatByName("Invincibility");
 			invincibilityCheat.Disable();
+			invincibilityLocked = false;
 			Cheat attackPotionCheat = cheats.GetCheatByName("AttackPotion");
 			attackPotionCheat.Disable();
 			Cheat shineCheat = cheats.GetCheatByName("Shine");
@@ -1559,6 +1614,7 @@ namespace SotnRandoTools.Khaos
 			SetSpeed();
 			hasteTimer.Stop();
 			hasteActive = false;
+			speedLocked = false;
 			hasteSpeedOn = false;
 			hasteOverdriveOffTimer.Start();
 		}
