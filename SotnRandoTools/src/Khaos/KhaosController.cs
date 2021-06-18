@@ -180,62 +180,45 @@ namespace SotnRandoTools.Khaos
 		private int enduranceCount = 0;
 		private uint enduranceRoomX = 0;
 		private uint enduranceRoomY = 0;
-		private List<Actor> bannedBosses = new();
 		private List<Actor> hordeEnemies = new();
 		private List<Actor> bannedEnemies = new();
-		private List<int> bannedHordeEnemies = new List<int> { 26, 16, 18, 22, 100, 550, 80, 88 };
-		private List<SearchableActor> allowedHordeEnemies = new List<SearchableActor>
+		private List<SearchableActor> bannedHordeEnemies = new List<SearchableActor>
 		{
-#region Entrance
-			new SearchableActor { Hp = 1, Sprite = 25776 , Damage = 14},  //Zombie
-			new SearchableActor { Hp = 1, Sprite = 25188 , Damage = 16},  //Bat
-			new SearchableActor { Hp = 10, Sprite = 19232 , Damage = 13}, //Merman
-			new SearchableActor { Hp = 10, Sprite = 11852 , Damage = 14}, //Merman2
-#endregion
-#region AlchemyLab
-			new SearchableActor { Hp = 9, Sprite = 24516 , Damage = 2},   //Skeleton
-			new SearchableActor { Hp = 9, Sprite = 31064 , Damage = 8},   //Red Skeleton
-			new SearchableActor { Hp = 24, Sprite = 21864 , Damage = 10}, //Bloody Zombie
-			#endregion
-#region MarbleGallery
-			new SearchableActor { Hp = 20, Sprite = 48588 , Damage = 4},  //Table
-			new SearchableActor { Hp = 12, Sprite = 30320 , Damage = 5},  //Slinger
-			new SearchableActor { Hp = 20, Sprite = 26360 , Damage = 8},  //Marionette
-			new SearchableActor { Hp = 11, Sprite = 51080 , Damage = 9},  //Fleaman
-			#endregion
-#region OuterWall
-			new SearchableActor { Hp = 20, Sprite = 14964 , Damage = 12}, //Spear Guard
-			new SearchableActor { Hp = 10, Sprite = 1432 , Damage = 12},  //Skeleton Archer
-			new SearchableActor { Hp = 12, Sprite = 22572 , Damage = 12}, //Medusa Head
-			new SearchableActor { Hp = 24, Sprite = 60200 , Damage = 12}, //Bone Musket
-			new SearchableActor { Hp = 9, Sprite = 54896 , Damage = 2},   //Skeleton
-			#endregion
-#region Library
-			new SearchableActor { Hp = 11, Sprite = 772 , Damage = 9},    //Fleaman
-			new SearchableActor { Hp = 12, Sprite = 56172 , Damage = 10}, //Thornweed
-#endregion
-#region ClockTower
-
-#endregion
-#region Keep
-
-#endregion
-#region Olrox
-
-#endregion
-#region Colosseum
-
-#endregion
-#region Caverns
-
-#endregion
-#region Mines
-
-#endregion
-#region Catacombs
-
-#endregion
+			new SearchableActor {Hp = 32, Damage = 20, Sprite = 63296},  // Warg
+			new SearchableActor {Hp = 27, Damage = 7, Sprite = 8820},    // Spellbook
+			new SearchableActor {Hp = 22, Damage = 12, Sprite = 11688},  // Magic Tome
+			new SearchableActor {Hp = 18, Damage = 6, Sprite = 54040},   // Ectoplasm
+			new SearchableActor {Hp = 16, Damage = 16, Sprite = 38652},  // Frozen Shade
+			new SearchableActor {Hp = 30, Damage = 20, Sprite = 60380},  // Spectral Weapons
+			new SearchableActor {Hp = 100, Damage = 35, Sprite = 28812}, // Blue Venus Weed Unflowered
+			new SearchableActor {Hp = 550, Damage = 45, Sprite = 31040}, // Blue Venus Weed Flowered
+			new SearchableActor {Hp = 88, Damage = 35, Sprite = 24208}   // Cave Troll
 		};
+		private List<SearchableActor> enduranceBosses = new List<SearchableActor>
+		{
+			new SearchableActor {Hp = 200, Damage = 6, Sprite = 18296},    // Slogra
+			new SearchableActor {Hp = 200, Damage = 7, Sprite = 22392},    // Gaibon
+			new SearchableActor {Hp = 120, Damage = 7, Sprite = 14260},    // Doppleganger 10
+			new SearchableActor {Hp = 300, Damage = 20, Sprite = 9884},    // Minotaur
+			new SearchableActor {Hp = 260, Damage = 20, Sprite = 14428},   // Werewolf
+			new SearchableActor {Hp = 400, Damage = 20, Sprite = 56036},   // Lesser Demon
+			new SearchableActor {Hp = 500, Damage = 20, Sprite = 43920},   // Karasuman
+			new SearchableActor {Hp = 800, Damage = 18, Sprite = 7188},    // Hippogryph
+			new SearchableActor {Hp = 666, Damage = 20, Sprite = 54072},   // Olrox
+			new SearchableActor {Hp = 666, Damage = 25, Sprite = 8452},    // Succubus
+			new SearchableActor {Hp = 800, Damage = 20, Sprite = 19772},   // Cerberus
+			new SearchableActor {Hp = 400, Damage = 30, Sprite = 6264},    // Granfaloon
+			new SearchableActor {Hp = 400, Damage = 25, Sprite = 27332},   // Richter
+			new SearchableActor {Hp = 600, Damage = 35, Sprite = 40376},   // Darkwing Bat
+			new SearchableActor {Hp = 1100, Damage = 30, Sprite = 31032},  // Creature
+			new SearchableActor {Hp = 777, Damage = 35, Sprite = 11664},   // Doppleganger 40
+			new SearchableActor {Hp = 888, Damage = 35, Sprite = 46380},   // Death
+			new SearchableActor {Hp = 1100, Damage = 35, Sprite = 6044},   // Medusa
+			new SearchableActor {Hp = 1200, Damage = 40, Sprite = 16564},  // Akmodan
+			new SearchableActor {Hp = 1000, Damage = 9, Sprite = 30724},   // Sypha
+			new SearchableActor {Hp = 1300, Damage = 40, Sprite = 43772}   // Shaft
+		};
+		private SearchableActor shaftActor = new SearchableActor { Hp = 10, Damage = 0, Sprite = 0 };
 		private uint storedMana = 0;
 		private int spentMana = 0;
 		private bool speedLocked = false;
@@ -245,6 +228,10 @@ namespace SotnRandoTools.Khaos
 		private bool hasteActive = false;
 		private bool hasteSpeedOn = false;
 		private bool overdriveOn = false;
+		private int slowInterval;
+		private int normalInterval;
+		private int fastInterval;
+		private bool shaftHpSet = false;
 
 		private FileSystemWatcher botFileWatcher = new FileSystemWatcher();
 
@@ -278,6 +265,9 @@ namespace SotnRandoTools.Khaos
 
 			InitializeTimers();
 			notificationService.ActionQueue = queuedActions;
+			normalInterval = (int)toolConfig.Khaos.QueueInterval.TotalMilliseconds;
+			slowInterval = (int) normalInterval * 2;
+			fastInterval = (int) normalInterval / 2;
 		}
 
 		public void StartKhaos()
@@ -909,7 +899,7 @@ namespace SotnRandoTools.Khaos
 					commandAction = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.BloodMana).FirstOrDefault();
 					if (commandAction is not null && commandAction.Enabled)
 					{
-						queuedActions.Add(new QueuedAction { Name = "Blood Mana", Invoker = new MethodInvoker(() => BloodMana(user)) });
+						queuedActions.Add(new QueuedAction { Name = "Blood Mana", LocksMana = true, Invoker = new MethodInvoker(() => BloodMana(user)) });
 					}
 					break;
 				case "thirst":
@@ -1063,30 +1053,54 @@ namespace SotnRandoTools.Khaos
 				if (queuedActions.Count > 0)
 				{
 					int index = 0;
+					bool actionUnlocked = true;
 
 					for (int i = 0; i < queuedActions.Count; i++)
 					{
 						index = i;
+						actionUnlocked = true;
 						if (queuedActions[i].LocksSpeed && speedLocked)
 						{
+							actionUnlocked = false;
 							continue;
 						}
 						if (queuedActions[i].LocksMana && manaLocked)
 						{
+							actionUnlocked = false;
 							continue;
 						}
 						if (queuedActions[i].LocksInvincibility && invincibilityLocked)
 						{
+							actionUnlocked = false;
 							continue;
 						}
 						break;
 					}
 
-					queuedActions[index].Invoker();
-					queuedActions.RemoveAt(index);
-					if (actionTimer.Interval < toolConfig.Khaos.QueueInterval.TotalMilliseconds)
+					if (actionUnlocked)
 					{
-						actionTimer.Interval = (int) toolConfig.Khaos.QueueInterval.TotalMilliseconds;
+						queuedActions[index].Invoker();
+						queuedActions.RemoveAt(index);
+					}
+					else
+					{
+						Console.WriteLine($"All actions locked. speed: {speedLocked}, invincibility: {invincibilityLocked}, mana: {manaLocked}");
+					}
+
+					if (actionTimer.Interval < fastInterval)
+					{
+						if (toolConfig.Khaos.DynamicInterval && queuedActions.Count < 3)
+						{
+							actionTimer.Interval = (int) slowInterval;
+						}
+						else if (toolConfig.Khaos.DynamicInterval && queuedActions.Count > 8)
+						{
+							actionTimer.Interval = (int) fastInterval;
+						}
+						else
+						{
+							actionTimer.Interval = (int) normalInterval;
+						}
 					}
 				}
 				else
@@ -1102,10 +1116,15 @@ namespace SotnRandoTools.Khaos
 			bool keepRichterRoom = ((mapX >= 31 && mapX <= 34) && mapY == 8);
 			if (gameApi.InAlucardMode() && gameApi.CanMenu() && alucardApi.CurrentHp > 0 && !gameApi.CanSave() && !keepRichterRoom)
 			{
+				shaftHpSet = false;
 				if (queuedFastActions.Count > 0)
 				{
 					queuedFastActions.Dequeue()();
 				}
+			}
+			if (gameApi.InAlucardMode() && gameApi.CanMenu() && alucardApi.CurrentHp > 0 && !gameApi.CanSave() && keepRichterRoom && !shaftHpSet)
+			{
+				SetShaftHp();
 			}
 		}
 
@@ -1388,21 +1407,15 @@ namespace SotnRandoTools.Khaos
 		private bool FindHordeEnemy()
 		{
 			Random rnd = new Random();
-			long bannedEnemy = actorApi.FindEnemy(gameApi.SecondCastle ? 101 : 31, 10000);
+			long bannedEnemy = actorApi.FindEnemy(gameApi.SecondCastle ? 101 : 36, 10000);
 			Actor bannedActor = new Actor(actorApi.GetActor(bannedEnemy));
 			if (bannedEnemy > 0 && bannedEnemies.Where(e => e.Hp == bannedActor.Hp && e.Damage == bannedActor.Damage).Count() < 1)
 			{
 				bannedEnemies.Add(bannedActor);
-				Console.WriteLine($"Added banned enemy with hp: {bannedActor.Hp}");
+				Console.WriteLine($"Added banned enemy with hp: {bannedActor.Hp}, damage: {bannedActor.Damage}, sprite: {bannedActor.Sprite}");
 			}
-			List<int> areaBannedEnemies = new();
-			foreach (var be in bannedEnemies)
-			{
-				areaBannedEnemies.Add(be.Hp);
-			}
-			areaBannedEnemies.AddRange(bannedHordeEnemies);
 
-			long enemy = actorApi.FindEnemy(1, gameApi.SecondCastle ? 100 : 30, areaBannedEnemies.ToArray());
+			long enemy = actorApi.FindEnemy(1, gameApi.SecondCastle ? 100 : 35, bannedHordeEnemies);
 
 			if (enemy > 0)
 			{
@@ -1421,6 +1434,7 @@ namespace SotnRandoTools.Khaos
 					return true;
 				}
 			}
+
 			return false;
 		}
 		private void HonestGamerOff(Object sender, EventArgs e)
@@ -1456,32 +1470,22 @@ namespace SotnRandoTools.Khaos
 				return;
 			}
 
-			Actor? boss = null;
+			Actor? bossCopy = null;
 
-			long bannedBoss = actorApi.FindEnemy(2000, 2000);
-			Actor bannedBossFoundActor = new Actor(actorApi.GetActor(bannedBoss));
-			if (bannedBoss > 0 && bannedBosses.Where(e => e.Hp == bannedBossFoundActor.Hp && e.Damage == bannedBossFoundActor.Damage).Count() < 1)
-			{
-				bannedBosses.Add(bannedBossFoundActor);
-			}
-
-			long enemy = actorApi.FindEnemy(gameApi.SecondCastle ? 886 : 199, 1999);
+			long enemy = actorApi.FindActorFrom(enduranceBosses);
 			if (enemy > 0)
 			{
-				boss = new Actor(actorApi.GetActor(enemy));
+				LiveActor boss = actorApi.GetLiveActor(enemy);
+				boss.Hp *= (ushort)1.5; 
 
-				foreach (Actor bannedBossActor in bannedBosses)
-				{
-					if (boss.Damage == bannedBossActor.Damage)
-					{
-						return;
-					}
-				}
+				bossCopy = new Actor(actorApi.GetActor(enemy));
+				Console.WriteLine($"Endurance boss found hp: {bossCopy.Hp}, damage: {bossCopy.Damage}, sprite: {bossCopy.Sprite}");
 
-				boss.Xpos = (ushort) rnd.Next(70, 170);
-				boss.Palette = (ushort) (boss.Palette + rnd.Next(1, 10));
-				boss.Hp *= 2;
-				actorApi.SpawnActor(boss);
+				bossCopy.Xpos = (ushort) rnd.Next(70, 170);
+				bossCopy.Palette = (ushort) (bossCopy.Palette + rnd.Next(1, 10));
+				bossCopy.Hp *= (ushort)1.5;
+				bossCopy.Damage = (ushort)(1.5 * bossCopy.Damage);
+				actorApi.SpawnActor(bossCopy);
 				enduranceCount--;
 				enduranceRoomX = roomX;
 				enduranceRoomY = roomY;
@@ -1711,6 +1715,21 @@ namespace SotnRandoTools.Khaos
 			alucardApi.WolfDashTopLeftSpeed = (sbyte) Math.Ceiling(DefaultSpeeds.WolfDashTopLeft * factor);
 			alucardApi.BackdashDecel = slow == true ? DefaultSpeeds.BackdashDecelSlow : DefaultSpeeds.BackdashDecel;
 			Console.WriteLine($"Set all speeds with factor {factor}");
+		}
+		private void SetShaftHp()
+		{
+			long shaftAddress = actorApi.FindActorFrom(new List<SearchableActor> { shaftActor });
+			if (shaftAddress > 0)
+			{
+				LiveActor shaft = actorApi.GetLiveActor(shaftAddress);
+				shaft.Hp = 20;
+				shaftHpSet = true;
+				Console.WriteLine("Found Shaft actor and set HP to 20.");
+			}
+			else
+			{
+				return;
+			}
 		}
 		private void CheckManaUsage()
 		{

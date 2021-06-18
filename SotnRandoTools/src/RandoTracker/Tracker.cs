@@ -205,6 +205,7 @@ namespace SotnRandoTools.RandoTracker
 		private bool restarted = false;
 		private bool relicOrItemCollected = false;
 		private List<MapLocation> replay = new();
+		private int prologueTime = 0;
 
 		public Tracker(IGraphics? formGraphics, IToolConfig toolConfig, IWatchlistService watchlistService, IRenderingApi renderingApi, IGameApi gameApi, IAlucardApi alucardApi)
 		{
@@ -283,11 +284,15 @@ namespace SotnRandoTools.RandoTracker
 			{
 				gameReset = true;
 			}
-			else if (gameApi.InPrologue() && !restarted)
+			else if (gameApi.InPrologue())
 			{
-				ResetToDefaults();
-				DrawRelicsAndItems();
-				restarted = true;
+				prologueTime++;
+				if (!restarted)
+				{
+					ResetToDefaults();
+					DrawRelicsAndItems();
+					restarted = true;
+				}
 			}
 		}
 
@@ -743,7 +748,7 @@ namespace SotnRandoTools.RandoTracker
 			{
 				if (replay.Count == 0)
 				{
-					replay.Add(new MapLocation { X = currentMapX, Y = currentMapY, Relics = 0, ProgressionItems = 0 });
+					replay.Add(new MapLocation { X = currentMapX, Y = currentMapY, Time = prologueTime, Relics = 0, ProgressionItems = 0 });
 				}
 				else
 				{
@@ -818,7 +823,12 @@ namespace SotnRandoTools.RandoTracker
 			{
 				foreach (var room in replay)
 				{
-					string line = $"{room.X}:{room.Y}:{Math.Ceiling((double)(room.Time / 10))}:{room.SecondCastle}:{room.Relics}:{room.ProgressionItems}";
+					int time = (int)Math.Ceiling((double) (room.Time / 10));
+					if (time < 1)
+					{
+						time = 1;
+					}
+					string line = $"{room.X}:{room.Y}:{time}:{room.SecondCastle}:{room.Relics}:{room.ProgressionItems}";
 					w.WriteLine(line);
 				}
 			}

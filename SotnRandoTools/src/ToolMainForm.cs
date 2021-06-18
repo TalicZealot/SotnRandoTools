@@ -102,23 +102,6 @@ namespace SotnRandoTools
 			{
 				toolConfig = new ToolConfig();
 			}
-
-			KhaosConfig defaultKhaosConfig = new();
-
-			if (toolConfig.Khaos.Actions.Count != defaultKhaosConfig.Actions.Count)
-			{
-				toolConfig.Khaos.Actions = defaultKhaosConfig.Actions;
-			}
-
-			var duplicateActions = toolConfig.Khaos.Actions.GroupBy(x => x.Name)
-			  .Where(g => g.Count() > 1)
-			  .Select(y => y.Key)
-			  .ToList();
-
-			if (duplicateActions.Count > 0)
-			{
-				toolConfig.Khaos.Actions = defaultKhaosConfig.Actions;
-			}
 		}
 
 		protected override string WindowTitle => _windowTitle;

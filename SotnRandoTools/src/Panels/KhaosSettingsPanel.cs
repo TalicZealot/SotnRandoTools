@@ -40,6 +40,7 @@ namespace SotnRandoTools
 			weakenTextBox.Text = (toolConfig.Khaos.WeakenFactor * 100) + "%";
 			thirstTextBox.Text = toolConfig.Khaos.ThirstDrainPerSecond.ToString();
 			queueTextBox.Text = toolConfig.Khaos.QueueInterval.ToString();
+			dynamicIntervalCheckBox.Checked = toolConfig.Khaos.DynamicInterval;
 			pandoraMinTextBox.Text = toolConfig.Khaos.PandoraMinItems.ToString();
 			pandoraMaxTextBox.Text = toolConfig.Khaos.PandoraMaxItems.ToString();
 
@@ -295,10 +296,10 @@ namespace SotnRandoTools
 		private void queueTextBox_Validating(object sender, System.ComponentModel.CancelEventArgs e)
 		{
 			TimeSpan queueInterval;
-			TimeSpan minSpan = new TimeSpan(0, 0, 1);
+			TimeSpan minSpan = new TimeSpan(0, 0, 10);
 			TimeSpan maxSpan = new TimeSpan(0, 10, 0);
 			bool result = TimeSpan.TryParse(queueTextBox.Text, out queueInterval);
-			if (!result || queueInterval < minSpan || queueInterval > maxSpan)
+			if (!result)
 			{
 				this.queueTextBox.Text = "";
 				this.queueTextBox.BackColor = Color.Red;
@@ -307,6 +308,20 @@ namespace SotnRandoTools
 				this.valueToolTip.Active = true;
 				e.Cancel = true;
 			}
+			if (queueInterval < minSpan || queueInterval > maxSpan)
+			{
+				this.queueTextBox.Text = "";
+				this.queueTextBox.BackColor = Color.Red;
+				this.valueToolTip.SetToolTip(queueTextBox, "Value must be greater than 10 seconds and lower than 10 minutes!");
+				this.valueToolTip.ToolTipIcon = ToolTipIcon.Warning;
+				this.valueToolTip.Active = true;
+				e.Cancel = true;
+			}
+		}
+
+		private void dynamicIntervalCheckBox_CheckedChanged(object sender, EventArgs e)
+		{
+			toolConfig.Khaos.DynamicInterval = dynamicIntervalCheckBox.Checked;
 		}
 	}
 }

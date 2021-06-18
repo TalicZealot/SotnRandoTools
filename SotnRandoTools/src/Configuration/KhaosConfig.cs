@@ -20,7 +20,8 @@ namespace SotnRandoTools.Configuration
 			ThirstDrainPerSecond = 1;
 			PandoraMinItems = 5;
 			PandoraMaxItems = 32;
-			QueueInterval = new System.TimeSpan(0, 0, 30);
+			QueueInterval = new System.TimeSpan(0, 0, 31);
+			DynamicInterval = true;
 
 			Actions = new List<Action>
 			{
@@ -66,5 +67,6 @@ namespace SotnRandoTools.Configuration
 		public int PandoraMinItems { get; set; }
 		public int PandoraMaxItems { get; set; }
 		public System.TimeSpan QueueInterval { get; set; }
+		public bool DynamicInterval { get; set; }
 	}
 }
