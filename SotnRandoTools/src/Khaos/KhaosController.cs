@@ -999,6 +999,10 @@ namespace SotnRandoTools.Khaos
 					break;
 					#endregion
 			}
+			if (queuedActions.Count > 1)
+			{
+				SetDynamicInterval();
+			}
 		}
 		private void InitializeTimers()
 		{
@@ -1089,18 +1093,7 @@ namespace SotnRandoTools.Khaos
 
 					if (actionTimer.Interval < fastInterval)
 					{
-						if (toolConfig.Khaos.DynamicInterval && queuedActions.Count < 3)
-						{
-							actionTimer.Interval = (int) slowInterval;
-						}
-						else if (toolConfig.Khaos.DynamicInterval && queuedActions.Count > 8)
-						{
-							actionTimer.Interval = (int) fastInterval;
-						}
-						else
-						{
-							actionTimer.Interval = (int) normalInterval;
-						}
+						SetDynamicInterval();
 					}
 				}
 				else
@@ -1109,6 +1102,23 @@ namespace SotnRandoTools.Khaos
 				}
 			}
 		}
+
+		private void SetDynamicInterval()
+		{
+			if (toolConfig.Khaos.DynamicInterval && queuedActions.Count < 3)
+			{
+				actionTimer.Interval = (int) slowInterval;
+			}
+			else if (toolConfig.Khaos.DynamicInterval && queuedActions.Count > 8)
+			{
+				actionTimer.Interval = (int) fastInterval;
+			}
+			else
+			{
+				actionTimer.Interval = (int) normalInterval;
+			}
+		}
+
 		private void ExecuteFastAction(Object sender, EventArgs e)
 		{
 			uint mapX = alucardApi.MapX;

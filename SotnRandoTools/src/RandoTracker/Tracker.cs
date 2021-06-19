@@ -752,13 +752,12 @@ namespace SotnRandoTools.RandoTracker
 				}
 				else
 				{
-					replay.Add(new MapLocation { X = currentMapX, Y = currentMapY, Relics = replay[replay.Count - 1].Relics, ProgressionItems = replay[replay.Count - 1].ProgressionItems });
+					replay.Add(new MapLocation { X = currentMapX, Y = currentMapY, SecondCastle = secondCastle ? 1 : 0, Relics = replay[replay.Count - 1].Relics, ProgressionItems = replay[replay.Count - 1].ProgressionItems });
 				}
 			}
 
 			var room = replay[replay.Count - 1];
 			room.Time++;
-			room.SecondCastle = secondCastle ? 1 : 0;
 			if (relicOrItemCollected)
 			{
 				room.Relics = EncodeRelics();
@@ -775,7 +774,7 @@ namespace SotnRandoTools.RandoTracker
 				{
 					itemsNumber |= (int) Math.Pow(2, i);
 				}
-				else
+				else if (i == progressionItems.Count)
 				{
 					foreach (var sword in thrustSwords)
 					{
