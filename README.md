@@ -65,9 +65,8 @@ Khaos is in an alpha stage at the moment. I am still working on implementing the
 * [Latest BizHawk release](https://github.com/TASVideos/BizHawk/releases/latest)
 
 ## Contributors
-
-[**3snowp7im**](https://github.com/3snowp7im) - SotN Randomizer developer
-[**fatihG**](https://twitter.com/fatihG_) - Familiar card icons, replay system concept.
+* [3snowp7im](https://github.com/3snowp7im) - SotN Randomizer developer
+* [fatihG](https://twitter.com/fatihG_) - Familiar card icons, replay system concept.
 
 ## Special Thanks
 * asdheyb
