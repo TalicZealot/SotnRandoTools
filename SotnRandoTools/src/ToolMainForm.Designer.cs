@@ -31,13 +31,13 @@ namespace SotnRandoTools
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ToolMainForm));
             this.mainMenuPanel = new System.Windows.Forms.Panel();
-            this.autotrackerSelect = new System.Windows.Forms.Button();
             this.aboutButton = new System.Windows.Forms.Button();
             this.multiplayerLaunch = new System.Windows.Forms.Button();
             this.khaosChatLaunch = new System.Windows.Forms.Button();
+            this.autotrackerLaunch = new System.Windows.Forms.Button();
+            this.autotrackerSelect = new System.Windows.Forms.Button();
             this.multiplayerSelect = new System.Windows.Forms.Button();
             this.khaosChatSelect = new System.Windows.Forms.Button();
-            this.autotrackerLaunch = new System.Windows.Forms.Button();
             this.mainMenuPanel.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -56,26 +56,8 @@ namespace SotnRandoTools
             this.mainMenuPanel.Size = new System.Drawing.Size(394, 127);
             this.mainMenuPanel.TabIndex = 0;
             // 
-            // autotrackerSelect
-            // 
-            this.autotrackerSelect.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.autotrackerSelect.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
-            this.autotrackerSelect.FlatAppearance.BorderSize = 2;
-            this.autotrackerSelect.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
-            this.autotrackerSelect.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
-            this.autotrackerSelect.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.autotrackerSelect.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.autotrackerSelect.Image = global::SotnRandoTools.Properties.Resources.Tracker;
-            this.autotrackerSelect.Location = new System.Drawing.Point(12, 12);
-            this.autotrackerSelect.Name = "autotrackerSelect";
-            this.autotrackerSelect.Size = new System.Drawing.Size(88, 70);
-            this.autotrackerSelect.TabIndex = 5;
-            this.autotrackerSelect.UseVisualStyleBackColor = true;
-            this.autotrackerSelect.Click += new System.EventHandler(this.autotrackerSelect_Click);
-            // 
             // aboutButton
             // 
-            this.aboutButton.BackgroundImage = global::SotnRandoTools.Properties.Resources.LogoTZtwtr1;
             this.aboutButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.aboutButton.Cursor = System.Windows.Forms.Cursors.Default;
             this.aboutButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
@@ -83,7 +65,7 @@ namespace SotnRandoTools
             this.aboutButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.aboutButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.aboutButton.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.aboutButton.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.aboutButton.Image = global::SotnRandoTools.Properties.Resources.LogoTZtwtr1;
             this.aboutButton.Location = new System.Drawing.Point(294, 12);
             this.aboutButton.Name = "aboutButton";
             this.aboutButton.Size = new System.Drawing.Size(88, 70);
@@ -124,6 +106,39 @@ namespace SotnRandoTools
             this.khaosChatLaunch.Visible = false;
             this.khaosChatLaunch.Click += new System.EventHandler(this.khaosChatLaunch_Click);
             // 
+            // autotrackerLaunch
+            // 
+            this.autotrackerLaunch.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
+            this.autotrackerLaunch.FlatAppearance.BorderSize = 2;
+            this.autotrackerLaunch.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
+            this.autotrackerLaunch.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
+            this.autotrackerLaunch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.autotrackerLaunch.Location = new System.Drawing.Point(12, 88);
+            this.autotrackerLaunch.Name = "autotrackerLaunch";
+            this.autotrackerLaunch.Size = new System.Drawing.Size(87, 29);
+            this.autotrackerLaunch.TabIndex = 1;
+            this.autotrackerLaunch.Text = "Launch";
+            this.autotrackerLaunch.UseVisualStyleBackColor = true;
+            this.autotrackerLaunch.Visible = false;
+            this.autotrackerLaunch.Click += new System.EventHandler(this.autotrackerLaunch_Click);
+            // 
+            // autotrackerSelect
+            // 
+            this.autotrackerSelect.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.autotrackerSelect.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
+            this.autotrackerSelect.FlatAppearance.BorderSize = 2;
+            this.autotrackerSelect.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
+            this.autotrackerSelect.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
+            this.autotrackerSelect.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.autotrackerSelect.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.autotrackerSelect.Image = global::SotnRandoTools.Properties.Resources.tracker;
+            this.autotrackerSelect.Location = new System.Drawing.Point(12, 12);
+            this.autotrackerSelect.Name = "autotrackerSelect";
+            this.autotrackerSelect.Size = new System.Drawing.Size(88, 70);
+            this.autotrackerSelect.TabIndex = 5;
+            this.autotrackerSelect.UseVisualStyleBackColor = true;
+            this.autotrackerSelect.Click += new System.EventHandler(this.autotrackerSelect_Click);
+            // 
             // multiplayerSelect
             // 
             this.multiplayerSelect.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
@@ -133,7 +148,7 @@ namespace SotnRandoTools
             this.multiplayerSelect.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.multiplayerSelect.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.multiplayerSelect.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.multiplayerSelect.Image = global::SotnRandoTools.Properties.Resources.CoOp;
+            this.multiplayerSelect.Image = global::SotnRandoTools.Properties.Resources.coop;
             this.multiplayerSelect.Location = new System.Drawing.Point(200, 12);
             this.multiplayerSelect.Name = "multiplayerSelect";
             this.multiplayerSelect.Size = new System.Drawing.Size(88, 70);
@@ -150,29 +165,13 @@ namespace SotnRandoTools
             this.khaosChatSelect.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.khaosChatSelect.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.khaosChatSelect.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.khaosChatSelect.Image = global::SotnRandoTools.Properties.Resources.Khaos;
+            this.khaosChatSelect.Image = global::SotnRandoTools.Properties.Resources.khaosb;
             this.khaosChatSelect.Location = new System.Drawing.Point(106, 12);
             this.khaosChatSelect.Name = "khaosChatSelect";
             this.khaosChatSelect.Size = new System.Drawing.Size(88, 70);
             this.khaosChatSelect.TabIndex = 2;
             this.khaosChatSelect.UseVisualStyleBackColor = true;
             this.khaosChatSelect.Click += new System.EventHandler(this.khaosChatSelect_Click);
-            // 
-            // autotrackerLaunch
-            // 
-            this.autotrackerLaunch.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
-            this.autotrackerLaunch.FlatAppearance.BorderSize = 2;
-            this.autotrackerLaunch.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
-            this.autotrackerLaunch.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
-            this.autotrackerLaunch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.autotrackerLaunch.Location = new System.Drawing.Point(12, 88);
-            this.autotrackerLaunch.Name = "autotrackerLaunch";
-            this.autotrackerLaunch.Size = new System.Drawing.Size(87, 29);
-            this.autotrackerLaunch.TabIndex = 1;
-            this.autotrackerLaunch.Text = "Launch";
-            this.autotrackerLaunch.UseVisualStyleBackColor = true;
-            this.autotrackerLaunch.Visible = false;
-            this.autotrackerLaunch.Click += new System.EventHandler(this.autotrackerLaunch_Click);
             // 
             // ToolMainForm
             // 

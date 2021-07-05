@@ -118,19 +118,16 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="khaosb" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\khaosb.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="tracker" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tracker.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="coop" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\coop.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="LogoTZtwtr1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\LogoTZtwtr1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="CorpAlucard" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\CorpAlucard.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Khaos" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Khaos.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Tracker" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Tracker2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="CoOp" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\CoOp.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

@@ -63,29 +63,19 @@ namespace SotnRandoTools.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap CoOp {
+        internal static System.Drawing.Bitmap coop {
             get {
-                object obj = ResourceManager.GetObject("CoOp", resourceCulture);
+                object obj = ResourceManager.GetObject("coop", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon CorpAlucard {
-            get {
-                object obj = ResourceManager.GetObject("CorpAlucard", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
             }
         }
         
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Khaos {
+        internal static System.Drawing.Bitmap khaosb {
             get {
-                object obj = ResourceManager.GetObject("Khaos", resourceCulture);
+                object obj = ResourceManager.GetObject("khaosb", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -103,9 +93,9 @@ namespace SotnRandoTools.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Tracker {
+        internal static System.Drawing.Bitmap tracker {
             get {
-                object obj = ResourceManager.GetObject("Tracker", resourceCulture);
+                object obj = ResourceManager.GetObject("tracker", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

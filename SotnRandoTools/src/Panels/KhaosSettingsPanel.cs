@@ -26,14 +26,8 @@ namespace SotnRandoTools
 		private void KhaosSettingsPanel_Load(object sender, EventArgs e)
 		{
 			alertsCheckbox.Checked = toolConfig.Khaos.Alerts;
-			if (toolConfig.Khaos.BotActionsFilePath is not null)
-			{
-				botCommandsPath.Text = toolConfig.Khaos.BotActionsFilePath;
-			}
-			if (toolConfig.Khaos.NamesFilePath is not null)
-			{
-				namesPath.Text = toolConfig.Khaos.NamesFilePath;
-			}
+			namesPath.Text = toolConfig.Khaos.NamesFilePath;
+			botApiKey.Text = toolConfig.Khaos.BotApiKey;
 			volumeTrackBar.Value = toolConfig.Khaos.Volume;
 			crippleTextBox.Text = (toolConfig.Khaos.CrippleFactor * 100) + "%";
 			hasteTextBox.Text = (toolConfig.Khaos.HasteFactor * 100) + "%";
@@ -73,12 +67,6 @@ namespace SotnRandoTools
 			toolConfig.SaveConfig();
 		}
 
-		private void botActionFileDialog_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
-		{
-			botCommandsPath.Text = botActionFileDialog.FileName;
-			toolConfig.Khaos.BotActionsFilePath = botActionFileDialog.FileName;
-		}
-
 		private void volumeTrackBar_Scroll(object sender, EventArgs e)
 		{
 			toolConfig.Khaos.Volume = volumeTrackBar.Value;
@@ -88,16 +76,6 @@ namespace SotnRandoTools
 		private void alertsCheckbox_CheckedChanged(object sender, EventArgs e)
 		{
 			toolConfig.Khaos.Alerts = alertsCheckbox.Checked;
-		}
-
-		private void botCommandsBrowseButton_Click(object sender, EventArgs e)
-		{
-			botActionFileDialog.ShowDialog();
-		}
-
-		private void botCommandsPath_TextChanged(object sender, EventArgs e)
-		{
-			toolConfig.Khaos.BotActionsFilePath = botCommandsPath.Text;
 		}
 
 		private void namesBrowseButton_Click(object sender, EventArgs e)
@@ -322,6 +300,11 @@ namespace SotnRandoTools
 		private void dynamicIntervalCheckBox_CheckedChanged(object sender, EventArgs e)
 		{
 			toolConfig.Khaos.DynamicInterval = dynamicIntervalCheckBox.Checked;
+		}
+
+		private void botApiKey_TextChanged(object sender, EventArgs e)
+		{
+			toolConfig.Khaos.BotApiKey = botApiKey.Text;
 		}
 	}
 }

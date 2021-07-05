@@ -16,7 +16,7 @@ using SotnRandoTools.Services;
 
 namespace SotnRandoTools
 {
-	[ExternalTool("Symphony of the Night Randomizer Tools", Description = "A collection of tools to enhance the SotN randomizer experience.", LoadAssemblyFiles = new[] { "./SotnRandoTools/SotnApi.dll", "./SotnRandoTools/SimpleTCP.dll" })]
+	[ExternalTool("Symphony of the Night Randomizer Tools", Description = "A collection of tools to enhance the SotN randomizer experience.", LoadAssemblyFiles = new[] { "./SotnRandoTools/SotnApi.dll", "./SotnRandoTools/SimpleTCP.dll", "/SotnRandoTools/WatsonWebsocket.dll" })]
 	[ExternalToolEmbeddedIcon("BizAlucard.ico")]
 	[ExternalToolApplicability.SingleRom(CoreSystem.Playstation, "0DDCBC3D")]
 	public partial class ToolMainForm : ToolFormBase, IExternalToolForm

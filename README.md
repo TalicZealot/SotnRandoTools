@@ -74,3 +74,5 @@ Khaos is in an alpha stage at the moment. I am still working on implementing the
 * EmilyNyx
 * DinnerDog
 * Gods666thChild
+* LordalexZader
+* ziggypigster

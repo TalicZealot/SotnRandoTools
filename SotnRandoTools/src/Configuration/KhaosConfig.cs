@@ -14,6 +14,7 @@ namespace SotnRandoTools.Configuration
 			Volume = 2;
 			BotActionsFilePath = Paths.BotActionsFilePath;
 			NamesFilePath = Paths.NamesFilePath;
+			BotApiKey = "";
 			WeakenFactor = 0.5F;
 			CrippleFactor = 0.8F;
 			HasteFactor = 3.2F;
@@ -59,6 +60,7 @@ namespace SotnRandoTools.Configuration
 		public int Volume { get; set; }
 		public string BotActionsFilePath { get; set; }
 		public string NamesFilePath { get; set; }
+		public string BotApiKey { get; set; }
 		public List<Action> Actions { get; set; }
 		public float WeakenFactor { get; set; }
 		public float CrippleFactor { get; set; }

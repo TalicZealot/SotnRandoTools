@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 using BizHawk.Client.Common;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using SotnApi.Constants.Addresses;
 using SotnApi.Constants.Values.Alucard;
 using SotnApi.Constants.Values.Alucard.Enums;
@@ -17,6 +20,7 @@ using SotnRandoTools.Khaos.Models;
 using SotnRandoTools.Services;
 using SotnRandoTools.Services.Adapters;
 using SotnRandoTools.Utils;
+using WatsonWebsocket;
 
 namespace SotnRandoTools.Khaos
 {
@@ -29,6 +33,7 @@ namespace SotnRandoTools.Khaos
 		private readonly ICheatCollectionAdapter cheats;
 		private readonly INotificationService notificationService;
 		private readonly IInputService inputService;
+		private WatsonWsClient socketClient;
 
 		private string[] lightHelpItems =
 		{
@@ -190,6 +195,7 @@ namespace SotnRandoTools.Khaos
 			new SearchableActor {Hp = 18, Damage = 6, Sprite = 54040},   // Ectoplasm
 			new SearchableActor {Hp = 16, Damage = 16, Sprite = 38652},  // Frozen Shade
 			new SearchableActor {Hp = 30, Damage = 20, Sprite = 60380},  // Spectral Weapons
+			new SearchableActor {Hp = 32, Damage = 16, Sprite = 16520},  // Slime
 			new SearchableActor {Hp = 100, Damage = 35, Sprite = 28812}, // Blue Venus Weed Unflowered
 			new SearchableActor {Hp = 550, Damage = 45, Sprite = 31040}, // Blue Venus Weed Flowered
 			new SearchableActor {Hp = 88, Damage = 35, Sprite = 24208}   // Cave Troll
@@ -233,8 +239,6 @@ namespace SotnRandoTools.Khaos
 		private int fastInterval;
 		private bool shaftHpSet = false;
 
-		private FileSystemWatcher botFileWatcher = new FileSystemWatcher();
-
 		public KhaosController(IToolConfig toolConfig, IGameApi gameApi, IAlucardApi alucardApi, IActorApi actorApi, ICheatCollectionAdapter cheats, INotificationService notificationService, IInputService inputService)
 		{
 			if (toolConfig is null) throw new ArgumentNullException(nameof(toolConfig));
@@ -252,34 +256,21 @@ namespace SotnRandoTools.Khaos
 			this.notificationService = notificationService;
 			this.inputService = inputService;
 
-			if (File.Exists(toolConfig.Khaos.BotActionsFilePath))
-			{
-				botFileWatcher.Path = Path.GetDirectoryName(toolConfig.Khaos.BotActionsFilePath);
-				botFileWatcher.Filter = Path.GetFileName(toolConfig.Khaos.BotActionsFilePath);
-				botFileWatcher.Changed += OnBotFileChanged;
-			}
-			else
-			{
-				Console.WriteLine("Bot action file not found!");
-			}
-
 			InitializeTimers();
 			notificationService.ActionQueue = queuedActions;
 			normalInterval = (int)toolConfig.Khaos.QueueInterval.TotalMilliseconds;
 			slowInterval = (int) normalInterval * 2;
 			fastInterval = (int) normalInterval / 2;
+			Console.WriteLine($"Intervals set. \n normal: {normalInterval / 1000}s, slow:{slowInterval / 1000}s, fast:{fastInterval / 1000}s");
+
+			socketClient = new WatsonWsClient(new Uri(Globals.StreamlabsSocketAddress));
+			socketClient.ServerConnected += BotConnected;
+			socketClient.ServerDisconnected += BotDisconnected;
+			socketClient.MessageReceived += BotMessageReceived;
 		}
 
 		public void StartKhaos()
 		{
-			if (File.Exists(toolConfig.Khaos.BotActionsFilePath))
-			{
-				botFileWatcher.EnableRaisingEvents = true;
-			}
-			else
-			{
-				return;
-			}
 			if (File.Exists(toolConfig.Khaos.NamesFilePath))
 			{
 				subscribers = FileExtensions.GetLines(toolConfig.Khaos.NamesFilePath);
@@ -291,20 +282,23 @@ namespace SotnRandoTools.Khaos
 				OverwriteBossNames(subscribers);
 			}
 			StartCheats();
+			socketClient.Start();
 
 			notificationService.AddMessage($"Khaos started");
+			Console.WriteLine("Khaos started");
 		}
 		public void StopKhaos()
 		{
-			if (File.Exists(toolConfig.Khaos.BotActionsFilePath))
-			{
-				botFileWatcher.EnableRaisingEvents = false;
-			}
 			actionTimer.Stop();
 			fastActionTimer.Stop();
 			Cheat faerieScroll = cheats.GetCheatByName("FaerieScroll");
 			faerieScroll.Disable();
+			if (socketClient.Connected)
+			{
+				socketClient.Stop();
+			}
 			notificationService.AddMessage($"Khaos stopped");
+			Console.WriteLine("Khaos stopped");
 		}
 		public void OverwriteBossNames(string[] subscribers)
 		{
@@ -467,6 +461,7 @@ namespace SotnRandoTools.Khaos
 			storedMana = alucardApi.CurrentMp;
 			bloodManaActive = true;
 			bloodManaTimer.Start();
+			manaLocked = true;
 			notificationService.AddMessage($"{user} used Blood Mana");
 			notificationService.AddTimer(new Services.Models.ActionTimer
 			{
@@ -788,22 +783,14 @@ namespace SotnRandoTools.Khaos
 				CheckDashInput();
 			}
 		}
-		public void EnqueueAction(string command)
+		public void EnqueueAction(EventAddAction eventData)
 		{
-			if (command is null) throw new ArgumentNullException(nameof(command));
-			if (command == "") throw new ArgumentException($"Parameter {nameof(command)} is empty!");
-
-			string user = String.Empty;
-			string[] commandArgs = command.Split(' ');
-			string action = commandArgs[0];
-			if (commandArgs.Length > 1)
-			{
-				user = commandArgs[1];
-			}
-			if (user == String.Empty)
-			{
-				user = "Khaos";
-			}
+			if (eventData.Command is null) throw new ArgumentNullException(nameof(eventData.Command));
+			if (eventData.Command == "") throw new ArgumentException($"Parameter {nameof(eventData.Command)} is empty!");
+			if (eventData.UserName is null) throw new ArgumentNullException(nameof(eventData.UserName));
+			if (eventData.UserName == "") throw new ArgumentException($"Parameter {nameof(eventData.UserName)} is empty!");
+			string user = eventData.UserName;
+			string action = eventData.Command;
 
 			SotnRandoTools.Configuration.Models.Action commandAction;
 			switch (action)
@@ -999,10 +986,6 @@ namespace SotnRandoTools.Khaos
 					break;
 					#endregion
 			}
-			if (queuedActions.Count > 1)
-			{
-				SetDynamicInterval();
-			}
 		}
 		private void InitializeTimers()
 		{
@@ -1085,20 +1068,16 @@ namespace SotnRandoTools.Khaos
 					{
 						queuedActions[index].Invoker();
 						queuedActions.RemoveAt(index);
+						SetDynamicInterval();
 					}
 					else
 					{
 						Console.WriteLine($"All actions locked. speed: {speedLocked}, invincibility: {invincibilityLocked}, mana: {manaLocked}");
 					}
-
-					if (actionTimer.Interval < fastInterval)
-					{
-						SetDynamicInterval();
-					}
 				}
 				else
 				{
-					actionTimer.Interval = 2 * (1 * 1000);
+					actionTimer.Interval = 2000;
 				}
 			}
 		}
@@ -1107,15 +1086,18 @@ namespace SotnRandoTools.Khaos
 		{
 			if (toolConfig.Khaos.DynamicInterval && queuedActions.Count < 3)
 			{
-				actionTimer.Interval = (int) slowInterval;
+				actionTimer.Interval = slowInterval;
+				Console.WriteLine($"Interval set to {slowInterval / 1000}s, {actionTimer.Interval}");
 			}
 			else if (toolConfig.Khaos.DynamicInterval && queuedActions.Count > 8)
 			{
-				actionTimer.Interval = (int) fastInterval;
+				actionTimer.Interval = fastInterval;
+				Console.WriteLine($"Interval set to {fastInterval / 1000}s, {actionTimer.Interval}");
 			}
 			else
 			{
-				actionTimer.Interval = (int) normalInterval;
+				actionTimer.Interval = normalInterval;
+				Console.WriteLine($"Interval set to {normalInterval / 1000}s, {actionTimer.Interval}");
 			}
 		}
 
@@ -1341,6 +1323,7 @@ namespace SotnRandoTools.Khaos
 		}
 		private void BloodManaOff(Object sender, EventArgs e)
 		{
+			manaLocked = false;
 			bloodManaActive = false;
 			bloodManaTimer.Stop();
 		}
@@ -1395,7 +1378,6 @@ namespace SotnRandoTools.Khaos
 			{
 				FindHordeEnemy();
 				int enemyIndex = rnd.Next(0, hordeEnemies.Count);
-				Console.WriteLine($"Selected index: {enemyIndex} from count: {hordeEnemies.Count}");
 				if (hordeTimer.Interval == 5 * (60 * 1000))
 				{
 					hordeTimer.Stop();
@@ -1797,9 +1779,39 @@ namespace SotnRandoTools.Khaos
 				notificationService.PlayAlert(action.AlertPath);
 			}
 		}
-		private void OnBotFileChanged(object sender, FileSystemEventArgs e)
+		private void BotMessageReceived(object sender, MessageReceivedEventArgs e)
 		{
-			EnqueueAction(FileExtensions.GetLastLine(toolConfig.Khaos.BotActionsFilePath));
+			JObject eventJson = JObject.Parse(Encoding.UTF8.GetString(e.Data));
+			Console.WriteLine("Message from bot: \n" + eventJson.ToString());
+
+			if (eventJson["event"] is not null && eventJson["data"] is not null && eventJson["event"].ToString() == Globals.ActionSocketEvent)
+			{
+				JObject actionData = JObject.Parse(eventJson["data"].ToString().Replace("/", ""));
+				if (actionData["Command"] is not null && actionData["UserName"] is not null)
+				{
+					EnqueueAction(new EventAddAction { Command = actionData["Command"].ToString(), UserName = actionData["UserName"].ToString() });
+				}
+			}
+			else if (eventJson["event"] is not null && eventJson["data"] is not null && eventJson["event"].ToString() == Globals.ConnectedSocketEvent)
+			{
+				notificationService.AddMessage($"Bot connected");
+			}
+		}
+		private void BotDisconnected(object sender, EventArgs e)
+		{
+			Console.WriteLine("Bot socket disconnected");
+		}
+		private void BotConnected(object sender, EventArgs e)
+		{
+			JObject auth = JObject.FromObject(new
+			{
+				author = Globals.Author,
+				website = Globals.Website,
+				api_key = toolConfig.Khaos.BotApiKey,
+				events = new string[] { Globals.ActionSocketEvent }
+			});
+			socketClient.SendAsync(auth.ToString(), System.Net.WebSockets.WebSocketMessageType.Text);
+			Console.WriteLine("Bot socket connected, sending authentication");
 		}
 	}
 }

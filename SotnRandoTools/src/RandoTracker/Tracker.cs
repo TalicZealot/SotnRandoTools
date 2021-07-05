@@ -590,10 +590,6 @@ namespace SotnRandoTools.RandoTracker
 				}
 				return renderingApi.RoomIsRendered(row, col);
 			}
-			else
-			{
-				Console.WriteLine("No locations remaining.");
-			}
 			return true;
 		}
 
