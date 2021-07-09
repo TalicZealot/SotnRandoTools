@@ -198,7 +198,8 @@ namespace SotnRandoTools.Khaos
 			new SearchableActor {Hp = 32, Damage = 16, Sprite = 16520},  // Slime
 			new SearchableActor {Hp = 100, Damage = 35, Sprite = 28812}, // Blue Venus Weed Unflowered
 			new SearchableActor {Hp = 550, Damage = 45, Sprite = 31040}, // Blue Venus Weed Flowered
-			new SearchableActor {Hp = 88, Damage = 35, Sprite = 24208}   // Cave Troll
+			new SearchableActor {Hp = 88, Damage = 35, Sprite = 24208},  // Cave Troll
+			new SearchableActor {Hp = 50, Damage = 40, Sprite = 9240}	 // Sniper of Goth
 		};
 		private List<SearchableActor> enduranceBosses = new List<SearchableActor>
 		{
@@ -258,7 +259,7 @@ namespace SotnRandoTools.Khaos
 
 			InitializeTimers();
 			notificationService.ActionQueue = queuedActions;
-			normalInterval = (int)toolConfig.Khaos.QueueInterval.TotalMilliseconds;
+			normalInterval = (int) toolConfig.Khaos.QueueInterval.TotalMilliseconds;
 			slowInterval = (int) normalInterval * 2;
 			fastInterval = (int) normalInterval / 2;
 			Console.WriteLine($"Intervals set. \n normal: {normalInterval / 1000}s, slow:{slowInterval / 1000}s, fast:{fastInterval / 1000}s");
@@ -321,8 +322,17 @@ namespace SotnRandoTools.Khaos
 		#region Khaotic Effects
 		public void KhaosStatus(string user = "Khaos")
 		{
+			uint mapX = alucardApi.MapX;
+			uint mapY = alucardApi.MapY;
+			bool keepRichterRoom = ((mapX >= 31 && mapX <= 34) && mapY == 8);
+			bool succubusRoom = (mapX == 0 && mapY == 0);
 			Random rnd = new Random();
-			int result = rnd.Next(1, 4);
+			int max = 4;
+			if (succubusRoom)
+			{
+				max = 3;
+			}
+			int result = rnd.Next(1, max);
 			switch (result)
 			{
 				case 1:
@@ -1032,12 +1042,12 @@ namespace SotnRandoTools.Khaos
 		}
 		private void ExecuteAction(Object sender, EventArgs e)
 		{
-			uint mapX = alucardApi.MapX;
-			uint mapY = alucardApi.MapY;
-			bool keepRichterRoom = ((mapX >= 31 && mapX <=34) && mapY == 8);
-			if (gameApi.InAlucardMode() && gameApi.CanMenu() && alucardApi.CurrentHp > 0 && !gameApi.CanSave() && !keepRichterRoom)
+			if (queuedActions.Count > 0)
 			{
-				if (queuedActions.Count > 0)
+				uint mapX = alucardApi.MapX;
+				uint mapY = alucardApi.MapY;
+				bool keepRichterRoom = ((mapX >= 31 && mapX <= 34) && mapY == 8);
+				if (gameApi.InAlucardMode() && gameApi.CanMenu() && alucardApi.CurrentHp > 0 && !gameApi.CanSave() && !keepRichterRoom)
 				{
 					int index = 0;
 					bool actionUnlocked = true;
@@ -1075,10 +1085,10 @@ namespace SotnRandoTools.Khaos
 						Console.WriteLine($"All actions locked. speed: {speedLocked}, invincibility: {invincibilityLocked}, mana: {manaLocked}");
 					}
 				}
-				else
-				{
-					actionTimer.Interval = 2000;
-				}
+			}
+			else
+			{
+				actionTimer.Interval = 2000;
 			}
 		}
 
@@ -1105,6 +1115,7 @@ namespace SotnRandoTools.Khaos
 		{
 			uint mapX = alucardApi.MapX;
 			uint mapY = alucardApi.MapY;
+			Console.WriteLine($"mapx: {mapX}, mapy: {mapY}");
 			bool keepRichterRoom = ((mapX >= 31 && mapX <= 34) && mapY == 8);
 			if (gameApi.InAlucardMode() && gameApi.CanMenu() && alucardApi.CurrentHp > 0 && !gameApi.CanSave() && !keepRichterRoom)
 			{
@@ -1419,7 +1430,7 @@ namespace SotnRandoTools.Khaos
 						hordeEnemy = null;
 					}
 				}
-				if (hordeEnemy is  not null && hordeEnemies.Where(e => e.Hp == hordeEnemy.Hp && e.Damage == hordeEnemy.Damage).Count() < 1)
+				if (hordeEnemy is not null && hordeEnemies.Where(e => e.Hp == hordeEnemy.Hp && e.Damage == hordeEnemy.Damage).Count() < 1)
 				{
 					hordeEnemies.Add(hordeEnemy);
 					Console.WriteLine($"Added horde enemy with hp: {hordeEnemy.Hp} sprite: {hordeEnemy.Sprite} damage: {hordeEnemy.Damage}");
@@ -1468,15 +1479,15 @@ namespace SotnRandoTools.Khaos
 			if (enemy > 0)
 			{
 				LiveActor boss = actorApi.GetLiveActor(enemy);
-				boss.Hp *= (ushort)1.5; 
+				boss.Hp *= (ushort) 1.5;
 
 				bossCopy = new Actor(actorApi.GetActor(enemy));
 				Console.WriteLine($"Endurance boss found hp: {bossCopy.Hp}, damage: {bossCopy.Damage}, sprite: {bossCopy.Sprite}");
 
 				bossCopy.Xpos = (ushort) rnd.Next(70, 170);
 				bossCopy.Palette = (ushort) (bossCopy.Palette + rnd.Next(1, 10));
-				bossCopy.Hp *= (ushort)1.5;
-				bossCopy.Damage = (ushort)(1.5 * bossCopy.Damage);
+				bossCopy.Hp *= (ushort) 1.5;
+				bossCopy.Damage = (ushort) (1.5 * bossCopy.Damage);
 				actorApi.SpawnActor(bossCopy);
 				enduranceCount--;
 				enduranceRoomX = roomX;
@@ -1697,7 +1708,7 @@ namespace SotnRandoTools.Khaos
 			alucardApi.WalkingFractSpeed = horizontalFract;
 			alucardApi.JumpingHorizontalWholeSpeed = horizontalWhole;
 			alucardApi.JumpingHorizontalFractSpeed = horizontalFract;
-			alucardApi.JumpingAttackLeftHorizontalWholeSpeed = (uint)(0xFF - horizontalWhole);
+			alucardApi.JumpingAttackLeftHorizontalWholeSpeed = (uint) (0xFF - horizontalWhole);
 			alucardApi.JumpingAttackLeftHorizontalFractSpeed = horizontalFract;
 			alucardApi.JumpingAttackRightHorizontalWholeSpeed = horizontalWhole;
 			alucardApi.JumpingAttackRightHorizontalFractSpeed = horizontalFract;
@@ -1714,7 +1725,7 @@ namespace SotnRandoTools.Khaos
 			if (shaftAddress > 0)
 			{
 				LiveActor shaft = actorApi.GetLiveActor(shaftAddress);
-				shaft.Hp = 20;
+				shaft.Hp = 30;
 				shaftHpSet = true;
 				Console.WriteLine("Found Shaft actor and set HP to 20.");
 			}

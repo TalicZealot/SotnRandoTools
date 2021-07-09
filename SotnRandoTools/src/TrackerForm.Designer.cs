@@ -34,6 +34,8 @@ namespace SotnRandoTools
             // 
             // TrackerForm
             // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
             this.ClientSize = new System.Drawing.Size(284, 361);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

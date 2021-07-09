@@ -33,6 +33,7 @@ namespace SotnRandoTools
             this.divider = new System.Windows.Forms.Label();
             this.saveButton = new System.Windows.Forms.Button();
             this.optionsBox = new System.Windows.Forms.GroupBox();
+            this.sendRelicsCheckbox = new System.Windows.Forms.CheckBox();
             this.shareLocationsCheckbox = new System.Windows.Forms.CheckBox();
             this.sendAssistsCheckbox = new System.Windows.Forms.CheckBox();
             this.shareWarpsCheckbox = new System.Windows.Forms.CheckBox();
@@ -43,7 +44,6 @@ namespace SotnRandoTools
             this.serverTextBox = new System.Windows.Forms.TextBox();
             this.portLabel = new System.Windows.Forms.Label();
             this.portTextBox = new System.Windows.Forms.TextBox();
-            this.sendRelicsCheckbox = new System.Windows.Forms.CheckBox();
             this.optionsBox.SuspendLayout();
             this.connectionGroup.SuspendLayout();
             this.SuspendLayout();
@@ -96,6 +96,17 @@ namespace SotnRandoTools
             this.optionsBox.TabIndex = 4;
             this.optionsBox.TabStop = false;
             this.optionsBox.Text = "Options";
+            // 
+            // sendRelicsCheckbox
+            // 
+            this.sendRelicsCheckbox.AutoSize = true;
+            this.sendRelicsCheckbox.Location = new System.Drawing.Point(5, 20);
+            this.sendRelicsCheckbox.Name = "sendRelicsCheckbox";
+            this.sendRelicsCheckbox.Size = new System.Drawing.Size(81, 17);
+            this.sendRelicsCheckbox.TabIndex = 5;
+            this.sendRelicsCheckbox.Text = "Share relics";
+            this.sendRelicsCheckbox.UseVisualStyleBackColor = true;
+            this.sendRelicsCheckbox.CheckedChanged += new System.EventHandler(this.sendRelicsCheckbox_CheckedChanged);
             // 
             // shareLocationsCheckbox
             // 
@@ -202,21 +213,10 @@ namespace SotnRandoTools
             this.portTextBox.TabIndex = 0;
             this.portTextBox.TextChanged += new System.EventHandler(this.portTextBox_TextChanged);
             // 
-            // sendRelicsCheckbox
-            // 
-            this.sendRelicsCheckbox.AutoSize = true;
-            this.sendRelicsCheckbox.Location = new System.Drawing.Point(5, 20);
-            this.sendRelicsCheckbox.Name = "sendRelicsCheckbox";
-            this.sendRelicsCheckbox.Size = new System.Drawing.Size(81, 17);
-            this.sendRelicsCheckbox.TabIndex = 5;
-            this.sendRelicsCheckbox.Text = "Share relics";
-            this.sendRelicsCheckbox.UseVisualStyleBackColor = true;
-            this.sendRelicsCheckbox.CheckedChanged += new System.EventHandler(this.sendRelicsCheckbox_CheckedChanged);
-            // 
             // CoopSettingsPanel
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
             this.Controls.Add(this.connectionGroup);
             this.Controls.Add(this.optionsBox);

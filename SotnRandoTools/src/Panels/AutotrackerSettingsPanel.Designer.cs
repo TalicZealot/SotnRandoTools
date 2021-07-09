@@ -44,9 +44,9 @@ namespace SotnRandoTools
             this.replaysCheckBox = new System.Windows.Forms.CheckBox();
             this.locationsCheckbox = new System.Windows.Forms.CheckBox();
             this.customSeedGroup = new System.Windows.Forms.GroupBox();
-            this.customLocationsGuardedRadio = new System.Windows.Forms.RadioButton();
-            this.customLocationsEquipmentRadio = new System.Windows.Forms.RadioButton();
             this.customLocationsClassicRadio = new System.Windows.Forms.RadioButton();
+            this.customLocationsEquipmentRadio = new System.Windows.Forms.RadioButton();
+            this.customLocationsGuardedRadio = new System.Windows.Forms.RadioButton();
             this.relicDisplayGroup.SuspendLayout();
             this.layoutGroup.SuspendLayout();
             this.windowGroup.SuspendLayout();
@@ -229,17 +229,17 @@ namespace SotnRandoTools
             this.customSeedGroup.TabStop = false;
             this.customSeedGroup.Text = "Custom Seed Locations";
             // 
-            // customLocationsGuardedRadio
+            // customLocationsClassicRadio
             // 
-            this.customLocationsGuardedRadio.AutoSize = true;
-            this.customLocationsGuardedRadio.Location = new System.Drawing.Point(6, 20);
-            this.customLocationsGuardedRadio.Name = "customLocationsGuardedRadio";
-            this.customLocationsGuardedRadio.Size = new System.Drawing.Size(66, 17);
-            this.customLocationsGuardedRadio.TabIndex = 1;
-            this.customLocationsGuardedRadio.TabStop = true;
-            this.customLocationsGuardedRadio.Text = "Guarded";
-            this.customLocationsGuardedRadio.UseVisualStyleBackColor = true;
-            this.customLocationsGuardedRadio.CheckedChanged += new System.EventHandler(this.customLocationsGuardedRadio_CheckedChanged);
+            this.customLocationsClassicRadio.AutoSize = true;
+            this.customLocationsClassicRadio.Location = new System.Drawing.Point(6, 66);
+            this.customLocationsClassicRadio.Name = "customLocationsClassicRadio";
+            this.customLocationsClassicRadio.Size = new System.Drawing.Size(57, 17);
+            this.customLocationsClassicRadio.TabIndex = 3;
+            this.customLocationsClassicRadio.TabStop = true;
+            this.customLocationsClassicRadio.Text = "Classic";
+            this.customLocationsClassicRadio.UseVisualStyleBackColor = true;
+            this.customLocationsClassicRadio.CheckedChanged += new System.EventHandler(this.customLocationsClassicRadio_CheckedChanged);
             // 
             // customLocationsEquipmentRadio
             // 
@@ -253,22 +253,22 @@ namespace SotnRandoTools
             this.customLocationsEquipmentRadio.UseVisualStyleBackColor = true;
             this.customLocationsEquipmentRadio.CheckedChanged += new System.EventHandler(this.customLocationsEquipmentRadio_CheckedChanged);
             // 
-            // customLocationsClassicRadio
+            // customLocationsGuardedRadio
             // 
-            this.customLocationsClassicRadio.AutoSize = true;
-            this.customLocationsClassicRadio.Location = new System.Drawing.Point(6, 66);
-            this.customLocationsClassicRadio.Name = "customLocationsClassicRadio";
-            this.customLocationsClassicRadio.Size = new System.Drawing.Size(57, 17);
-            this.customLocationsClassicRadio.TabIndex = 3;
-            this.customLocationsClassicRadio.TabStop = true;
-            this.customLocationsClassicRadio.Text = "Classic";
-            this.customLocationsClassicRadio.UseVisualStyleBackColor = true;
-            this.customLocationsClassicRadio.CheckedChanged += new System.EventHandler(this.customLocationsClassicRadio_CheckedChanged);
+            this.customLocationsGuardedRadio.AutoSize = true;
+            this.customLocationsGuardedRadio.Location = new System.Drawing.Point(6, 20);
+            this.customLocationsGuardedRadio.Name = "customLocationsGuardedRadio";
+            this.customLocationsGuardedRadio.Size = new System.Drawing.Size(66, 17);
+            this.customLocationsGuardedRadio.TabIndex = 1;
+            this.customLocationsGuardedRadio.TabStop = true;
+            this.customLocationsGuardedRadio.Text = "Guarded";
+            this.customLocationsGuardedRadio.UseVisualStyleBackColor = true;
+            this.customLocationsGuardedRadio.CheckedChanged += new System.EventHandler(this.customLocationsGuardedRadio_CheckedChanged);
             // 
             // AutotrackerSettingsPanel
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
             this.Controls.Add(this.customSeedGroup);
             this.Controls.Add(this.optionsGroup);
