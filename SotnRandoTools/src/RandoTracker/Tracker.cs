@@ -260,6 +260,10 @@ namespace SotnRandoTools.RandoTracker
 					secondCastle = updatedSecondCastle;
 					SetMapLocations();
 				}
+				else if (updatedSecondCastle != secondCastle)
+				{
+					secondCastle = updatedSecondCastle;
+				}
 
 				UpdateRelics();
 				UpdateProgressionItems();
@@ -818,7 +822,7 @@ namespace SotnRandoTools.RandoTracker
 			{
 				foreach (var room in replay)
 				{
-					int time = (int)Math.Ceiling((double) (room.Time / 10));
+					int time = (int) Math.Ceiling((double) (room.Time / 10));
 					if (time < 1)
 					{
 						time = 1;

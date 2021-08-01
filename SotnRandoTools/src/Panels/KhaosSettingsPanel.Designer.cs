@@ -79,13 +79,13 @@ namespace SotnRandoTools
             this.Browse = new System.Windows.Forms.DataGridViewButtonColumn();
             this.actionSettings = new System.Windows.Forms.TabPage();
             this.actionsGridView = new System.Windows.Forms.DataGridView();
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.AlertEnabled = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.Duration = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Interval = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.alertFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.namesFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.valueToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.AlertEnabled = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.Duration = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Meter = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.khaosTabs.SuspendLayout();
             this.generalTab.SuspendLayout();
             this.generalSettingsBox.SuspendLayout();
@@ -561,7 +561,7 @@ namespace SotnRandoTools
             this.dataGridViewTextBoxColumn1,
             this.AlertEnabled,
             this.Duration,
-            this.Interval});
+            this.Meter});
             dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle10.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
             dataGridViewCellStyle10.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -578,9 +578,20 @@ namespace SotnRandoTools
             this.actionsGridView.Name = "actionsGridView";
             this.actionsGridView.RowHeadersVisible = false;
             this.actionsGridView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.actionsGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+            this.actionsGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.actionsGridView.Size = new System.Drawing.Size(368, 259);
             this.actionsGridView.TabIndex = 1;
+            // 
+            // alertFileDialog
+            // 
+            this.alertFileDialog.Filter = "mp3 files (*.mp3)|*.mp3|wav files (*.wav*)|*.wav*";
+            this.alertFileDialog.Title = "Select Alert Sound File";
+            this.alertFileDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.alertFileDialog_FileOk);
+            // 
+            // namesFileDialog
+            // 
+            this.namesFileDialog.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+            this.namesFileDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.namesFileDialog_FileOk);
             // 
             // dataGridViewTextBoxColumn1
             // 
@@ -608,32 +619,22 @@ namespace SotnRandoTools
             // 
             this.Duration.DataPropertyName = "Duration";
             dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle8.NullValue = null;
             this.Duration.DefaultCellStyle = dataGridViewCellStyle8;
             this.Duration.HeaderText = "Duration";
             this.Duration.MaxInputLength = 8;
             this.Duration.Name = "Duration";
             this.Duration.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             // 
-            // Interval
+            // Meter
             // 
-            this.Interval.DataPropertyName = "Interval";
+            this.Meter.DataPropertyName = "Meter";
             dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Interval.DefaultCellStyle = dataGridViewCellStyle9;
-            this.Interval.HeaderText = "Interval";
-            this.Interval.MaxInputLength = 8;
-            this.Interval.Name = "Interval";
-            this.Interval.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            // 
-            // alertFileDialog
-            // 
-            this.alertFileDialog.Filter = "mp3 files (*.mp3)|*.mp3|wav files (*.wav*)|*.wav*";
-            this.alertFileDialog.Title = "Select Alert Sound File";
-            this.alertFileDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.alertFileDialog_FileOk);
-            // 
-            // namesFileDialog
-            // 
-            this.namesFileDialog.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
-            this.namesFileDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.namesFileDialog_FileOk);
+            this.Meter.DefaultCellStyle = dataGridViewCellStyle9;
+            this.Meter.HeaderText = "Khaos Meter";
+            this.Meter.MaxInputLength = 2;
+            this.Meter.Name = "Meter";
+            this.Meter.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             // 
             // KhaosSettingsPanel
             // 
@@ -708,15 +709,15 @@ namespace SotnRandoTools
 		private System.Windows.Forms.ToolTip valueToolTip;
 		private System.Windows.Forms.DataGridView alertsGridView;
 		private System.Windows.Forms.DataGridView actionsGridView;
-		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
-		private System.Windows.Forms.DataGridViewCheckBoxColumn AlertEnabled;
-		private System.Windows.Forms.DataGridViewTextBoxColumn Duration;
-		private System.Windows.Forms.DataGridViewTextBoxColumn Interval;
 		private System.Windows.Forms.DataGridViewTextBoxColumn ActionName;
 		private System.Windows.Forms.DataGridViewTextBoxColumn AlertPath;
 		private System.Windows.Forms.DataGridViewButtonColumn Browse;
 		private System.Windows.Forms.CheckBox dynamicIntervalCheckBox;
 		private System.Windows.Forms.GroupBox botApiKeyBox;
 		private System.Windows.Forms.TextBox botApiKey;
+		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
+		private System.Windows.Forms.DataGridViewCheckBoxColumn AlertEnabled;
+		private System.Windows.Forms.DataGridViewTextBoxColumn Duration;
+		private System.Windows.Forms.DataGridViewTextBoxColumn Meter;
 	}
 }

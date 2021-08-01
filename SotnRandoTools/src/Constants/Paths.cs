@@ -9,6 +9,7 @@
 		public const string RichterLaughSound = "./ExternalTools/SotnRandoTools/Sounds/RichterLaugh.mp3";
 		public const string FairyPotionSound = "./ExternalTools/SotnRandoTools/Sounds/FairyPotion.mp3";
 		public const string MeltySound = "./ExternalTools/SotnRandoTools/Sounds/Melty.mp3";
+		public const string DragonInstallSound = "./ExternalTools/SotnRandoTools/Sounds/DragonInstall.mp3";
 		public const string ZaWarudoSound = "./ExternalTools/SotnRandoTools/Sounds/ZaWarudo.mp3";
 
 		public const string BotActionsFilePath = "./ExternalTools/SotnRandoTools/Khaos/actions.txt";

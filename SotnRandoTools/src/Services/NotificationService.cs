@@ -16,8 +16,9 @@ namespace SotnRandoTools.Services
 {
 	public class NotificationService : INotificationService
 	{
-		const int NotificationTime = 4 * 1000;
-		const int NotificationTimeFast = 1 * 1000;
+		private const int NotificationTime = 4 * 1000;
+		private const int NotificationTimeFast = 1 * 1000;
+		private const int MeterSize = 60;
 
 		private readonly IGuiApi guiApi;
 		private readonly IToolConfig toolConfig;
@@ -25,14 +26,23 @@ namespace SotnRandoTools.Services
 
 		private System.Timers.Timer messageTimer;
 		private System.Timers.Timer countdownTimer;
+		private int scale;
 		private Image textbox;
 		private Image iconSkull;
 		private Image iconFairy;
 		private Image iconEye;
+		private Image scaledTextbox;
+		private Image scaledIconSkull;
+		private Image scaledIconFairy;
+		private Image scaledIconEye;
 		private System.Windows.Media.MediaPlayer audioPlayer = new();
 		private List<string> messageQueue = new();
 		private List<ActionTimer> actionTimers = new();
 		private bool cleared = false;
+		private Color meterForegroundColor = Color.FromArgb(96, 101, 168);
+		private Color meterBackgroundColor = Color.FromArgb(40, 40, 40);
+		private Color meterBorderColor = Color.FromArgb(180, 180, 180);
+		private Color timerPieColor = Color.FromArgb(190, 190, 190, 190);
 
 		public NotificationService(IToolConfig toolConfig, IGuiApi guiApi, IEmuClientApi clientAPI)
 		{
@@ -55,8 +65,11 @@ namespace SotnRandoTools.Services
 			iconSkull = Image.FromFile(Paths.IconSkull);
 			iconFairy = Image.FromFile(Paths.IconFairy);
 			iconEye = Image.FromFile(Paths.IconEye);
+			scale = GetScale();
+			ResizeImages();
 			audioPlayer.Volume = (double) toolConfig.Khaos.Volume / 10F;
 			ActionQueue = new();
+			this.KhaosMeter = 0;
 		}
 
 		public double Volume
@@ -66,6 +79,8 @@ namespace SotnRandoTools.Services
 				audioPlayer.Volume = value;
 			}
 		}
+
+		public short KhaosMeter { get; set; }
 
 		public List<QueuedAction> ActionQueue { get; set; }
 
@@ -119,7 +134,7 @@ namespace SotnRandoTools.Services
 
 		private void DrawUI()
 		{
-			if (ActionQueue.Count == 0 && actionTimers.Count == 0 && messageQueue.Count == 0)
+			if (ActionQueue.Count == 0 && actionTimers.Count == 0 && messageQueue.Count == 0 && KhaosMeter == 0)
 			{
 				if (!cleared)
 				{
@@ -133,19 +148,15 @@ namespace SotnRandoTools.Services
 			}
 
 			cleared = false;
-			int bufferWidth = clientAPI.BufferWidth();
-			int scale = clientAPI.GetWindowSize();
-			bool pixelPro = bufferWidth == 800;
-			if (pixelPro)
+			int newScale = GetScale();
+			if (scale != newScale)
 			{
-				scale *= 2;
+				scale = newScale;
+				ResizeImages();
+				Console.WriteLine($"Changed scale to {scale}");
 			}
-			int fontSize = 11 * scale;
 
-			Image scaledTextbox = ResizeImage(textbox, textbox.Width * scale, textbox.Height * scale);
-			Image scaledIconSkull = ResizeImage(iconSkull, iconSkull.Width * scale, iconSkull.Height * scale);
-			Image scaledIconFairy = ResizeImage(iconFairy, iconFairy.Width * scale, iconFairy.Height * scale);
-			Image scaledIconEye = ResizeImage(iconEye, iconEye.Width * scale, iconEye.Height * scale);
+			int fontSize = 11 * scale;
 
 			int screenWidth = clientAPI.ScreenWidth();
 			int screenHeight = clientAPI.ScreenHeight();
@@ -170,12 +181,38 @@ namespace SotnRandoTools.Services
 					DrawQueue(scale, scaledIconSkull, scaledIconFairy, scaledIconEye, xpos, ypos, ref col, ref row);
 				}
 
-				xpos = pixelPro ? (int) (screenWidth * 0.17) : (int) (screenWidth * 0.05);
+
+				if (KhaosMeter > 0)
+				{
+					xpos = (int) (screenWidth * 0.15);
+					ypos = (int) (screenHeight * 0.18);
+					DrawMeter(scale, xpos, ypos);
+				}
+
+				xpos = IsPixelPro() ? (int) (screenWidth * 0.17) : (int) (screenWidth * 0.05);
 				ypos = (int) (screenHeight * 0.15);
 				row = 0;
-				fontSize = 8 * scale;
+				fontSize = 6 * scale;
 				DrawTimers(scale, fontSize, scaledIconSkull, scaledIconFairy, scaledIconEye, xpos, ypos, ref row);
 			});
+		}
+
+		private int GetScale()
+		{
+			int bufferWidth = clientAPI.BufferWidth();
+			int scale = clientAPI.GetWindowSize();
+			bool pixelPro = bufferWidth == 800;
+			if (pixelPro)
+			{
+				scale *= 2;
+			}
+			return scale;
+		}
+
+		private bool IsPixelPro()
+		{
+			int bufferWidth = clientAPI.BufferWidth();
+			return bufferWidth == 800;
 		}
 
 		private void DrawMessage(string message, int scale, Image scaledTextbox, int xpos, int ypos, int fontSize)
@@ -216,22 +253,32 @@ namespace SotnRandoTools.Services
 			foreach (var timer in actionTimers)
 			{
 				row++;
+				int timerPie = (int)(((float)timer.Duration.TotalSeconds / (float)timer.TotalDuration) * 360);
+				guiApi.DrawPie(xpos + (1 * scale), ypos + (row * (scaledIconEye.Height + (3 * scale))) + (10 * scale), scaledIconEye.Width + (3 * scale), scaledIconEye.Width + (3 * scale), 0, timerPie, timerPieColor, timerPieColor);
 				switch (timer.Type)
 				{
 					case ActionType.Khaotic:
-						guiApi.DrawImage(scaledIconEye, xpos + (1 * scale), ypos + (row * scaledIconEye.Height) + (1 * scale), scaledIconEye.Width, scaledIconEye.Height, true);
+						guiApi.DrawImage(scaledIconEye, xpos + (3 * scale), ypos + (row * (scaledIconEye.Height + (3 * scale))) + (13 * scale), scaledIconEye.Width, scaledIconEye.Height, true);
 						break;
 					case ActionType.Debuff:
-						guiApi.DrawImage(scaledIconSkull, xpos + (1 * scale), ypos + (row * scaledIconSkull.Height) + (1 * scale), scaledIconSkull.Width, scaledIconSkull.Height, true);
+						guiApi.DrawImage(scaledIconSkull, xpos + (3 * scale), ypos + (row * (scaledIconEye.Height + (3 * scale))) + (13 * scale), scaledIconSkull.Width, scaledIconSkull.Height, true);
 						break;
 					case ActionType.Buff:
-						guiApi.DrawImage(scaledIconFairy, xpos + (1 * scale), ypos + (row * scaledIconFairy.Height) + (1 * scale), scaledIconFairy.Width, scaledIconFairy.Height, true);
+						guiApi.DrawImage(scaledIconFairy, xpos + (3 * scale), ypos + (row * (scaledIconEye.Height + (3 * scale))) + (13 * scale), scaledIconFairy.Width, scaledIconFairy.Height, true);
 						break;
 					default:
 						break;
 				}
-				guiApi.DrawString(xpos + (scaledIconEye.Width) + (1 * scale), ypos + (row * scaledIconEye.Height) + (4 * scale), timer.Name + " " + timer.Duration.ToString(@"mm\:ss"), Color.White, null, fontSize, "Arial", "bold");
+				guiApi.DrawString(xpos + (scaledIconEye.Width) + (5 * scale), ypos + (row * (scaledIconEye.Height + (3 * scale))) + (17 * scale), timer.Name, Color.White, null, fontSize, "Arial", "bold");
 			}
+		}
+
+		private void DrawMeter(int scale, int xpos, int ypos)
+		{
+			guiApi.DrawBox(xpos - (1 * scale), ypos - (1 * scale), xpos + (MeterSize * scale) + (1 * scale), ypos + (5 * scale) + (1 * scale), meterBorderColor, meterBorderColor);
+			guiApi.DrawBox(xpos, ypos, xpos + (MeterSize * scale), ypos + (5 * scale), meterBackgroundColor, meterBackgroundColor);
+			guiApi.DrawBox(xpos, ypos, xpos + ((int) ((KhaosMeter / 100f) * MeterSize) * scale), ypos + (5 * scale), meterForegroundColor, meterForegroundColor);
+			guiApi.DrawString(xpos + (int)(0.38 * (MeterSize * scale)), ypos, "KHAOS", Color.White, null, 4 * scale, "Arial", "bold");
 		}
 
 		private void DequeueMessage(object sender, ElapsedEventArgs e)
@@ -246,6 +293,11 @@ namespace SotnRandoTools.Services
 		{
 			foreach (var timer in actionTimers)
 			{
+				if (timer.TotalDuration == 0)
+				{
+					timer.TotalDuration = (int)timer.Duration.TotalSeconds;
+				}
+
 				timer.Duration -= TimeSpan.FromSeconds(1);
 				if (timer.Duration.TotalSeconds < 1)
 				{
@@ -275,6 +327,14 @@ namespace SotnRandoTools.Services
 			}
 
 			return destImage;
+		}
+
+		private void ResizeImages()
+		{
+			scaledTextbox = ResizeImage(textbox, textbox.Width * scale, textbox.Height * scale);
+			scaledIconSkull = ResizeImage(iconSkull, iconSkull.Width * scale, iconSkull.Height * scale);
+			scaledIconFairy = ResizeImage(iconFairy, iconFairy.Width * scale, iconFairy.Height * scale);
+			scaledIconEye = ResizeImage(iconEye, iconEye.Width * scale, iconEye.Height * scale);
 		}
 	}
 }

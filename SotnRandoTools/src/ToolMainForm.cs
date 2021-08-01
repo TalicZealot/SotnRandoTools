@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Windows.Forms;
 using BizHawk.Client.Common;
 using BizHawk.Client.EmuHawk;
@@ -80,7 +79,7 @@ namespace SotnRandoTools
 		private string _windowTitle = "Symphony of the Night Randomizer Tools";
 		private const int PanelOffset = 130;
 		private int cooldown = 0;
-		private StringWriter log = new ();
+		private StringWriter log = new();
 
 		public ToolMainForm()
 		{

@@ -93,7 +93,7 @@ namespace SotnRandoTools
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
 			{
-				khaosControler.EnqueueAction(new EventAddAction { Command = "kstatus", UserName = "Khaos"});
+				khaosControler.EnqueueAction(new EventAddAction { Command = "kstatus", UserName = "Khaos" });
 			}
 			else
 			{
