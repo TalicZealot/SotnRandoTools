@@ -46,6 +46,8 @@ namespace SotnRandoTools
 			customLocationsGuardedRadio.Checked = toolConfig.Tracker.CustomLocationsGuarded;
 			customLocationsEquipmentRadio.Checked = toolConfig.Tracker.CustomLocationsEquipment;
 			customLocationsClassicRadio.Checked = toolConfig.Tracker.CustomLocationsClassic;
+
+			username.Text = toolConfig.Tracker.Username;
 		}
 
 		private void radioProgression_CheckedChanged(object sender, EventArgs e)
@@ -105,6 +107,11 @@ namespace SotnRandoTools
 		private void customLocationsClassicRadio_CheckedChanged(object sender, EventArgs e)
 		{
 			toolConfig.Tracker.CustomLocationsClassic = customLocationsClassicRadio.Checked;
+		}
+
+		private void username_TextChanged(object sender, EventArgs e)
+		{
+			toolConfig.Tracker.Username = username.Text;
 		}
 	}
 }

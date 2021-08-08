@@ -47,11 +47,14 @@ namespace SotnRandoTools
             this.customLocationsClassicRadio = new System.Windows.Forms.RadioButton();
             this.customLocationsEquipmentRadio = new System.Windows.Forms.RadioButton();
             this.customLocationsGuardedRadio = new System.Windows.Forms.RadioButton();
+            this.username = new System.Windows.Forms.TextBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.relicDisplayGroup.SuspendLayout();
             this.layoutGroup.SuspendLayout();
             this.windowGroup.SuspendLayout();
             this.optionsGroup.SuspendLayout();
             this.customSeedGroup.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // autotrackerPanelTitle
@@ -189,7 +192,7 @@ namespace SotnRandoTools
             this.optionsGroup.ForeColor = System.Drawing.Color.White;
             this.optionsGroup.Location = new System.Drawing.Point(206, 56);
             this.optionsGroup.Name = "optionsGroup";
-            this.optionsGroup.Size = new System.Drawing.Size(182, 75);
+            this.optionsGroup.Size = new System.Drawing.Size(182, 111);
             this.optionsGroup.TabIndex = 6;
             this.optionsGroup.TabStop = false;
             this.optionsGroup.Text = "Options";
@@ -222,7 +225,7 @@ namespace SotnRandoTools
             this.customSeedGroup.Controls.Add(this.customLocationsEquipmentRadio);
             this.customSeedGroup.Controls.Add(this.customLocationsGuardedRadio);
             this.customSeedGroup.ForeColor = System.Drawing.Color.White;
-            this.customSeedGroup.Location = new System.Drawing.Point(206, 149);
+            this.customSeedGroup.Location = new System.Drawing.Point(206, 224);
             this.customSeedGroup.Name = "customSeedGroup";
             this.customSeedGroup.Size = new System.Drawing.Size(182, 96);
             this.customSeedGroup.TabIndex = 7;
@@ -265,11 +268,32 @@ namespace SotnRandoTools
             this.customLocationsGuardedRadio.UseVisualStyleBackColor = true;
             this.customLocationsGuardedRadio.CheckedChanged += new System.EventHandler(this.customLocationsGuardedRadio_CheckedChanged);
             // 
+            // username
+            // 
+            this.username.Location = new System.Drawing.Point(6, 19);
+            this.username.Name = "username";
+            this.username.Size = new System.Drawing.Size(170, 21);
+            this.username.TabIndex = 5;
+            this.username.TextChanged += new System.EventHandler(this.username_TextChanged);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.username);
+            this.groupBox1.ForeColor = System.Drawing.Color.White;
+            this.groupBox1.Location = new System.Drawing.Point(206, 169);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(181, 49);
+            this.groupBox1.TabIndex = 8;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Tag = "Username";
+            this.groupBox1.Text = "Username";
+            // 
             // AutotrackerSettingsPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.customSeedGroup);
             this.Controls.Add(this.optionsGroup);
             this.Controls.Add(this.windowGroup);
@@ -293,6 +317,8 @@ namespace SotnRandoTools
             this.optionsGroup.PerformLayout();
             this.customSeedGroup.ResumeLayout(false);
             this.customSeedGroup.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -318,5 +344,7 @@ namespace SotnRandoTools
 		private System.Windows.Forms.RadioButton customLocationsClassicRadio;
 		private System.Windows.Forms.RadioButton customLocationsEquipmentRadio;
 		private System.Windows.Forms.RadioButton customLocationsGuardedRadio;
+		private System.Windows.Forms.TextBox username;
+		private System.Windows.Forms.GroupBox groupBox1;
 	}
 }

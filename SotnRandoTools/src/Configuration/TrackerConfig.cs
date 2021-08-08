@@ -22,6 +22,7 @@ namespace SotnRandoTools.Configuration
 		public bool AlwaysOnTop { get; set; }
 		public bool Locations { get; set; }
 		public bool SaveReplays { get; set; }
+		public string Username { get; set; }
 		public bool CustomLocationsGuarded { get; set; }
 		public bool CustomLocationsEquipment { get; set; }
 		public bool CustomLocationsClassic { get; set; }

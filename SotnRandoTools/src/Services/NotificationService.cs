@@ -275,9 +275,10 @@ namespace SotnRandoTools.Services
 
 		private void DrawMeter(int scale, int xpos, int ypos)
 		{
+			short adjustedMeter = KhaosMeter > 100 ? (short)100 : KhaosMeter;
 			guiApi.DrawBox(xpos - (1 * scale), ypos - (1 * scale), xpos + (MeterSize * scale) + (1 * scale), ypos + (5 * scale) + (1 * scale), meterBorderColor, meterBorderColor);
 			guiApi.DrawBox(xpos, ypos, xpos + (MeterSize * scale), ypos + (5 * scale), meterBackgroundColor, meterBackgroundColor);
-			guiApi.DrawBox(xpos, ypos, xpos + ((int) ((KhaosMeter / 100f) * MeterSize) * scale), ypos + (5 * scale), meterForegroundColor, meterForegroundColor);
+			guiApi.DrawBox(xpos, ypos, xpos + ((int) ((adjustedMeter / 100f) * MeterSize) * scale), ypos + (5 * scale), meterForegroundColor, meterForegroundColor);
 			guiApi.DrawString(xpos + (int)(0.38 * (MeterSize * scale)), ypos, "KHAOS", Color.White, null, 4 * scale, "Arial", "bold");
 		}
 

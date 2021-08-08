@@ -16,7 +16,8 @@ namespace SotnRandoTools.RandoTracker
 		private const int LabelOffset = 40;
 		private const int ImageSize = 14;
 		private const int CellPadding = 1;
-		private const int Columns = 6;
+		private const int Columns = 8;
+		private const int CellSize = ImageSize + CellPadding;
 		private Color DefaultBackground = Color.FromArgb(17, 00, 17);
 
 		private IGraphics formGraphics;
@@ -95,28 +96,32 @@ namespace SotnRandoTools.RandoTracker
 
 		public void CalculateGrid(int width, int height)
 		{
-			/* TODO variable grid
-             if taller reserve 2 rows
-             if wider reserve 2 columns
-             */
-
-			scale = width / ((ImageSize + CellPadding) * Columns);
-
-			relicSlots = new List<Rectangle>();
-			vladRelicSlots = new List<Rectangle>();
-			progressionItemSlots = new List<Rectangle>();
+			int adjustedColumns = (int) (Columns * (((float) width / (float) height)));
+			if (adjustedColumns < 5)
+			{
+				adjustedColumns = 5;
+			}
 
 			int relicCount = 25;
 			if (toolConfig.Tracker.ProgressionRelicsOnly)
 			{
 				relicCount = progressionRelics - 5;
 			}
+
+			int normalRelicRows = (int)Math.Ceiling((float) (relicCount + 1) / (float) adjustedColumns);
+			int cellsPerColumn = height / ((CellSize * (2 + normalRelicRows)) + LabelOffset);
+			int cellsPerRow = width / ((CellSize * adjustedColumns) + (CellPadding * scale));
+			scale = cellsPerColumn <= cellsPerRow ? cellsPerColumn : cellsPerRow;
+			relicSlots = new List<Rectangle>();
+			vladRelicSlots = new List<Rectangle>();
+			progressionItemSlots = new List<Rectangle>();
+
 			int row = 0;
 			int col = 0;
 
 			for (int i = 0; i < relicCount + 1; i++)
 			{
-				if (col == Columns)
+				if (col == adjustedColumns)
 				{
 					row++;
 					col = 0;

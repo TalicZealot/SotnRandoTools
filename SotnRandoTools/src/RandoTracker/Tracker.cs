@@ -810,11 +810,11 @@ namespace SotnRandoTools.RandoTracker
 				return;
 			}
 
-			string replayPath = Paths.ReplaysPath + SeedInfo + ".sotnr";
+			string replayPath = Paths.ReplaysPath + SeedInfo + "-" + toolConfig.Tracker.Username + ".sotnr";
 			int version = 2;
 			while (File.Exists(replayPath))
 			{
-				replayPath = Paths.ReplaysPath + SeedInfo + "(" + version + ")" + ".sotnr";
+				replayPath = Paths.ReplaysPath + SeedInfo + "(" + version + ")" + "-" + toolConfig.Tracker.Username + ".sotnr";
 				version++;
 			}
 

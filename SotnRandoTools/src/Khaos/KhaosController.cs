@@ -174,6 +174,7 @@ namespace SotnRandoTools.Khaos
 		private System.Timers.Timer meltyTimer = new();
 		private System.Timers.Timer fourBeastsTimer = new();
 		private System.Timers.Timer zawarudoTimer = new();
+		private System.Timers.Timer zawarudoCheckTimer = new();
 		private System.Timers.Timer hasteTimer = new();
 		private System.Timers.Timer hasteOverdriveTimer = new();
 		private System.Timers.Timer hasteOverdriveOffTimer = new();
@@ -226,6 +227,9 @@ namespace SotnRandoTools.Khaos
 		};
 		private SearchableActor shaftActor = new SearchableActor { Hp = 10, Damage = 0, Sprite = 0 };
 
+		private uint zaWarudoZone = 0;
+		private uint zaWarudoZone2 = 0;
+
 		private uint storedMana = 0;
 		private int spentMana = 0;
 		private bool speedLocked = false;
@@ -235,6 +239,7 @@ namespace SotnRandoTools.Khaos
 		private bool hasteActive = false;
 		private bool hasteSpeedOn = false;
 		private bool overdriveOn = false;
+		private bool subweaponsOnlyActive = false;
 
 		private int slowInterval;
 		private int normalInterval;
@@ -415,7 +420,7 @@ namespace SotnRandoTools.Khaos
 			if (meterFull)
 			{
 				superThirst = true;
-				notificationService.KhaosMeter = 0;
+				notificationService.KhaosMeter -= 100;
 			}
 
 			Cheat darkMetamorphasisCheat = cheats.GetCheatByName("DarkMetamorphasis");
@@ -442,7 +447,7 @@ namespace SotnRandoTools.Khaos
 			if (meterFull)
 			{
 				enhancedFactor = 0.5F;
-				notificationService.KhaosMeter = 0;
+				notificationService.KhaosMeter -= 100;
 			}
 
 			alucardApi.CurrentHp = (uint) (alucardApi.CurrentHp * toolConfig.Khaos.WeakenFactor * enhancedFactor);
@@ -483,7 +488,7 @@ namespace SotnRandoTools.Khaos
 			if (meterFull)
 			{
 				enhancedFactor = 0.5F;
-				notificationService.KhaosMeter = 0;
+				notificationService.KhaosMeter -= 100;
 			}
 
 			speedLocked = true;
@@ -553,6 +558,7 @@ namespace SotnRandoTools.Khaos
 			manaCheat.PokeValue(5);
 			manaCheat.Enable();
 			manaLocked = true;
+			subweaponsOnlyActive = true;
 			subweaponsOnlyTimer.Start();
 			notificationService.AddMessage($"{user} used Subweapons Only");
 			notificationService.AddTimer(new Services.Models.ActionTimer
@@ -581,7 +587,7 @@ namespace SotnRandoTools.Khaos
 			if (meterFull)
 			{
 				superHorde = true;
-				notificationService.KhaosMeter = 0;
+				notificationService.KhaosMeter -= 100;
 			}
 
 			hordeTimer.Start();
@@ -668,7 +674,7 @@ namespace SotnRandoTools.Khaos
 			bool meterFull = notificationService.KhaosMeter >= 100;
 			if (meterFull)
 			{
-				notificationService.KhaosMeter = 0;
+				notificationService.KhaosMeter -= 100;
 			}
 
 			Random rnd = new Random();
@@ -762,8 +768,10 @@ namespace SotnRandoTools.Khaos
 			bool meterFull = notificationService.KhaosMeter >= 100;
 			if (meterFull)
 			{
-				notificationService.KhaosMeter = 0;
+				notificationService.KhaosMeter -= 100;
 				alucardApi.GrantRelic(Relic.SoulOfBat);
+				alucardApi.GrantRelic(Relic.EchoOfBat);
+				alucardApi.GrantRelic(Relic.ForceOfEcho);
 				alucardApi.GrantRelic(Relic.SoulOfWolf);
 				alucardApi.GrantRelic(Relic.PowerOfWolf);
 				alucardApi.GrantRelic(Relic.SkillOfWolf);
@@ -772,6 +780,7 @@ namespace SotnRandoTools.Khaos
 				alucardApi.GrantRelic(Relic.GasCloud);
 			}
 
+			alucardApi.GrantItemByName("Wizard hat");
 			alucardApi.ActivatePotion(Potion.SmartPotion);
 			Cheat manaCheat = cheats.GetCheatByName("Mana");
 			manaCheat.PokeValue(99);
@@ -794,11 +803,18 @@ namespace SotnRandoTools.Khaos
 		public void ZaWarudo(string user = "Khaos")
 		{
 			alucardApi.ActivateStopwatch();
-			alucardApi.Subweapon = Subweapon.Stopwatch;
+			zaWarudoZone = gameApi.Zone;
+			zaWarudoZone2 = gameApi.Zone2;
+
+			if (!subweaponsOnlyActive)
+			{
+				alucardApi.Subweapon = Subweapon.Stopwatch;
+			}
 
 			Cheat stopwatchTimer = cheats.GetCheatByName("SubweaponTimer");
 			stopwatchTimer.Enable();
 			zawarudoTimer.Start();
+			zawarudoCheckTimer.Start();
 
 			notificationService.AddMessage($"{user} used ZA WARUDO");
 			notificationService.AddTimer(new Services.Models.ActionTimer
@@ -824,7 +840,7 @@ namespace SotnRandoTools.Khaos
 				alucardApi.DarkMetamorphasisTimer = 50;
 				alucardApi.DefencePotionTimer = 50;
 				alucardApi.InvincibilityTimer = 3;
-				notificationService.KhaosMeter = 0;
+				notificationService.KhaosMeter -= 100;
 			}
 
 			Cheat width = cheats.GetCheatByName("AlucardAttackHitboxWidth");
@@ -835,6 +851,7 @@ namespace SotnRandoTools.Khaos
 			height.Enable();
 			width2.Enable();
 			height2.Enable();
+			alucardApi.GrantRelic(Relic.LeapStone);
 			meltyTimer.Start();
 			notificationService.AddTimer(new Services.Models.ActionTimer
 			{
@@ -883,7 +900,7 @@ namespace SotnRandoTools.Khaos
 
 			if (meterFull)
 			{
-				notificationService.KhaosMeter = 0;
+				notificationService.KhaosMeter -= 100;
 				superHaste = true;
 			}
 
@@ -1160,6 +1177,8 @@ namespace SotnRandoTools.Khaos
 			fourBeastsTimer.Interval = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.FourBeasts).FirstOrDefault().Duration.TotalMilliseconds;
 			zawarudoTimer.Elapsed += ZawarudoOff;
 			zawarudoTimer.Interval = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.ZaWarudo).FirstOrDefault().Duration.TotalMilliseconds;
+			zawarudoCheckTimer.Elapsed += ZaWarudoAreaCheck;
+			zawarudoCheckTimer.Interval += 2 * 1000;
 			hasteTimer.Elapsed += HasteOff;
 			hasteTimer.Interval = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.Haste).FirstOrDefault().Duration.TotalMilliseconds;
 			hasteOverdriveTimer.Elapsed += OverdriveOn;
@@ -1607,6 +1626,7 @@ namespace SotnRandoTools.Khaos
 			Cheat hearts = cheats.GetCheatByName("Hearts");
 			hearts.Disable();
 			subweaponsOnlyTimer.Stop();
+			subweaponsOnlyActive = false;
 		}
 		private void CrippleOff(Object sender, EventArgs e)
 		{
@@ -1778,11 +1798,24 @@ namespace SotnRandoTools.Khaos
 			Cheat stopwatchTimer = cheats.GetCheatByName("SubweaponTimer");
 			stopwatchTimer.Disable();
 			zawarudoTimer.Stop();
+			zawarudoCheckTimer.Stop();
+		}
+		private void ZaWarudoAreaCheck(Object sender, EventArgs e)
+		{
+			uint zone = gameApi.Zone;
+			uint zone2 = gameApi.Zone2;
+
+			if (zaWarudoZone != zone || zaWarudoZone2 != zone2)
+			{
+				zaWarudoZone = zone;
+				zaWarudoZone2 = zone2;
+				alucardApi.ActivateStopwatch();
+			}
 		}
 		private void HasteOff(Object sender, EventArgs e)
 		{
-			SetSpeed();
 			hasteTimer.Stop();
+			SetSpeed();
 			superHaste = false;
 			hasteActive = false;
 			speedLocked = false;
@@ -1952,10 +1985,6 @@ namespace SotnRandoTools.Khaos
 		private void GainKhaosMeter(short meter)
 		{
 			notificationService.KhaosMeter += meter;
-			if (notificationService.KhaosMeter > 100)
-			{
-				notificationService.KhaosMeter = 100;
-			}
 		}
 		private void Alert(string actionName)
 		{
