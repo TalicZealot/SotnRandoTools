@@ -195,6 +195,7 @@ namespace SotnRandoTools.Khaos
 			new SearchableActor {Hp = 18, Damage = 6, Sprite = 54040},   // Ectoplasm
 			new SearchableActor {Hp = 16, Damage = 16, Sprite = 38652},  // Frozen Shade
 			new SearchableActor {Hp = 30, Damage = 20, Sprite = 60380},  // Spectral Weapons
+			new SearchableActor {Hp = 32, Damage = 30, Sprite = 57020},	 // Vandal Sword
 			new SearchableActor {Hp = 32, Damage = 16, Sprite = 16520},  // Slime
 			new SearchableActor {Hp = 100, Damage = 35, Sprite = 28812}, // Blue Venus Weed Unflowered
 			new SearchableActor {Hp = 550, Damage = 45, Sprite = 31040}, // Blue Venus Weed Flowered
@@ -210,7 +211,7 @@ namespace SotnRandoTools.Khaos
 			new SearchableActor {Hp = 260, Damage = 20, Sprite = 14428},   // Werewolf
 			new SearchableActor {Hp = 400, Damage = 20, Sprite = 56036},   // Lesser Demon
 			new SearchableActor {Hp = 500, Damage = 20, Sprite = 43920},   // Karasuman
-			new SearchableActor {Hp = 800, Damage = 18, Sprite = 7188},    // Hippogryph
+			//new SearchableActor {Hp = 800, Damage = 18, Sprite = 7188},  // Hippogryph
 			new SearchableActor {Hp = 666, Damage = 20, Sprite = 54072},   // Olrox
 			new SearchableActor {Hp = 666, Damage = 25, Sprite = 8452},    // Succubus
 			new SearchableActor {Hp = 800, Damage = 20, Sprite = 19772},   // Cerberus
@@ -301,8 +302,7 @@ namespace SotnRandoTools.Khaos
 		}
 		public void StopKhaos()
 		{
-			actionTimer.Stop();
-			fastActionTimer.Stop();
+			StopTimers();
 			Cheat faerieScroll = cheats.GetCheatByName("FaerieScroll");
 			faerieScroll.Disable();
 			if (socketClient.Connected)
@@ -1185,6 +1185,31 @@ namespace SotnRandoTools.Khaos
 			hasteOverdriveTimer.Interval = (2 * 1000);
 			hasteOverdriveOffTimer.Elapsed += OverdriveOff;
 			hasteOverdriveOffTimer.Interval = (2 * 1000);
+		}
+		private void StopTimers()
+		{
+			fastActionTimer.Stop();
+			actionTimer.Stop();
+
+			honestGamerTimer.Interval = 1;
+			subweaponsOnlyTimer.Interval = 1;
+			crippleTimer.Interval = 1;
+			bloodManaTimer.Interval = 1;
+			thirstTimer.Interval = 1;
+			thirstTickTimer.Stop();
+			hordeTimer.Interval = 1;
+			hordeSpawnTimer.Stop();
+			enduranceSpawnTimer.Stop();
+
+			vampireTimer.Interval = 1;
+			magicianTimer.Interval = 1;
+			meltyTimer.Interval = 1;
+			fourBeastsTimer.Interval = 1;
+			zawarudoTimer.Interval = 1;
+			zawarudoCheckTimer.Stop();
+			hasteTimer.Interval = 1;
+			hasteOverdriveTimer.Stop();
+			hasteOverdriveOffTimer.Stop();
 		}
 		private void ExecuteAction(Object sender, EventArgs e)
 		{

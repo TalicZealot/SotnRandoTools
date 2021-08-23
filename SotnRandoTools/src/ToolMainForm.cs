@@ -214,6 +214,13 @@ namespace SotnRandoTools
 					w.Write(log.ToString());
 				}
 			}
+
+			actorApi = null;
+			alucardApi = null;
+			gameApi = null;
+			renderingApi = null;
+			watchlistService = null;
+			inputService = null;
 		}
 
 		private void autotrackerLaunch_Click(object sender, EventArgs e)
