@@ -182,6 +182,8 @@ namespace SotnRandoTools.Khaos
 
 		private uint hordeZone = 0;
 		private uint hordeZone2 = 0;
+		private uint hordeTriggerRoomX = 0;
+		private uint hordeTriggerRoomY = 0;
 		private int enduranceCount = 0;
 		private uint enduranceRoomX = 0;
 		private uint enduranceRoomY = 0;
@@ -338,11 +340,7 @@ namespace SotnRandoTools.Khaos
 			bool keepRichterRoom = ((mapX >= 31 && mapX <= 34) && mapY == 8);
 			bool succubusRoom = (mapX == 0 && mapY == 0);
 			Random rnd = new Random();
-			int max = 4;
-			if (succubusRoom)
-			{
-				max = 3;
-			}
+			int max = 9;
 			int result = rnd.Next(1, max);
 			switch (result)
 			{
@@ -355,8 +353,40 @@ namespace SotnRandoTools.Khaos
 					notificationService.AddMessage($"{user} cursed you");
 					break;
 				case 3:
+					if (succubusRoom)
+					{
+						SpawnPoisonHitbox();
+						notificationService.AddMessage($"{user} poisoned you");
+						break;
+					}
 					SpawnStoneHitbox();
 					notificationService.AddMessage($"{user} petrified you");
+					break;
+				case 4:
+					if (succubusRoom)
+					{
+						SpawnPoisonHitbox();
+						notificationService.AddMessage($"{user} poisoned you");
+						break;
+					}
+					SpawnSlamHitbox();
+					notificationService.AddMessage($"{user} slammed you");
+					break;
+				case 5:
+					alucardApi.ActivatePotion(Potion.LuckPotion);
+					notificationService.AddMessage($"{user} gave you luck");
+					break;
+				case 6:
+					alucardApi.ActivatePotion(Potion.ResistFire);
+					notificationService.AddMessage($"{user} gave you resistance to fire");
+					break;
+				case 7:
+					alucardApi.ActivatePotion(Potion.ResistDark);
+					notificationService.AddMessage($"{user} gave you resistance to dark");
+					break;
+				case 8:
+					alucardApi.ActivatePotion(Potion.ShieldPotion);
+					notificationService.AddMessage($"{user} gave you defence");
 					break;
 				default:
 					break;
@@ -583,6 +613,8 @@ namespace SotnRandoTools.Khaos
 		}
 		public void Horde(string user = "Khaos")
 		{
+			hordeTriggerRoomX = gameApi.MapXPos;
+			hordeTriggerRoomY = gameApi.MapYPos;
 			bool meterFull = notificationService.KhaosMeter >= 100;
 			if (meterFull)
 			{
@@ -1580,6 +1612,14 @@ namespace SotnRandoTools.Khaos
 		}
 		private bool FindHordeEnemy()
 		{
+			uint roomX = gameApi.MapXPos;
+			uint roomY = gameApi.MapYPos;
+
+			if ((roomX == hordeTriggerRoomX && roomY == hordeTriggerRoomY) || !gameApi.InAlucardMode() || !gameApi.CanMenu())
+			{
+				return false;
+			}
+
 			Random rnd = new Random();
 			long bannedEnemy = actorApi.FindEnemy(gameApi.SecondCastle ? 101 : 36, 10000);
 			Actor bannedActor = new Actor(actorApi.GetActor(bannedEnemy));
@@ -1664,12 +1704,12 @@ namespace SotnRandoTools.Khaos
 			uint roomX = gameApi.MapXPos;
 			uint roomY = gameApi.MapYPos;
 
-			Random rnd = new Random();
 			if ((roomX == enduranceRoomX && roomY == enduranceRoomY) || !gameApi.InAlucardMode() || !gameApi.CanMenu() || alucardApi.CurrentHp < 5)
 			{
 				return;
 			}
 
+			Random rnd = new Random();
 			Actor? bossCopy = null;
 
 			long enemy = actorApi.FindActorFrom(enduranceBosses);
@@ -1705,7 +1745,7 @@ namespace SotnRandoTools.Khaos
 			poison.HitboxHeight = 255;
 			poison.HitboxWidth = 255;
 			poison.AutoToggle = 1;
-			poison.Damage = 10;
+			poison.Damage = (ushort)(alucardApi.Def + 5);
 			poison.DamageTypeA = (uint) Actors.Poison;
 			actorApi.SpawnActor(poison);
 		}
@@ -1715,7 +1755,7 @@ namespace SotnRandoTools.Khaos
 			poison.HitboxHeight = 255;
 			poison.HitboxWidth = 255;
 			poison.AutoToggle = 1;
-			poison.Damage = 10;
+			poison.Damage = (ushort) (alucardApi.Def + 5);
 			poison.DamageTypeB = (uint) Actors.Curse;
 			actorApi.SpawnActor(poison);
 		}
@@ -1725,9 +1765,19 @@ namespace SotnRandoTools.Khaos
 			poison.HitboxHeight = 255;
 			poison.HitboxWidth = 255;
 			poison.AutoToggle = 1;
-			poison.Damage = 10;
+			poison.Damage = (ushort) (alucardApi.Def + 5);
 			poison.DamageTypeA = (uint) Actors.Stone;
 			poison.DamageTypeB = (uint) Actors.Stone;
+			actorApi.SpawnActor(poison);
+		}
+		private void SpawnSlamHitbox()
+		{
+			Actor poison = new Actor();
+			poison.HitboxHeight = 255;
+			poison.HitboxWidth = 255;
+			poison.AutoToggle = 1;
+			poison.Damage = (ushort) (alucardApi.Def + 5);
+			poison.DamageTypeA = (uint) Actors.Slam;
 			actorApi.SpawnActor(poison);
 		}
 		private void BankruptActivate()

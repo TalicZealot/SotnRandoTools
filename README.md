@@ -20,7 +20,7 @@ This tool and the accompanying library and app are open source. The idea is to i
   - [Updating](#updating)
   - [Autotracker](#autotracker)
   - [Co-Op](#co-op)
-  - [Khaos](#khaos)
+  - [Khaos-Setup](#Khaos-Setup)
   - [Useful links](#useful-links)
   - [Contributors](#contributors)
   - [Special Thanks](#special-thanks)
@@ -47,18 +47,32 @@ Every tool's window possition and the Tracker's size are all saved and will open
 If the Extarnal Tool says that the game is not supported for the tool and BizHawk is displaying a question mark in the lower left corner your rom is either not recognized or you have to make sure the cue file is pointing to the correct files. I recommend creating a separate folder for Randomizer where you copy both tracks and the cue and replace track1 every time you randomize.
 
 ## Updating
-On lunching the tool it will check for a new release and inform the user. If there is a newer release the update button apepars. Clicking it shuts down BizHawk and updates the tool. If it displays "Installation failed" please run the updater manually by going to ```BizHawk\ExternalTools\SotnRandoTools\Updater\SimpleLatestReleaseUpdater.exe``` or get the [latest release](https://github.com/TalicZealot/SotnRandoTools/releases/latest) from GitHub and update manually.
+On lunching the tool it will check for a new release and inform the user. If there is a newer release the update button apepars. Clicking it shuts down BizHawk and updates the tool. If it displays "Installation failed" please run the updater manually by going to ```BizHawk\ExternalTools\SotnRandoTools\Updater\SimpleLatestReleaseUpdater.exe``` or get the [latest release](https://github.com/TalicZealot/SotnRandoTools/releases/latest) from GitHub and update manually. If you get an error notifying you that your system lacks the necessary .NET version to run the updater click [the link](https://dotnet.microsoft.com/download/dotnet/5.0/runtime?utm_source=getdotnetcore&utm_medium=referral) and download the x64 and x86 redistributable packages for desktop apps.
 
 ## Autotracker
-The new tracker has been re-written from the ground up for better performance and usability. Can be manually rescaled and supports different rendering modes. Saves size and location. Locations are drawn on the game map iself instead of relying on BizHawk GUI. It doesn't rely on the PSX display mode anymore and automatically detects everything it needs.
+The new tracker has been re-written from the ground up for better performance and usability. Can be manually rescaled. Saves size and location. Locations are drawn on the game map iself instead of relying on BizHawk GUI. It doesn't rely on the PSX display mode anymore and automatically detects everything it needs.
 
 ## Co-Op
 Coop requires the host to have the port they want to use forwarded. Hosting automatically copies your address(ip:port) to the clipboard. The other player uses that address to connect. Please be careful to not leak your IP!
 Bindings over at: [https://taliczealot.github.io/coop/](https://taliczealot.github.io/coop/)
 
-## Khaos
-Video setup guide: [https://www.youtube.com/watch?v=cDUYwATR7k8](https://www.youtube.com/watch?v=cDUYwATR7k8)
-Khaos is in an alpha stage at the moment. I am still working on implementing the in-game effects and making them stable. In order to engage in chat interaction you must set up StreamlabsChatbot with their internal custom currency. Then add commands that will fill the input text file, that Khaos reads. Improt the command group, then edit the file paths and prices to your preferences: [https://raw.githubusercontent.com/TalicZealot/SotnRandoTools/main/BotCommands/KhaosCommands.abcomg](https://raw.githubusercontent.com/TalicZealot/SotnRandoTools/main/BotCommands/KhaosCommands.abcomg) `right click > Save Link As...`
+## Khaos-Setup
+* Video setup guide: SOON
+* Set up StreamlabsChatbot.
+* Turn on and adjust the StreamlabsChatbot currency.
+* Follow these instructions: https://streamlabs.com/content-hub/post/chatbot-scripts-desktop
+* Import the Khaos-Bot-Script from `BizHawk\ExternalTools\SotnRandoTools\Khaos`.
+* Right click the script and select `Insert API Key`.
+* Right click the script and select `Open Script Folder`. Inside `Scripts\Khaos-Bot-Script\Overlays` the index.html file is your dynamic commands widget for OBS.
+* Click the settings button on the top right of the scripts tab and copy the API Key. Paste it inside SotnRandoTools in the `Khaos > Input > Bot API Key` field.
+* Enable the script by clicking the checkbox on the right.
+* Adjust the action costs and cooldowns through the script and properties through the tool to your preference.
+* Script management commands available to mods and streamer:
+  * !startkhaos
+  * !stopkhaos
+  * !pausekhaos
+  * !unpausekhaos
+* Useful commands for running Khaos: [https://raw.githubusercontent.com/TalicZealot/SotnRandoTools/main/BotCommands/KhaosHelperCommands.abcomg](https://raw.githubusercontent.com/TalicZealot/SotnRandoTools/main/BotCommands/KhaosHelperCommands.abcomg) `right click > Save Link As...` then import in the command ssection of StreamlabsChatbot.
 
 ## Useful links
 * [SotN Randomizer](https://sotn.io)
