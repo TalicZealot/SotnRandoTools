@@ -22,6 +22,7 @@ namespace SotnRandoTools.Configuration
 			PandoraMaxItems = 32;
 			QueueInterval = new System.TimeSpan(0, 0, 31);
 			DynamicInterval = true;
+			KeepVladRelics = false;
 
 			Actions = new List<Action>
 			{
@@ -68,5 +69,6 @@ namespace SotnRandoTools.Configuration
 		public int PandoraMaxItems { get; set; }
 		public System.TimeSpan QueueInterval { get; set; }
 		public bool DynamicInterval { get; set; }
+		public bool KeepVladRelics { get; set; }
 	}
 }

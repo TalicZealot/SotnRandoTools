@@ -82,12 +82,22 @@ namespace SotnRandoTools.Khaos
 		private string[] mediumHelpItems =
 		{
 			"Fire shield",
+			"Iron shield",
+			"Medusa shield",
+			"Alucard shield",
 			"Alucard shield",
 			"Cross shuriken",
+			"Shield rod",
 			"Buffalo star",
 			"Flame star",
+			"Zweihander",
+			"Obsidian sword",
+			"Marsil",
 			"Estoc",
+			"Zweihander",
+			"Obsidian sword",
 			"Iron Fist",
+			"Elixir",
 			"Gram",
 			"Holy sword",
 			"Dark Blade",
@@ -98,8 +108,10 @@ namespace SotnRandoTools.Khaos
 			"Fury plate",
 			"Joseph's cloak",
 			"Twilight cloak",
+			"Library card",
 			"Moonstone",
 			"Turquoise",
+			"Diamond",
 			"Onyx",
 			"Mystic pendant",
 			"Gauntlet",
@@ -108,31 +120,21 @@ namespace SotnRandoTools.Khaos
 		};
 		private string[] heavyHelpItems =
 		{
-			"Shield rod",
-			"Iron shield",
-			"Medusa shield",
-			"Alucard shield",
-			"Zweihander",
-			"Obsidian sword",
 			"Mablung Sword",
 			"Masamune",
-			"Elixir",
 			"Manna prism",
-			"Marsil",
 			"Fist of Tulkas",
 			"Gurthang",
 			"Alucard sword",
 			"Vorpal blade",
 			"Crissaegirm",
 			"Yasatsuna",
-			"Library card",
 			"Dragon helm",
 			"Holy glasses",
 			"Spike Breaker",
 			"Dark armor",
 			"Dracula tunic",
 			"God's Garb",
-			"Diamond",
 			"Ring of Ares",
 			"Ring of Varda",
 			"Duplicator",
@@ -338,6 +340,7 @@ namespace SotnRandoTools.Khaos
 			uint mapX = alucardApi.MapX;
 			uint mapY = alucardApi.MapY;
 			bool keepRichterRoom = ((mapX >= 31 && mapX <= 34) && mapY == 8);
+			bool entranceCutscene = ((mapX >= 0 && mapX <= 18) && mapY == 44);
 			bool succubusRoom = (mapX == 0 && mapY == 0);
 			Random rnd = new Random();
 			int max = 9;
@@ -363,7 +366,7 @@ namespace SotnRandoTools.Khaos
 					notificationService.AddMessage($"{user} petrified you");
 					break;
 				case 4:
-					if (succubusRoom)
+					if (succubusRoom || entranceCutscene)
 					{
 						SpawnPoisonHitbox();
 						notificationService.AddMessage($"{user} poisoned you");
@@ -1317,7 +1320,7 @@ namespace SotnRandoTools.Khaos
 			uint mapX = alucardApi.MapX;
 			uint mapY = alucardApi.MapY;
 			bool keepRichterRoom = ((mapX >= 31 && mapX <= 34) && mapY == 8);
-			if (gameApi.InAlucardMode() && gameApi.CanMenu() && alucardApi.CurrentHp > 0 && !gameApi.CanSave() && !keepRichterRoom)
+			if (gameApi.InAlucardMode() && gameApi.CanMenu() && alucardApi.CurrentHp > 0 && !gameApi.CanSave() && !keepRichterRoom && !gameApi.InTransition && !gameApi.IsLoading)
 			{
 				shaftHpSet = false;
 				if (queuedFastActions.Count > 0)
@@ -1325,7 +1328,7 @@ namespace SotnRandoTools.Khaos
 					queuedFastActions.Dequeue()();
 				}
 			}
-			if (gameApi.InAlucardMode() && gameApi.CanMenu() && alucardApi.CurrentHp > 0 && !gameApi.CanSave() && keepRichterRoom && !shaftHpSet)
+			if (gameApi.InAlucardMode() && gameApi.CanMenu() && alucardApi.CurrentHp > 0 && !gameApi.CanSave() && keepRichterRoom && !shaftHpSet && !gameApi.InTransition && !gameApi.IsLoading)
 			{
 				SetShaftHp();
 			}
@@ -1466,6 +1469,10 @@ namespace SotnRandoTools.Khaos
 			var relics = Enum.GetValues(typeof(Relic));
 			foreach (var relic in relics)
 			{
+				if ((int) relic < 25)
+				{
+					alucardApi.GrantRelic((Relic) relic);
+				}
 				int roll = rnd.Next(0, 2);
 				if (roll > 0)
 				{
@@ -1476,7 +1483,10 @@ namespace SotnRandoTools.Khaos
 				}
 				else
 				{
-					alucardApi.TakeRelic((Relic) relic);
+					if (!toolConfig.Khaos.KeepVladRelics || (toolConfig.Khaos.KeepVladRelics && (int) relic < 25))
+					{
+						alucardApi.TakeRelic((Relic) relic);
+					}
 				}
 			}
 		}
@@ -1741,44 +1751,50 @@ namespace SotnRandoTools.Khaos
 		}
 		private void SpawnPoisonHitbox()
 		{
-			Actor poison = new Actor();
-			poison.HitboxHeight = 255;
-			poison.HitboxWidth = 255;
-			poison.AutoToggle = 1;
-			poison.Damage = (ushort)(alucardApi.Def + 5);
-			poison.DamageTypeA = (uint) Actors.Poison;
-			actorApi.SpawnActor(poison);
+			Actor hitbox = new Actor();
+			hitbox.HitboxHeight = 255;
+			hitbox.HitboxWidth = 255;
+			hitbox.AutoToggle = 1;
+			hitbox.Damage = (ushort)(alucardApi.Def + 5);
+			hitbox.DamageTypeA = (uint) Actors.Poison;
+			actorApi.SpawnActor(hitbox);
 		}
 		private void SpawnCurseHitbox()
 		{
-			Actor poison = new Actor();
-			poison.HitboxHeight = 255;
-			poison.HitboxWidth = 255;
-			poison.AutoToggle = 1;
-			poison.Damage = (ushort) (alucardApi.Def + 5);
-			poison.DamageTypeB = (uint) Actors.Curse;
-			actorApi.SpawnActor(poison);
+			Actor hitbox = new Actor();
+			hitbox.HitboxHeight = 255;
+			hitbox.HitboxWidth = 255;
+			hitbox.AutoToggle = 1;
+			hitbox.Damage = (ushort) (alucardApi.Def + 5);
+			hitbox.DamageTypeB = (uint) Actors.Curse;
+			actorApi.SpawnActor(hitbox);
 		}
 		private void SpawnStoneHitbox()
 		{
-			Actor poison = new Actor();
-			poison.HitboxHeight = 255;
-			poison.HitboxWidth = 255;
-			poison.AutoToggle = 1;
-			poison.Damage = (ushort) (alucardApi.Def + 5);
-			poison.DamageTypeA = (uint) Actors.Stone;
-			poison.DamageTypeB = (uint) Actors.Stone;
-			actorApi.SpawnActor(poison);
+			Actor hitbox = new Actor();
+			Random rnd = new Random();
+			int roll = rnd.Next(0, 2);
+			hitbox.Xpos = roll == 1 ? (ushort) 200 : (ushort) 0;
+			hitbox.HitboxHeight = 255;
+			hitbox.HitboxWidth = 255;
+			hitbox.AutoToggle = 1;
+			hitbox.Damage = (ushort) (alucardApi.Def + 5);
+			hitbox.DamageTypeA = (uint) Actors.Stone;
+			hitbox.DamageTypeB = (uint) Actors.Stone;
+			actorApi.SpawnActor(hitbox);
 		}
 		private void SpawnSlamHitbox()
 		{
-			Actor poison = new Actor();
-			poison.HitboxHeight = 255;
-			poison.HitboxWidth = 255;
-			poison.AutoToggle = 1;
-			poison.Damage = (ushort) (alucardApi.Def + 5);
-			poison.DamageTypeA = (uint) Actors.Slam;
-			actorApi.SpawnActor(poison);
+			Actor hitbox = new Actor();
+			Random rnd = new Random();
+			int roll = rnd.Next(0, 2);
+			hitbox.Xpos = roll == 1 ? (ushort)200 : (ushort) 0;
+			hitbox.HitboxHeight = 255;
+			hitbox.HitboxWidth = 255;
+			hitbox.AutoToggle = 1;
+			hitbox.Damage = (ushort) (alucardApi.Def + 5);
+			hitbox.DamageTypeA = (uint) Actors.Slam;
+			actorApi.SpawnActor(hitbox);
 		}
 		private void BankruptActivate()
 		{
@@ -1894,7 +1910,6 @@ namespace SotnRandoTools.Khaos
 			superHaste = false;
 			hasteActive = false;
 			speedLocked = false;
-			hasteSpeedOn = false;
 			hasteOverdriveOffTimer.Start();
 		}
 		private void SetHasteStaticSpeeds(bool super = false)

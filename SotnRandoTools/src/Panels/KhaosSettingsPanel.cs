@@ -35,6 +35,7 @@ namespace SotnRandoTools
 			thirstTextBox.Text = toolConfig.Khaos.ThirstDrainPerSecond.ToString();
 			queueTextBox.Text = toolConfig.Khaos.QueueInterval.ToString();
 			dynamicIntervalCheckBox.Checked = toolConfig.Khaos.DynamicInterval;
+			keepVladRelicsCheckbox.Checked = toolConfig.Khaos.KeepVladRelics;
 			pandoraMinTextBox.Text = toolConfig.Khaos.PandoraMinItems.ToString();
 			pandoraMaxTextBox.Text = toolConfig.Khaos.PandoraMaxItems.ToString();
 
@@ -305,6 +306,11 @@ namespace SotnRandoTools
 		private void botApiKey_TextChanged(object sender, EventArgs e)
 		{
 			toolConfig.Khaos.BotApiKey = botApiKey.Text;
+		}
+
+		private void keepVladRelicsCheckbox_CheckedChanged(object sender, EventArgs e)
+		{
+			toolConfig.Khaos.KeepVladRelics = keepVladRelicsCheckbox.Checked;
 		}
 	}
 }
