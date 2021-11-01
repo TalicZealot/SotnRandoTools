@@ -12,7 +12,6 @@
 		public const string DragonInstallSound = "./ExternalTools/SotnRandoTools/Sounds/DragonInstall.mp3";
 		public const string ZaWarudoSound = "./ExternalTools/SotnRandoTools/Sounds/ZaWarudo.mp3";
 
-		public const string BotActionsFilePath = "./ExternalTools/SotnRandoTools/Khaos/actions.txt";
 		public const string NamesFilePath = "./ExternalTools/SotnRandoTools/Khaos/names.txt";
 
 		public const string SourceLink = "https://github.com/TalicZealot/SotnRandoTools/";

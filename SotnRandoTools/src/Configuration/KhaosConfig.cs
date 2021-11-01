@@ -49,6 +49,7 @@ namespace SotnRandoTools.Configuration
 				new Action{Name="Battle Orders", Enabled = true,  Meter = 4, Duration = new System.TimeSpan(0, 1, 0)},
 				new Action{Name="Magician", Enabled = true, Meter = 4, Duration = new System.TimeSpan(0, 1, 0)},
 				new Action{Name="Melty Blood", Enabled = true, Meter = 5, Duration = new System.TimeSpan(0, 1, 0), AlertPath = Paths.MeltySound},
+				new Action{Name="Guilty Gear", Enabled = true, Meter = 5, Duration = new System.TimeSpan(0, 1, 0), AlertPath = Paths.DragonInstallSound},
 				new Action{Name="Four Beasts", Enabled = true,  Meter = 6, Duration = new System.TimeSpan(0, 1, 0)},
 				new Action{Name="ZA WARUDO", Enabled = true, Meter = 4, Duration = new System.TimeSpan(0, 1, 0), AlertPath = Paths.ZaWarudoSound},
 				new Action{Name="Haste", Enabled = true, Meter = 6, Duration = new System.TimeSpan(0, 1, 0)}

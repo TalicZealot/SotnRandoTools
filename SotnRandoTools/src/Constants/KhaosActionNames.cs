@@ -25,6 +25,7 @@
 		public const string BattleOrders = "Battle Orders";
 		public const string Magician = "Magician";
 		public const string MeltyBlood = "Melty Blood";
+		public const string GuiltyGear = "GUILTY GEAR";
 		public const string FourBeasts = "Four Beasts";
 		public const string ZaWarudo = "ZA WARUDO";
 		public const string Haste = "Haste";
