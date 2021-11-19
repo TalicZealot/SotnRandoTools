@@ -17,7 +17,8 @@ namespace SotnRandoTools
 {
 	[ExternalTool("Symphony of the Night Randomizer Tools", Description = "A collection of tools to enhance the SotN randomizer experience.", LoadAssemblyFiles = new[] { "./SotnRandoTools/SotnApi.dll", "./SotnRandoTools/SimpleTCP.dll", "./SotnRandoTools/WatsonWebsocket.dll" })]
 	[ExternalToolEmbeddedIcon("BizAlucard.ico")]
-	[ExternalToolApplicability.SingleRom(CoreSystem.Playstation, "0DDCBC3D")]
+	//TODO: Revert when BIzhawk fixes Dump Status Report
+	//[ExternalToolApplicability.SingleRom(CoreSystem.Playstation, "0DDCBC3D")]
 	public partial class ToolMainForm : ToolFormBase, IExternalToolForm
 	{
 		[RequiredService]
@@ -143,6 +144,12 @@ namespace SotnRandoTools
 					return;
 				}
 			}
+
+			if (!File.Exists(Paths.CheatsPath))
+			{
+				File.Copy(Paths.CheatsPath + ".bkp", Paths.CheatsPath);
+			}
+
 			this.MainForm.CheatList.Load(_memoryDomains, Paths.CheatsPath, false);
 			this.MainForm.CheatList.DisableAll();
 

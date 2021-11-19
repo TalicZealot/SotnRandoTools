@@ -33,124 +33,24 @@ namespace SotnRandoTools.Khaos
 		private readonly INotificationService notificationService;
 		private readonly IInputService inputService;
 		private WatsonWsClient socketClient;
+		//private WatsonWsServer socketServer;
+		private Random rng = new Random();
 
-		private string[] lightHelpItems =
+		private Relic[] progressionRelics =
 		{
-			"Leather shield",
-			"Shaman shield",
-			"Pot Roast",
-			"Sirloin",
-			"Turkey",
-			"Bat Pentagram",
-			"Javelin",
-			"Luminus",
-			"Jewel sword",
-			"Icebrand",
-			"Holy rod",
-			"Star flail",
-			"Chakram",
-			"Holbein dagger",
-			"Heart Refresh",
-			"Antivenom",
-			"Uncurse",
-			"Life apple",
-			"Str. potion",
-			"Attack potion",
-			"Shield potion",
-			"Resist fire",
-			"Potion",
-			"Alucart shield",
-			"Alucart sword",
-			"Stone mask",
-			"Wizard hat",
-			"Platinum mail",
-			"Diamond plate",
-			"Healing mail",
-			"Fire mail",
-			"Mirror cuirass",
-			"Brilliant mail",
-			"Axe Lord armor",
-			"Alucart mail",
-			"Royal cloak",
-			"Blood cloak",
-			"Zircon",
-			"Aquamarine",
-			"Lapis lazuli",
-			"Medal",
-			"Talisman"
+			Relic.SoulOfBat,
+			Relic.SoulOfWolf,
+			Relic.FormOfMist,
+			Relic.GravityBoots,
+			Relic.LeapStone,
+			Relic.JewelOfOpen,
+			Relic.MermanStatue
 		};
-		private string[] mediumHelpItems =
-		{
-			"Fire shield",
-			"Iron shield",
-			"Medusa shield",
-			"Alucard shield",
-			"Alucard shield",
-			"Cross shuriken",
-			"Shield rod",
-			"Buffalo star",
-			"Flame star",
-			"Zweihander",
-			"Obsidian sword",
-			"Marsil",
-			"Estoc",
-			"Zweihander",
-			"Obsidian sword",
-			"Iron Fist",
-			"Elixir",
-			"Gram",
-			"Holy sword",
-			"Dark Blade",
-			"Mourneblade",
-			"Osafune katana",
-			"Topaz circlet",
-			"Beryl circlet",
-			"Fury plate",
-			"Joseph's cloak",
-			"Twilight cloak",
-			"Library card",
-			"Moonstone",
-			"Turquoise",
-			"Diamond",
-			"Onyx",
-			"Mystic pendant",
-			"Gauntlet",
-			"Ring of Feanor",
-			"King's stone"
-		};
-		private string[] heavyHelpItems =
-		{
-			"Mablung Sword",
-			"Masamune",
-			"Manna prism",
-			"Fist of Tulkas",
-			"Gurthang",
-			"Alucard sword",
-			"Vorpal blade",
-			"Crissaegirm",
-			"Yasatsuna",
-			"Dragon helm",
-			"Holy glasses",
-			"Spike Breaker",
-			"Dark armor",
-			"Dracula tunic",
-			"God's Garb",
-			"Ring of Ares",
-			"Ring of Varda",
-			"Duplicator",
-			"Covenant stone",
-			"Gold Ring",
-			"Silver Ring"
-		};
-		private string[] progressionRelics =
-		{
-			"SoulOfBat",
-			"SoulOfWolf",
-			"FormOfMist",
-			"GravityBoots",
-			"LeapStone",
-			"JewelOfOpen",
-			"MermanStatue"
+		private List<Relic[]> flightRelics = new List<Relic[]>{
+			new Relic[] {Relic.SoulOfBat},
+			new Relic[] {Relic.LeapStone, Relic.GravityBoots},
+			new Relic[] {Relic.FormOfMist, Relic.PowerOfMist},
+			new Relic[] {Relic.SoulOfWolf, Relic.GravityBoots},
 		};
 		private string[]? subscribers =
 		{
@@ -162,7 +62,6 @@ namespace SotnRandoTools.Khaos
 		private Timer fastActionTimer = new Timer();
 
 		#region Timers
-		private System.Timers.Timer honestGamerTimer = new();
 		private System.Timers.Timer subweaponsOnlyTimer = new();
 		private System.Timers.Timer crippleTimer = new();
 		private System.Timers.Timer bloodManaTimer = new();
@@ -186,26 +85,92 @@ namespace SotnRandoTools.Khaos
 		private uint hordeZone2 = 0;
 		private uint hordeTriggerRoomX = 0;
 		private uint hordeTriggerRoomY = 0;
+		private List<Actor> hordeEnemies = new();
+		private List<SearchableActor> acceptedHordeEnemies = new List<SearchableActor>
+		{
+			new SearchableActor {Hp = 1, Damage = 14, Sprite = 25776 },
+			new SearchableActor {Hp = 1, Damage = 16, Sprite = 25188 },
+			new SearchableActor {Hp = 18 , Damage = 5, Sprite = 23212  },
+			new SearchableActor {Hp = 24 , Damage = 10, Sprite = 42580  },
+			new SearchableActor {Hp = 48, Damage = 13, Sprite = 4612 },
+			new SearchableActor {Hp = 18, Damage = 5, Sprite = 14308  },
+			new SearchableActor {Hp = 9, Damage = 8, Sprite = 31064  },
+			new SearchableActor {Hp = 9, Damage = 2, Sprite = 24516 },
+			new SearchableActor {Hp = 18, Damage = 7, Sprite = 26412 },
+			new SearchableActor {Hp = 32, Damage = 6, Sprite = 17852  },
+			new SearchableActor {Hp = 32, Damage = 6, Sprite = 46300  },
+			new SearchableActor {Hp = 20, Damage = 4, Sprite = 48588 },
+			new SearchableActor {Hp = 12, Damage = 5, Sprite = 30320  },
+			new SearchableActor {Hp = 20, Damage = 8, Sprite = 26360 },
+			new SearchableActor {Hp = 5, Damage = 4, Sprite = 48588  },
+			new SearchableActor {Hp = 11, Damage = 9, Sprite = 51080  },
+			new SearchableActor {Hp = 9, Damage = 2, Sprite = 52040  },
+			new SearchableActor {Hp = 9, Damage = 2, Sprite = 54896 },
+			new SearchableActor {Hp = 20, Damage = 12, Sprite = 14964  },
+			new SearchableActor {Hp = 24, Damage = 12, Sprite = 60200  },
+			new SearchableActor {Hp = 12, Damage = 12, Sprite = 22572 },
+			new SearchableActor {Hp = 32, Damage = 7, Sprite = 49236 },
+			new SearchableActor {Hp = 11, Damage = 9, Sprite = 772  },
+			new SearchableActor {Hp = 12, Damage = 10, Sprite = 56172 },
+			new SearchableActor {Hp = 18, Damage = 17, Sprite = 64000 },
+			new SearchableActor {Hp = 10, Damage = 10, Sprite = 18916 },
+			new SearchableActor {Hp = 10, Damage = 12, Sprite = 1432  },
+			new SearchableActor {Hp = 15, Damage = 14, Sprite = 59616 },
+			new SearchableActor {Hp = 12, Damage = 7, Sprite = 916  },
+			new SearchableActor {Hp = 26, Damage = 18, Sprite = 43308 },
+			new SearchableActor {Hp = 20, Damage = 32, Sprite = 50472 },
+			new SearchableActor {Hp = 17, Damage = 18, Sprite = 34488 },
+			new SearchableActor {Hp = 42, Damage = 10, Sprite = 38568 },
+			new SearchableActor {Hp = 15, Damage = 10, Sprite = 16344  },
+			new SearchableActor {Hp = 15, Damage = 12, Sprite = 14276 },
+			new SearchableActor {Hp = 30, Damage = 12, Sprite = 12196  },
+			new SearchableActor {Hp = 1, Damage = 16, Sprite = 15756 },
+			new SearchableActor {Hp = 18, Damage = 12, Sprite = 18060 },
+			new SearchableActor {Hp = 24, Damage = 10, Sprite = 21864 },
+			new SearchableActor {Hp = 18, Damage = 12, Sprite = 11068 },
+			new SearchableActor {Hp = 16, Damage = 15, Sprite = 18404 },
+			new SearchableActor {Hp = 24, Damage = 12, Sprite = 20436 },
+			new SearchableActor {Hp = 24, Damage = 10, Sprite = 15440 },
+			new SearchableActor {Hp = 20, Damage = 12, Sprite = 49068 },
+			new SearchableActor {Hp = 1, Damage = 16, Sprite = 36428 },
+			new SearchableActor {Hp = 10, Damage = 14, Sprite = 31116 },
+			new SearchableActor {Hp = 20, Damage = 12, Sprite = 33464 },
+			new SearchableActor {Hp = 2, Damage = 13, Sprite = 33204 },
+			new SearchableActor {Hp = 100, Damage = 20, Sprite = 38856 },
+			new SearchableActor {Hp = 100, Damage = 20, Sprite = 8932 },
+			new SearchableActor {Hp = 99, Damage = 18, Sprite = 64232 },
+			new SearchableActor {Hp = 12, Damage = 10, Sprite = 22344 },
+			new SearchableActor {Hp = 10, Damage = 20, Sprite = 17300 },
+			new SearchableActor {Hp = 22, Damage = 28, Sprite = 10100 },
+			new SearchableActor {Hp = 46, Damage = 37, Sprite = 48728 },
+			new SearchableActor {Hp = 12, Damage = 7, Sprite = 45404 },
+			new SearchableActor {Hp = 5, Damage = 40, Sprite = 54652 },
+			new SearchableActor {Hp = 3, Damage = 55, Sprite = 18024 },
+			new SearchableActor {Hp = 35, Damage = 45, Sprite = 24640 },
+			new SearchableActor {Hp = 43, Damage = 10, Sprite = 14584 },
+			new SearchableActor {Hp = 12, Damage = 7, Sprite = 45800 },
+			new SearchableActor {Hp = 30, Damage = 56, Sprite = 43916 },
+			new SearchableActor {Hp = 280, Damage = 40, Sprite = 29328 },
+			new SearchableActor {Hp = 10, Damage = 66, Sprite = 14076 },
+			new SearchableActor {Hp = 43, Damage = 10, Sprite = 2536 },
+			new SearchableActor {Hp = 12, Damage = 7, Sprite = 9876 },
+			new SearchableActor {Hp = 12, Damage = 10, Sprite = 27132 },
+			new SearchableActor {Hp = 50, Damage = 40, Sprite = 64648 },
+			new SearchableActor {Hp = 1, Damage = 70, Sprite = 33952 },
+			new SearchableActor {Hp = 46, Damage = 37, Sprite = 39840 },
+			new SearchableActor {Hp = 10, Damage = 100, Sprite = 38772 },
+			new SearchableActor {Hp = 200, Damage = 7, Sprite = 27600 },
+			new SearchableActor {Hp = 200, Damage = 6, Sprite = 23676 },
+			new SearchableActor {Hp = 1, Damage = 16, Sprite = 43228 },
+			new SearchableActor {Hp = 12, Damage = 10, Sprite = 33052 },
+			new SearchableActor {Hp = 1, Damage = 16, Sprite = 15412 },
+			new SearchableActor {Hp = 9, Damage = 8, Sprite = 7536  },
+			new SearchableActor {Hp = 9, Damage = 2, Sprite = 8684  }
+		};
+
 		private int enduranceCount = 0;
 		private uint enduranceRoomX = 0;
 		private uint enduranceRoomY = 0;
-		private List<Actor> hordeEnemies = new();
-		private List<Actor> bannedEnemies = new();
-		private List<SearchableActor> bannedHordeEnemies = new List<SearchableActor>
-		{
-			new SearchableActor {Hp = 32, Damage = 20, Sprite = 63296},  // Warg
-			new SearchableActor {Hp = 27, Damage = 7, Sprite = 8820},    // Spellbook
-			new SearchableActor {Hp = 22, Damage = 12, Sprite = 11688},  // Magic Tome
-			new SearchableActor {Hp = 18, Damage = 6, Sprite = 54040},   // Ectoplasm
-			new SearchableActor {Hp = 16, Damage = 16, Sprite = 38652},  // Frozen Shade
-			new SearchableActor {Hp = 30, Damage = 20, Sprite = 60380},  // Spectral Weapons
-			new SearchableActor {Hp = 32, Damage = 30, Sprite = 57020},	 // Vandal Sword
-			new SearchableActor {Hp = 32, Damage = 16, Sprite = 16520},  // Slime
-			new SearchableActor {Hp = 100, Damage = 35, Sprite = 28812}, // Blue Venus Weed Unflowered
-			new SearchableActor {Hp = 550, Damage = 45, Sprite = 31040}, // Blue Venus Weed Flowered
-			new SearchableActor {Hp = 88, Damage = 35, Sprite = 24208},  // Cave Troll
-			new SearchableActor {Hp = 50, Damage = 40, Sprite = 9240}	 // Sniper of Goth
-		};
 		private List<SearchableActor> enduranceBosses = new List<SearchableActor>
 		{
 			new SearchableActor {Hp = 200, Damage = 6, Sprite = 18296},    // Slogra
@@ -230,16 +195,18 @@ namespace SotnRandoTools.Khaos
 			new SearchableActor {Hp = 1000, Damage = 9, Sprite = 30724},   // Sypha
 			new SearchableActor {Hp = 1300, Damage = 40, Sprite = 43772}   // Shaft
 		};
-		private SearchableActor shaftActor = new SearchableActor { Hp = 10, Damage = 0, Sprite = 0 };
 		private SearchableActor galamothTorsoActor = new SearchableActor { Hp = 12000, Damage = 50, Sprite = 23936 };
 		private SearchableActor galamothHeadActor = new SearchableActor { Hp = 32767, Damage = 50, Sprite = 31516 };
 		private SearchableActor galamothPartsActors = new SearchableActor { Hp = 12000, Damage = 50, Sprite = 31516 };
+
+		private SearchableActor shaftActor = new SearchableActor { Hp = 10, Damage = 0, Sprite = 0 };
 
 		private uint zaWarudoZone = 0;
 		private uint zaWarudoZone2 = 0;
 
 		private uint storedMana = 0;
 		private int spentMana = 0;
+
 		private bool speedLocked = false;
 		private bool manaLocked = false;
 		private bool invincibilityLocked = false;
@@ -253,6 +220,7 @@ namespace SotnRandoTools.Khaos
 		private int slowInterval;
 		private int normalInterval;
 		private int fastInterval;
+
 		private bool shaftHpSet = false;
 		private bool galamothStatsSet = false;
 
@@ -324,9 +292,8 @@ namespace SotnRandoTools.Khaos
 		}
 		public void OverwriteBossNames(string[] subscribers)
 		{
-			Random rnd = new Random();
-			subscribers = subscribers.OrderBy(x => rnd.Next()).ToArray();
-			var randomizedBosses = Strings.BossNameAddresses.OrderBy(x => rnd.Next());
+			subscribers = subscribers.OrderBy(x => rng.Next()).ToArray();
+			var randomizedBosses = Strings.BossNameAddresses.OrderBy(x => rng.Next());
 			int i = 0;
 			foreach (var boss in randomizedBosses)
 			{
@@ -348,9 +315,8 @@ namespace SotnRandoTools.Khaos
 			bool keepRichterRoom = ((mapX >= 31 && mapX <= 34) && mapY == 8);
 			bool entranceCutscene = ((mapX >= 0 && mapX <= 18) && mapY == 44);
 			bool succubusRoom = (mapX == 0 && mapY == 0);
-			Random rnd = new Random();
 			int max = 9;
-			int result = rnd.Next(1, max);
+			int result = rng.Next(1, max);
 			switch (result)
 			{
 				case 1:
@@ -430,20 +396,20 @@ namespace SotnRandoTools.Khaos
 			RandomizeInventory();
 			RandomizeSubweapon();
 			gameApi.RespawnBosses();
+			gameApi.RespawnItems();
 			notificationService.AddMessage($"{user} opened Pandora's Box");
 			Alert(KhaosActionNames.PandorasBox);
 		}
 		public void Gamble(string user = "Khaos")
 		{
-			Random rnd = new Random();
-			double goldPercent = rnd.NextDouble();
+			double goldPercent = rng.NextDouble();
 			uint newGold = (uint) ((double) alucardApi.Gold * goldPercent);
 			uint goldSpent = alucardApi.Gold - newGold;
 			alucardApi.Gold = newGold;
-			string item = Equipment.Items[rnd.Next(1, Equipment.Items.Count)];
+			string item = Equipment.Items[rng.Next(1, Equipment.Items.Count)];
 			while (item.Contains("empty hand") || item.Contains("-"))
 			{
-				item = Equipment.Items[rnd.Next(1, Equipment.Items.Count)];
+				item = Equipment.Items[rng.Next(1, Equipment.Items.Count)];
 			}
 			alucardApi.GrantItemByName(item);
 
@@ -532,6 +498,8 @@ namespace SotnRandoTools.Khaos
 
 			speedLocked = true;
 			SetSpeed(toolConfig.Khaos.CrippleFactor * enhancedFactor);
+			Cheat underwaterPhysics = cheats.GetCheatByName("UnderwaterPhysics");
+			underwaterPhysics.Enable();
 			crippleTimer.Start();
 			notificationService.AddTimer(new Services.Models.ActionTimer
 			{
@@ -559,31 +527,12 @@ namespace SotnRandoTools.Khaos
 			});
 			Alert(KhaosActionNames.BloodMana);
 		}
-		public void HonestGamer(string user = "Khaos")
-		{
-			alucardApi.TakeRelic(Relic.GasCloud);
-			manaLocked = true;
-			Cheat manaCheat = cheats.GetCheatByName("Mana");
-			manaCheat.PokeValue(5);
-			manaCheat.Enable();
-			honestGamerTimer.Start();
-			notificationService.AddMessage($"{user} used Honest Gamer");
-			notificationService.AddTimer(new Services.Models.ActionTimer
-			{
-				Name = KhaosActionNames.HonestGamer,
-				Type = Enums.ActionType.Debuff,
-				Duration = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.HonestGamer).FirstOrDefault().Duration
-			});
-			Alert(KhaosActionNames.HonestGamer);
-
-		}
 		public void SubweaponsOnly(string user = "Khaos")
 		{
-			Random rnd = new Random();
-			int roll = rnd.Next(1, 10);
+			int roll = rng.Next(1, 10);
 			while (roll == 6)
 			{
-				roll = rnd.Next(1, 10);
+				roll = rng.Next(1, 10);
 			}
 			alucardApi.Subweapon = (Subweapon) roll;
 			alucardApi.ActivatePotion(Potion.SmartPotion);
@@ -662,28 +611,30 @@ namespace SotnRandoTools.Khaos
 		#region Buffs
 		public void LightHelp(string user = "Khaos")
 		{
-			Random rnd = new Random();
-			string item = lightHelpItems[rnd.Next(0, lightHelpItems.Length)];
+			string item = toolConfig.Khaos.LightHelpItemRewards[rng.Next(0, toolConfig.Khaos.LightHelpItemRewards.Length)];
 			int rolls = 0;
 			while (alucardApi.HasItemInInventory(item) && rolls < 10)
 			{
-				item = lightHelpItems[rnd.Next(0, lightHelpItems.Length)];
+				item = toolConfig.Khaos.LightHelpItemRewards[rng.Next(0, toolConfig.Khaos.LightHelpItemRewards.Length)];
 				rolls++;
 			}
 
-			int roll = rnd.Next(1, 4);
+			int roll = rng.Next(1, 4);
 			switch (roll)
 			{
 				case 1:
 					alucardApi.GrantItemByName(item);
+					Console.WriteLine($"Light help rolled: {item}");
 					notificationService.AddMessage($"{user} gave you a {item}");
 					break;
 				case 2:
 					alucardApi.ActivatePotion(Potion.Potion);
+					Console.WriteLine($"Light help rolled activate potion.");
 					notificationService.AddMessage($"{user} healed you");
 					break;
 				case 3:
 					alucardApi.ActivatePotion(Potion.ShieldPotion);
+					Console.WriteLine($"Light help rolled activate shield potion.");
 					notificationService.AddMessage($"{user} used a Shield Potion");
 					break;
 				default:
@@ -693,28 +644,30 @@ namespace SotnRandoTools.Khaos
 		}
 		public void MediumHelp(string user = "Khaos")
 		{
-			Random rnd = new Random();
-			string item = mediumHelpItems[rnd.Next(0, mediumHelpItems.Length)];
+			string item = toolConfig.Khaos.MediumHelpItemRewards[rng.Next(0, toolConfig.Khaos.MediumHelpItemRewards.Length)];
 			int rolls = 0;
 			while (alucardApi.HasItemInInventory(item) && rolls < 10)
 			{
-				item = mediumHelpItems[rnd.Next(0, mediumHelpItems.Length)];
+				item = toolConfig.Khaos.MediumHelpItemRewards[rng.Next(0, toolConfig.Khaos.MediumHelpItemRewards.Length)];
 				rolls++;
 			}
 
-			int roll = rnd.Next(1, 4);
+			int roll = rng.Next(1, 4);
 			switch (roll)
 			{
 				case 1:
 					alucardApi.GrantItemByName(item);
+					Console.WriteLine($"Medium help rolled: {item}");
 					notificationService.AddMessage($"{user} gave you a {item}");
 					break;
 				case 2:
 					alucardApi.ActivatePotion(Potion.Elixir);
+					Console.WriteLine($"Medium help rolled activate Elixir.");
 					notificationService.AddMessage($"{user} healed you");
 					break;
 				case 3:
 					alucardApi.ActivatePotion(Potion.Mannaprism);
+					Console.WriteLine($"Medium help rolled activate Manna prism.");
 					notificationService.AddMessage($"{user} used a Mana Prism");
 					break;
 				default:
@@ -730,36 +683,35 @@ namespace SotnRandoTools.Khaos
 				notificationService.KhaosMeter -= 100;
 			}
 
-			Random rnd = new Random();
 			string item;
 			int relic;
 			int roll;
-			RollRewards(rnd, out item, out relic, out roll);
+			RollRewards(out item, out relic, out roll);
 			GiveRewards(user, item, relic, roll);
 			Alert(KhaosActionNames.HeavyHelp);
 
 			if (meterFull)
 			{
-				RollRewards(rnd, out item, out relic, out roll);
+				RollRewards(out item, out relic, out roll);
 				GiveRewards(user, item, relic, roll);
 			}
 
-			void RollRewards(Random rnd, out string item, out int relic, out int roll)
+			void RollRewards(out string item, out int relic, out int roll)
 			{
-				item = heavyHelpItems[rnd.Next(0, heavyHelpItems.Length)];
+				item = toolConfig.Khaos.HeavyHelpItemRewards[rng.Next(0, toolConfig.Khaos.HeavyHelpItemRewards.Length)];
 				int rolls = 0;
 				while (alucardApi.HasItemInInventory(item) && rolls < 10)
 				{
-					item = heavyHelpItems[rnd.Next(0, heavyHelpItems.Length)];
+					item = toolConfig.Khaos.HeavyHelpItemRewards[rng.Next(0, toolConfig.Khaos.HeavyHelpItemRewards.Length)];
 					rolls++;
 				}
 
-				relic = rnd.Next(0, progressionRelics.Length);
+				relic = rng.Next(0, progressionRelics.Length);
 
-				roll = rnd.Next(1, 3);
+				roll = rng.Next(1, 3);
 				for (int i = 0; i < 11; i++)
 				{
-					if (!alucardApi.HasRelic((Relic) Enum.Parse(typeof(Relic), progressionRelics[relic])))
+					if (!alucardApi.HasRelic(progressionRelics[relic]))
 					{
 						break;
 					}
@@ -768,7 +720,7 @@ namespace SotnRandoTools.Khaos
 						roll = 1;
 						break;
 					}
-					relic = rnd.Next(0, progressionRelics.Length);
+					relic = rng.Next(0, progressionRelics.Length);
 				}
 			}
 
@@ -777,13 +729,14 @@ namespace SotnRandoTools.Khaos
 				switch (roll)
 				{
 					case 1:
-						Console.WriteLine(item);
+						Console.WriteLine($"Heavy help rolled: {item}");
 						alucardApi.GrantItemByName(item);
 						notificationService.AddMessage($"{user} gave you a {item}");
 						break;
 					case 2:
-						alucardApi.GrantRelic((Relic) Enum.Parse(typeof(Relic), progressionRelics[relic]));
-						notificationService.AddMessage($"{user} gave you {(Relic) Enum.Parse(typeof(Relic), progressionRelics[relic])}");
+						Console.WriteLine($"Heavy help rolled: {progressionRelics[relic]}");
+						alucardApi.GrantRelic(progressionRelics[relic]);
+						notificationService.AddMessage($"{user} gave you {progressionRelics[relic]}");
 						break;
 					default:
 						break;
@@ -840,7 +793,7 @@ namespace SotnRandoTools.Khaos
 			manaCheat.Enable();
 			manaLocked = true;
 			magicianTimer.Start();
-			
+
 			notificationService.AddTimer(new Services.Models.ActionTimer
 			{
 				Name = KhaosActionNames.Magician,
@@ -984,6 +937,25 @@ namespace SotnRandoTools.Khaos
 			{
 				CheckDashInput();
 			}
+			if (subweaponsOnlyActive)
+			{
+				if (alucardApi.RightHand == 0)
+				{
+					alucardApi.RightHand = (uint) Equipment.Items.IndexOf("Orange");
+					if (alucardApi.HasItemInInventory("Orange"))
+					{
+						alucardApi.TakeOneItemByName("Orange");
+					}
+				}
+				if (alucardApi.LeftHand == 0)
+				{
+					alucardApi.LeftHand = (uint) Equipment.Items.IndexOf("Orange");
+					if (alucardApi.HasItemInInventory("Orange"))
+					{
+						alucardApi.TakeOneItemByName("Orange");
+					}
+				}
+			}
 		}
 		public void EnqueueAction(EventAddAction eventData)
 		{
@@ -1061,13 +1033,6 @@ namespace SotnRandoTools.Khaos
 					if (commandAction is not null && commandAction.Enabled)
 					{
 						queuedFastActions.Enqueue(new MethodInvoker(() => RespawnBosses(user)));
-					}
-					break;
-				case "honest":
-					commandAction = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.HonestGamer).FirstOrDefault();
-					if (commandAction is not null && commandAction.Enabled)
-					{
-						queuedActions.Add(new QueuedAction { Name = "Honest Gamer", LocksMana = true, Invoker = new MethodInvoker(() => HonestGamer(user)) });
 					}
 					break;
 				case "subsonly":
@@ -1201,8 +1166,6 @@ namespace SotnRandoTools.Khaos
 			actionTimer.Tick += ExecuteAction;
 			actionTimer.Interval = 2 * (1 * 1000);
 
-			honestGamerTimer.Elapsed += HonestGamerOff;
-			honestGamerTimer.Interval = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.HonestGamer).FirstOrDefault().Duration.TotalMilliseconds; ;
 			subweaponsOnlyTimer.Elapsed += SubweaponsOnlyOff;
 			subweaponsOnlyTimer.Interval = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.SubweaponsOnly).FirstOrDefault().Duration.TotalMilliseconds;
 			crippleTimer.Elapsed += CrippleOff;
@@ -1244,7 +1207,6 @@ namespace SotnRandoTools.Khaos
 			fastActionTimer.Stop();
 			actionTimer.Stop();
 
-			honestGamerTimer.Interval = 1;
 			subweaponsOnlyTimer.Interval = 1;
 			crippleTimer.Interval = 1;
 			bloodManaTimer.Interval = 1;
@@ -1364,22 +1326,20 @@ namespace SotnRandoTools.Khaos
 		#region Khaotic events
 		private void RandomizeGold()
 		{
-			Random rnd = new Random();
-			uint gold = (uint) rnd.Next(0, 5000);
-			uint roll = (uint) rnd.Next(0, 21);
+			uint gold = (uint) rng.Next(0, 5000);
+			uint roll = (uint) rng.Next(0, 21);
 			if (roll > 16 && roll < 20)
 			{
-				gold = gold * (uint) rnd.Next(1, 11);
+				gold = gold * (uint) rng.Next(1, 11);
 			}
 			else if (roll > 19)
 			{
-				gold = gold * (uint) rnd.Next(10, 81);
+				gold = gold * (uint) rng.Next(10, 81);
 			}
 			alucardApi.Gold = gold;
 		}
 		private void RandomizeStatsActivate()
 		{
-			Random rnd = new Random();
 			uint maxHp = alucardApi.MaxtHp;
 			uint currentHp = alucardApi.CurrentHp;
 			uint maxMana = alucardApi.MaxtMp;
@@ -1390,9 +1350,9 @@ namespace SotnRandoTools.Khaos
 			uint lck = alucardApi.Lck;
 
 			uint statPool = str + con + intel + lck > 24 ? str + con + intel + lck - 24 : str + con + intel + lck;
-			uint offset = (uint) ((rnd.NextDouble() / 2) * statPool);
+			uint offset = (uint) ((rng.NextDouble() / 2) * statPool);
 
-			int statPoolRoll = rnd.Next(1, 4);
+			int statPoolRoll = rng.Next(1, 4);
 			if (statPoolRoll == 2)
 			{
 				statPool = statPool + offset;
@@ -1402,10 +1362,10 @@ namespace SotnRandoTools.Khaos
 				statPool = statPool - offset;
 			}
 
-			double a = rnd.NextDouble();
-			double b = rnd.NextDouble();
-			double c = rnd.NextDouble();
-			double d = rnd.NextDouble();
+			double a = rng.NextDouble();
+			double b = rng.NextDouble();
+			double c = rng.NextDouble();
+			double d = rng.NextDouble();
 			double sum = a + b + c + d;
 			double percentageStr = (a / sum);
 			double percentageCon = (b / sum);
@@ -1426,9 +1386,9 @@ namespace SotnRandoTools.Khaos
 			{
 				pointsPool = 110;
 			}
-			offset = (uint) ((rnd.NextDouble() / 2) * pointsPool);
+			offset = (uint) ((rng.NextDouble() / 2) * pointsPool);
 
-			int pointsRoll = rnd.Next(1, 4);
+			int pointsRoll = rng.Next(1, 4);
 			if (pointsRoll == 2)
 			{
 				pointsPool = pointsPool + offset;
@@ -1438,7 +1398,7 @@ namespace SotnRandoTools.Khaos
 				pointsPool = pointsPool - offset;
 			}
 
-			double hpPercent = rnd.NextDouble();
+			double hpPercent = rng.NextDouble();
 			uint pointsHp = 80 + (uint) Math.Round(hpPercent * pointsPool);
 			uint pointsMp = 30 + pointsPool - (uint) Math.Round(hpPercent * pointsPool);
 
@@ -1462,13 +1422,12 @@ namespace SotnRandoTools.Khaos
 			bool hasSilverRing = alucardApi.HasItemInInventory("Silver Ring");
 
 			alucardApi.ClearInventory();
-			Random rnd = new Random();
 
-			int itemCount = rnd.Next(toolConfig.Khaos.PandoraMinItems, toolConfig.Khaos.PandoraMaxItems + 1);
+			int itemCount = rng.Next(toolConfig.Khaos.PandoraMinItems, toolConfig.Khaos.PandoraMaxItems + 1);
 
 			for (int i = 0; i < itemCount; i++)
 			{
-				int result = rnd.Next(0, Equipment.Items.Count);
+				int result = rng.Next(0, Equipment.Items.Count);
 				alucardApi.GrantItemByName(Equipment.Items[result]);
 			}
 
@@ -1491,13 +1450,12 @@ namespace SotnRandoTools.Khaos
 		}
 		private void RandomizeSubweapon()
 		{
-			Random rnd = new Random();
 			var subweapons = Enum.GetValues(typeof(Subweapon));
-			alucardApi.Subweapon = (Subweapon) subweapons.GetValue(rnd.Next(subweapons.Length));
+			alucardApi.Subweapon = (Subweapon) subweapons.GetValue(rng.Next(subweapons.Length));
 		}
 		private void RandomizeRelicsActivate()
 		{
-			Random rnd = new Random();
+			bool secondCastle = gameApi.SecondCastle;
 			var relics = Enum.GetValues(typeof(Relic));
 			foreach (var relic in relics)
 			{
@@ -1505,7 +1463,7 @@ namespace SotnRandoTools.Khaos
 				{
 					alucardApi.GrantRelic((Relic) relic);
 				}
-				int roll = rnd.Next(0, 2);
+				int roll = rng.Next(0, 2);
 				if (roll > 0)
 				{
 					if ((int) relic < 25)
@@ -1521,6 +1479,15 @@ namespace SotnRandoTools.Khaos
 					}
 				}
 			}
+
+			if (secondCastle)
+			{
+				int roll = rng.Next(0, flightRelics.Count);
+				foreach (var relic in flightRelics[roll])
+				{
+					alucardApi.GrantRelic((Relic) relic);
+				}
+			}
 		}
 		private void RandomizeEquipmentSlots()
 		{
@@ -1529,14 +1496,13 @@ namespace SotnRandoTools.Khaos
 			bool equippedGoldRing = Equipment.Items[(int) (alucardApi.Accessory1 + Equipment.HandCount + 1)] == "Gold Ring" || Equipment.Items[(int) (alucardApi.Accessory2 + Equipment.HandCount + 1)] == "Gold Ring";
 			bool equippedSilverRing = Equipment.Items[(int) (alucardApi.Accessory1 + Equipment.HandCount + 1)] == "Silver Ring" || Equipment.Items[(int) (alucardApi.Accessory2 + Equipment.HandCount + 1)] == "Silver Ring";
 
-			Random rnd = new Random();
-			alucardApi.RightHand = (uint) rnd.Next(0, Equipment.HandCount + 1);
-			alucardApi.LeftHand = (uint) rnd.Next(0, Equipment.HandCount + 1);
-			alucardApi.Armor = (uint) rnd.Next(0, Equipment.ArmorCount + 1);
-			alucardApi.Helm = Equipment.HelmStart + (uint) rnd.Next(0, Equipment.HelmCount + 1);
-			alucardApi.Cloak = Equipment.CloakStart + (uint) rnd.Next(0, Equipment.CloakCount + 1);
-			alucardApi.Accessory1 = Equipment.AccessoryStart + (uint) rnd.Next(0, Equipment.AccessoryCount + 1);
-			alucardApi.Accessory2 = Equipment.AccessoryStart + (uint) rnd.Next(0, Equipment.AccessoryCount + 1);
+			alucardApi.RightHand = (uint) rng.Next(0, Equipment.HandCount + 1);
+			alucardApi.LeftHand = (uint) rng.Next(0, Equipment.HandCount + 1);
+			alucardApi.Armor = (uint) rng.Next(0, Equipment.ArmorCount + 1);
+			alucardApi.Helm = Equipment.HelmStart + (uint) rng.Next(0, Equipment.HelmCount + 1);
+			alucardApi.Cloak = Equipment.CloakStart + (uint) rng.Next(0, Equipment.CloakCount + 1);
+			alucardApi.Accessory1 = Equipment.AccessoryStart + (uint) rng.Next(0, Equipment.AccessoryCount + 1);
+			alucardApi.Accessory2 = Equipment.AccessoryStart + (uint) rng.Next(0, Equipment.AccessoryCount + 1);
 
 			RandomizeSubweapon();
 			if (subweaponsOnlyActive)
@@ -1618,8 +1584,6 @@ namespace SotnRandoTools.Khaos
 		}
 		private void HordeSpawn(Object sender, EventArgs e)
 		{
-			Random rnd = new Random();
-
 			uint mapX = alucardApi.MapX;
 			uint mapY = alucardApi.MapY;
 			bool keepRichterRoom = ((mapX >= 31 && mapX <= 34) && mapY == 8);
@@ -1641,7 +1605,7 @@ namespace SotnRandoTools.Khaos
 			else if (hordeEnemies.Count > 0)
 			{
 				FindHordeEnemy();
-				int enemyIndex = rnd.Next(0, hordeEnemies.Count);
+				int enemyIndex = rng.Next(0, hordeEnemies.Count);
 				if (hordeTimer.Interval == 5 * (60 * 1000))
 				{
 					hordeTimer.Stop();
@@ -1654,9 +1618,9 @@ namespace SotnRandoTools.Khaos
 					});
 					hordeTimer.Start();
 				}
-				hordeEnemies[enemyIndex].Xpos = (ushort) rnd.Next(10, 245);
-				hordeEnemies[enemyIndex].Ypos = (ushort) rnd.Next(10, 245);
-				hordeEnemies[enemyIndex].Palette += (ushort) rnd.Next(1, 10);
+				hordeEnemies[enemyIndex].Xpos = (ushort) rng.Next(10, 245);
+				hordeEnemies[enemyIndex].Ypos = (ushort) rng.Next(10, 245);
+				hordeEnemies[enemyIndex].Palette += (ushort) rng.Next(1, 10);
 				actorApi.SpawnActor(hordeEnemies[enemyIndex]);
 			}
 		}
@@ -1670,35 +1634,20 @@ namespace SotnRandoTools.Khaos
 				return false;
 			}
 
-			Random rnd = new Random();
-			long bannedEnemy = actorApi.FindEnemy(gameApi.SecondCastle ? 101 : 36, 10000);
-			Actor bannedActor = new Actor(actorApi.GetActor(bannedEnemy));
-			if (bannedEnemy > 0 && bannedEnemies.Where(e => e.Hp == bannedActor.Hp && e.Damage == bannedActor.Damage).Count() < 1)
-			{
-				bannedEnemies.Add(bannedActor);
-				Console.WriteLine($"Added banned enemy with hp: {bannedActor.Hp}, damage: {bannedActor.Damage}, sprite: {bannedActor.Sprite}");
-			}
-
-			long enemy = actorApi.FindEnemy(1, gameApi.SecondCastle ? 100 : 35, bannedHordeEnemies);
+			long enemy = actorApi.FindActorFrom(acceptedHordeEnemies);
 
 			if (enemy > 0)
 			{
 				Actor? hordeEnemy = new Actor(actorApi.GetActor(enemy));
-				foreach (Actor bannedEnemyActor in bannedEnemies)
-				{
-					if (hordeEnemy.Damage == bannedEnemyActor.Damage && hordeEnemy.HitboxHeight == bannedEnemyActor.HitboxHeight)
-					{
-						hordeEnemy = null;
-					}
-				}
-				if (hordeEnemy is not null && hordeEnemies.Where(e => e.Hp == hordeEnemy.Hp && e.Damage == hordeEnemy.Damage).Count() < 1)
+
+				if (hordeEnemy is not null && hordeEnemies.Where(e => e.Sprite == hordeEnemy.Sprite).Count() < 1)
 				{
 					if (superHorde)
 					{
 						hordeEnemy.Hp *= 2;
 						hordeEnemy.Damage *= 2;
 
-						int damageTypeRoll = rnd.Next(0, 4);
+						int damageTypeRoll = rng.Next(0, 4);
 
 						switch (damageTypeRoll)
 						{
@@ -1724,13 +1673,6 @@ namespace SotnRandoTools.Khaos
 
 			return false;
 		}
-		private void HonestGamerOff(Object sender, EventArgs e)
-		{
-			Cheat manaCheat = cheats.GetCheatByName("Mana");
-			manaCheat.Disable();
-			manaLocked = false;
-			honestGamerTimer.Stop();
-		}
 		private void SubweaponsOnlyOff(object sender, EventArgs e)
 		{
 			Cheat curse = cheats.GetCheatByName("CurseTimer");
@@ -1751,6 +1693,8 @@ namespace SotnRandoTools.Khaos
 		private void CrippleOff(Object sender, EventArgs e)
 		{
 			SetSpeed();
+			Cheat underwaterPhysics = cheats.GetCheatByName("UnderwaterPhysics");
+			underwaterPhysics.Disable();
 			crippleTimer.Stop();
 			speedLocked = false;
 		}
@@ -1758,36 +1702,35 @@ namespace SotnRandoTools.Khaos
 		{
 			uint roomX = gameApi.MapXPos;
 			uint roomY = gameApi.MapYPos;
+			float healthMultiplier = 1.7F;
 
 			if ((roomX == enduranceRoomX && roomY == enduranceRoomY) || !gameApi.InAlucardMode() || !gameApi.CanMenu() || alucardApi.CurrentHp < 5)
 			{
 				return;
 			}
 
-			Random rnd = new Random();
 			Actor? bossCopy = null;
 
 			long enemy = actorApi.FindActorFrom(enduranceBosses);
 			if (enemy > 0)
 			{
 				LiveActor boss = actorApi.GetLiveActor(enemy);
-				boss.Hp = (ushort) (1.5 * boss.Hp);
-
 				bossCopy = new Actor(actorApi.GetActor(enemy));
 				Console.WriteLine($"Endurance boss found hp: {bossCopy.Hp}, damage: {bossCopy.Damage}, sprite: {bossCopy.Sprite}");
 
-				bossCopy.Xpos = (ushort) (bossCopy.Xpos + rnd.Next(-70, 70));
-				bossCopy.Palette = (ushort) (bossCopy.Palette + rnd.Next(1, 10));
-				bossCopy.Hp = (ushort) (1.5 * bossCopy.Hp);
-				bossCopy.Damage = (ushort) (1.5 * bossCopy.Damage);
+				bossCopy.Xpos = (ushort) (bossCopy.Xpos + rng.Next(-70, 70));
+				bossCopy.Palette = (ushort) (bossCopy.Palette + rng.Next(1, 10));
+				bossCopy.Hp = (ushort) (healthMultiplier * bossCopy.Hp);
 				actorApi.SpawnActor(bossCopy);
+
+				boss.Hp = (ushort) (healthMultiplier * boss.Hp);
 
 				if (superEndurance)
 				{
 					superEndurance = false;
-					
-					bossCopy.Xpos = (ushort) (bossCopy.Xpos + rnd.Next(-70, 70));
-					bossCopy.Palette = (ushort) (bossCopy.Palette + rnd.Next(1, 10));
+
+					bossCopy.Xpos = rng.Next(0, 2) == 1 ? (ushort) (bossCopy.Xpos + rng.Next(-80, -20)) : (ushort) (bossCopy.Xpos + rng.Next(20, 80));
+					bossCopy.Palette = (ushort) (bossCopy.Palette + rng.Next(1, 10));
 					actorApi.SpawnActor(bossCopy);
 				}
 
@@ -1807,33 +1750,36 @@ namespace SotnRandoTools.Khaos
 		private void SpawnPoisonHitbox()
 		{
 			Actor hitbox = new Actor();
+			int roll = rng.Next(0, 2);
+			hitbox.Xpos = roll == 1 ? (ushort) (alucardApi.ScreenX + 1) : (ushort) 0;
 			hitbox.HitboxHeight = 255;
 			hitbox.HitboxWidth = 255;
 			hitbox.AutoToggle = 1;
-			hitbox.Damage = (ushort)(alucardApi.Def + 5);
+			hitbox.Damage = (ushort) (alucardApi.Def + 2);
 			hitbox.DamageTypeA = (uint) Actors.Poison;
 			actorApi.SpawnActor(hitbox);
 		}
 		private void SpawnCurseHitbox()
 		{
 			Actor hitbox = new Actor();
+			int roll = rng.Next(0, 2);
+			hitbox.Xpos = roll == 1 ? (ushort) (alucardApi.ScreenX + 1) : (ushort) 0;
 			hitbox.HitboxHeight = 255;
 			hitbox.HitboxWidth = 255;
 			hitbox.AutoToggle = 1;
-			hitbox.Damage = (ushort) (alucardApi.Def + 5);
+			hitbox.Damage = (ushort) (alucardApi.Def + 2);
 			hitbox.DamageTypeB = (uint) Actors.Curse;
 			actorApi.SpawnActor(hitbox);
 		}
 		private void SpawnStoneHitbox()
 		{
 			Actor hitbox = new Actor();
-			Random rnd = new Random();
-			int roll = rnd.Next(0, 2);
-			hitbox.Xpos = roll == 1 ? (ushort) 200 : (ushort) 0;
+			int roll = rng.Next(0, 2);
+			hitbox.Xpos = roll == 1 ? (ushort) (alucardApi.ScreenX + 1) : (ushort) 0;
 			hitbox.HitboxHeight = 255;
 			hitbox.HitboxWidth = 255;
 			hitbox.AutoToggle = 1;
-			hitbox.Damage = (ushort) (alucardApi.Def + 5);
+			hitbox.Damage = (ushort) (alucardApi.Def + 2);
 			hitbox.DamageTypeA = (uint) Actors.Stone;
 			hitbox.DamageTypeB = (uint) Actors.Stone;
 			actorApi.SpawnActor(hitbox);
@@ -1841,9 +1787,8 @@ namespace SotnRandoTools.Khaos
 		private void SpawnSlamHitbox()
 		{
 			Actor hitbox = new Actor();
-			Random rnd = new Random();
-			int roll = rnd.Next(0, 2);
-			hitbox.Xpos = roll == 1 ? (ushort)200 : (ushort) 0;
+			int roll = rng.Next(0, 2);
+			hitbox.Xpos = roll == 1 ? (ushort) (alucardApi.ScreenX + 1) : (ushort) 0;
 			hitbox.HitboxHeight = 255;
 			hitbox.HitboxWidth = 255;
 			hitbox.AutoToggle = 1;
@@ -1872,6 +1817,7 @@ namespace SotnRandoTools.Khaos
 			alucardApi.Cloak = Equipment.CloakStart;
 			alucardApi.Accessory1 = Equipment.AccessoryStart;
 			alucardApi.Accessory2 = Equipment.AccessoryStart;
+			gameApi.RespawnItems();
 
 			if (equippedHolyGlasses || hasHolyGlasses)
 			{
@@ -2131,7 +2077,7 @@ namespace SotnRandoTools.Khaos
 		{
 			if (inputService.RegisteredMove(InputKeys.Dash, Globals.UpdateCooldownFrames) && !hasteSpeedOn && hasteActive)
 			{
-				ToggleHasteDynamicSpeeds( superHaste ? toolConfig.Khaos.HasteFactor * 1.8F : toolConfig.Khaos.HasteFactor);
+				ToggleHasteDynamicSpeeds(superHaste ? toolConfig.Khaos.HasteFactor * 1.8F : toolConfig.Khaos.HasteFactor);
 				hasteSpeedOn = true;
 				hasteOverdriveTimer.Start();
 			}

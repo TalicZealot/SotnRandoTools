@@ -195,18 +195,6 @@ namespace SotnRandoTools
 				khaosControler.RespawnBosses();
 			}
 		}
-		private void honestButton_Click(object sender, EventArgs e)
-		{
-			if (toolConfig.Khaos.ControlPannelQueueActions)
-			{
-				khaosControler.EnqueueAction(new EventAddAction { Command = "honest", UserName = "Khaos" });
-			}
-			else
-			{
-
-				khaosControler.HonestGamer();
-			}
-		}
 		private void subsonlyButton_Click(object sender, EventArgs e)
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)

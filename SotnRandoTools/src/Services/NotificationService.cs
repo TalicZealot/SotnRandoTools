@@ -253,7 +253,7 @@ namespace SotnRandoTools.Services
 			foreach (var timer in actionTimers)
 			{
 				row++;
-				int timerPie = (int)(((float)timer.Duration.TotalSeconds / (float)timer.TotalDuration) * 360);
+				int timerPie = (int) (((float) timer.Duration.TotalSeconds / (float) timer.TotalDuration) * 360);
 				guiApi.DrawPie(xpos + (1 * scale), ypos + (row * (scaledIconEye.Height + (3 * scale))) + (10 * scale), scaledIconEye.Width + (3 * scale), scaledIconEye.Width + (3 * scale), 0, timerPie, timerPieColor, timerPieColor);
 				switch (timer.Type)
 				{
@@ -275,11 +275,11 @@ namespace SotnRandoTools.Services
 
 		private void DrawMeter(int scale, int xpos, int ypos)
 		{
-			short adjustedMeter = KhaosMeter > 100 ? (short)100 : KhaosMeter;
+			short adjustedMeter = KhaosMeter > 100 ? (short) 100 : KhaosMeter;
 			guiApi.DrawBox(xpos - (1 * scale), ypos - (1 * scale), xpos + (MeterSize * scale) + (1 * scale), ypos + (5 * scale) + (1 * scale), meterBorderColor, meterBorderColor);
 			guiApi.DrawBox(xpos, ypos, xpos + (MeterSize * scale), ypos + (5 * scale), meterBackgroundColor, meterBackgroundColor);
 			guiApi.DrawBox(xpos, ypos, xpos + ((int) ((adjustedMeter / 100f) * MeterSize) * scale), ypos + (5 * scale), meterForegroundColor, meterForegroundColor);
-			guiApi.DrawString(xpos + (int)(0.38 * (MeterSize * scale)), ypos, "KHAOS", Color.White, null, 4 * scale, "Arial", "bold");
+			guiApi.DrawString(xpos + (int) (0.38 * (MeterSize * scale)), ypos, "KHAOS", Color.White, null, 4 * scale, "Arial", "bold");
 		}
 
 		private void DequeueMessage(object sender, ElapsedEventArgs e)
@@ -296,7 +296,7 @@ namespace SotnRandoTools.Services
 			{
 				if (timer.TotalDuration == 0)
 				{
-					timer.TotalDuration = (int)timer.Duration.TotalSeconds;
+					timer.TotalDuration = (int) timer.Duration.TotalSeconds;
 				}
 
 				timer.Duration -= TimeSpan.FromSeconds(1);

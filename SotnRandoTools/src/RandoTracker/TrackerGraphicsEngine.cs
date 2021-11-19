@@ -108,7 +108,7 @@ namespace SotnRandoTools.RandoTracker
 				relicCount = progressionRelics - 5;
 			}
 
-			int normalRelicRows = (int)Math.Ceiling((float) (relicCount + 1) / (float) adjustedColumns);
+			int normalRelicRows = (int) Math.Ceiling((float) (relicCount + 1) / (float) adjustedColumns);
 			int cellsPerColumn = height / ((CellSize * (2 + normalRelicRows)) + LabelOffset);
 			int cellsPerRow = width / ((CellSize * adjustedColumns) + (CellPadding * scale));
 			scale = cellsPerColumn <= cellsPerRow ? cellsPerColumn : cellsPerRow;

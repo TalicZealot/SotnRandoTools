@@ -23,7 +23,6 @@ namespace SotnRandoTools.Configuration
 			QueueInterval = new System.TimeSpan(0, 0, 31);
 			DynamicInterval = true;
 			KeepVladRelics = false;
-
 			Actions = new List<Action>
 			{
 				new Action{Name="Khaos Status", Enabled = true, Meter = 2, AlertPath = Paths.AlucardWhatSound},
@@ -35,7 +34,6 @@ namespace SotnRandoTools.Configuration
 				new Action{Name="Bankrupt", Enabled = true, Meter = 5, AlertPath = Paths.DeathLaughSound},
 				new Action{Name="Weaken", Enabled = true, Meter = 5, AlertPath = Paths.RichterLaughSound},
 				new Action{Name="Respawn Bosses", Enabled = true, Meter = 3, AlertPath = Paths.DeathLaughSound},
-				new Action{Name="Honest Gamer", Enabled = true, Meter = 4, Duration = new System.TimeSpan(0, 1, 0)},
 				new Action{Name="Subweapons Only", Enabled = true, Meter = 4, AlertPath = Paths.RichterLaughSound, Duration = new System.TimeSpan(0, 1, 0)},
 				new Action{Name="Cripple", Enabled = true, Meter = 5, Duration = new System.TimeSpan(0, 1, 0), AlertPath = Paths.DeathLaughSound},
 				new Action{Name="Blood Mana", Enabled = true, Meter = 3, Duration = new System.TimeSpan(0, 1, 0), AlertPath = Paths.DeathLaughSound},
@@ -54,6 +52,114 @@ namespace SotnRandoTools.Configuration
 				new Action{Name="ZA WARUDO", Enabled = true, Meter = 4, Duration = new System.TimeSpan(0, 1, 0), AlertPath = Paths.ZaWarudoSound},
 				new Action{Name="Haste", Enabled = true, Meter = 6, Duration = new System.TimeSpan(0, 1, 0)}
 			};
+			LightHelpItemRewards = new string[]
+			{
+				"Leather shield",
+				"Shaman shield",
+				"Pot Roast",
+				"Sirloin",
+				"Turkey",
+				"Bat Pentagram",
+				"Javelin",
+				"Luminus",
+				"Jewel sword",
+				"Icebrand",
+				"Holy rod",
+				"Star flail",
+				"Chakram",
+				"Holbein dagger",
+				"Heart Refresh",
+				"Antivenom",
+				"Uncurse",
+				"Life apple",
+				"Str. potion",
+				"Attack potion",
+				"Shield potion",
+				"Resist fire",
+				"Potion",
+				"Alucart shield",
+				"Alucart sword",
+				"Stone mask",
+				"Wizard hat",
+				"Platinum mail",
+				"Diamond plate",
+				"Healing mail",
+				"Fire mail",
+				"Mirror cuirass",
+				"Brilliant mail",
+				"Axe Lord armor",
+				"Alucart mail",
+				"Royal cloak",
+				"Blood cloak",
+				"Zircon",
+				"Aquamarine",
+				"Lapis lazuli",
+				"Medal",
+				"Talisman"
+			};
+			MediumHelpItemRewards = new string[]
+			{
+				"Fire shield",
+				"Iron shield",
+				"Medusa shield",
+				"Alucard shield",
+				"Alucard shield",
+				"Cross shuriken",
+				"Shield rod",
+				"Buffalo star",
+				"Flame star",
+				"Zweihander",
+				"Obsidian sword",
+				"Marsil",
+				"Estoc",
+				"Zweihander",
+				"Obsidian sword",
+				"Iron Fist",
+				"Elixir",
+				"Gram",
+				"Holy sword",
+				"Dark Blade",
+				"Mourneblade",
+				"Osafune katana",
+				"Topaz circlet",
+				"Beryl circlet",
+				"Fury plate",
+				"Joseph's cloak",
+				"Twilight cloak",
+				"Library card",
+				"Moonstone",
+				"Turquoise",
+				"Diamond",
+				"Onyx",
+				"Mystic pendant",
+				"Gauntlet",
+				"Ring of Feanor",
+				"King's stone"
+			};
+			HeavyHelpItemRewards = new string[]
+			{
+				"Mablung Sword",
+				"Masamune",
+				"Manna prism",
+				"Fist of Tulkas",
+				"Gurthang",
+				"Alucard sword",
+				"Vorpal blade",
+				"Crissaegirm",
+				"Yasatsuna",
+				"Dragon helm",
+				"Holy glasses",
+				"Spike Breaker",
+				"Dark armor",
+				"Dracula tunic",
+				"God's Garb",
+				"Ring of Ares",
+				"Ring of Varda",
+				"Duplicator",
+				"Covenant stone",
+				"Gold Ring",
+				"Silver Ring"
+			};
 		}
 		public Point Location { get; set; }
 		public bool Alerts { get; set; }
@@ -71,5 +177,8 @@ namespace SotnRandoTools.Configuration
 		public System.TimeSpan QueueInterval { get; set; }
 		public bool DynamicInterval { get; set; }
 		public bool KeepVladRelics { get; set; }
+		public string[] LightHelpItemRewards { get; set; }
+		public string[] MediumHelpItemRewards { get; set; }
+		public string[] HeavyHelpItemRewards { get; set; }
 	}
 }

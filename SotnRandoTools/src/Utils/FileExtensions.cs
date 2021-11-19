@@ -8,6 +8,7 @@ namespace SotnRandoTools.Utils
 	public static class FileExtensions
 	{
 		private const uint retries = 10;
+
 		private static bool WaitForFile(string fullPath, uint retries)
 		{
 			if (fullPath is null) throw new ArgumentNullException(nameof(fullPath));
