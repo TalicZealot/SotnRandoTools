@@ -36,22 +36,6 @@ namespace SotnRandoTools.Khaos
 		//private WatsonWsServer socketServer;
 		private Random rng = new Random();
 
-		private Relic[] progressionRelics =
-		{
-			Relic.SoulOfBat,
-			Relic.SoulOfWolf,
-			Relic.FormOfMist,
-			Relic.GravityBoots,
-			Relic.LeapStone,
-			Relic.JewelOfOpen,
-			Relic.MermanStatue
-		};
-		private List<Relic[]> flightRelics = new List<Relic[]>{
-			new Relic[] {Relic.SoulOfBat},
-			new Relic[] {Relic.LeapStone, Relic.GravityBoots},
-			new Relic[] {Relic.FormOfMist, Relic.PowerOfMist},
-			new Relic[] {Relic.SoulOfWolf, Relic.GravityBoots},
-		};
 		private string[]? subscribers =
 		{
 		};
@@ -86,120 +70,10 @@ namespace SotnRandoTools.Khaos
 		private uint hordeTriggerRoomX = 0;
 		private uint hordeTriggerRoomY = 0;
 		private List<Actor> hordeEnemies = new();
-		private List<SearchableActor> acceptedHordeEnemies = new List<SearchableActor>
-		{
-			new SearchableActor {Hp = 1, Damage = 14, Sprite = 25776 },
-			new SearchableActor {Hp = 1, Damage = 16, Sprite = 25188 },
-			new SearchableActor {Hp = 18 , Damage = 5, Sprite = 23212  },
-			new SearchableActor {Hp = 24 , Damage = 10, Sprite = 42580  },
-			new SearchableActor {Hp = 48, Damage = 13, Sprite = 4612 },
-			new SearchableActor {Hp = 18, Damage = 5, Sprite = 14308  },
-			new SearchableActor {Hp = 9, Damage = 8, Sprite = 31064  },
-			new SearchableActor {Hp = 9, Damage = 2, Sprite = 24516 },
-			new SearchableActor {Hp = 18, Damage = 7, Sprite = 26412 },
-			new SearchableActor {Hp = 32, Damage = 6, Sprite = 17852  },
-			new SearchableActor {Hp = 32, Damage = 6, Sprite = 46300  },
-			new SearchableActor {Hp = 20, Damage = 4, Sprite = 48588 },
-			new SearchableActor {Hp = 12, Damage = 5, Sprite = 30320  },
-			new SearchableActor {Hp = 20, Damage = 8, Sprite = 26360 },
-			new SearchableActor {Hp = 5, Damage = 4, Sprite = 48588  },
-			new SearchableActor {Hp = 11, Damage = 9, Sprite = 51080  },
-			new SearchableActor {Hp = 9, Damage = 2, Sprite = 52040  },
-			new SearchableActor {Hp = 9, Damage = 2, Sprite = 54896 },
-			new SearchableActor {Hp = 20, Damage = 12, Sprite = 14964  },
-			new SearchableActor {Hp = 24, Damage = 12, Sprite = 60200  },
-			new SearchableActor {Hp = 12, Damage = 12, Sprite = 22572 },
-			new SearchableActor {Hp = 32, Damage = 7, Sprite = 49236 },
-			new SearchableActor {Hp = 11, Damage = 9, Sprite = 772  },
-			new SearchableActor {Hp = 12, Damage = 10, Sprite = 56172 },
-			new SearchableActor {Hp = 18, Damage = 17, Sprite = 64000 },
-			new SearchableActor {Hp = 10, Damage = 10, Sprite = 18916 },
-			new SearchableActor {Hp = 10, Damage = 12, Sprite = 1432  },
-			new SearchableActor {Hp = 15, Damage = 14, Sprite = 59616 },
-			new SearchableActor {Hp = 12, Damage = 7, Sprite = 916  },
-			new SearchableActor {Hp = 26, Damage = 18, Sprite = 43308 },
-			new SearchableActor {Hp = 20, Damage = 32, Sprite = 50472 },
-			new SearchableActor {Hp = 17, Damage = 18, Sprite = 34488 },
-			new SearchableActor {Hp = 42, Damage = 10, Sprite = 38568 },
-			new SearchableActor {Hp = 15, Damage = 10, Sprite = 16344  },
-			new SearchableActor {Hp = 15, Damage = 12, Sprite = 14276 },
-			new SearchableActor {Hp = 30, Damage = 12, Sprite = 12196  },
-			new SearchableActor {Hp = 1, Damage = 16, Sprite = 15756 },
-			new SearchableActor {Hp = 18, Damage = 12, Sprite = 18060 },
-			new SearchableActor {Hp = 24, Damage = 10, Sprite = 21864 },
-			new SearchableActor {Hp = 18, Damage = 12, Sprite = 11068 },
-			new SearchableActor {Hp = 16, Damage = 15, Sprite = 18404 },
-			new SearchableActor {Hp = 24, Damage = 12, Sprite = 20436 },
-			new SearchableActor {Hp = 24, Damage = 10, Sprite = 15440 },
-			new SearchableActor {Hp = 20, Damage = 12, Sprite = 49068 },
-			new SearchableActor {Hp = 1, Damage = 16, Sprite = 36428 },
-			new SearchableActor {Hp = 10, Damage = 14, Sprite = 31116 },
-			new SearchableActor {Hp = 20, Damage = 12, Sprite = 33464 },
-			new SearchableActor {Hp = 2, Damage = 13, Sprite = 33204 },
-			new SearchableActor {Hp = 100, Damage = 20, Sprite = 38856 },
-			new SearchableActor {Hp = 100, Damage = 20, Sprite = 8932 },
-			new SearchableActor {Hp = 99, Damage = 18, Sprite = 64232 },
-			new SearchableActor {Hp = 12, Damage = 10, Sprite = 22344 },
-			new SearchableActor {Hp = 10, Damage = 20, Sprite = 17300 },
-			new SearchableActor {Hp = 22, Damage = 28, Sprite = 10100 },
-			new SearchableActor {Hp = 46, Damage = 37, Sprite = 48728 },
-			new SearchableActor {Hp = 12, Damage = 7, Sprite = 45404 },
-			new SearchableActor {Hp = 5, Damage = 40, Sprite = 54652 },
-			new SearchableActor {Hp = 3, Damage = 55, Sprite = 18024 },
-			new SearchableActor {Hp = 35, Damage = 45, Sprite = 24640 },
-			new SearchableActor {Hp = 43, Damage = 10, Sprite = 14584 },
-			new SearchableActor {Hp = 12, Damage = 7, Sprite = 45800 },
-			new SearchableActor {Hp = 30, Damage = 56, Sprite = 43916 },
-			new SearchableActor {Hp = 280, Damage = 40, Sprite = 29328 },
-			new SearchableActor {Hp = 10, Damage = 66, Sprite = 14076 },
-			new SearchableActor {Hp = 43, Damage = 10, Sprite = 2536 },
-			new SearchableActor {Hp = 12, Damage = 7, Sprite = 9876 },
-			new SearchableActor {Hp = 12, Damage = 10, Sprite = 27132 },
-			new SearchableActor {Hp = 50, Damage = 40, Sprite = 64648 },
-			new SearchableActor {Hp = 1, Damage = 70, Sprite = 33952 },
-			new SearchableActor {Hp = 46, Damage = 37, Sprite = 39840 },
-			new SearchableActor {Hp = 10, Damage = 100, Sprite = 38772 },
-			new SearchableActor {Hp = 200, Damage = 7, Sprite = 27600 },
-			new SearchableActor {Hp = 200, Damage = 6, Sprite = 23676 },
-			new SearchableActor {Hp = 1, Damage = 16, Sprite = 43228 },
-			new SearchableActor {Hp = 12, Damage = 10, Sprite = 33052 },
-			new SearchableActor {Hp = 1, Damage = 16, Sprite = 15412 },
-			new SearchableActor {Hp = 9, Damage = 8, Sprite = 7536  },
-			new SearchableActor {Hp = 9, Damage = 2, Sprite = 8684  }
-		};
 
 		private int enduranceCount = 0;
 		private uint enduranceRoomX = 0;
 		private uint enduranceRoomY = 0;
-		private List<SearchableActor> enduranceBosses = new List<SearchableActor>
-		{
-			new SearchableActor {Hp = 200, Damage = 6, Sprite = 18296},    // Slogra
-			new SearchableActor {Hp = 200, Damage = 7, Sprite = 22392},    // Gaibon
-			new SearchableActor {Hp = 120, Damage = 7, Sprite = 14260},    // Doppleganger 10
-			new SearchableActor {Hp = 300, Damage = 20, Sprite = 9884},    // Minotaur
-			new SearchableActor {Hp = 260, Damage = 20, Sprite = 14428},   // Werewolf
-			new SearchableActor {Hp = 400, Damage = 20, Sprite = 56036},   // Lesser Demon
-			new SearchableActor {Hp = 500, Damage = 20, Sprite = 43920},   // Karasuman
-			//new SearchableActor {Hp = 800, Damage = 18, Sprite = 7188},  // Hippogryph - Can trigger the door closing and locking the player on the wrong side.
-			new SearchableActor {Hp = 666, Damage = 20, Sprite = 54072},   // Olrox
-			new SearchableActor {Hp = 666, Damage = 25, Sprite = 8452},    // Succubus
-			new SearchableActor {Hp = 800, Damage = 20, Sprite = 19772},   // Cerberus
-			new SearchableActor {Hp = 400, Damage = 30, Sprite = 6264},    // Granfaloon
-			new SearchableActor {Hp = 400, Damage = 25, Sprite = 27332},   // Richter
-			new SearchableActor {Hp = 600, Damage = 35, Sprite = 40376},   // Darkwing Bat
-			new SearchableActor {Hp = 1100, Damage = 30, Sprite = 31032},  // Creature
-			new SearchableActor {Hp = 777, Damage = 35, Sprite = 11664},   // Doppleganger 40
-			new SearchableActor {Hp = 888, Damage = 35, Sprite = 46380},   // Death
-			new SearchableActor {Hp = 1100, Damage = 35, Sprite = 6044},   // Medusa
-			new SearchableActor {Hp = 1200, Damage = 40, Sprite = 16564},  // Akmodan
-			new SearchableActor {Hp = 1000, Damage = 9, Sprite = 30724},   // Sypha
-			new SearchableActor {Hp = 1300, Damage = 40, Sprite = 43772}   // Shaft
-		};
-		private SearchableActor galamothTorsoActor = new SearchableActor { Hp = 12000, Damage = 50, Sprite = 23936 };
-		private SearchableActor galamothHeadActor = new SearchableActor { Hp = 32767, Damage = 50, Sprite = 31516 };
-		private SearchableActor galamothPartsActors = new SearchableActor { Hp = 12000, Damage = 50, Sprite = 31516 };
-
-		private SearchableActor shaftActor = new SearchableActor { Hp = 10, Damage = 0, Sprite = 0 };
 
 		private uint zaWarudoZone = 0;
 		private uint zaWarudoZone2 = 0;
@@ -310,11 +184,8 @@ namespace SotnRandoTools.Khaos
 		#region Khaotic Effects
 		public void KhaosStatus(string user = "Khaos")
 		{
-			uint mapX = alucardApi.MapX;
-			uint mapY = alucardApi.MapY;
-			bool keepRichterRoom = ((mapX >= 31 && mapX <= 34) && mapY == 8);
-			bool entranceCutscene = ((mapX >= 0 && mapX <= 18) && mapY == 44);
-			bool succubusRoom = (mapX == 0 && mapY == 0);
+			bool entranceCutscene = IsInEntranceCutscene();
+			bool succubusRoom = IsInSuccubusRoom();
 			int max = 9;
 			int result = rng.Next(1, max);
 			switch (result)
@@ -451,7 +322,7 @@ namespace SotnRandoTools.Khaos
 			float enhancedFactor = 1;
 			if (meterFull)
 			{
-				enhancedFactor = 0.5F;
+				enhancedFactor = Constants.Khaos.SuperWeakenFactor;
 				notificationService.KhaosMeter -= 100;
 			}
 
@@ -492,7 +363,7 @@ namespace SotnRandoTools.Khaos
 			float enhancedFactor = 1;
 			if (meterFull)
 			{
-				enhancedFactor = 0.5F;
+				enhancedFactor = Constants.Khaos.SuperCrippleFactor;
 				notificationService.KhaosMeter -= 100;
 			}
 
@@ -547,7 +418,7 @@ namespace SotnRandoTools.Khaos
 			Cheat curse = cheats.GetCheatByName("CurseTimer");
 			curse.Enable();
 			Cheat manaCheat = cheats.GetCheatByName("Mana");
-			manaCheat.PokeValue(5);
+			manaCheat.PokeValue(7);
 			manaCheat.Enable();
 			manaLocked = true;
 			subweaponsOnlyActive = true;
@@ -613,7 +484,7 @@ namespace SotnRandoTools.Khaos
 		{
 			string item = toolConfig.Khaos.LightHelpItemRewards[rng.Next(0, toolConfig.Khaos.LightHelpItemRewards.Length)];
 			int rolls = 0;
-			while (alucardApi.HasItemInInventory(item) && rolls < 10)
+			while (alucardApi.HasItemInInventory(item) && rolls < Constants.Khaos.HelpItemRetryCount)
 			{
 				item = toolConfig.Khaos.LightHelpItemRewards[rng.Next(0, toolConfig.Khaos.LightHelpItemRewards.Length)];
 				rolls++;
@@ -646,7 +517,7 @@ namespace SotnRandoTools.Khaos
 		{
 			string item = toolConfig.Khaos.MediumHelpItemRewards[rng.Next(0, toolConfig.Khaos.MediumHelpItemRewards.Length)];
 			int rolls = 0;
-			while (alucardApi.HasItemInInventory(item) && rolls < 10)
+			while (alucardApi.HasItemInInventory(item) && rolls < Constants.Khaos.HelpItemRetryCount)
 			{
 				item = toolConfig.Khaos.MediumHelpItemRewards[rng.Next(0, toolConfig.Khaos.MediumHelpItemRewards.Length)];
 				rolls++;
@@ -700,18 +571,18 @@ namespace SotnRandoTools.Khaos
 			{
 				item = toolConfig.Khaos.HeavyHelpItemRewards[rng.Next(0, toolConfig.Khaos.HeavyHelpItemRewards.Length)];
 				int rolls = 0;
-				while (alucardApi.HasItemInInventory(item) && rolls < 10)
+				while (alucardApi.HasItemInInventory(item) && rolls < Constants.Khaos.HelpItemRetryCount)
 				{
 					item = toolConfig.Khaos.HeavyHelpItemRewards[rng.Next(0, toolConfig.Khaos.HeavyHelpItemRewards.Length)];
 					rolls++;
 				}
 
-				relic = rng.Next(0, progressionRelics.Length);
+				relic = rng.Next(0, Constants.Khaos.ProgressionRelics.Length);
 
 				roll = rng.Next(1, 3);
 				for (int i = 0; i < 11; i++)
 				{
-					if (!alucardApi.HasRelic(progressionRelics[relic]))
+					if (!alucardApi.HasRelic(Constants.Khaos.ProgressionRelics[relic]))
 					{
 						break;
 					}
@@ -720,7 +591,7 @@ namespace SotnRandoTools.Khaos
 						roll = 1;
 						break;
 					}
-					relic = rng.Next(0, progressionRelics.Length);
+					relic = rng.Next(0, Constants.Khaos.ProgressionRelics.Length);
 				}
 			}
 
@@ -734,9 +605,9 @@ namespace SotnRandoTools.Khaos
 						notificationService.AddMessage($"{user} gave you a {item}");
 						break;
 					case 2:
-						Console.WriteLine($"Heavy help rolled: {progressionRelics[relic]}");
-						alucardApi.GrantRelic(progressionRelics[relic]);
-						notificationService.AddMessage($"{user} gave you {progressionRelics[relic]}");
+						Console.WriteLine($"Heavy help rolled: {Constants.Khaos.ProgressionRelics[relic]}");
+						alucardApi.GrantRelic(Constants.Khaos.ProgressionRelics[relic]);
+						notificationService.AddMessage($"{user} gave you {Constants.Khaos.ProgressionRelics[relic]}");
 						break;
 					default:
 						break;
@@ -763,7 +634,7 @@ namespace SotnRandoTools.Khaos
 		}
 		public void BattleOrders(string user = "Khaos")
 		{
-			alucardApi.CurrentHp = alucardApi.MaxtHp * 2;
+			alucardApi.CurrentHp = (uint) (alucardApi.MaxtHp * Constants.Khaos.BattleOrdersHpMultiplier);
 			alucardApi.CurrentMp = alucardApi.MaxtMp;
 			alucardApi.ActivatePotion(Potion.ShieldPotion);
 			notificationService.AddMessage($"{user} used Battle Orders");
@@ -842,10 +713,10 @@ namespace SotnRandoTools.Khaos
 				alucardApi.CurrentHp = alucardApi.MaxtHp;
 				alucardApi.CurrentMp = alucardApi.MaxtMp;
 				alucardApi.ActivatePotion(Potion.StrPotion);
-				alucardApi.AttackPotionTimer = 50;
-				alucardApi.DarkMetamorphasisTimer = 50;
-				alucardApi.DefencePotionTimer = 50;
-				alucardApi.InvincibilityTimer = 3;
+				alucardApi.AttackPotionTimer = Constants.Khaos.GuiltyGearAttack;
+				alucardApi.DarkMetamorphasisTimer = Constants.Khaos.GuiltyGearDarkMetamorphosis;
+				alucardApi.DefencePotionTimer = Constants.Khaos.GuiltyGearDefence;
+				alucardApi.InvincibilityTimer = Constants.Khaos.GuiltyGearInvincibility;
 				notificationService.KhaosMeter -= 100;
 			}
 
@@ -1230,9 +1101,7 @@ namespace SotnRandoTools.Khaos
 		{
 			if (queuedActions.Count > 0)
 			{
-				uint mapX = alucardApi.MapX;
-				uint mapY = alucardApi.MapY;
-				bool keepRichterRoom = ((mapX >= 31 && mapX <= 34) && mapY == 8);
+				bool keepRichterRoom = IsInKeepRichterRoom();
 				if (gameApi.InAlucardMode() && gameApi.CanMenu() && alucardApi.CurrentHp > 0 && !gameApi.CanSave() && !keepRichterRoom)
 				{
 					int index = 0;
@@ -1279,12 +1148,12 @@ namespace SotnRandoTools.Khaos
 		}
 		private void SetDynamicInterval()
 		{
-			if (toolConfig.Khaos.DynamicInterval && queuedActions.Count < 3)
+			if (toolConfig.Khaos.DynamicInterval && queuedActions.Count < Constants.Khaos.SlowQueueIntervalEnd)
 			{
 				actionTimer.Interval = slowInterval;
 				Console.WriteLine($"Interval set to {slowInterval / 1000}s, {actionTimer.Interval}");
 			}
-			else if (toolConfig.Khaos.DynamicInterval && queuedActions.Count > 8)
+			else if (toolConfig.Khaos.DynamicInterval && queuedActions.Count >= Constants.Khaos.FastQueueIntervalStart)
 			{
 				actionTimer.Interval = fastInterval;
 				Console.WriteLine($"Interval set to {fastInterval / 1000}s, {actionTimer.Interval}");
@@ -1297,10 +1166,8 @@ namespace SotnRandoTools.Khaos
 		}
 		private void ExecuteFastAction(Object sender, EventArgs e)
 		{
-			uint mapX = alucardApi.MapX;
-			uint mapY = alucardApi.MapY;
-			bool keepRichterRoom = ((mapX >= 31 && mapX <= 34) && mapY == 8);
-			bool galamothRoom = ((mapX >= 44 && mapX <= 45) && (mapY >= 12 && mapY <= 13));
+			bool keepRichterRoom = IsInKeepRichterRoom();
+			bool galamothRoom = IsInGalamothRoom();
 			if (gameApi.InAlucardMode() && gameApi.CanMenu() && alucardApi.CurrentHp > 0 && !gameApi.CanSave() && !keepRichterRoom && !gameApi.InTransition && !gameApi.IsLoading)
 			{
 				shaftHpSet = false;
@@ -1482,8 +1349,8 @@ namespace SotnRandoTools.Khaos
 
 			if (secondCastle)
 			{
-				int roll = rng.Next(0, flightRelics.Count);
-				foreach (var relic in flightRelics[roll])
+				int roll = rng.Next(0, Constants.Khaos.FlightRelics.Count);
+				foreach (var relic in Constants.Khaos.FlightRelics[roll])
 				{
 					alucardApi.GrantRelic((Relic) relic);
 				}
@@ -1556,8 +1423,8 @@ namespace SotnRandoTools.Khaos
 		}
 		private void ThirstDrain(Object sender, EventArgs e)
 		{
-			uint superDrain = superThirst ? 2u : 0u;
-			if (alucardApi.CurrentHp > toolConfig.Khaos.ThirstDrainPerSecond + 1)
+			uint superDrain = superThirst ? Constants.Khaos.SuperThirstExtraDrain : 0u;
+			if (alucardApi.CurrentHp > toolConfig.Khaos.ThirstDrainPerSecond + 1 + + superDrain)
 			{
 				alucardApi.CurrentHp -= (toolConfig.Khaos.ThirstDrainPerSecond + superDrain);
 			}
@@ -1634,7 +1501,7 @@ namespace SotnRandoTools.Khaos
 				return false;
 			}
 
-			long enemy = actorApi.FindActorFrom(acceptedHordeEnemies);
+			long enemy = actorApi.FindActorFrom(Constants.Khaos.AcceptedHordeEnemies);
 
 			if (enemy > 0)
 			{
@@ -1711,7 +1578,7 @@ namespace SotnRandoTools.Khaos
 
 			Actor? bossCopy = null;
 
-			long enemy = actorApi.FindActorFrom(enduranceBosses);
+			long enemy = actorApi.FindActorFrom(Constants.Khaos.EnduranceBosses);
 			if (enemy > 0)
 			{
 				LiveActor boss = actorApi.GetLiveActor(enemy);
@@ -1973,6 +1840,30 @@ namespace SotnRandoTools.Khaos
 		}
 		#endregion
 
+		private bool IsInGalamothRoom()
+		{
+			uint mapX = alucardApi.MapX;
+			uint mapY = alucardApi.MapY;
+			return (mapX >= Constants.Khaos.GalamothRoomMapMinX && mapX <= Constants.Khaos.GalamothRoomMapMaxX) && (mapY >= Constants.Khaos.GalamothRoomMapMinY && mapY <= Constants.Khaos.GalamothRoomMapMaxY);
+		}
+		private bool IsInKeepRichterRoom()
+		{
+			uint mapX = alucardApi.MapX;
+			uint mapY = alucardApi.MapY;
+			return ((mapX >= Constants.Khaos.RichterRoomMapMinX && mapX <= Constants.Khaos.RichterRoomMapMaxX) && mapY == Constants.Khaos.RichterRoomMapY);
+		}
+		private bool IsInSuccubusRoom()
+		{
+			uint mapX = alucardApi.MapX;
+			uint mapY = alucardApi.MapY;
+			return (mapX == Constants.Khaos.SuccubusMapX && mapY == Constants.Khaos.SuccubusMapY);
+		}
+		private bool IsInEntranceCutscene()
+		{
+			uint mapX = alucardApi.MapX;
+			uint mapY = alucardApi.MapY;
+			return ((mapX >= Constants.Khaos.EntranceCutsceneMapMinX && mapX <= Constants.Khaos.EntranceCutsceneMapMaxX) && mapY == Constants.Khaos.EntranceCutsceneMapY);
+		}
 		private void StartCheats()
 		{
 			Cheat faerieScroll = cheats.GetCheatByName("FaerieScroll");
@@ -2018,11 +1909,11 @@ namespace SotnRandoTools.Khaos
 		}
 		private void SetShaftHp()
 		{
-			long shaftAddress = actorApi.FindActorFrom(new List<SearchableActor> { shaftActor });
+			long shaftAddress = actorApi.FindActorFrom(new List<SearchableActor> { Constants.Khaos.ShaftActor });
 			if (shaftAddress > 0)
 			{
 				LiveActor shaft = actorApi.GetLiveActor(shaftAddress);
-				shaft.Hp = 25;
+				shaft.Hp = Constants.Khaos.ShaftKhaosHp;
 				shaftHpSet = true;
 				Console.WriteLine("Found Shaft actor and set HP to 25.");
 			}
@@ -2033,24 +1924,24 @@ namespace SotnRandoTools.Khaos
 		}
 		private void SetGalamothtStats()
 		{
-			long galamothTorsoAddress = actorApi.FindActorFrom(new List<SearchableActor> { galamothTorsoActor });
+			long galamothTorsoAddress = actorApi.FindActorFrom(new List<SearchableActor> { Constants.Khaos.GalamothTorsoActor });
 			if (galamothTorsoAddress > 0)
 			{
 				LiveActor galamothTorso = actorApi.GetLiveActor(galamothTorsoAddress);
-				galamothTorso.Hp = 2000;
-				galamothTorso.Xpos -= 100;
+				galamothTorso.Hp = Constants.Khaos.GalamothKhaosHp;
+				galamothTorso.Xpos -= Constants.Khaos.GalamothKhaosPositionOffset;
 				Console.WriteLine($"gala def: {galamothTorso.Def}");
 				//galamothTorso.Def = 0; Removes XP gained
 
-				long galamothHeadAddress = actorApi.FindActorFrom(new List<SearchableActor> { galamothHeadActor });
+				long galamothHeadAddress = actorApi.FindActorFrom(new List<SearchableActor> { Constants.Khaos.GalamothHeadActor });
 				LiveActor galamothHead = actorApi.GetLiveActor(galamothHeadAddress);
-				galamothHead.Xpos -= 100;
+				galamothHead.Xpos -= Constants.Khaos.GalamothKhaosPositionOffset;
 
-				List<long> galamothParts = actorApi.GetAllActors(new List<SearchableActor> { galamothPartsActors });
+				List<long> galamothParts = actorApi.GetAllActors(new List<SearchableActor> { Constants.Khaos.GalamothPartsActors });
 				foreach (var actor in galamothParts)
 				{
 					LiveActor galamothAnchor = actorApi.GetLiveActor(actor);
-					galamothAnchor.Xpos -= 100;
+					galamothAnchor.Xpos -= Constants.Khaos.GalamothKhaosPositionOffset;
 					galamothAnchor.Def = 0;
 				}
 
@@ -2077,7 +1968,7 @@ namespace SotnRandoTools.Khaos
 		{
 			if (inputService.RegisteredMove(InputKeys.Dash, Globals.UpdateCooldownFrames) && !hasteSpeedOn && hasteActive)
 			{
-				ToggleHasteDynamicSpeeds(superHaste ? toolConfig.Khaos.HasteFactor * 1.8F : toolConfig.Khaos.HasteFactor);
+				ToggleHasteDynamicSpeeds(superHaste ? toolConfig.Khaos.HasteFactor * Constants.Khaos.HasteDashFactor : toolConfig.Khaos.HasteFactor);
 				hasteSpeedOn = true;
 				hasteOverdriveTimer.Start();
 			}
