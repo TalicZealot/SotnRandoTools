@@ -2,7 +2,7 @@
 {
 	public class EventAddAction
 	{
-		public string Command { get; set; }
+		public int ActionIndex { get; set; }
 		public string UserName { get; set; }
 	}
 }

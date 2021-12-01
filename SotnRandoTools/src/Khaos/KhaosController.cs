@@ -42,6 +42,7 @@ namespace SotnRandoTools.Khaos
 		private Queue<MethodInvoker> queuedFastActions = new();
 		private Timer actionTimer = new Timer();
 		private Timer fastActionTimer = new Timer();
+		private List<int> autoKhaosIndexes = new();
 
 		#region Timers
 		private System.Timers.Timer subweaponsOnlyTimer = new();
@@ -120,6 +121,7 @@ namespace SotnRandoTools.Khaos
 			this.inputService = inputService;
 
 			InitializeTimers();
+			SetAutoKhaosChances();
 			notificationService.ActionQueue = queuedActions;
 			normalInterval = (int) toolConfig.Khaos.QueueInterval.TotalMilliseconds;
 			slowInterval = (int) normalInterval * 2;
@@ -153,22 +155,6 @@ namespace SotnRandoTools.Khaos
 			faerieScroll.Disable();
 			notificationService.AddMessage($"Khaos stopped");
 			Console.WriteLine("Khaos stopped");
-		}
-		public void OverwriteBossNames(string[] subscribers)
-		{
-			subscribers = subscribers.OrderBy(x => rng.Next()).ToArray();
-			var randomizedBosses = Strings.BossNameAddresses.OrderBy(x => rng.Next());
-			int i = 0;
-			foreach (var boss in randomizedBosses)
-			{
-				if (i == subscribers.Length)
-				{
-					break;
-				}
-				gameApi.OverwriteString(boss.Value, subscribers[i]);
-				Console.WriteLine($"{boss.Key} renamed to {subscribers[i]}");
-				i++;
-			}
 		}
 
 		#region Khaotic Effects
@@ -882,192 +868,191 @@ namespace SotnRandoTools.Khaos
 		}
 		public void EnqueueAction(EventAddAction eventData)
 		{
-			if (eventData.Command is null) throw new ArgumentNullException(nameof(eventData.Command));
-			if (eventData.Command == "") throw new ArgumentException($"Parameter {nameof(eventData.Command)} is empty!");
+			if (eventData.ActionIndex < 0 || eventData.ActionIndex > toolConfig.Khaos.Actions.Count) throw new ArgumentOutOfRangeException(nameof(eventData.ActionIndex));
 			if (eventData.UserName is null) throw new ArgumentNullException(nameof(eventData.UserName));
 			if (eventData.UserName == "") throw new ArgumentException($"Parameter {nameof(eventData.UserName)} is empty!");
 			string user = eventData.UserName;
-			string action = eventData.Command;
+			int action = eventData.ActionIndex;
 
 			SotnRandoTools.Configuration.Models.Action? commandAction;
 			switch (action)
 			{
 				#region Khaotic commands
-				case "kstatus":
-					commandAction = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.KhaosStatus).FirstOrDefault();
-					if (commandAction is not null && commandAction.Enabled)
+				case 0:
+					commandAction = toolConfig.Khaos.Actions[0];
+					if (commandAction.Enabled)
 					{
 						queuedFastActions.Enqueue(new MethodInvoker(() => KhaosStatus(user)));
 					}
 					break;
-				case "kequipment":
-					commandAction = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.KhaosEquipment).FirstOrDefault();
-					if (commandAction is not null && commandAction.Enabled)
+				case 1:
+					commandAction = toolConfig.Khaos.Actions[1];
+					if (commandAction.Enabled)
 					{
 						queuedActions.Add(new QueuedAction { Name = "Khaos Equipment", Type = ActionType.Khaotic, Invoker = new MethodInvoker(() => KhaosEquipment(user)) });
 					}
 					break;
-				case "kstats":
-					commandAction = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.KhaosStats).FirstOrDefault();
-					if (commandAction is not null && commandAction.Enabled)
+				case 2:
+					commandAction = toolConfig.Khaos.Actions[2];
+					if (commandAction.Enabled)
 					{
 						queuedActions.Add(new QueuedAction { Name = "Khaos Stats", Type = ActionType.Khaotic, Invoker = new MethodInvoker(() => KhaosStats(user)) });
 					}
 					break;
-				case "krelics":
-					commandAction = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.KhaosRelics).FirstOrDefault();
-					if (commandAction is not null && commandAction.Enabled)
+				case 3:
+					commandAction = toolConfig.Khaos.Actions[3];
+					if (commandAction.Enabled)
 					{
 						queuedActions.Add(new QueuedAction { Name = "Khaos Relics", Type = ActionType.Khaotic, Invoker = new MethodInvoker(() => KhaosRelics(user)) });
 					}
 					break;
-				case "pandora":
-					commandAction = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.PandorasBox).FirstOrDefault();
-					if (commandAction is not null && commandAction.Enabled)
+				case 4:
+					commandAction = toolConfig.Khaos.Actions[4];
+					if (commandAction.Enabled)
 					{
 						queuedActions.Add(new QueuedAction { Name = "Pandora's Box", Type = ActionType.Khaotic, Invoker = new MethodInvoker(() => PandorasBox(user)) });
 					}
 					break;
-				case "gamble":
-					commandAction = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.Gamble).FirstOrDefault();
-					if (commandAction is not null && commandAction.Enabled)
+				case 5:
+					commandAction = toolConfig.Khaos.Actions[5];
+					if (commandAction.Enabled)
 					{
 						queuedFastActions.Enqueue(new MethodInvoker(() => Gamble(user)));
 					}
 					break;
 				#endregion
 				#region Debuffs
-				case "bankrupt":
-					commandAction = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.Bankrupt).FirstOrDefault();
-					if (commandAction is not null && commandAction.Enabled)
+				case 6:
+					commandAction = toolConfig.Khaos.Actions[6];
+					if (commandAction.Enabled)
 					{
 						queuedActions.Add(new QueuedAction { Name = "Bankrupt", Invoker = new MethodInvoker(() => Bankrupt(user)) });
 					}
 					break;
-				case "weaken":
-					commandAction = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.Weaken).FirstOrDefault();
-					if (commandAction is not null && commandAction.Enabled)
+				case 7:
+					commandAction = toolConfig.Khaos.Actions[7];
+					if (commandAction.Enabled)
 					{
 						queuedActions.Add(new QueuedAction { Name = "Weaken", Invoker = new MethodInvoker(() => Weaken(user)) });
 					}
 					break;
-				case "respawnbosses":
-					commandAction = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.RespawnBosses).FirstOrDefault();
-					if (commandAction is not null && commandAction.Enabled)
+				case 8:
+					commandAction = toolConfig.Khaos.Actions[8];
+					if (commandAction.Enabled)
 					{
 						queuedFastActions.Enqueue(new MethodInvoker(() => RespawnBosses(user)));
 					}
 					break;
-				case "subsonly":
-					commandAction = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.SubweaponsOnly).FirstOrDefault();
-					if (commandAction is not null && commandAction.Enabled)
+				case 9:
+					commandAction = toolConfig.Khaos.Actions[9];
+					if (commandAction.Enabled)
 					{
 						queuedActions.Add(new QueuedAction { Name = "Subweapons Only", LocksMana = true, Invoker = new MethodInvoker(() => SubweaponsOnly(user)) });
 					}
 					break;
-				case "cripple":
-					commandAction = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.Cripple).FirstOrDefault();
-					if (commandAction is not null && commandAction.Enabled)
+				case 10:
+					commandAction = toolConfig.Khaos.Actions[10];
+					if (commandAction.Enabled)
 					{
 						queuedActions.Add(new QueuedAction { Name = "Cripple", LocksSpeed = true, Invoker = new MethodInvoker(() => Cripple(user)) });
 					}
 					break;
-				case "bloodmana":
-					commandAction = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.BloodMana).FirstOrDefault();
-					if (commandAction is not null && commandAction.Enabled)
+				case 11:
+					commandAction = toolConfig.Khaos.Actions[11];
+					if (commandAction.Enabled)
 					{
 						queuedActions.Add(new QueuedAction { Name = "Blood Mana", LocksMana = true, Invoker = new MethodInvoker(() => BloodMana(user)) });
 					}
 					break;
-				case "thirst":
-					commandAction = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.Thirst).FirstOrDefault();
-					if (commandAction is not null && commandAction.Enabled)
+				case 12:
+					commandAction = toolConfig.Khaos.Actions[12];
+					if (commandAction.Enabled)
 					{
 						queuedActions.Add(new QueuedAction { Name = "Thirst", Invoker = new MethodInvoker(() => Thirst(user)) });
 					}
 					break;
-				case "horde":
-					commandAction = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.KhaosHorde).FirstOrDefault();
-					if (commandAction is not null && commandAction.Enabled)
+				case 13:
+					commandAction = toolConfig.Khaos.Actions[13];
+					if (commandAction.Enabled)
 					{
 						queuedActions.Add(new QueuedAction { Name = "Horde", Invoker = new MethodInvoker(() => Horde(user)) });
 					}
 					break;
-				case "endurance":
-					commandAction = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.Endurance).FirstOrDefault();
-					if (commandAction is not null && commandAction.Enabled)
+				case 14:
+					commandAction = toolConfig.Khaos.Actions[14];
+					if (commandAction.Enabled)
 					{
 						queuedFastActions.Enqueue(new MethodInvoker(() => Endurance(user)));
 					}
 					break;
 				#endregion
 				#region Buffs
-				case "vampire":
-					commandAction = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.Vampire).FirstOrDefault();
-					if (commandAction is not null && commandAction.Enabled)
+				case 15:
+					commandAction = toolConfig.Khaos.Actions[15];
+					if (commandAction.Enabled)
 					{
 						queuedFastActions.Enqueue(new MethodInvoker(() => Vampire(user)));
 					}
 					break;
-				case "lighthelp":
-					commandAction = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.LightHelp).FirstOrDefault();
-					if (commandAction is not null && commandAction.Enabled)
+				case 16:
+					commandAction = toolConfig.Khaos.Actions[16];
+					if (commandAction.Enabled)
 					{
 						queuedFastActions.Enqueue(new MethodInvoker(() => LightHelp(user)));
 					}
 					break;
-				case "mediumhelp":
-					commandAction = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.MediumHelp).FirstOrDefault();
-					if (commandAction is not null && commandAction.Enabled)
+				case 17:
+					commandAction = toolConfig.Khaos.Actions[17];
+					if (commandAction.Enabled)
 					{
 						queuedFastActions.Enqueue(new MethodInvoker(() => MediumHelp(user)));
 					}
 					break;
-				case "heavyhelp":
-					commandAction = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.HeavyHelp).FirstOrDefault();
-					if (commandAction is not null && commandAction.Enabled)
+				case 18:
+					commandAction = toolConfig.Khaos.Actions[18];
+					if (commandAction.Enabled)
 					{
 						queuedFastActions.Enqueue(new MethodInvoker(() => HeavytHelp(user)));
 					}
 					break;
-				case "battleorders":
-					commandAction = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.BattleOrders).FirstOrDefault();
-					if (commandAction is not null && commandAction.Enabled)
+				case 19:
+					commandAction = toolConfig.Khaos.Actions[19];
+					if (commandAction.Enabled)
 					{
 						queuedActions.Add(new QueuedAction { Name = "Battle Orders", Type = ActionType.Buff, Invoker = new MethodInvoker(() => BattleOrders(user)) });
 					}
 					break;
-				case "magician":
-					commandAction = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.Magician).FirstOrDefault();
-					if (commandAction is not null && commandAction.Enabled)
+				case 20:
+					commandAction = toolConfig.Khaos.Actions[20];
+					if (commandAction.Enabled)
 					{
 						queuedActions.Add(new QueuedAction { Name = "Magician", Type = ActionType.Buff, LocksMana = true, Invoker = new MethodInvoker(() => Magician(user)) });
 					}
 					break;
-				case "melty":
-					commandAction = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.MeltyBlood).FirstOrDefault();
-					if (commandAction is not null && commandAction.Enabled)
+				case 21:
+					commandAction = toolConfig.Khaos.Actions[21];
+					if (commandAction.Enabled)
 					{
 						queuedActions.Add(new QueuedAction { Name = "MeltyBlood", Type = ActionType.Buff, Invoker = new MethodInvoker(() => MeltyBlood(user)) });
 					}
 					break;
-				case "fourbeasts":
-					commandAction = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.FourBeasts).FirstOrDefault();
-					if (commandAction is not null && commandAction.Enabled)
+				case 22:
+					commandAction = toolConfig.Khaos.Actions[22];
+					if (commandAction.Enabled)
 					{
 						queuedActions.Add(new QueuedAction { Name = "Four Beasts", Type = ActionType.Buff, LocksInvincibility = true, Invoker = new MethodInvoker(() => FourBeasts(user)) });
 					}
 					break;
-				case "zawarudo":
-					commandAction = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.ZaWarudo).FirstOrDefault();
-					if (commandAction is not null && commandAction.Enabled)
+				case 23:
+					commandAction = toolConfig.Khaos.Actions[23];
+					if (commandAction.Enabled)
 					{
 						queuedFastActions.Enqueue(new MethodInvoker(() => ZaWarudo(user)));
 					}
 					break;
-				case "haste":
-					commandAction = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.Haste).FirstOrDefault();
-					if (commandAction is not null && commandAction.Enabled)
+				case 24:
+					commandAction = toolConfig.Khaos.Actions[24];
+					if (commandAction.Enabled)
 					{
 						queuedActions.Add(new QueuedAction { Name = "Haste", Type = ActionType.Buff, LocksSpeed = true, Invoker = new MethodInvoker(() => Haste(user)) });
 					}
@@ -1249,8 +1234,7 @@ namespace SotnRandoTools.Khaos
 				int roll = rng.Next(0, 101);
 				if (roll > 85)
 				{
-					//TODO: maybe weight actions by their khaos meter value
-					var actionEvent = new EventAddAction { UserName = "Auto Khaos", Command = KhaosActionNames.Commands[rng.Next(0, KhaosActionNames.Commands.Length)] };
+					var actionEvent = new EventAddAction { UserName = "Auto Khaos", ActionIndex = autoKhaosIndexes[rng.Next(0, autoKhaosIndexes.Count)] };
 					EnqueueAction(actionEvent);
 				}
 			}
@@ -1939,6 +1923,57 @@ namespace SotnRandoTools.Khaos
 		}
 		#endregion
 
+		private void StartCheats()
+		{
+			Cheat faerieScroll = cheats.GetCheatByName("FaerieScroll");
+			faerieScroll.Enable();
+			Cheat batCardXp = cheats.GetCheatByName("BatCardXp");
+			batCardXp.Enable();
+			Cheat ghostCardXp = cheats.GetCheatByName("GhostCardXp");
+			ghostCardXp.Enable();
+			Cheat faerieCardXp = cheats.GetCheatByName("FaerieCardXp");
+			faerieCardXp.Enable();
+			Cheat demonCardXp = cheats.GetCheatByName("DemonCardXp");
+			demonCardXp.Enable();
+			Cheat swordCardXp = cheats.GetCheatByName("SwordCardXp");
+			swordCardXp.Enable();
+			Cheat spriteCardXp = cheats.GetCheatByName("SpriteCardXp");
+			spriteCardXp.Enable();
+			Cheat noseDevilCardXp = cheats.GetCheatByName("NoseDevilCardXp");
+			noseDevilCardXp.Enable();
+		}
+		private void OverwriteBossNames(string[] subscribers)
+		{
+			subscribers = subscribers.OrderBy(x => rng.Next()).ToArray();
+			var randomizedBosses = Strings.BossNameAddresses.OrderBy(x => rng.Next());
+			int i = 0;
+			foreach (var boss in randomizedBosses)
+			{
+				if (i == subscribers.Length)
+				{
+					break;
+				}
+				gameApi.OverwriteString(boss.Value, subscribers[i]);
+				Console.WriteLine($"{boss.Key} renamed to {subscribers[i]}");
+				i++;
+			}
+		}
+		private void SetAutoKhaosChances()
+		{
+			int maxKhaosMeter = toolConfig.Khaos.Actions.Max(action => action.Meter);
+			int baselineChance = (int) Math.Ceiling(1.05 * maxKhaosMeter);
+			Console.WriteLine($"baselineChance: {baselineChance}");
+
+			for (int i = 0; i < toolConfig.Khaos.Actions.Count; i++)
+			{
+				int slots = baselineChance - toolConfig.Khaos.Actions[i].Meter;
+				Console.WriteLine(slots);
+				for (int j = 0; j <= slots; j++)
+				{
+					autoKhaosIndexes.Add(i);
+				}
+			}
+		}
 		private bool IsInGalamothRoom()
 		{
 			uint mapX = alucardApi.MapX;
@@ -1962,25 +1997,6 @@ namespace SotnRandoTools.Khaos
 			uint mapX = alucardApi.MapX;
 			uint mapY = alucardApi.MapY;
 			return ((mapX >= Constants.Khaos.EntranceCutsceneMapMinX && mapX <= Constants.Khaos.EntranceCutsceneMapMaxX) && mapY == Constants.Khaos.EntranceCutsceneMapY);
-		}
-		private void StartCheats()
-		{
-			Cheat faerieScroll = cheats.GetCheatByName("FaerieScroll");
-			faerieScroll.Enable();
-			Cheat batCardXp = cheats.GetCheatByName("BatCardXp");
-			batCardXp.Enable();
-			Cheat ghostCardXp = cheats.GetCheatByName("GhostCardXp");
-			ghostCardXp.Enable();
-			Cheat faerieCardXp = cheats.GetCheatByName("FaerieCardXp");
-			faerieCardXp.Enable();
-			Cheat demonCardXp = cheats.GetCheatByName("DemonCardXp");
-			demonCardXp.Enable();
-			Cheat swordCardXp = cheats.GetCheatByName("SwordCardXp");
-			swordCardXp.Enable();
-			Cheat spriteCardXp = cheats.GetCheatByName("SpriteCardXp");
-			spriteCardXp.Enable();
-			Cheat noseDevilCardXp = cheats.GetCheatByName("NoseDevilCardXp");
-			noseDevilCardXp.Enable();
 		}
 		private void SetSpeed(float factor = 1)
 		{
