@@ -19,7 +19,7 @@
 		public const string ApiLink = "https://github.com/TalicZealot/SotnApi";
 		public const string UpdaterLink = "https://github.com/TalicZealot/SimpleLatestReleaseUpdater";
 		public const string RandoSourceLink = "https://github.com/3snowp7im/SotN-Randomizer";
-		public const string DonateLink = "https://streamlabs.com/taliczealot";
+		public const string DonateLink = "https://streamelements.com/taliczealot/tip";
 
 		public const string LatestReleaseApi = "https://api.github.com/repos/taliczealot/sotnrandotools/releases";
 		public const string LatestReleaseUrl = "https://github.com/TalicZealot/SotnRandoTools/releases/latest";

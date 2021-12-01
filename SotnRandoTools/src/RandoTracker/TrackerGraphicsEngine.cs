@@ -15,9 +15,10 @@ namespace SotnRandoTools.RandoTracker
 		private const int TextPadding = 5;
 		private const int LabelOffset = 40;
 		private const int ImageSize = 14;
-		private const int CellPadding = 1;
+		private const int CellPadding = 2;
 		private const int Columns = 8;
 		private const int CellSize = ImageSize + CellPadding;
+		private const double PixelPerfectSnapMargin = 0.18;
 		private Color DefaultBackground = Color.FromArgb(17, 00, 17);
 
 		private IGraphics formGraphics;
@@ -35,7 +36,7 @@ namespace SotnRandoTools.RandoTracker
 		private List<Rectangle> vladRelicSlots = new List<Rectangle>();
 		private List<Rectangle> progressionItemSlots = new List<Rectangle>();
 
-		private int scale = 1;
+		private float scale = 1;
 		private int progressionRelics = 0;
 		private bool vladProgression = true;
 		private ColorMatrix greyscaleColorMatrix = new ColorMatrix(
@@ -109,12 +110,22 @@ namespace SotnRandoTools.RandoTracker
 			}
 
 			int normalRelicRows = (int) Math.Ceiling((float) (relicCount + 1) / (float) adjustedColumns);
-			int cellsPerColumn = height / ((CellSize * (2 + normalRelicRows)) + LabelOffset);
-			int cellsPerRow = width / ((CellSize * adjustedColumns) + (CellPadding * scale));
+
+			float cellsPerColumn = (float) (height - (LabelOffset * 2)) / ((CellSize * (2 + normalRelicRows)));
+			float cellsPerRow = (float) (width - (CellPadding * 5)) / ((CellSize * adjustedColumns));
 			scale = cellsPerColumn <= cellsPerRow ? cellsPerColumn : cellsPerRow;
+
+			double roundedScale = Math.Floor(scale);
+
+			if (scale - roundedScale < PixelPerfectSnapMargin)
+			{
+				scale = (float)roundedScale;
+			}
+
 			relicSlots = new List<Rectangle>();
 			vladRelicSlots = new List<Rectangle>();
 			progressionItemSlots = new List<Rectangle>();
+
 
 			int row = 0;
 			int col = 0;
@@ -126,7 +137,7 @@ namespace SotnRandoTools.RandoTracker
 					row++;
 					col = 0;
 				}
-				relicSlots.Add(new Rectangle((CellPadding * scale) + (col * (ImageSize + CellPadding) * scale), LabelOffset + (row * (ImageSize + CellPadding) * scale), ImageSize * scale, ImageSize * scale));
+				relicSlots.Add(new Rectangle((int)(CellPadding + (col * (ImageSize + CellPadding) * scale)), LabelOffset + (int)(row * (ImageSize + CellPadding) * scale), (int) (ImageSize * scale), (int)(ImageSize * scale)));
 				col++;
 			}
 
@@ -136,7 +147,7 @@ namespace SotnRandoTools.RandoTracker
 				col = 0;
 				for (int i = 0; i < 6; i++)
 				{
-					vladRelicSlots.Add(new Rectangle((CellPadding * scale) + (col * (ImageSize + CellPadding) * scale), LabelOffset + (row * (ImageSize + CellPadding) * scale), ImageSize * scale, ImageSize * scale));
+					vladRelicSlots.Add(new Rectangle((int) (CellPadding + (col * (ImageSize + CellPadding) * scale)), LabelOffset + (int) (row * (ImageSize + CellPadding) * scale), (int) (ImageSize * scale), (int) (ImageSize * scale)));
 					col++;
 				}
 			}
@@ -145,7 +156,7 @@ namespace SotnRandoTools.RandoTracker
 			col = 0;
 			for (int i = 0; i < 5; i++)
 			{
-				progressionItemSlots.Add(new Rectangle((CellPadding * scale) + (col * ((ImageSize + CellPadding) * scale)), LabelOffset + (row * ((ImageSize + CellPadding) * scale)), ImageSize * scale, ImageSize * scale));
+				progressionItemSlots.Add(new Rectangle((int) (CellPadding + (col * (ImageSize + CellPadding) * scale)), LabelOffset + (int) (row * (ImageSize + CellPadding) * scale), (int) (ImageSize * scale), (int) (ImageSize * scale)));
 				col++;
 			}
 		}
@@ -185,7 +196,7 @@ namespace SotnRandoTools.RandoTracker
 			int normalRelicCount = 0;
 			for (int i = 0; i < 25; i++)
 			{
-				if (relics[i].Status && ((toolConfig.Tracker.ProgressionRelicsOnly && relics[i].Progression) || !toolConfig.Tracker.ProgressionRelicsOnly))
+				if (relics[i].Collected && ((toolConfig.Tracker.ProgressionRelicsOnly && relics[i].Progression) || !toolConfig.Tracker.ProgressionRelicsOnly))
 				{
 					formGraphics.DrawImage(relicImages[i], relicSlots[normalRelicCount], 0, 0, relicImages[i].Width, relicImages[i].Height, GraphicsUnit.Pixel);
 					normalRelicCount++;
@@ -210,7 +221,7 @@ namespace SotnRandoTools.RandoTracker
 			{
 				for (int i = 25; i < relics.Count; i++)
 				{
-					if (relics[i].Status)
+					if (relics[i].Collected)
 					{
 						formGraphics.DrawImage(relicImages[i], vladRelicSlots[i - 25], 0, 0, relicImages[i].Width, relicImages[i].Height, GraphicsUnit.Pixel);
 					}
@@ -241,7 +252,7 @@ namespace SotnRandoTools.RandoTracker
 			int normalRelicCount = 0;
 			for (int i = 0; i < 25; i++)
 			{
-				if (relics[i].Status && ((toolConfig.Tracker.ProgressionRelicsOnly && relics[i].Progression) || !toolConfig.Tracker.ProgressionRelicsOnly))
+				if (relics[i].Collected && ((toolConfig.Tracker.ProgressionRelicsOnly && relics[i].Progression) || !toolConfig.Tracker.ProgressionRelicsOnly))
 				{
 					formGraphics.DrawImage(relicImages[i], relicSlots[normalRelicCount], 0, 0, relicImages[i].Width, relicImages[i].Height, GraphicsUnit.Pixel);
 					normalRelicCount++;
@@ -258,7 +269,7 @@ namespace SotnRandoTools.RandoTracker
 				int vladRelicCount = 0;
 				for (int i = 25; i < relics.Count; i++)
 				{
-					if (relics[i].Status)
+					if (relics[i].Collected)
 					{
 						formGraphics.DrawImage(relicImages[i], vladRelicSlots[vladRelicCount], 0, 0, relicImages[i].Width, relicImages[i].Height, GraphicsUnit.Pixel);
 						vladRelicCount++;

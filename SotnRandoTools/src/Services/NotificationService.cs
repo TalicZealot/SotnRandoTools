@@ -11,11 +11,14 @@ using SotnRandoTools.Constants;
 using SotnRandoTools.Khaos.Enums;
 using SotnRandoTools.Khaos.Models;
 using SotnRandoTools.Services.Models;
+using WatsonWebsocket;
+//TODO: add socket server
 
 namespace SotnRandoTools.Services
 {
 	public class NotificationService : INotificationService
 	{
+		//private WatsonWsServer socketServer;
 		private const int NotificationTime = 4 * 1000;
 		private const int NotificationTimeFast = 1 * 1000;
 		private const int MeterSize = 60;

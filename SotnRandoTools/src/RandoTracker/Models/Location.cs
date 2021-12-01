@@ -14,7 +14,7 @@ namespace SotnRandoTools.RandoTracker.Models
 			EquipmentExtension = false;
 			Status = false;
 		}
-		public string? Name { get; set; }
+		public string Name { get; set; }
 		public bool SecondCastle { get; set; }
 		public bool GuardedExtension { get; set; }
 		public bool EquipmentExtension { get; set; }

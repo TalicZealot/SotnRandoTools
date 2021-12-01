@@ -393,5 +393,19 @@ namespace SotnRandoTools
 			}
 			khaosControler = null;
 		}
+
+		private void autoKhaosButton_Click(object sender, EventArgs e)
+		{
+			if (khaosControler.AutoKhaosOn)
+			{
+				khaosControler.AutoKhaosOn = false;
+				autoKhaosButton.Text = "Start Auto Khaos";
+			}
+			else
+			{
+				khaosControler.AutoKhaosOn = true;
+				autoKhaosButton.Text = "Stop Auto Khaos";
+			}
+		}
 	}
 }

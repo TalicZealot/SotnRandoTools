@@ -204,6 +204,7 @@ namespace SotnRandoTools.RandoTracker
 		private bool secondCastle = false;
 		private bool restarted = false;
 		private bool relicOrItemCollected = false;
+		private string lastLocationVisited = "";
 		private List<MapLocation> replay = new();
 		private int prologueTime = 0;
 
@@ -340,7 +341,7 @@ namespace SotnRandoTools.RandoTracker
 			roomCount = 2;
 			foreach (var relic in relics)
 			{
-				relic.Status = false;
+				relic.Collected = false;
 			}
 			foreach (var item in progressionItems)
 			{
@@ -392,12 +393,14 @@ namespace SotnRandoTools.RandoTracker
 				{
 					if (watchlistService.RelicWatches[i].Value > 0)
 					{
-						relics[i].Status = true;
+						relics[i].Collected = true;
 						relicOrItemCollected = true;
+						Console.WriteLine($"Found relic {relics[i].Name} at: {lastLocationVisited}");
+						//TODO: On acquiring progression relic output location name
 					}
 					else
 					{
-						relics[i].Status = false;
+						relics[i].Collected = false;
 					}
 					DrawRelicsAndItems();
 					if (toolConfig.Tracker.Locations)
@@ -618,7 +621,6 @@ namespace SotnRandoTools.RandoTracker
 						{
 							foreach (int value in room.Values)
 							{
-								Console.WriteLine($"Tracker: {location.Name} change, value = {value}");
 								if ((watch.Value & value) == value)
 								{
 									location.Status = true;
@@ -642,6 +644,8 @@ namespace SotnRandoTools.RandoTracker
 										Console.WriteLine($"Added {coopWatch.Notes} at index {watchIndex} value {watchlistService.CoopLocationValues[watchIndex]} to coopValues.");
 									}
 									ClearMapLocation(locations.IndexOf(location));
+
+									lastLocationVisited = location.Name;
 								}
 							}
 						}
@@ -718,7 +722,7 @@ namespace SotnRandoTools.RandoTracker
 			Relic relic = relics.Where(relic => relic.Name.ToLower() == name).FirstOrDefault();
 			if (relic != null)
 			{
-				return relic.Status;
+				return relic.Collected;
 			}
 			Item progressionItem = progressionItems.Where(item => item.Name.ToLower() == name).FirstOrDefault();
 			if (progressionItem != null)
@@ -795,7 +799,7 @@ namespace SotnRandoTools.RandoTracker
 			int relicsNumber = 0;
 			for (int i = 0; i < relics.Count; i++)
 			{
-				if (relics[i].Status)
+				if (relics[i].Collected)
 				{
 					relicsNumber |= (int) Math.Pow(2, i);
 				}

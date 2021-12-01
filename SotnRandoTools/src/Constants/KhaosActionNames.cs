@@ -29,5 +29,34 @@
 		public const string FourBeasts = "Four Beasts";
 		public const string ZaWarudo = "ZA WARUDO";
 		public const string Haste = "Haste";
+
+		public static string[] Commands = {
+		"kstatus",
+		"kequipment",
+		"kstats",
+		"krelics",
+		"pandora",
+		"gamble",
+		"bankrupt",
+		"weaken",
+		"respawnbosses",
+		"subsonly",
+		"cripple",
+		"bloodmana",
+		"thirst",
+		"horde",
+		"endurance",
+		"vampire",
+		"lighthelp",
+		"mediumhelp",
+		"heavyhelp",
+		"battleorders",
+		"magician",
+		"melty",
+		"fourbeasts",
+		"zawarudo",
+		"haste"
+		};
+
 	}
 }

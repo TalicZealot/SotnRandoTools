@@ -116,7 +116,7 @@ namespace SotnRandoTools.Constants
 			new SearchableActor {Hp = 666, Damage = 20, Sprite = 54072},   // Olrox
 			new SearchableActor {Hp = 666, Damage = 25, Sprite = 8452},    // Succubus
 			new SearchableActor {Hp = 800, Damage = 20, Sprite = 19772},   // Cerberus
-			new SearchableActor {Hp = 400, Damage = 30, Sprite = 6264},    // Granfaloon
+			//new SearchableActor {Hp = 400, Damage = 30, Sprite = 6264},  // Granfaloon
 			new SearchableActor {Hp = 400, Damage = 25, Sprite = 27332},   // Richter
 			new SearchableActor {Hp = 600, Damage = 35, Sprite = 40376},   // Darkwing Bat
 			new SearchableActor {Hp = 1100, Damage = 30, Sprite = 31032},  // Creature
@@ -131,6 +131,27 @@ namespace SotnRandoTools.Constants
 		public static SearchableActor GalamothHeadActor = new SearchableActor { Hp = 32767, Damage = 50, Sprite = 31516 };
 		public static SearchableActor GalamothPartsActors = new SearchableActor { Hp = 12000, Damage = 50, Sprite = 31516 };
 		public static SearchableActor ShaftActor = new SearchableActor { Hp = 10, Damage = 0, Sprite = 0 };
+		public static string[] BuggyQuickSwapWeapons = { 
+			"Shuriken",
+			"Cross shuriken",
+			"Buffalo star",
+			"Flame star",
+			"Boomerang",
+			"Javelin",
+			"Heaven sword",
+			"Alucard sword",
+			"Chakram",
+			"Fire boomerang",
+			"Osafune katana",
+			"Masamune",
+			"Runesword",
+			"Claymore",
+			"Flamberge",
+			"Zweihander",
+			"Obsidian sword",
+			"Estoc",
+			"Shotel"
+		};
 		public static int RichterRoomMapMinX = 31;
 		public static int RichterRoomMapMaxX = 34;
 		public static int RichterRoomMapY = 8;

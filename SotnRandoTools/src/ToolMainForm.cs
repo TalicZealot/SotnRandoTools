@@ -145,13 +145,7 @@ namespace SotnRandoTools
 				}
 			}
 
-			if (!File.Exists(Paths.CheatsPath))
-			{
-				File.Copy(Paths.CheatsPath + ".bkp", Paths.CheatsPath);
-			}
-
-			this.MainForm.CheatList.Load(_memoryDomains, Paths.CheatsPath, false);
-			this.MainForm.CheatList.DisableAll();
+			LoadCheats();
 
 			actorApi = new ActorApi(_maybeMemAPI);
 			alucardApi = new AlucardApi(_maybeMemAPI);
@@ -161,6 +155,17 @@ namespace SotnRandoTools
 			inputService = new InputService(_maybeJoypadApi, alucardApi);
 
 			Console.SetOut(log);
+		}
+
+		private void LoadCheats()
+		{
+			if (!File.Exists(Paths.CheatsPath))
+			{
+				File.Copy(Paths.CheatsPath + ".bkp", Paths.CheatsPath);
+			}
+
+			this.MainForm.CheatList.Load(_memoryDomains, Paths.CheatsPath, false);
+			this.MainForm.CheatList.DisableAll();
 		}
 
 		public override bool AskSaveChanges() => true;
@@ -188,6 +193,10 @@ namespace SotnRandoTools
 				if (coopForm is not null)
 				{
 					coopForm.UpdateCoop();
+				}
+				if (this.MainForm.CheatList.Count == 0)
+				{
+					LoadCheats();
 				}
 			}
 		}

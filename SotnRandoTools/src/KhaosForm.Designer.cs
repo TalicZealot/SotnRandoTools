@@ -30,7 +30,6 @@ namespace SotnRandoTools
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(KhaosForm));
-            this.controlBox = new System.Windows.Forms.GroupBox();
             this.enduranceButton = new System.Windows.Forms.Button();
             this.hasteButton = new System.Windows.Forms.Button();
             this.subsonlyButton = new System.Windows.Forms.Button();
@@ -60,47 +59,14 @@ namespace SotnRandoTools
             this.randomEquipmentButton = new System.Windows.Forms.Button();
             this.randomStatusButton = new System.Windows.Forms.Button();
             this.startButton = new System.Windows.Forms.Button();
-            this.controlBox.SuspendLayout();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.statusPanel = new System.Windows.Forms.TabPage();
+            this.controlPanel = new System.Windows.Forms.TabPage();
+            this.autoKhaosButton = new System.Windows.Forms.Button();
             this.modePanel.SuspendLayout();
+            this.tabControl1.SuspendLayout();
+            this.controlPanel.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // controlBox
-            // 
-            this.controlBox.Controls.Add(this.enduranceButton);
-            this.controlBox.Controls.Add(this.hasteButton);
-            this.controlBox.Controls.Add(this.subsonlyButton);
-            this.controlBox.Controls.Add(this.hordeButton);
-            this.controlBox.Controls.Add(this.zawarudoButton);
-            this.controlBox.Controls.Add(this.modePanel);
-            this.controlBox.Controls.Add(this.thurstButton);
-            this.controlBox.Controls.Add(this.fourBeastsButton);
-            this.controlBox.Controls.Add(this.bloodManaButton);
-            this.controlBox.Controls.Add(this.crippleButton);
-            this.controlBox.Controls.Add(this.meltyButton);
-            this.controlBox.Controls.Add(this.magicianButton);
-            this.controlBox.Controls.Add(this.battleOrdersButton);
-            this.controlBox.Controls.Add(this.heavyHelpButton);
-            this.controlBox.Controls.Add(this.mediumHelpButton);
-            this.controlBox.Controls.Add(this.lightHelpButton);
-            this.controlBox.Controls.Add(this.pandorasBoxButton);
-            this.controlBox.Controls.Add(this.vampireButton);
-            this.controlBox.Controls.Add(this.randomizeRelicsButton);
-            this.controlBox.Controls.Add(this.respawnBossesButton);
-            this.controlBox.Controls.Add(this.gambleButton);
-            this.controlBox.Controls.Add(this.bankruptButton);
-            this.controlBox.Controls.Add(this.randomizeStatsButton);
-            this.controlBox.Controls.Add(this.weakenButton);
-            this.controlBox.Controls.Add(this.randomEquipmentButton);
-            this.controlBox.Controls.Add(this.randomStatusButton);
-            this.controlBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.controlBox.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.controlBox.ForeColor = System.Drawing.Color.White;
-            this.controlBox.Location = new System.Drawing.Point(12, 72);
-            this.controlBox.Name = "controlBox";
-            this.controlBox.Size = new System.Drawing.Size(426, 419);
-            this.controlBox.TabIndex = 0;
-            this.controlBox.TabStop = false;
-            this.controlBox.Text = "Manual Control Panel";
             // 
             // enduranceButton
             // 
@@ -109,7 +75,8 @@ namespace SotnRandoTools
             this.enduranceButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.enduranceButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.enduranceButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.enduranceButton.Location = new System.Drawing.Point(146, 353);
+            this.enduranceButton.ForeColor = System.Drawing.Color.White;
+            this.enduranceButton.Location = new System.Drawing.Point(146, 339);
             this.enduranceButton.Name = "enduranceButton";
             this.enduranceButton.Size = new System.Drawing.Size(134, 26);
             this.enduranceButton.TabIndex = 26;
@@ -124,7 +91,8 @@ namespace SotnRandoTools
             this.hasteButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.hasteButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.hasteButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.hasteButton.Location = new System.Drawing.Point(286, 385);
+            this.hasteButton.ForeColor = System.Drawing.Color.White;
+            this.hasteButton.Location = new System.Drawing.Point(286, 371);
             this.hasteButton.Name = "hasteButton";
             this.hasteButton.Size = new System.Drawing.Size(134, 26);
             this.hasteButton.TabIndex = 25;
@@ -139,7 +107,8 @@ namespace SotnRandoTools
             this.subsonlyButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.subsonlyButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.subsonlyButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.subsonlyButton.Location = new System.Drawing.Point(146, 193);
+            this.subsonlyButton.ForeColor = System.Drawing.Color.White;
+            this.subsonlyButton.Location = new System.Drawing.Point(146, 179);
             this.subsonlyButton.Name = "subsonlyButton";
             this.subsonlyButton.Size = new System.Drawing.Size(134, 26);
             this.subsonlyButton.TabIndex = 24;
@@ -154,7 +123,8 @@ namespace SotnRandoTools
             this.hordeButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.hordeButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.hordeButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.hordeButton.Location = new System.Drawing.Point(146, 321);
+            this.hordeButton.ForeColor = System.Drawing.Color.White;
+            this.hordeButton.Location = new System.Drawing.Point(146, 307);
             this.hordeButton.Name = "hordeButton";
             this.hordeButton.Size = new System.Drawing.Size(134, 26);
             this.hordeButton.TabIndex = 23;
@@ -169,7 +139,8 @@ namespace SotnRandoTools
             this.zawarudoButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.zawarudoButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.zawarudoButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.zawarudoButton.Location = new System.Drawing.Point(286, 353);
+            this.zawarudoButton.ForeColor = System.Drawing.Color.White;
+            this.zawarudoButton.Location = new System.Drawing.Point(286, 339);
             this.zawarudoButton.Name = "zawarudoButton";
             this.zawarudoButton.Size = new System.Drawing.Size(134, 26);
             this.zawarudoButton.TabIndex = 22;
@@ -182,7 +153,7 @@ namespace SotnRandoTools
             this.modePanel.Controls.Add(this.instantRadio);
             this.modePanel.Controls.Add(this.queueRadio);
             this.modePanel.ForeColor = System.Drawing.Color.White;
-            this.modePanel.Location = new System.Drawing.Point(6, 20);
+            this.modePanel.Location = new System.Drawing.Point(3, 6);
             this.modePanel.Name = "modePanel";
             this.modePanel.Size = new System.Drawing.Size(134, 71);
             this.modePanel.TabIndex = 21;
@@ -219,7 +190,8 @@ namespace SotnRandoTools
             this.thurstButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.thurstButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.thurstButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.thurstButton.Location = new System.Drawing.Point(146, 289);
+            this.thurstButton.ForeColor = System.Drawing.Color.White;
+            this.thurstButton.Location = new System.Drawing.Point(146, 275);
             this.thurstButton.Name = "thurstButton";
             this.thurstButton.Size = new System.Drawing.Size(134, 26);
             this.thurstButton.TabIndex = 20;
@@ -234,7 +206,8 @@ namespace SotnRandoTools
             this.fourBeastsButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.fourBeastsButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.fourBeastsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.fourBeastsButton.Location = new System.Drawing.Point(286, 321);
+            this.fourBeastsButton.ForeColor = System.Drawing.Color.White;
+            this.fourBeastsButton.Location = new System.Drawing.Point(286, 307);
             this.fourBeastsButton.Name = "fourBeastsButton";
             this.fourBeastsButton.Size = new System.Drawing.Size(134, 26);
             this.fourBeastsButton.TabIndex = 19;
@@ -249,7 +222,8 @@ namespace SotnRandoTools
             this.bloodManaButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.bloodManaButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.bloodManaButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.bloodManaButton.Location = new System.Drawing.Point(146, 257);
+            this.bloodManaButton.ForeColor = System.Drawing.Color.White;
+            this.bloodManaButton.Location = new System.Drawing.Point(146, 243);
             this.bloodManaButton.Name = "bloodManaButton";
             this.bloodManaButton.Size = new System.Drawing.Size(134, 26);
             this.bloodManaButton.TabIndex = 18;
@@ -264,7 +238,8 @@ namespace SotnRandoTools
             this.crippleButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.crippleButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.crippleButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.crippleButton.Location = new System.Drawing.Point(146, 225);
+            this.crippleButton.ForeColor = System.Drawing.Color.White;
+            this.crippleButton.Location = new System.Drawing.Point(146, 211);
             this.crippleButton.Name = "crippleButton";
             this.crippleButton.Size = new System.Drawing.Size(134, 26);
             this.crippleButton.TabIndex = 17;
@@ -279,7 +254,8 @@ namespace SotnRandoTools
             this.meltyButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.meltyButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.meltyButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.meltyButton.Location = new System.Drawing.Point(286, 289);
+            this.meltyButton.ForeColor = System.Drawing.Color.White;
+            this.meltyButton.Location = new System.Drawing.Point(286, 275);
             this.meltyButton.Name = "meltyButton";
             this.meltyButton.Size = new System.Drawing.Size(134, 26);
             this.meltyButton.TabIndex = 16;
@@ -294,7 +270,8 @@ namespace SotnRandoTools
             this.magicianButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.magicianButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.magicianButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.magicianButton.Location = new System.Drawing.Point(286, 257);
+            this.magicianButton.ForeColor = System.Drawing.Color.White;
+            this.magicianButton.Location = new System.Drawing.Point(286, 243);
             this.magicianButton.Name = "magicianButton";
             this.magicianButton.Size = new System.Drawing.Size(134, 26);
             this.magicianButton.TabIndex = 15;
@@ -309,7 +286,8 @@ namespace SotnRandoTools
             this.battleOrdersButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.battleOrdersButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.battleOrdersButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.battleOrdersButton.Location = new System.Drawing.Point(286, 225);
+            this.battleOrdersButton.ForeColor = System.Drawing.Color.White;
+            this.battleOrdersButton.Location = new System.Drawing.Point(286, 211);
             this.battleOrdersButton.Name = "battleOrdersButton";
             this.battleOrdersButton.Size = new System.Drawing.Size(134, 26);
             this.battleOrdersButton.TabIndex = 13;
@@ -324,7 +302,8 @@ namespace SotnRandoTools
             this.heavyHelpButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.heavyHelpButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.heavyHelpButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.heavyHelpButton.Location = new System.Drawing.Point(286, 193);
+            this.heavyHelpButton.ForeColor = System.Drawing.Color.White;
+            this.heavyHelpButton.Location = new System.Drawing.Point(286, 179);
             this.heavyHelpButton.Name = "heavyHelpButton";
             this.heavyHelpButton.Size = new System.Drawing.Size(134, 26);
             this.heavyHelpButton.TabIndex = 12;
@@ -339,7 +318,8 @@ namespace SotnRandoTools
             this.mediumHelpButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.mediumHelpButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.mediumHelpButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.mediumHelpButton.Location = new System.Drawing.Point(286, 161);
+            this.mediumHelpButton.ForeColor = System.Drawing.Color.White;
+            this.mediumHelpButton.Location = new System.Drawing.Point(286, 147);
             this.mediumHelpButton.Name = "mediumHelpButton";
             this.mediumHelpButton.Size = new System.Drawing.Size(134, 26);
             this.mediumHelpButton.TabIndex = 11;
@@ -354,7 +334,8 @@ namespace SotnRandoTools
             this.lightHelpButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.lightHelpButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.lightHelpButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.lightHelpButton.Location = new System.Drawing.Point(286, 129);
+            this.lightHelpButton.ForeColor = System.Drawing.Color.White;
+            this.lightHelpButton.Location = new System.Drawing.Point(286, 115);
             this.lightHelpButton.Name = "lightHelpButton";
             this.lightHelpButton.Size = new System.Drawing.Size(134, 26);
             this.lightHelpButton.TabIndex = 10;
@@ -369,7 +350,8 @@ namespace SotnRandoTools
             this.pandorasBoxButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.pandorasBoxButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.pandorasBoxButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.pandorasBoxButton.Location = new System.Drawing.Point(6, 225);
+            this.pandorasBoxButton.ForeColor = System.Drawing.Color.White;
+            this.pandorasBoxButton.Location = new System.Drawing.Point(6, 211);
             this.pandorasBoxButton.Name = "pandorasBoxButton";
             this.pandorasBoxButton.Size = new System.Drawing.Size(134, 26);
             this.pandorasBoxButton.TabIndex = 9;
@@ -384,7 +366,8 @@ namespace SotnRandoTools
             this.vampireButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.vampireButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.vampireButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.vampireButton.Location = new System.Drawing.Point(286, 97);
+            this.vampireButton.ForeColor = System.Drawing.Color.White;
+            this.vampireButton.Location = new System.Drawing.Point(286, 83);
             this.vampireButton.Name = "vampireButton";
             this.vampireButton.Size = new System.Drawing.Size(134, 26);
             this.vampireButton.TabIndex = 8;
@@ -399,7 +382,8 @@ namespace SotnRandoTools
             this.randomizeRelicsButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.randomizeRelicsButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.randomizeRelicsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.randomizeRelicsButton.Location = new System.Drawing.Point(6, 193);
+            this.randomizeRelicsButton.ForeColor = System.Drawing.Color.White;
+            this.randomizeRelicsButton.Location = new System.Drawing.Point(6, 179);
             this.randomizeRelicsButton.Name = "randomizeRelicsButton";
             this.randomizeRelicsButton.Size = new System.Drawing.Size(134, 26);
             this.randomizeRelicsButton.TabIndex = 7;
@@ -414,7 +398,8 @@ namespace SotnRandoTools
             this.respawnBossesButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.respawnBossesButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.respawnBossesButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.respawnBossesButton.Location = new System.Drawing.Point(146, 161);
+            this.respawnBossesButton.ForeColor = System.Drawing.Color.White;
+            this.respawnBossesButton.Location = new System.Drawing.Point(146, 147);
             this.respawnBossesButton.Name = "respawnBossesButton";
             this.respawnBossesButton.Size = new System.Drawing.Size(134, 26);
             this.respawnBossesButton.TabIndex = 6;
@@ -429,7 +414,8 @@ namespace SotnRandoTools
             this.gambleButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.gambleButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.gambleButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.gambleButton.Location = new System.Drawing.Point(6, 257);
+            this.gambleButton.ForeColor = System.Drawing.Color.White;
+            this.gambleButton.Location = new System.Drawing.Point(6, 243);
             this.gambleButton.Name = "gambleButton";
             this.gambleButton.Size = new System.Drawing.Size(134, 26);
             this.gambleButton.TabIndex = 5;
@@ -444,7 +430,8 @@ namespace SotnRandoTools
             this.bankruptButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.bankruptButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.bankruptButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.bankruptButton.Location = new System.Drawing.Point(146, 97);
+            this.bankruptButton.ForeColor = System.Drawing.Color.White;
+            this.bankruptButton.Location = new System.Drawing.Point(146, 83);
             this.bankruptButton.Name = "bankruptButton";
             this.bankruptButton.Size = new System.Drawing.Size(134, 26);
             this.bankruptButton.TabIndex = 4;
@@ -459,7 +446,8 @@ namespace SotnRandoTools
             this.randomizeStatsButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.randomizeStatsButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.randomizeStatsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.randomizeStatsButton.Location = new System.Drawing.Point(6, 161);
+            this.randomizeStatsButton.ForeColor = System.Drawing.Color.White;
+            this.randomizeStatsButton.Location = new System.Drawing.Point(6, 147);
             this.randomizeStatsButton.Name = "randomizeStatsButton";
             this.randomizeStatsButton.Size = new System.Drawing.Size(134, 26);
             this.randomizeStatsButton.TabIndex = 3;
@@ -474,7 +462,8 @@ namespace SotnRandoTools
             this.weakenButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.weakenButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.weakenButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.weakenButton.Location = new System.Drawing.Point(146, 129);
+            this.weakenButton.ForeColor = System.Drawing.Color.White;
+            this.weakenButton.Location = new System.Drawing.Point(146, 115);
             this.weakenButton.Name = "weakenButton";
             this.weakenButton.Size = new System.Drawing.Size(134, 26);
             this.weakenButton.TabIndex = 2;
@@ -489,7 +478,8 @@ namespace SotnRandoTools
             this.randomEquipmentButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.randomEquipmentButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.randomEquipmentButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.randomEquipmentButton.Location = new System.Drawing.Point(6, 129);
+            this.randomEquipmentButton.ForeColor = System.Drawing.Color.White;
+            this.randomEquipmentButton.Location = new System.Drawing.Point(6, 115);
             this.randomEquipmentButton.Name = "randomEquipmentButton";
             this.randomEquipmentButton.Size = new System.Drawing.Size(134, 26);
             this.randomEquipmentButton.TabIndex = 1;
@@ -504,7 +494,8 @@ namespace SotnRandoTools
             this.randomStatusButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.randomStatusButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.randomStatusButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.randomStatusButton.Location = new System.Drawing.Point(6, 97);
+            this.randomStatusButton.ForeColor = System.Drawing.Color.White;
+            this.randomStatusButton.Location = new System.Drawing.Point(6, 83);
             this.randomStatusButton.Name = "randomStatusButton";
             this.randomStatusButton.Size = new System.Drawing.Size(134, 26);
             this.randomStatusButton.TabIndex = 0;
@@ -520,13 +511,84 @@ namespace SotnRandoTools
             this.startButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.startButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.startButton.ForeColor = System.Drawing.Color.White;
-            this.startButton.Location = new System.Drawing.Point(158, 12);
+            this.startButton.Location = new System.Drawing.Point(12, 9);
             this.startButton.Name = "startButton";
-            this.startButton.Size = new System.Drawing.Size(134, 54);
+            this.startButton.Size = new System.Drawing.Size(134, 39);
             this.startButton.TabIndex = 5;
             this.startButton.Text = "Start";
             this.startButton.UseVisualStyleBackColor = true;
             this.startButton.Click += new System.EventHandler(this.startButton_Click);
+            // 
+            // tabControl1
+            // 
+            this.tabControl1.Controls.Add(this.statusPanel);
+            this.tabControl1.Controls.Add(this.controlPanel);
+            this.tabControl1.Location = new System.Drawing.Point(3, 54);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(444, 442);
+            this.tabControl1.TabIndex = 6;
+            // 
+            // statusPanel
+            // 
+            this.statusPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
+            this.statusPanel.Location = new System.Drawing.Point(4, 22);
+            this.statusPanel.Name = "statusPanel";
+            this.statusPanel.Size = new System.Drawing.Size(436, 416);
+            this.statusPanel.TabIndex = 2;
+            this.statusPanel.Text = "Status Panel";
+            // 
+            // controlPanel
+            // 
+            this.controlPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
+            this.controlPanel.Controls.Add(this.enduranceButton);
+            this.controlPanel.Controls.Add(this.hasteButton);
+            this.controlPanel.Controls.Add(this.modePanel);
+            this.controlPanel.Controls.Add(this.subsonlyButton);
+            this.controlPanel.Controls.Add(this.randomStatusButton);
+            this.controlPanel.Controls.Add(this.hordeButton);
+            this.controlPanel.Controls.Add(this.randomEquipmentButton);
+            this.controlPanel.Controls.Add(this.zawarudoButton);
+            this.controlPanel.Controls.Add(this.weakenButton);
+            this.controlPanel.Controls.Add(this.thurstButton);
+            this.controlPanel.Controls.Add(this.randomizeStatsButton);
+            this.controlPanel.Controls.Add(this.fourBeastsButton);
+            this.controlPanel.Controls.Add(this.bankruptButton);
+            this.controlPanel.Controls.Add(this.bloodManaButton);
+            this.controlPanel.Controls.Add(this.gambleButton);
+            this.controlPanel.Controls.Add(this.crippleButton);
+            this.controlPanel.Controls.Add(this.respawnBossesButton);
+            this.controlPanel.Controls.Add(this.meltyButton);
+            this.controlPanel.Controls.Add(this.randomizeRelicsButton);
+            this.controlPanel.Controls.Add(this.magicianButton);
+            this.controlPanel.Controls.Add(this.vampireButton);
+            this.controlPanel.Controls.Add(this.battleOrdersButton);
+            this.controlPanel.Controls.Add(this.pandorasBoxButton);
+            this.controlPanel.Controls.Add(this.heavyHelpButton);
+            this.controlPanel.Controls.Add(this.lightHelpButton);
+            this.controlPanel.Controls.Add(this.mediumHelpButton);
+            this.controlPanel.Location = new System.Drawing.Point(4, 22);
+            this.controlPanel.Name = "controlPanel";
+            this.controlPanel.Padding = new System.Windows.Forms.Padding(3);
+            this.controlPanel.Size = new System.Drawing.Size(436, 416);
+            this.controlPanel.TabIndex = 0;
+            this.controlPanel.Text = "Control Panel";
+            // 
+            // autoKhaosButton
+            // 
+            this.autoKhaosButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
+            this.autoKhaosButton.FlatAppearance.BorderSize = 2;
+            this.autoKhaosButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
+            this.autoKhaosButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
+            this.autoKhaosButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.autoKhaosButton.ForeColor = System.Drawing.Color.White;
+            this.autoKhaosButton.Location = new System.Drawing.Point(304, 9);
+            this.autoKhaosButton.Name = "autoKhaosButton";
+            this.autoKhaosButton.Size = new System.Drawing.Size(134, 39);
+            this.autoKhaosButton.TabIndex = 7;
+            this.autoKhaosButton.Text = "Start Auto Khaos";
+            this.autoKhaosButton.UseVisualStyleBackColor = true;
+            this.autoKhaosButton.Click += new System.EventHandler(this.autoKhaosButton_Click);
             // 
             // KhaosForm
             // 
@@ -534,8 +596,9 @@ namespace SotnRandoTools
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
             this.ClientSize = new System.Drawing.Size(450, 498);
+            this.Controls.Add(this.autoKhaosButton);
+            this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.startButton);
-            this.Controls.Add(this.controlBox);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -546,16 +609,15 @@ namespace SotnRandoTools
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.KhaosForm_FormClosing);
             this.Load += new System.EventHandler(this.Khaos_Load);
             this.Move += new System.EventHandler(this.KhaosForm_Move);
-            this.controlBox.ResumeLayout(false);
             this.modePanel.ResumeLayout(false);
             this.modePanel.PerformLayout();
+            this.tabControl1.ResumeLayout(false);
+            this.controlPanel.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
-
-        private System.Windows.Forms.GroupBox controlBox;
         private System.Windows.Forms.Button randomStatusButton;
         private System.Windows.Forms.Button vampireButton;
         private System.Windows.Forms.Button randomizeRelicsButton;
@@ -585,6 +647,10 @@ namespace SotnRandoTools
 		private System.Windows.Forms.Button subsonlyButton;
 		private System.Windows.Forms.Button hasteButton;
 		private System.Windows.Forms.Button enduranceButton;
+		private System.Windows.Forms.TabControl tabControl1;
+		private System.Windows.Forms.TabPage statusPanel;
+		private System.Windows.Forms.TabPage controlPanel;
+		private System.Windows.Forms.Button autoKhaosButton;
 	}
 }
 
