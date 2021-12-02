@@ -6,16 +6,16 @@ namespace SotnRandoTools.Configuration
 	{
 		public TrackerConfig()
 		{
-			ProgressionRelicsOnly = true;
-			GridLayout = false;
+			ProgressionRelicsOnly = false;
+			GridLayout = true;
 			AlwaysOnTop = false;
 			Locations = true;
 			SaveReplays = true;
 			CustomLocationsGuarded = true;
 			CustomLocationsEquipment = false;
 			CustomLocationsClassic = false;
-			Width = 300;
-			Height = 470;
+			Width = 260;
+			Height = 465;
 		}
 		public bool ProgressionRelicsOnly { get; set; }
 		public bool GridLayout { get; set; }

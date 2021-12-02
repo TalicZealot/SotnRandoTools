@@ -61,10 +61,29 @@ namespace SotnRandoTools
             this.startButton = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.statusPanel = new System.Windows.Forms.TabPage();
+            this.queueBox = new System.Windows.Forms.GroupBox();
+            this.queueTextBox = new System.Windows.Forms.TextBox();
+            this.relicLocationsBox = new System.Windows.Forms.GroupBox();
+            this.eyeLocation = new System.Windows.Forms.Label();
+            this.ringLocation = new System.Windows.Forms.Label();
+            this.ribLocation = new System.Windows.Forms.Label();
+            this.toothLocation = new System.Windows.Forms.Label();
+            this.heartLocation = new System.Windows.Forms.Label();
+            this.eyeLabel = new System.Windows.Forms.Label();
+            this.ringLabel = new System.Windows.Forms.Label();
+            this.ribLabel = new System.Windows.Forms.Label();
+            this.toothLabel = new System.Windows.Forms.Label();
+            this.heartLabel = new System.Windows.Forms.Label();
+            this.timersBox = new System.Windows.Forms.GroupBox();
+            this.timersTextBox = new System.Windows.Forms.TextBox();
             this.controlPanel = new System.Windows.Forms.TabPage();
             this.autoKhaosButton = new System.Windows.Forms.Button();
             this.modePanel.SuspendLayout();
             this.tabControl1.SuspendLayout();
+            this.statusPanel.SuspendLayout();
+            this.queueBox.SuspendLayout();
+            this.relicLocationsBox.SuspendLayout();
+            this.timersBox.SuspendLayout();
             this.controlPanel.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -511,7 +530,7 @@ namespace SotnRandoTools
             this.startButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.startButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.startButton.ForeColor = System.Drawing.Color.White;
-            this.startButton.Location = new System.Drawing.Point(12, 9);
+            this.startButton.Location = new System.Drawing.Point(3, 9);
             this.startButton.Name = "startButton";
             this.startButton.Size = new System.Drawing.Size(134, 39);
             this.startButton.TabIndex = 5;
@@ -532,11 +551,167 @@ namespace SotnRandoTools
             // statusPanel
             // 
             this.statusPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
+            this.statusPanel.Controls.Add(this.queueBox);
+            this.statusPanel.Controls.Add(this.relicLocationsBox);
+            this.statusPanel.Controls.Add(this.timersBox);
             this.statusPanel.Location = new System.Drawing.Point(4, 22);
             this.statusPanel.Name = "statusPanel";
             this.statusPanel.Size = new System.Drawing.Size(436, 416);
             this.statusPanel.TabIndex = 2;
             this.statusPanel.Text = "Status Panel";
+            // 
+            // queueBox
+            // 
+            this.queueBox.Controls.Add(this.queueTextBox);
+            this.queueBox.ForeColor = System.Drawing.Color.White;
+            this.queueBox.Location = new System.Drawing.Point(220, 185);
+            this.queueBox.Name = "queueBox";
+            this.queueBox.Size = new System.Drawing.Size(211, 225);
+            this.queueBox.TabIndex = 3;
+            this.queueBox.TabStop = false;
+            this.queueBox.Text = "Action Queue";
+            // 
+            // queueTextBox
+            // 
+            this.queueTextBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
+            this.queueTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.queueTextBox.CausesValidation = false;
+            this.queueTextBox.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.queueTextBox.ForeColor = System.Drawing.Color.White;
+            this.queueTextBox.Location = new System.Drawing.Point(21, 20);
+            this.queueTextBox.Multiline = true;
+            this.queueTextBox.Name = "queueTextBox";
+            this.queueTextBox.Size = new System.Drawing.Size(172, 194);
+            this.queueTextBox.TabIndex = 1;
+            this.queueTextBox.Text = "\r\n";
+            this.queueTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.queueTextBox.WordWrap = false;
+            // 
+            // relicLocationsBox
+            // 
+            this.relicLocationsBox.Controls.Add(this.eyeLocation);
+            this.relicLocationsBox.Controls.Add(this.ringLocation);
+            this.relicLocationsBox.Controls.Add(this.ribLocation);
+            this.relicLocationsBox.Controls.Add(this.toothLocation);
+            this.relicLocationsBox.Controls.Add(this.heartLocation);
+            this.relicLocationsBox.Controls.Add(this.eyeLabel);
+            this.relicLocationsBox.Controls.Add(this.ringLabel);
+            this.relicLocationsBox.Controls.Add(this.ribLabel);
+            this.relicLocationsBox.Controls.Add(this.toothLabel);
+            this.relicLocationsBox.Controls.Add(this.heartLabel);
+            this.relicLocationsBox.ForeColor = System.Drawing.Color.White;
+            this.relicLocationsBox.Location = new System.Drawing.Point(8, 3);
+            this.relicLocationsBox.Name = "relicLocationsBox";
+            this.relicLocationsBox.Size = new System.Drawing.Size(208, 176);
+            this.relicLocationsBox.TabIndex = 2;
+            this.relicLocationsBox.TabStop = false;
+            this.relicLocationsBox.Text = "Relic Locations";
+            // 
+            // eyeLocation
+            // 
+            this.eyeLocation.Location = new System.Drawing.Point(99, 134);
+            this.eyeLocation.Name = "eyeLocation";
+            this.eyeLocation.Size = new System.Drawing.Size(100, 13);
+            this.eyeLocation.TabIndex = 9;
+            // 
+            // ringLocation
+            // 
+            this.ringLocation.Location = new System.Drawing.Point(99, 111);
+            this.ringLocation.Name = "ringLocation";
+            this.ringLocation.Size = new System.Drawing.Size(100, 13);
+            this.ringLocation.TabIndex = 8;
+            // 
+            // ribLocation
+            // 
+            this.ribLocation.Location = new System.Drawing.Point(99, 86);
+            this.ribLocation.Name = "ribLocation";
+            this.ribLocation.Size = new System.Drawing.Size(100, 13);
+            this.ribLocation.TabIndex = 7;
+            // 
+            // toothLocation
+            // 
+            this.toothLocation.Location = new System.Drawing.Point(99, 62);
+            this.toothLocation.Name = "toothLocation";
+            this.toothLocation.Size = new System.Drawing.Size(100, 13);
+            this.toothLocation.TabIndex = 6;
+            // 
+            // heartLocation
+            // 
+            this.heartLocation.Location = new System.Drawing.Point(99, 39);
+            this.heartLocation.Name = "heartLocation";
+            this.heartLocation.Size = new System.Drawing.Size(100, 13);
+            this.heartLocation.TabIndex = 5;
+            // 
+            // eyeLabel
+            // 
+            this.eyeLabel.AutoSize = true;
+            this.eyeLabel.Location = new System.Drawing.Point(15, 134);
+            this.eyeLabel.Name = "eyeLabel";
+            this.eyeLabel.Size = new System.Drawing.Size(78, 13);
+            this.eyeLabel.TabIndex = 4;
+            this.eyeLabel.Text = "Eye of Vlad at:";
+            // 
+            // ringLabel
+            // 
+            this.ringLabel.AutoSize = true;
+            this.ringLabel.Location = new System.Drawing.Point(12, 111);
+            this.ringLabel.Name = "ringLabel";
+            this.ringLabel.Size = new System.Drawing.Size(81, 13);
+            this.ringLabel.TabIndex = 3;
+            this.ringLabel.Text = "Ring of Vlad at:";
+            // 
+            // ribLabel
+            // 
+            this.ribLabel.AutoSize = true;
+            this.ribLabel.Location = new System.Drawing.Point(18, 86);
+            this.ribLabel.Name = "ribLabel";
+            this.ribLabel.Size = new System.Drawing.Size(75, 13);
+            this.ribLabel.TabIndex = 2;
+            this.ribLabel.Text = "Rib of Vlad at:";
+            // 
+            // toothLabel
+            // 
+            this.toothLabel.AutoSize = true;
+            this.toothLabel.Location = new System.Drawing.Point(5, 62);
+            this.toothLabel.Name = "toothLabel";
+            this.toothLabel.Size = new System.Drawing.Size(88, 13);
+            this.toothLabel.TabIndex = 1;
+            this.toothLabel.Text = "Tooth of Vlad at:";
+            // 
+            // heartLabel
+            // 
+            this.heartLabel.AutoSize = true;
+            this.heartLabel.Location = new System.Drawing.Point(6, 39);
+            this.heartLabel.Name = "heartLabel";
+            this.heartLabel.Size = new System.Drawing.Size(87, 13);
+            this.heartLabel.TabIndex = 0;
+            this.heartLabel.Text = "Heart of Vlad at:";
+            // 
+            // timersBox
+            // 
+            this.timersBox.Controls.Add(this.timersTextBox);
+            this.timersBox.ForeColor = System.Drawing.Color.White;
+            this.timersBox.Location = new System.Drawing.Point(5, 185);
+            this.timersBox.Name = "timersBox";
+            this.timersBox.Size = new System.Drawing.Size(211, 225);
+            this.timersBox.TabIndex = 1;
+            this.timersBox.TabStop = false;
+            this.timersBox.Text = "Active Actions";
+            // 
+            // timersTextBox
+            // 
+            this.timersTextBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
+            this.timersTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.timersTextBox.CausesValidation = false;
+            this.timersTextBox.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.timersTextBox.ForeColor = System.Drawing.Color.White;
+            this.timersTextBox.Location = new System.Drawing.Point(12, 20);
+            this.timersTextBox.Multiline = true;
+            this.timersTextBox.Name = "timersTextBox";
+            this.timersTextBox.Size = new System.Drawing.Size(190, 194);
+            this.timersTextBox.TabIndex = 0;
+            this.timersTextBox.Text = "\r\n";
+            this.timersTextBox.WordWrap = false;
             // 
             // controlPanel
             // 
@@ -582,7 +757,7 @@ namespace SotnRandoTools
             this.autoKhaosButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.autoKhaosButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.autoKhaosButton.ForeColor = System.Drawing.Color.White;
-            this.autoKhaosButton.Location = new System.Drawing.Point(304, 9);
+            this.autoKhaosButton.Location = new System.Drawing.Point(313, 9);
             this.autoKhaosButton.Name = "autoKhaosButton";
             this.autoKhaosButton.Size = new System.Drawing.Size(134, 39);
             this.autoKhaosButton.TabIndex = 7;
@@ -612,6 +787,13 @@ namespace SotnRandoTools
             this.modePanel.ResumeLayout(false);
             this.modePanel.PerformLayout();
             this.tabControl1.ResumeLayout(false);
+            this.statusPanel.ResumeLayout(false);
+            this.queueBox.ResumeLayout(false);
+            this.queueBox.PerformLayout();
+            this.relicLocationsBox.ResumeLayout(false);
+            this.relicLocationsBox.PerformLayout();
+            this.timersBox.ResumeLayout(false);
+            this.timersBox.PerformLayout();
             this.controlPanel.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -651,6 +833,21 @@ namespace SotnRandoTools
 		private System.Windows.Forms.TabPage statusPanel;
 		private System.Windows.Forms.TabPage controlPanel;
 		private System.Windows.Forms.Button autoKhaosButton;
+		private System.Windows.Forms.TextBox timersTextBox;
+		private System.Windows.Forms.GroupBox timersBox;
+		private System.Windows.Forms.GroupBox queueBox;
+		private System.Windows.Forms.GroupBox relicLocationsBox;
+		private System.Windows.Forms.TextBox queueTextBox;
+		private System.Windows.Forms.Label heartLabel;
+		private System.Windows.Forms.Label heartLocation;
+		private System.Windows.Forms.Label eyeLabel;
+		private System.Windows.Forms.Label ringLabel;
+		private System.Windows.Forms.Label ribLabel;
+		private System.Windows.Forms.Label toothLabel;
+		private System.Windows.Forms.Label eyeLocation;
+		private System.Windows.Forms.Label ringLocation;
+		private System.Windows.Forms.Label ribLocation;
+		private System.Windows.Forms.Label toothLocation;
 	}
 }
 

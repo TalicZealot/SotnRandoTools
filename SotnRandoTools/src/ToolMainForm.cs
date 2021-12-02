@@ -251,6 +251,10 @@ namespace SotnRandoTools
 			{
 				trackerForm = new TrackerForm(toolConfig, watchlistService, renderingApi, gameApi, alucardApi);
 				trackerForm.Show();
+				if (khaosForm is not null)
+				{
+					trackerForm.SetTrackerVladRelicLocationDisplay(khaosForm);
+				}
 			}
 		}
 
@@ -266,6 +270,10 @@ namespace SotnRandoTools
 			{
 				khaosForm = new KhaosForm(toolConfig, this.MainForm.CheatList, gameApi, alucardApi, actorApi, notificationService, inputService);
 				khaosForm.Show();
+				if (trackerForm is not null)
+				{
+					trackerForm.SetTrackerVladRelicLocationDisplay(khaosForm);
+				}
 			}
 		}
 

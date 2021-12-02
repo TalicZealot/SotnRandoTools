@@ -8,6 +8,7 @@ using SotnApi.Constants.Values.Game;
 using SotnApi.Interfaces;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Constants;
+using SotnRandoTools.Khaos.Interfaces;
 using SotnRandoTools.RandoTracker.Interfaces;
 using SotnRandoTools.RandoTracker.Models;
 using SotnRandoTools.Services;
@@ -235,6 +236,7 @@ namespace SotnRandoTools.RandoTracker
 		}
 
 		public string SeedInfo { get; set; }
+		public IVladRelicLocationDisplay VladRelicLocationDisplay { get; set; }
 
 		public TrackerGraphicsEngine GraphicsEngine { get; }
 
@@ -396,7 +398,29 @@ namespace SotnRandoTools.RandoTracker
 						relics[i].Collected = true;
 						relicOrItemCollected = true;
 						Console.WriteLine($"Found relic {relics[i].Name} at: {lastLocationVisited}");
-						//TODO: On acquiring progression relic output location name
+						if (VladRelicLocationDisplay is not null)
+						{
+							switch (relics[i].Name)
+							{
+								case "HeartOfVlad":
+									VladRelicLocationDisplay.HeartOfVladLocation = lastLocationVisited;
+									break;
+								case "ToothOfVlad":
+									VladRelicLocationDisplay.ToothOfVladLocation = lastLocationVisited;
+									break;
+								case "RibOfVlad":
+									VladRelicLocationDisplay.RibOfVladLocation = lastLocationVisited;
+									break;
+								case "RingOfVlad":
+									VladRelicLocationDisplay.RingOfVladLocation = lastLocationVisited;
+									break;
+								case "EyeOfVlad":
+									VladRelicLocationDisplay.EyeOfVladLocation = lastLocationVisited;
+									break;
+								default:
+									break;
+							}
+						}
 					}
 					else
 					{

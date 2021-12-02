@@ -15,6 +15,7 @@ using SotnApi.Models;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Constants;
 using SotnRandoTools.Khaos.Enums;
+using SotnRandoTools.Khaos.Interfaces;
 using SotnRandoTools.Khaos.Models;
 using SotnRandoTools.Services;
 using SotnRandoTools.Services.Adapters;
@@ -32,6 +33,7 @@ namespace SotnRandoTools.Khaos
 		private readonly ICheatCollectionAdapter cheats;
 		private readonly INotificationService notificationService;
 		private readonly IInputService inputService;
+		private readonly IKhaosActionsInfoDisplay statusInfoDisplay;
 		private Random rng = new Random();
 
 		private string[]? subscribers =
@@ -103,7 +105,7 @@ namespace SotnRandoTools.Khaos
 		private bool superMelty = false;
 		private bool superHaste = false;
 
-		public KhaosController(IToolConfig toolConfig, IGameApi gameApi, IAlucardApi alucardApi, IActorApi actorApi, ICheatCollectionAdapter cheats, INotificationService notificationService, IInputService inputService)
+		public KhaosController(IToolConfig toolConfig, IGameApi gameApi, IAlucardApi alucardApi, IActorApi actorApi, ICheatCollectionAdapter cheats, INotificationService notificationService, IInputService inputService, IKhaosActionsInfoDisplay statusInfoDisplay)
 		{
 			if (toolConfig is null) throw new ArgumentNullException(nameof(toolConfig));
 			if (gameApi is null) throw new ArgumentNullException(nameof(gameApi));
@@ -112,6 +114,7 @@ namespace SotnRandoTools.Khaos
 			if (cheats == null) throw new ArgumentNullException(nameof(cheats));
 			if (notificationService == null) throw new ArgumentNullException(nameof(notificationService));
 			if (inputService is null) throw new ArgumentNullException(nameof(inputService));
+			if (statusInfoDisplay is null) throw new ArgumentNullException(nameof(statusInfoDisplay));
 			this.toolConfig = toolConfig;
 			this.gameApi = gameApi;
 			this.alucardApi = alucardApi;
@@ -119,10 +122,12 @@ namespace SotnRandoTools.Khaos
 			this.cheats = cheats;
 			this.notificationService = notificationService;
 			this.inputService = inputService;
+			this.statusInfoDisplay = statusInfoDisplay;
 
 			InitializeTimers();
 			SetAutoKhaosChances();
 			notificationService.ActionQueue = queuedActions;
+			statusInfoDisplay.ActionQueue = queuedActions;
 			normalInterval = (int) toolConfig.Khaos.QueueInterval.TotalMilliseconds;
 			slowInterval = (int) normalInterval * 2;
 			fastInterval = (int) normalInterval / 2;
@@ -324,6 +329,13 @@ namespace SotnRandoTools.Khaos
 				Duration = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.Thirst).FirstOrDefault().Duration
 			});
 
+			statusInfoDisplay.AddTimer(new Services.Models.ActionTimer
+			{
+				Name = KhaosActionNames.Thirst,
+				Type = Enums.ActionType.Debuff,
+				Duration = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.Thirst).FirstOrDefault().Duration
+			});
+
 			string message = meterFull ? $"{user} used Super Thirst" : $"{user} used Thirst";
 			notificationService.AddMessage(message);
 			Alert(KhaosActionNames.Thirst);
@@ -391,6 +403,13 @@ namespace SotnRandoTools.Khaos
 				Duration = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.Cripple).FirstOrDefault().Duration
 			});
 
+			statusInfoDisplay.AddTimer(new Services.Models.ActionTimer
+			{
+				Name = KhaosActionNames.Cripple,
+				Type = Enums.ActionType.Debuff,
+				Duration = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.Cripple).FirstOrDefault().Duration
+			});
+
 			string message = meterFull ? $"{user} used Super Cripple" : $"{user} used Cripple";
 			notificationService.AddMessage(message);
 			Alert(KhaosActionNames.Cripple);
@@ -403,6 +422,12 @@ namespace SotnRandoTools.Khaos
 			manaLocked = true;
 			notificationService.AddMessage($"{user} used Blood Mana");
 			notificationService.AddTimer(new Services.Models.ActionTimer
+			{
+				Name = KhaosActionNames.BloodMana,
+				Type = Enums.ActionType.Debuff,
+				Duration = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.BloodMana).FirstOrDefault().Duration
+			});
+			statusInfoDisplay.AddTimer(new Services.Models.ActionTimer
 			{
 				Name = KhaosActionNames.BloodMana,
 				Type = Enums.ActionType.Debuff,
@@ -437,6 +462,12 @@ namespace SotnRandoTools.Khaos
 			subweaponsOnlyTimer.Start();
 			notificationService.AddMessage($"{user} used Subweapons Only");
 			notificationService.AddTimer(new Services.Models.ActionTimer
+			{
+				Name = KhaosActionNames.SubweaponsOnly,
+				Type = Enums.ActionType.Debuff,
+				Duration = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.SubweaponsOnly).FirstOrDefault().Duration
+			});
+			statusInfoDisplay.AddTimer(new Services.Models.ActionTimer
 			{
 				Name = KhaosActionNames.SubweaponsOnly,
 				Type = Enums.ActionType.Debuff,
@@ -666,6 +697,12 @@ namespace SotnRandoTools.Khaos
 				Type = Enums.ActionType.Buff,
 				Duration = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.Vampire).FirstOrDefault().Duration
 			});
+			statusInfoDisplay.AddTimer(new Services.Models.ActionTimer
+			{
+				Name = KhaosActionNames.Vampire,
+				Type = Enums.ActionType.Buff,
+				Duration = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.Vampire).FirstOrDefault().Duration
+			});
 			Alert(KhaosActionNames.Vampire);
 		}
 		public void BattleOrders(string user = "Khaos")
@@ -707,7 +744,12 @@ namespace SotnRandoTools.Khaos
 				Type = Enums.ActionType.Buff,
 				Duration = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.Magician).FirstOrDefault().Duration
 			});
-
+			statusInfoDisplay.AddTimer(new Services.Models.ActionTimer
+			{
+				Name = KhaosActionNames.Magician,
+				Type = Enums.ActionType.Buff,
+				Duration = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.Magician).FirstOrDefault().Duration
+			});
 			string message = meterFull ? $"{user} activated Shapeshifter" : $"{user} activated Magician";
 			notificationService.AddMessage(message);
 
@@ -731,6 +773,12 @@ namespace SotnRandoTools.Khaos
 
 			notificationService.AddMessage($"{user} used ZA WARUDO");
 			notificationService.AddTimer(new Services.Models.ActionTimer
+			{
+				Name = KhaosActionNames.ZaWarudo,
+				Type = Enums.ActionType.Buff,
+				Duration = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.ZaWarudo).FirstOrDefault().Duration
+			});
+			statusInfoDisplay.AddTimer(new Services.Models.ActionTimer
 			{
 				Name = KhaosActionNames.ZaWarudo,
 				Type = Enums.ActionType.Buff,
@@ -772,7 +820,12 @@ namespace SotnRandoTools.Khaos
 				Type = Enums.ActionType.Buff,
 				Duration = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.MeltyBlood).FirstOrDefault().Duration
 			});
-
+			statusInfoDisplay.AddTimer(new Services.Models.ActionTimer
+			{
+				Name = KhaosActionNames.MeltyBlood,
+				Type = Enums.ActionType.Buff,
+				Duration = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.MeltyBlood).FirstOrDefault().Duration
+			});
 			string message = meterFull ? $"{user} activated GUILTY GEAR" : $"{user} activated Melty Blood";
 			notificationService.AddMessage(message);
 			if (meterFull)
@@ -805,6 +858,12 @@ namespace SotnRandoTools.Khaos
 				Type = Enums.ActionType.Buff,
 				Duration = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.FourBeasts).FirstOrDefault().Duration
 			});
+			statusInfoDisplay.AddTimer(new Services.Models.ActionTimer
+			{
+				Name = KhaosActionNames.FourBeasts,
+				Type = Enums.ActionType.Buff,
+				Duration = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.FourBeasts).FirstOrDefault().Duration
+			});
 			Alert(KhaosActionNames.FourBeasts);
 		}
 		//TODO: Necromancer
@@ -824,6 +883,12 @@ namespace SotnRandoTools.Khaos
 			speedLocked = true;
 			Console.WriteLine($"{user} used {KhaosActionNames.Haste}");
 			notificationService.AddTimer(new Services.Models.ActionTimer
+			{
+				Name = KhaosActionNames.Haste,
+				Type = Enums.ActionType.Buff,
+				Duration = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.Haste).FirstOrDefault().Duration
+			});
+			statusInfoDisplay.AddTimer(new Services.Models.ActionTimer
 			{
 				Name = KhaosActionNames.Haste,
 				Type = Enums.ActionType.Buff,
@@ -1559,6 +1624,12 @@ namespace SotnRandoTools.Khaos
 					hordeTimer.Stop();
 					hordeTimer.Interval = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.KhaosHorde).FirstOrDefault().Duration.TotalMilliseconds;
 					notificationService.AddTimer(new Services.Models.ActionTimer
+					{
+						Name = KhaosActionNames.KhaosHorde,
+						Type = Enums.ActionType.Debuff,
+						Duration = toolConfig.Khaos.Actions.Where(a => a.Name == KhaosActionNames.KhaosHorde).FirstOrDefault().Duration
+					});
+					statusInfoDisplay.AddTimer(new Services.Models.ActionTimer
 					{
 						Name = KhaosActionNames.KhaosHorde,
 						Type = Enums.ActionType.Debuff,
