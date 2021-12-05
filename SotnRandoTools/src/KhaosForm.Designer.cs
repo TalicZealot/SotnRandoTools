@@ -78,6 +78,8 @@ namespace SotnRandoTools
             this.timersTextBox = new System.Windows.Forms.TextBox();
             this.controlPanel = new System.Windows.Forms.TabPage();
             this.autoKhaosButton = new System.Windows.Forms.Button();
+            this.burstButton = new System.Windows.Forms.Button();
+            this.hnkButton = new System.Windows.Forms.Button();
             this.modePanel.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.statusPanel.SuspendLayout();
@@ -716,6 +718,8 @@ namespace SotnRandoTools
             // controlPanel
             // 
             this.controlPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
+            this.controlPanel.Controls.Add(this.hnkButton);
+            this.controlPanel.Controls.Add(this.burstButton);
             this.controlPanel.Controls.Add(this.enduranceButton);
             this.controlPanel.Controls.Add(this.hasteButton);
             this.controlPanel.Controls.Add(this.modePanel);
@@ -764,6 +768,38 @@ namespace SotnRandoTools
             this.autoKhaosButton.Text = "Start Auto Khaos";
             this.autoKhaosButton.UseVisualStyleBackColor = true;
             this.autoKhaosButton.Click += new System.EventHandler(this.autoKhaosButton_Click);
+            // 
+            // burstButton
+            // 
+            this.burstButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
+            this.burstButton.FlatAppearance.BorderSize = 2;
+            this.burstButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
+            this.burstButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
+            this.burstButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.burstButton.ForeColor = System.Drawing.Color.White;
+            this.burstButton.Location = new System.Drawing.Point(6, 275);
+            this.burstButton.Name = "burstButton";
+            this.burstButton.Size = new System.Drawing.Size(134, 26);
+            this.burstButton.TabIndex = 27;
+            this.burstButton.Text = "Khaotic Burst";
+            this.burstButton.UseVisualStyleBackColor = true;
+            this.burstButton.Click += new System.EventHandler(this.burstButton_Click);
+            // 
+            // hnkButton
+            // 
+            this.hnkButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
+            this.hnkButton.FlatAppearance.BorderSize = 2;
+            this.hnkButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
+            this.hnkButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
+            this.hnkButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.hnkButton.ForeColor = System.Drawing.Color.White;
+            this.hnkButton.Location = new System.Drawing.Point(146, 371);
+            this.hnkButton.Name = "hnkButton";
+            this.hnkButton.Size = new System.Drawing.Size(134, 26);
+            this.hnkButton.TabIndex = 28;
+            this.hnkButton.Text = "HnK";
+            this.hnkButton.UseVisualStyleBackColor = true;
+            this.hnkButton.Click += new System.EventHandler(this.hnkButton_Click);
             // 
             // KhaosForm
             // 
@@ -848,6 +884,8 @@ namespace SotnRandoTools
 		private System.Windows.Forms.Label ringLocation;
 		private System.Windows.Forms.Label ribLocation;
 		private System.Windows.Forms.Label toothLocation;
+		private System.Windows.Forms.Button burstButton;
+		private System.Windows.Forms.Button hnkButton;
 	}
 }
 

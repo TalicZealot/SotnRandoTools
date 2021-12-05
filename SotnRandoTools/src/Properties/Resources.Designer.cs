@@ -73,9 +73,9 @@ namespace SotnRandoTools.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap khaosb {
+        internal static System.Drawing.Bitmap Khaos {
             get {
-                object obj = ResourceManager.GetObject("khaosb", resourceCulture);
+                object obj = ResourceManager.GetObject("Khaos", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -83,9 +83,9 @@ namespace SotnRandoTools.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap LogoTZtwtr1 {
+        internal static System.Drawing.Bitmap Tracker {
             get {
-                object obj = ResourceManager.GetObject("LogoTZtwtr1", resourceCulture);
+                object obj = ResourceManager.GetObject("Tracker", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -93,9 +93,9 @@ namespace SotnRandoTools.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap tracker {
+        internal static System.Drawing.Bitmap VectorSimple {
             get {
-                object obj = ResourceManager.GetObject("tracker", resourceCulture);
+                object obj = ResourceManager.GetObject("VectorSimple", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

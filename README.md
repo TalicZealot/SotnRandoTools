@@ -57,22 +57,6 @@ Coop requires the host to have the port they want to use forwarded. Hosting auto
 Bindings over at: [https://taliczealot.github.io/coop/](https://taliczealot.github.io/coop/)
 
 ## Khaos-Setup
-* Video setup guide: SOON
-* Set up StreamlabsChatbot.
-* Turn on and adjust the StreamlabsChatbot currency.
-* Follow these instructions: https://streamlabs.com/content-hub/post/chatbot-scripts-desktop
-* Import the Khaos-Bot-Script from `BizHawk\ExternalTools\SotnRandoTools\Khaos`.
-* Right click the script and select `Insert API Key`.
-* Right click the script and select `Open Script Folder`. Inside `Scripts\Khaos-Bot-Script\Overlays` the index.html file is your dynamic commands widget for OBS.
-* Click the settings button on the top right of the scripts tab and copy the API Key. Paste it inside SotnRandoTools in the `Khaos > Input > Bot API Key` field.
-* Enable the script by clicking the checkbox on the right.
-* Adjust the action costs and cooldowns through the script and properties through the tool to your preference.
-* Script management commands available to mods and streamer:
-  * !startkhaos
-  * !stopkhaos
-  * !pausekhaos
-  * !unpausekhaos
-* Useful commands for running Khaos: [https://raw.githubusercontent.com/TalicZealot/SotnRandoTools/main/BotCommands/KhaosHelperCommands.abcomg](https://raw.githubusercontent.com/TalicZealot/SotnRandoTools/main/BotCommands/KhaosHelperCommands.abcomg) `right click > Save Link As...` then import in the command ssection of StreamlabsChatbot.
 
 ## Useful links
 * [SotN Randomizer](https://sotn.io)

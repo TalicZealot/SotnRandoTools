@@ -328,6 +328,18 @@ namespace SotnRandoTools
 				khaosControler.Gamble();
 			}
 		}
+		private void burstButton_Click(object sender, EventArgs e)
+		{
+			if (toolConfig.Khaos.ControlPannelQueueActions)
+			{
+				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = 6, UserName = "Khaos" });
+			}
+			else
+			{
+
+				khaosControler.KhaoticBurst();
+			}
+		}
 		#endregion
 		#region Debuffs
 		private void bankruptButton_Click(object sender, EventArgs e)
@@ -429,6 +441,17 @@ namespace SotnRandoTools
 			else
 			{
 				khaosControler.Endurance();
+			}
+		}
+		private void hnkButton_Click(object sender, EventArgs e)
+		{
+			if (toolConfig.Khaos.ControlPannelQueueActions)
+			{
+				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = 16, UserName = "Khaos" });
+			}
+			else
+			{
+				khaosControler.HnK();
 			}
 		}
 		#endregion
@@ -561,6 +584,5 @@ namespace SotnRandoTools
 			}
 			khaosControler = null;
 		}
-
 	}
 }
