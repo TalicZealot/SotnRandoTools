@@ -57,7 +57,7 @@ namespace SotnRandoTools.Services
 
 		public void UpdateInputs()
 		{
-			inputHistory.Add(joypadApi.Get().ToDictionary(kvp => kvp.Key, kvp => kvp.Value));
+			inputHistory.Add((Dictionary<string, object>)  joypadApi.Get());
 			if (inputHistory.Count > 120)
 			{
 				inputHistory.RemoveAt(0);

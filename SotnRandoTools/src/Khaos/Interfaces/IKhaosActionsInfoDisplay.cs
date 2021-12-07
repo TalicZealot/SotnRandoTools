@@ -8,5 +8,6 @@ namespace SotnRandoTools.Khaos.Interfaces
 	{
 		List<QueuedAction> ActionQueue { get; set; }
 		void AddTimer(ActionTimer timer);
+		bool ContainsTimer(string name);
 	}
 }
