@@ -11,7 +11,8 @@ namespace SotnRandoTools
 		private readonly IToolConfig? toolConfig;
 		private readonly INotificationService notificationService;
 		private BindingSource actionsAlertsSource = new();
-		private BindingSource actionsOtherSource = new();
+		private BindingSource actionSettingsSource = new();
+		private BindingSource actionCooldownsSource = new();
 
 		public KhaosSettingsPanel(IToolConfig toolConfig, INotificationService notificationService)
 		{
@@ -42,13 +43,16 @@ namespace SotnRandoTools
 			foreach (var action in toolConfig.Khaos.Actions)
 			{
 				actionsAlertsSource.Add(action);
-				actionsOtherSource.Add(action);
+				actionSettingsSource.Add(action);
+				actionCooldownsSource.Add(action);
 			}
 			alertsGridView.AutoGenerateColumns = false;
 			alertsGridView.DataSource = actionsAlertsSource;
 			alertsGridView.CellClick += AlertsGridView_BrowseClick;
 			actionsGridView.AutoGenerateColumns = false;
-			actionsGridView.DataSource = actionsOtherSource;
+			actionsGridView.DataSource = actionSettingsSource;
+			actionCooldownsGridView.AutoGenerateColumns = false;
+			actionCooldownsGridView.DataSource = actionCooldownsSource;
 		}
 
 		private void AlertsGridView_BrowseClick(object sender, DataGridViewCellEventArgs e)

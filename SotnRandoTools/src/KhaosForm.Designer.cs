@@ -77,9 +77,9 @@ namespace SotnRandoTools
             this.timersBox = new System.Windows.Forms.GroupBox();
             this.timersTextBox = new System.Windows.Forms.TextBox();
             this.controlPanel = new System.Windows.Forms.TabPage();
-            this.autoKhaosButton = new System.Windows.Forms.Button();
-            this.burstButton = new System.Windows.Forms.Button();
             this.hnkButton = new System.Windows.Forms.Button();
+            this.burstButton = new System.Windows.Forms.Button();
+            this.autoKhaosButton = new System.Windows.Forms.Button();
             this.modePanel.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.statusPanel.SuspendLayout();
@@ -149,7 +149,7 @@ namespace SotnRandoTools
             this.hordeButton.Name = "hordeButton";
             this.hordeButton.Size = new System.Drawing.Size(134, 26);
             this.hordeButton.TabIndex = 23;
-            this.hordeButton.Text = "Khaos Horde";
+            this.hordeButton.Text = "Horde";
             this.hordeButton.UseVisualStyleBackColor = true;
             this.hordeButton.Click += new System.EventHandler(this.hordeButton_Click);
             // 
@@ -216,7 +216,7 @@ namespace SotnRandoTools
             this.thurstButton.Name = "thurstButton";
             this.thurstButton.Size = new System.Drawing.Size(134, 26);
             this.thurstButton.TabIndex = 20;
-            this.thurstButton.Text = "Thurst";
+            this.thurstButton.Text = "Thirst";
             this.thurstButton.UseVisualStyleBackColor = true;
             this.thurstButton.Click += new System.EventHandler(this.thurstButton_Click);
             // 
@@ -753,21 +753,21 @@ namespace SotnRandoTools
             this.controlPanel.TabIndex = 0;
             this.controlPanel.Text = "Control Panel";
             // 
-            // autoKhaosButton
+            // hnkButton
             // 
-            this.autoKhaosButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
-            this.autoKhaosButton.FlatAppearance.BorderSize = 2;
-            this.autoKhaosButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
-            this.autoKhaosButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
-            this.autoKhaosButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.autoKhaosButton.ForeColor = System.Drawing.Color.White;
-            this.autoKhaosButton.Location = new System.Drawing.Point(313, 9);
-            this.autoKhaosButton.Name = "autoKhaosButton";
-            this.autoKhaosButton.Size = new System.Drawing.Size(134, 39);
-            this.autoKhaosButton.TabIndex = 7;
-            this.autoKhaosButton.Text = "Start Auto Khaos";
-            this.autoKhaosButton.UseVisualStyleBackColor = true;
-            this.autoKhaosButton.Click += new System.EventHandler(this.autoKhaosButton_Click);
+            this.hnkButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
+            this.hnkButton.FlatAppearance.BorderSize = 2;
+            this.hnkButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
+            this.hnkButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
+            this.hnkButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.hnkButton.ForeColor = System.Drawing.Color.White;
+            this.hnkButton.Location = new System.Drawing.Point(146, 371);
+            this.hnkButton.Name = "hnkButton";
+            this.hnkButton.Size = new System.Drawing.Size(134, 26);
+            this.hnkButton.TabIndex = 28;
+            this.hnkButton.Text = "HnK";
+            this.hnkButton.UseVisualStyleBackColor = true;
+            this.hnkButton.Click += new System.EventHandler(this.hnkButton_Click);
             // 
             // burstButton
             // 
@@ -785,21 +785,21 @@ namespace SotnRandoTools
             this.burstButton.UseVisualStyleBackColor = true;
             this.burstButton.Click += new System.EventHandler(this.burstButton_Click);
             // 
-            // hnkButton
+            // autoKhaosButton
             // 
-            this.hnkButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
-            this.hnkButton.FlatAppearance.BorderSize = 2;
-            this.hnkButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
-            this.hnkButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
-            this.hnkButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.hnkButton.ForeColor = System.Drawing.Color.White;
-            this.hnkButton.Location = new System.Drawing.Point(146, 371);
-            this.hnkButton.Name = "hnkButton";
-            this.hnkButton.Size = new System.Drawing.Size(134, 26);
-            this.hnkButton.TabIndex = 28;
-            this.hnkButton.Text = "HnK";
-            this.hnkButton.UseVisualStyleBackColor = true;
-            this.hnkButton.Click += new System.EventHandler(this.hnkButton_Click);
+            this.autoKhaosButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
+            this.autoKhaosButton.FlatAppearance.BorderSize = 2;
+            this.autoKhaosButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
+            this.autoKhaosButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
+            this.autoKhaosButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.autoKhaosButton.ForeColor = System.Drawing.Color.White;
+            this.autoKhaosButton.Location = new System.Drawing.Point(313, 9);
+            this.autoKhaosButton.Name = "autoKhaosButton";
+            this.autoKhaosButton.Size = new System.Drawing.Size(134, 39);
+            this.autoKhaosButton.TabIndex = 7;
+            this.autoKhaosButton.Text = "Start Auto Khaos";
+            this.autoKhaosButton.UseVisualStyleBackColor = true;
+            this.autoKhaosButton.Click += new System.EventHandler(this.autoKhaosButton_Click);
             // 
             // KhaosForm
             // 

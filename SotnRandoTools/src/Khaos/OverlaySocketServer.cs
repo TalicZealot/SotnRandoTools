@@ -50,7 +50,7 @@ namespace SotnRandoTools.Khaos
 
 		public void UpdateQueue(List<QueuedAction> actionQueue)
 		{
-			string[] actions = actionQueue.Select(action => action.Name.ToLower().Replace(" ", String.Empty)).ToArray();
+			string[] actions = actionQueue.Select(action => action.Name.ToLower().Replace(" ", String.Empty).Replace("'", String.Empty)).ToArray();
 
 			JObject data = JObject.FromObject(new
 			{

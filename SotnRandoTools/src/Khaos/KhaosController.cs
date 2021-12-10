@@ -44,7 +44,6 @@ namespace SotnRandoTools.Khaos
 		private Queue<MethodInvoker> queuedFastActions = new();
 		private Timer actionTimer = new Timer();
 		private Timer fastActionTimer = new Timer();
-		private List<int> autoKhaosIndexes = new();
 
 		#region Timers
 		private System.Timers.Timer subweaponsOnlyTimer = new();
@@ -147,7 +146,6 @@ namespace SotnRandoTools.Khaos
 			this.overlaySocketServer = overlaySocketServer;
 
 			InitializeTimers();
-			SetAutoKhaosChances();
 			GetCheats();
 			statusInfoDisplay.ActionQueue = queuedActions;
 			normalInterval = (int) toolConfig.Khaos.QueueInterval.TotalMilliseconds;
@@ -171,6 +169,18 @@ namespace SotnRandoTools.Khaos
 				OverwriteBossNames(subscribers);
 			}
 			StartCheats();
+			DateTime startedAt = DateTime.Now;
+			foreach (var action in toolConfig.Khaos.Actions)
+			{
+				if (action.StartsOnCooldown)
+				{
+					action.LastUsedAt = startedAt;
+				}
+				else
+				{
+					action.LastUsedAt = null;
+				}
+			}
 			overlaySocketServer.StartServer();
 			notificationService.AddMessage($"Khaos started");
 			Console.WriteLine("Khaos started");
@@ -827,6 +837,7 @@ namespace SotnRandoTools.Khaos
 				statusInfoDisplay.AddTimer(timer);
 			}
 		}
+		//Activate one of four effects or four beasts on super
 		public void FourBeasts(string user = "Khaos")
 		{
 			invincibilityCheat.PokeValue(1);
@@ -1153,6 +1164,7 @@ namespace SotnRandoTools.Khaos
 			if (commandAction is not null)
 			{
 				GainKhaosMeter(commandAction.Meter);
+				commandAction.LastUsedAt = DateTime.Now;
 			}
 
 			overlaySocketServer.UpdateQueue(queuedActions);
@@ -1325,12 +1337,12 @@ namespace SotnRandoTools.Khaos
 			if (AutoKhaosOn)
 			{
 				int roll = rng.Next(0, 101);
-				if (roll > 75)
+				if (roll > 50)
 				{
-					int index = rng.Next(0, autoKhaosIndexes.Count);
-					var actionEvent = new EventAddAction { UserName = "Auto Khaos", ActionIndex = autoKhaosIndexes[index] };
+					int index = rng.Next(0, toolConfig.Khaos.Actions.Count);
+					var actionEvent = new EventAddAction { UserName = "Auto Khaos", ActionIndex = index };
 
-					if (queuedActions.Where(action => action.Name == toolConfig.Khaos.Actions[autoKhaosIndexes[index]].Name).Count() == 0 && !statusInfoDisplay.ContainsTimer(toolConfig.Khaos.Actions[autoKhaosIndexes[index]].Name))
+					if (toolConfig.Khaos.Actions[index].Name != "Guilty Gear" && !toolConfig.Khaos.Actions[index].IsOnCooldown())
 					{
 						EnqueueAction(actionEvent);
 					}
@@ -2060,21 +2072,6 @@ namespace SotnRandoTools.Khaos
 				gameApi.OverwriteString(boss.Value, subscribers[i]);
 				Console.WriteLine($"{boss.Key} renamed to {subscribers[i]}");
 				i++;
-			}
-		}
-		private void SetAutoKhaosChances()
-		{
-			int maxKhaosMeter = toolConfig.Khaos.Actions.Max(action => action.Meter);
-			int baselineChance = (int) Math.Ceiling(1.05 * maxKhaosMeter);
-
-			for (int i = 0; i < toolConfig.Khaos.Actions.Count; i++)
-			{
-				int slots = baselineChance - toolConfig.Khaos.Actions[i].Meter;
-				Console.WriteLine(slots);
-				for (int j = 0; j <= slots; j++)
-				{
-					autoKhaosIndexes.Add(i);
-				}
 			}
 		}
 		private bool IsInGalamothRoom()

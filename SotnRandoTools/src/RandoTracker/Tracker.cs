@@ -403,19 +403,34 @@ namespace SotnRandoTools.RandoTracker
 							switch (relics[i].Name)
 							{
 								case "HeartOfVlad":
-									VladRelicLocationDisplay.HeartOfVladLocation = lastLocationVisited;
+									if (VladRelicLocationDisplay.HeartOfVladLocation is null)
+									{
+										VladRelicLocationDisplay.HeartOfVladLocation = lastLocationVisited;
+									}
 									break;
 								case "ToothOfVlad":
-									VladRelicLocationDisplay.ToothOfVladLocation = lastLocationVisited;
+									if (VladRelicLocationDisplay.ToothOfVladLocation is null)
+									{
+										VladRelicLocationDisplay.ToothOfVladLocation = lastLocationVisited;
+									}
 									break;
 								case "RibOfVlad":
-									VladRelicLocationDisplay.RibOfVladLocation = lastLocationVisited;
+									if (VladRelicLocationDisplay.RibOfVladLocation is null)
+									{
+										VladRelicLocationDisplay.RibOfVladLocation = lastLocationVisited;
+									}
 									break;
 								case "RingOfVlad":
-									VladRelicLocationDisplay.RingOfVladLocation = lastLocationVisited;
+									if (VladRelicLocationDisplay.RingOfVladLocation is null)
+									{
+										VladRelicLocationDisplay.RingOfVladLocation = lastLocationVisited;
+									}
 									break;
 								case "EyeOfVlad":
-									VladRelicLocationDisplay.EyeOfVladLocation = lastLocationVisited;
+									if (VladRelicLocationDisplay.EyeOfVladLocation is null)
+									{
+										VladRelicLocationDisplay.EyeOfVladLocation = lastLocationVisited;
+									}
 									break;
 								default:
 									break;
