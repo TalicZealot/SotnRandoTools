@@ -28,7 +28,6 @@ namespace SotnRandoTools
 		{
 			alertsCheckbox.Checked = toolConfig.Khaos.Alerts;
 			namesPath.Text = toolConfig.Khaos.NamesFilePath;
-			botApiKey.Text = toolConfig.Khaos.BotApiKey;
 			volumeTrackBar.Value = toolConfig.Khaos.Volume;
 			crippleTextBox.Text = (toolConfig.Khaos.CrippleFactor * 100) + "%";
 			hasteTextBox.Text = (toolConfig.Khaos.HasteFactor * 100) + "%";
@@ -305,11 +304,6 @@ namespace SotnRandoTools
 		private void dynamicIntervalCheckBox_CheckedChanged(object sender, EventArgs e)
 		{
 			toolConfig.Khaos.DynamicInterval = dynamicIntervalCheckBox.Checked;
-		}
-
-		private void botApiKey_TextChanged(object sender, EventArgs e)
-		{
-			toolConfig.Khaos.BotApiKey = botApiKey.Text;
 		}
 
 		private void keepVladRelicsCheckbox_CheckedChanged(object sender, EventArgs e)

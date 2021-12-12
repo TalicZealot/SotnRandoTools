@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using SotnApi.Constants.Values.Alucard.Enums;
 using SotnApi.Models;
+using MapLocation = SotnRandoTools.RandoTracker.Models.MapLocation;
 
 namespace SotnRandoTools.Constants
 {
@@ -21,6 +22,54 @@ namespace SotnRandoTools.Constants
 			new Relic[] {Relic.LeapStone, Relic.GravityBoots},
 			new Relic[] {Relic.FormOfMist, Relic.PowerOfMist},
 			new Relic[] {Relic.SoulOfWolf, Relic.GravityBoots},
+		};
+		public static List<MapLocation> LoadingRooms = new List<MapLocation>
+		{
+			new MapLocation{X =17,Y = 36, SecondCastle = 0},
+			new MapLocation{X =21,Y = 26, SecondCastle = 0},
+			new MapLocation{X =20,Y = 36, SecondCastle = 0},
+			new MapLocation{X =30,Y = 25, SecondCastle = 0},
+			new MapLocation{X =26,Y = 22, SecondCastle = 0},
+			new MapLocation{X =13,Y = 22, SecondCastle = 0},
+			new MapLocation{X = 4,Y = 28, SecondCastle = 0},
+			new MapLocation{X =36,Y = 21, SecondCastle = 0},
+			new MapLocation{X =17,Y = 19, SecondCastle = 0},
+			new MapLocation{X =29,Y = 12, SecondCastle = 0},
+			new MapLocation{X =39,Y = 12, SecondCastle = 0},
+			new MapLocation{X =39,Y = 10, SecondCastle = 0},
+			new MapLocation{X =60,Y = 14, SecondCastle = 0},
+			new MapLocation{X =60,Y = 17, SecondCastle = 0},
+			new MapLocation{X =59,Y = 21, SecondCastle = 0},
+			new MapLocation{X =60,Y = 25, SecondCastle = 0},
+			new MapLocation{X =40,Y = 26, SecondCastle = 0},
+			new MapLocation{X =15,Y = 41, SecondCastle = 0},
+			new MapLocation{X =28,Y = 38, SecondCastle = 0},
+			new MapLocation{X =34,Y = 44, SecondCastle = 0},
+			new MapLocation{X =32,Y = 49, SecondCastle = 0},
+			new MapLocation{X =16,Y = 38, SecondCastle = 0},
+
+			new MapLocation{X =24,Y = 51, SecondCastle = 1},
+			new MapLocation{X =24,Y = 53, SecondCastle = 1},
+			new MapLocation{X = 3,Y = 49, SecondCastle = 1},
+			new MapLocation{X = 3,Y = 46, SecondCastle = 1},
+			new MapLocation{X = 4,Y = 42, SecondCastle = 1},
+			new MapLocation{X = 3,Y = 38, SecondCastle = 1},
+			new MapLocation{X =23,Y = 37, SecondCastle = 1},
+			new MapLocation{X =35,Y = 25, SecondCastle = 1},
+			new MapLocation{X =29,Y = 19, SecondCastle = 1},
+			new MapLocation{X =31,Y = 14, SecondCastle = 1},
+			new MapLocation{X =48,Y = 22, SecondCastle = 1},
+			new MapLocation{X =47,Y = 25, SecondCastle = 1},
+			new MapLocation{X =43,Y = 27, SecondCastle = 1},
+			new MapLocation{X =46,Y = 27, SecondCastle = 1},
+			new MapLocation{X =59,Y = 35, SecondCastle = 1},
+			new MapLocation{X =42,Y = 37, SecondCastle = 1},
+			new MapLocation{X =33,Y = 38, SecondCastle = 1},
+			new MapLocation{X =37,Y = 41, SecondCastle = 1},
+			new MapLocation{X =50,Y = 41, SecondCastle = 1},
+			new MapLocation{X =46,Y = 44, SecondCastle = 1},
+			new MapLocation{X =27,Y = 42, SecondCastle = 1},
+			new MapLocation{X =34,Y = 51, SecondCastle = 1},
 		};
 		public static List<SearchableActor> AcceptedHordeEnemies = new List<SearchableActor>
 		{
@@ -131,7 +180,7 @@ namespace SotnRandoTools.Constants
 		public static SearchableActor GalamothHeadActor = new SearchableActor { Hp = 32767, Damage = 50, Sprite = 31516 };
 		public static SearchableActor GalamothPartsActors = new SearchableActor { Hp = 12000, Damage = 50, Sprite = 31516 };
 		public static SearchableActor ShaftActor = new SearchableActor { Hp = 10, Damage = 0, Sprite = 0 };
-		public static string[] BuggyQuickSwapWeapons = { 
+		public static string[] BuggyQuickSwapWeapons = {
 			"Shuriken",
 			"Cross shuriken",
 			"Buffalo star",
@@ -176,7 +225,7 @@ namespace SotnRandoTools.Constants
 		public static uint GuiltyGearDefence = 50;
 		public static uint GuiltyGearDarkMetamorphosis = 50;
 		public static uint ShaftKhaosHp = 25;
-		public static uint GalamothKhaosHp = 2000;
+		public static uint GalamothKhaosHp = 2500;
 		public static uint GalamothKhaosPositionOffset = 100;
 		public static float HasteDashFactor = 1.8F;
 	}

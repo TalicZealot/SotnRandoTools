@@ -13,14 +13,14 @@ namespace SotnRandoTools.Configuration
 			ControlPannelQueueActions = true;
 			Volume = 2;
 			NamesFilePath = Paths.NamesFilePath;
-			BotApiKey = "";
 			WeakenFactor = 0.5F;
 			CrippleFactor = 0.8F;
 			HasteFactor = 3.2F;
 			ThirstDrainPerSecond = 1;
+			PandoraTrigger = 1000;
 			PandoraMinItems = 5;
 			PandoraMaxItems = 32;
-			QueueInterval = new System.TimeSpan(0, 0, 31);
+			QueueInterval = new System.TimeSpan(0, 0, 21);
 			DynamicInterval = true;
 			KeepVladRelics = false;
 			Actions = new List<Action>
@@ -36,7 +36,7 @@ namespace SotnRandoTools.Configuration
 				new Action{Name="Weaken", Enabled = true, Meter = 8, AlertPath = Paths.RichterLaughSound, Cooldown = new System.TimeSpan(0, 24, 0)},
 				new Action{Name="Respawn Bosses", Enabled = true, Meter = 3, AlertPath = Paths.DeathLaughSound, Cooldown = new System.TimeSpan(0, 10, 0), StartsOnCooldown = true},
 				new Action{Name="Subweapons Only", Enabled = true, Meter = 4, AlertPath = Paths.RichterLaughSound, Cooldown = new System.TimeSpan(0, 6, 0), Duration = new System.TimeSpan(0, 1, 0)},
-				new Action{Name="Cripple", Enabled = true, Meter = 8, Duration = new System.TimeSpan(0, 1, 0), AlertPath = Paths.DeathLaughSound, Cooldown = new System.TimeSpan(0, 6, 0)},
+				new Action{Name="Cripple", Enabled = true, Meter = 8, Duration = new System.TimeSpan(0, 0, 30), AlertPath = Paths.DeathLaughSound, Cooldown = new System.TimeSpan(0, 5, 0)},
 				new Action{Name="Blood Mana", Enabled = true, Meter = 4, Duration = new System.TimeSpan(0, 1, 0), AlertPath = Paths.DeathLaughSound, Cooldown = new System.TimeSpan(0, 6, 0)},
 				new Action{Name="Thirst", Enabled = true, Meter = 6, Duration = new System.TimeSpan(0, 1, 0), AlertPath = Paths.DeathLaughSound, Cooldown = new System.TimeSpan(0, 6, 0)},
 				new Action{Name="Khaos Horde", Enabled = true, Meter = 8, Duration = new System.TimeSpan(0, 2, 0), Interval = new System.TimeSpan(0, 0, 1), AlertPath = Paths.RichterLaughSound, Cooldown = new System.TimeSpan(0, 10, 0)},
@@ -52,7 +52,7 @@ namespace SotnRandoTools.Configuration
 				new Action{Name="Guilty Gear", Enabled = true, Meter = 5, Duration = new System.TimeSpan(0, 1, 0), AlertPath = Paths.DragonInstallSound},
 				new Action{Name="Four Beasts", Enabled = true,  Meter = 10, Duration = new System.TimeSpan(0, 1, 0), Cooldown = new System.TimeSpan(0, 15, 0), StartsOnCooldown = true},
 				new Action{Name="ZA WARUDO", Enabled = true, Meter = 4, Duration = new System.TimeSpan(0, 0, 30), AlertPath = Paths.ZaWarudoSound, Cooldown = new System.TimeSpan(0, 6, 0)},
-				new Action{Name="Haste", Enabled = true, Meter = 6, Duration = new System.TimeSpan(0, 1, 0), Cooldown = new System.TimeSpan(0, 6, 0)}
+				new Action{Name="Haste", Enabled = true, Meter = 6, Duration = new System.TimeSpan(0, 0, 30), Cooldown = new System.TimeSpan(0, 5, 0)}
 			};
 			LightHelpItemRewards = new string[]
 			{
@@ -168,12 +168,12 @@ namespace SotnRandoTools.Configuration
 		public bool ControlPannelQueueActions { get; set; }
 		public int Volume { get; set; }
 		public string NamesFilePath { get; set; }
-		public string BotApiKey { get; set; }
 		public List<Action> Actions { get; set; }
 		public float WeakenFactor { get; set; }
 		public float CrippleFactor { get; set; }
 		public float HasteFactor { get; set; }
 		public uint ThirstDrainPerSecond { get; set; }
+		public int PandoraTrigger { get; set; }
 		public int PandoraMinItems { get; set; }
 		public int PandoraMaxItems { get; set; }
 		public System.TimeSpan QueueInterval { get; set; }
