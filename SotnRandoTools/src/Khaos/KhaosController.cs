@@ -206,6 +206,7 @@ namespace SotnRandoTools.Khaos
 		{
 			bool entranceCutscene = IsInEntranceCutscene();
 			bool succubusRoom = IsInSuccubusRoom();
+			int min = 1;
 			int max = 9;
 
 			if (zaWarudoActive)
@@ -213,7 +214,12 @@ namespace SotnRandoTools.Khaos
 				max = 5;
 			}
 
-			int result = rng.Next(1, max);
+			if (true)
+			{
+
+			}
+
+			int result = rng.Next(min, max);
 
 			bool alucardIsImmuneToCurse = alucardApi.HasRelic(Relic.HeartOfVlad)
 				|| Equipment.Items[(int) (alucardApi.Helm + Equipment.HandCount + 1)] == "Coral circlet";
@@ -562,6 +568,7 @@ namespace SotnRandoTools.Khaos
 			invincibilityCheat.Enable();
 			defencePotionCheat.PokeValue(1);
 			defencePotionCheat.Enable();
+			invincibilityLocked = true;
 			hnkTimer.Start();
 
 			ActionTimer timer = new()
@@ -1254,7 +1261,6 @@ namespace SotnRandoTools.Khaos
 			hasteOverdriveTimer.Stop();
 			hasteOverdriveOffTimer.Stop();
 		}
-		//TODO: disable effects in loading rooms
 		private void ExecuteAction(Object sender, EventArgs e)
 		{
 			if (queuedActions.Count > 0)
@@ -1334,8 +1340,8 @@ namespace SotnRandoTools.Khaos
 
 			bool keepRichterRoom = IsInKeepRichterRoom();
 			bool galamothRoom = IsInGalamothRoom();
-			if (gameApi.InAlucardMode() && alucardApi.HasControl() && gameApi.CanMenu() && alucardApi.CurrentHp > 0 && !gameApi.CanSave()
-				&& !keepRichterRoom && !gameApi.InTransition && !gameApi.IsLoading && !alucardApi.IsInvincible() && !IsInLoadingRoom())
+			if (gameApi.InAlucardMode() && alucardApi.HasControl() && alucardApi.HasHitbox() && gameApi.CanMenu() && alucardApi.CurrentHp > 0 && !gameApi.CanSave()
+				&& !keepRichterRoom && !gameApi.InTransition && !gameApi.IsLoading && !alucardApi.IsInvincible() && !IsInLoadingRoom() && alucardMapX < 99)
 			{
 				shaftHpSet = false;
 				if (queuedFastActions.Count > 0)
@@ -1807,7 +1813,7 @@ namespace SotnRandoTools.Khaos
 		{
 			uint roomX = gameApi.MapXPos;
 			uint roomY = gameApi.MapYPos;
-			float healthMultiplier = 1.7F;
+			float healthMultiplier = 2.5F;
 
 			if ((roomX == enduranceRoomX && roomY == enduranceRoomY) || !gameApi.InAlucardMode() || !gameApi.CanMenu() || alucardApi.CurrentHp < 5)
 			{
@@ -1947,6 +1953,7 @@ namespace SotnRandoTools.Khaos
 			invincibilityCheat.Disable();
 			defencePotionCheat.Disable();
 			hnkTimer.Stop();
+			invincibilityLocked = false;
 		}
 		#endregion
 		#region Buff events

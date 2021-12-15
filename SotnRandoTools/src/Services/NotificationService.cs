@@ -174,10 +174,8 @@ namespace SotnRandoTools.Services
 
 		private int GetScale()
 		{
-			int bufferWidth = clientAPI.BufferWidth();
 			int scale = clientAPI.GetWindowSize();
-			bool pixelPro = bufferWidth == 800;
-			if (pixelPro)
+			if (IsPixelPro())
 			{
 				scale *= 2;
 			}

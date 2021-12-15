@@ -254,7 +254,7 @@ namespace SotnRandoTools.RandoTracker
 			bool updatedSecondCastle = gameApi.SecondCastle;
 			relicOrItemCollected = false;
 
-			if (gameApi.InAlucardMode())
+			if (gameApi.InAlucardMode() && alucardApi.HasHitbox())
 			{
 				restarted = false;
 
