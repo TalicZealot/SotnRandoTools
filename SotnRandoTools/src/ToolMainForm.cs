@@ -168,7 +168,7 @@ namespace SotnRandoTools
 			this.MainForm.CheatList.Load(_memoryDomains, Paths.CheatsPath, false);
 			this.MainForm.CheatList.DisableAll();
 			var musicCheat = this.MainForm.CheatList.Where(x => x.Name == "Music").FirstOrDefault();
-			if (musicCheat is not null)
+			if (musicCheat is not null && toolConfig.Tracker.MuteMusic)
 			{
 				musicCheat.PokeValue((int) SotnApi.Constants.Addresses.Game.MusicTracks.Where(x => x.Key == "Enchanted Banquet").FirstOrDefault().Value);
 				musicCheat.Enable();

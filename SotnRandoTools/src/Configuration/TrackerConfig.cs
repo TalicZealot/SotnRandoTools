@@ -16,6 +16,7 @@ namespace SotnRandoTools.Configuration
 			CustomLocationsClassic = false;
 			Width = 260;
 			Height = 465;
+			MuteMusic = true;
 		}
 		public bool ProgressionRelicsOnly { get; set; }
 		public bool GridLayout { get; set; }
@@ -28,6 +29,7 @@ namespace SotnRandoTools.Configuration
 		public bool CustomLocationsClassic { get; set; }
 		public int Width { get; set; }
 		public int Height { get; set; }
+		public bool MuteMusic { get; set; }
 		public Point Location { get; set; }
 	}
 }
