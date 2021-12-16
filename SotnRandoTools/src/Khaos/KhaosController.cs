@@ -612,10 +612,10 @@ namespace SotnRandoTools.Khaos
 				rolls++;
 			}
 
-			bool hpIsMax = alucardApi.CurrentHp == alucardApi.MaxtHp;
+			bool heighHp = alucardApi.CurrentHp > alucardApi.MaxtHp * 0.6;
 
 			int roll = rng.Next(1, 4);
-			if (hpIsMax && roll == 2)
+			if (heighHp && roll == 2)
 			{
 				roll = 3;
 			}
@@ -657,20 +657,20 @@ namespace SotnRandoTools.Khaos
 				rolls++;
 			}
 
-			bool hpIsMax = alucardApi.CurrentHp == alucardApi.MaxtHp;
-			bool mpIsMax = alucardApi.CurrentMp == alucardApi.MaxtMp;
+			bool highHp = alucardApi.CurrentHp > alucardApi.MaxtHp * 0.6;
+			bool highMp = alucardApi.CurrentMp > alucardApi.MaxtMp * 0.6;
 
 			int roll = rng.Next(1, manaLocked ? 3 : 4);
 
-			if (hpIsMax && roll == 2)
+			if (highHp && roll == 2)
 			{
 				roll = 3;
 			}
-			if (mpIsMax && roll == 3)
+			if (highMp && roll == 3)
 			{
 				roll = 2;
 			}
-			if ((hpIsMax && mpIsMax) || zaWarudoActive)
+			if ((highHp && highMp) || zaWarudoActive)
 			{
 				roll = 1;
 			}
