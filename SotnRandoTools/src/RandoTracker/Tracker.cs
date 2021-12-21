@@ -87,7 +87,7 @@ namespace SotnRandoTools.RandoTracker
 			new Location { Name = "FaerieCard",  MapRow = 108, MapCol = 418,  Rooms = new List<Room>{ new Room { Name = "FaerieCard", Values = new int[] { 0x40 } }}},
 			new Location { Name = "DemonCard",  MapRow = 316, MapCol = 234,  Rooms = new List<Room>{ new Room { Name = "DemonCard", Values = new int[] { 0x10 } }}},
 			new Location { Name = "SwordCard",  MapRow = 108, MapCol = 162,  Rooms = new List<Room>{ new Room { Name = "SwordCard", Values = new int[] { 0x40 } }}},
-			new Location { Name = "CrystalCloak", GuardedExtension = true,  MapRow = 268, MapCol = 322,  Rooms = new List<Room>{ new Room { Name = "CrystalCloak", Values = new int[] { 0x40 } }}},
+			new Location { Name = "CrystalCloak", GuardedExtension = true, SpreadExtension = true,  MapRow = 268, MapCol = 322,  Rooms = new List<Room>{ new Room { Name = "CrystalCloak", Values = new int[] { 0x40 } }}},
 			new Location { Name = "Mormegil", GuardedExtension = true,  MapRow = 364, MapCol = 138,  Rooms = new List<Room>{ new Room { Name = "Mormegil", Values = new int[] { 0x10 } }}},
 			new Location { Name = "GoldRing",  MapRow = 228, MapCol = 362,  Rooms = new List<Room>{ new Room { Name = "GoldRing", Values = new int[] { 0x10 } }}},
 			new Location { Name = "Spikebreaker",  MapRow = 372, MapCol = 330,  Rooms = new List<Room>{ new Room { Name = "Spikebreaker", Values = new int[] { 0x10 } }}},
@@ -101,9 +101,9 @@ namespace SotnRandoTools.RandoTracker
 			new Location { Name = "EyeOfVlad", SecondCastle = true,  MapRow = 114, MapCol = 264,  Rooms = new List<Room>{ new Room { Name = "EyeOfVlad", Values = new int[] { 0x10, 0x40 } }}},
 			new Location { Name = "ForceOfEcho", SecondCastle = true,  MapRow = 106, MapCol = 64,  Rooms = new List<Room>{ new Room { Name = "ForceOfEcho", Values = new int[] { 0x40 } }}},
 			new Location { Name = "GasCloud", SecondCastle = true,  MapRow = 34, MapCol = 368,  Rooms = new List<Room>{ new Room { Name = "GasCloud", Values = new int[] { 0x04 } }}},
-			new Location { Name = "RingOfArcana", GuardedExtension = true, SecondCastle = true,  MapRow = 218, MapCol = 400,  Rooms = new List<Room>{ new Room { Name = "RingOfArcana", Values = new int[] { 0x04 } }}},
-			new Location { Name = "DarkBlade", GuardedExtension = true, SecondCastle = true,  MapRow = 130, MapCol = 184,  Rooms = new List<Room>{ new Room { Name = "DarkBlade", Values = new int[] { 0x01 } }}},
-			new Location { Name = "Trio", GuardedExtension = true, SecondCastle = true,  MapRow = 258, MapCol = 344,  Rooms = new List<Room>
+			new Location { Name = "RingOfArcana", GuardedExtension = true, SpreadExtension = true, SecondCastle = true,  MapRow = 218, MapCol = 400,  Rooms = new List<Room>{ new Room { Name = "RingOfArcana", Values = new int[] { 0x04 } }}},
+			new Location { Name = "DarkBlade", GuardedExtension = true, SpreadExtension = true, SecondCastle = true,  MapRow = 130, MapCol = 184,  Rooms = new List<Room>{ new Room { Name = "DarkBlade", Values = new int[] { 0x01 } }}},
+			new Location { Name = "Trio", GuardedExtension = true, SpreadExtension = true, SecondCastle = true,  MapRow = 258, MapCol = 344,  Rooms = new List<Room>
 			{ new Room { Name = "Trio1", Values = new int[] { 0x40 } }, new Room { Name = "Trio2", Values = new int[] { 0x01 } }}},
 			new Location { Name = "Walk armor", EquipmentExtension = true, MapRow = 364, MapCol = 186, Rooms = new List<Room>{ new Room { Name = "Walk armor", Values = new int[] { 0x1 }} }},
 			new Location { Name = "Icebrand", EquipmentExtension = true, MapRow = 364, MapCol = 194, Rooms = new List<Room>{ new Room { Name = "Icebrand", Values = new int[] { 0x40 }} }},
@@ -157,10 +157,10 @@ namespace SotnRandoTools.RandoTracker
 			new Location { Name = "Moon rod", EquipmentExtension = true, SecondCastle = true, MapRow = 346, MapCol = 168, Rooms = new List<Room>{ new Room { Name = "Moon rod", Values = new int[] { 0x10 }} }},
 			new Location { Name = "Sunstone", EquipmentExtension = true, SecondCastle = true, MapRow = 322, MapCol = 112, Rooms = new List<Room>{ new Room { Name = "Sunstone", Values = new int[] { 0x4 }} }},
 			new Location { Name = "Luminus", EquipmentExtension = true, SecondCastle = true, MapRow = 328, MapCol = 64, Rooms = new List<Room>{ new Room { Name = "Luminus", Values = new int[] { 0x10, 0x40 }} }},
-			new Location { Name = "Dragon helm", EquipmentExtension = true, SecondCastle = true, MapRow = 346, MapCol = 32, Rooms = new List<Room>{ new Room { Name = "Dragon helm", Values = new int[] { 0x40 }} }},
-			new Location { Name = "Shotel", EquipmentExtension = true, SecondCastle = true, MapRow = 218, MapCol = 32, Rooms = new List<Room>{ new Room { Name = "Shotel", Values = new int[] { 0x40 }} }},
+			new Location { Name = "Dragon helm", EquipmentExtension = true, SpreadExtension = true, SecondCastle = true, MapRow = 346, MapCol = 32, Rooms = new List<Room>{ new Room { Name = "Dragon helm", Values = new int[] { 0x40 }} }},
+			new Location { Name = "Shotel", EquipmentExtension = true, SpreadExtension = true, SecondCastle = true, MapRow = 218, MapCol = 32, Rooms = new List<Room>{ new Room { Name = "Shotel", Values = new int[] { 0x40 }} }},
 			new Location { Name = "Badelaire", EquipmentExtension = true, SecondCastle = true, MapRow = 290, MapCol = 104, Rooms = new List<Room>{ new Room { Name = "Badelaire", Values = new int[] { 0x10 }} }},
-			new Location { Name = "Staurolite", EquipmentExtension = true, SecondCastle = true, MapRow = 264, MapCol = 120, Rooms = new List<Room>{ new Room { Name = "Staurolite", Values = new int[] { 0x40 }} }},
+			new Location { Name = "Staurolite", EquipmentExtension = true, SpreadExtension = true, SecondCastle = true, MapRow = 264, MapCol = 120, Rooms = new List<Room>{ new Room { Name = "Staurolite", Values = new int[] { 0x40 }} }},
 			new Location { Name = "Forbidden Library Opal", EquipmentExtension = true, SecondCastle = true, MapRow = 274, MapCol = 110, Rooms = new List<Room>{ new Room { Name = "Forbidden Library Opal", Values = new int[] { 0x04 }} }},
 			new Location { Name = "Reverse Caverns Diamond", EquipmentExtension = true, SecondCastle = true, MapRow = 218, MapCol = 224, Rooms = new List<Room>{ new Room { Name = "Reverse Caverns Diamond", Values = new int[] { 0x40 }} }},
 			new Location { Name = "Reverse Caverns Opal", EquipmentExtension = true, SecondCastle = true, MapRow = 178, MapCol = 208, Rooms = new List<Room>{ new Room { Name = "Reverse Caverns Opal", Values = new int[] { 0x4 }} }},
@@ -201,6 +201,7 @@ namespace SotnRandoTools.RandoTracker
 		private uint roomCount = 2;
 		private bool guardedExtension = true;
 		private bool equipmentExtension = false;
+		private bool spreadExtension = false;
 		private bool gameReset = true;
 		private bool secondCastle = false;
 		private bool restarted = false;
@@ -378,11 +379,12 @@ namespace SotnRandoTools.RandoTracker
 				roomCount = currentRooms;
 				watchlistService.UpdateWatchlist(watchlistService.SafeLocationWatches);
 				CheckRooms(watchlistService.SafeLocationWatches);
-				if (equipmentExtension)
+				if (equipmentExtension || spreadExtension)
 				{
 					watchlistService.UpdateWatchlist(watchlistService.EquipmentLocationWatches);
 					CheckRooms(watchlistService.EquipmentLocationWatches);
 				}
+
 			}
 		}
 
@@ -543,6 +545,10 @@ namespace SotnRandoTools.RandoTracker
 				case "og":
 					guardedExtension = false;
 					break;
+				case "bat-master":
+					guardedExtension = false;
+					spreadExtension = true;
+					break;
 				case "custom":
 					guardedExtension = toolConfig.Tracker.CustomLocationsGuarded;
 					equipmentExtension = toolConfig.Tracker.CustomLocationsEquipment;
@@ -572,13 +578,31 @@ namespace SotnRandoTools.RandoTracker
 			{
 				if (!locations[i].Status && locations[i].SecondCastle == secondCastle)
 				{
-					if (locations[i].EquipmentExtension && !equipmentExtension)
+					if (locations[i].SpreadExtension && !spreadExtension)
 					{
 						continue;
 					}
+					if (locations[i].EquipmentExtension && !equipmentExtension)
+					{
+						if (locations[i].SpreadExtension && !spreadExtension)
+						{
+							continue;
+						}
+						else if (!locations[i].SpreadExtension)
+						{
+							continue;
+						}
+					}
 					if (locations[i].GuardedExtension && !guardedExtension)
 					{
-						continue;
+						if (locations[i].SpreadExtension && !spreadExtension)
+						{
+							continue;
+						}
+						else if (!locations[i].SpreadExtension)
+						{
+							continue;
+						}
 					}
 					ColorMapRoom(i, (uint) locations[i].AvailabilityColor, locations[i].SecondCastle);
 				}
@@ -610,7 +634,7 @@ namespace SotnRandoTools.RandoTracker
 			}
 			uint borderColor = color > 0 ? (uint) MapColor.Border : 0;
 
-			if (locations[i].EquipmentExtension)
+			if (locations[i].EquipmentExtension && spreadExtension == false)
 			{
 				renderingApi.ColorMapLocation(row, col, color);
 			}

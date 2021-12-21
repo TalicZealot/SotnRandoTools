@@ -26,7 +26,7 @@ This tool and the accompanying library and app are open source. The idea is to i
   - [Special Thanks](#special-thanks)
 
 ## Installation
-This tool requires Bizhawk version 2.6 or higher.
+This tool requires Bizhawk version 2.7 or higher.
 Download the full version from the [latest release](https://github.com/TalicZealot/SotnRandoTools/releases/latest) that looks like this `SotnRandoTools-x.x.x.zip`
 Right click on it and select `Extract all...` then navigate to your BizHawk 2.6+ folder and press `Extract`.
 File structure should look like this:

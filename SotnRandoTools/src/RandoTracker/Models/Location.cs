@@ -12,12 +12,14 @@ namespace SotnRandoTools.RandoTracker.Models
 			SecondCastle = false;
 			GuardedExtension = false;
 			EquipmentExtension = false;
+			SpreadExtension = false;
 			Status = false;
 		}
 		public string Name { get; set; }
 		public bool SecondCastle { get; set; }
 		public bool GuardedExtension { get; set; }
 		public bool EquipmentExtension { get; set; }
+		public bool SpreadExtension { get; set; }
 		public MapColor AvailabilityColor { get; set; }
 		public bool Status { get; set; }
 		public int MapRow { get; set; }

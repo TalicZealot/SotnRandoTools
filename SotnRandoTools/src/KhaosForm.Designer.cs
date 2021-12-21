@@ -578,11 +578,13 @@ namespace SotnRandoTools
             this.queueTextBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
             this.queueTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.queueTextBox.CausesValidation = false;
-            this.queueTextBox.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.queueTextBox.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.queueTextBox.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.queueTextBox.ForeColor = System.Drawing.Color.White;
             this.queueTextBox.Location = new System.Drawing.Point(21, 20);
             this.queueTextBox.Multiline = true;
             this.queueTextBox.Name = "queueTextBox";
+            this.queueTextBox.ReadOnly = true;
             this.queueTextBox.Size = new System.Drawing.Size(172, 194);
             this.queueTextBox.TabIndex = 1;
             this.queueTextBox.Text = "\r\n";
@@ -604,88 +606,98 @@ namespace SotnRandoTools
             this.relicLocationsBox.ForeColor = System.Drawing.Color.White;
             this.relicLocationsBox.Location = new System.Drawing.Point(8, 3);
             this.relicLocationsBox.Name = "relicLocationsBox";
-            this.relicLocationsBox.Size = new System.Drawing.Size(208, 176);
+            this.relicLocationsBox.Size = new System.Drawing.Size(423, 176);
             this.relicLocationsBox.TabIndex = 2;
             this.relicLocationsBox.TabStop = false;
             this.relicLocationsBox.Text = "Relic Locations";
             // 
             // eyeLocation
             // 
-            this.eyeLocation.Location = new System.Drawing.Point(99, 134);
+            this.eyeLocation.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.eyeLocation.Location = new System.Drawing.Point(209, 129);
             this.eyeLocation.Name = "eyeLocation";
-            this.eyeLocation.Size = new System.Drawing.Size(100, 13);
+            this.eyeLocation.Size = new System.Drawing.Size(150, 13);
             this.eyeLocation.TabIndex = 9;
             // 
             // ringLocation
             // 
-            this.ringLocation.Location = new System.Drawing.Point(99, 111);
+            this.ringLocation.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.ringLocation.Location = new System.Drawing.Point(209, 106);
             this.ringLocation.Name = "ringLocation";
-            this.ringLocation.Size = new System.Drawing.Size(100, 13);
+            this.ringLocation.Size = new System.Drawing.Size(150, 13);
             this.ringLocation.TabIndex = 8;
             // 
             // ribLocation
             // 
-            this.ribLocation.Location = new System.Drawing.Point(99, 86);
+            this.ribLocation.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.ribLocation.Location = new System.Drawing.Point(209, 81);
             this.ribLocation.Name = "ribLocation";
-            this.ribLocation.Size = new System.Drawing.Size(100, 13);
+            this.ribLocation.Size = new System.Drawing.Size(150, 13);
             this.ribLocation.TabIndex = 7;
             // 
             // toothLocation
             // 
-            this.toothLocation.Location = new System.Drawing.Point(99, 62);
+            this.toothLocation.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.toothLocation.Location = new System.Drawing.Point(209, 57);
             this.toothLocation.Name = "toothLocation";
-            this.toothLocation.Size = new System.Drawing.Size(100, 13);
+            this.toothLocation.Size = new System.Drawing.Size(150, 13);
             this.toothLocation.TabIndex = 6;
             // 
             // heartLocation
             // 
-            this.heartLocation.Location = new System.Drawing.Point(99, 39);
+            this.heartLocation.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.heartLocation.Location = new System.Drawing.Point(209, 39);
             this.heartLocation.Name = "heartLocation";
-            this.heartLocation.Size = new System.Drawing.Size(100, 13);
+            this.heartLocation.Size = new System.Drawing.Size(150, 13);
             this.heartLocation.TabIndex = 5;
             // 
             // eyeLabel
             // 
             this.eyeLabel.AutoSize = true;
-            this.eyeLabel.Location = new System.Drawing.Point(15, 134);
+            this.eyeLabel.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.eyeLabel.Location = new System.Drawing.Point(82, 129);
             this.eyeLabel.Name = "eyeLabel";
-            this.eyeLabel.Size = new System.Drawing.Size(78, 13);
+            this.eyeLabel.Size = new System.Drawing.Size(105, 18);
             this.eyeLabel.TabIndex = 4;
             this.eyeLabel.Text = "Eye of Vlad at:";
             // 
             // ringLabel
             // 
             this.ringLabel.AutoSize = true;
-            this.ringLabel.Location = new System.Drawing.Point(12, 111);
+            this.ringLabel.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.ringLabel.Location = new System.Drawing.Point(79, 106);
             this.ringLabel.Name = "ringLabel";
-            this.ringLabel.Size = new System.Drawing.Size(81, 13);
+            this.ringLabel.Size = new System.Drawing.Size(108, 18);
             this.ringLabel.TabIndex = 3;
             this.ringLabel.Text = "Ring of Vlad at:";
             // 
             // ribLabel
             // 
             this.ribLabel.AutoSize = true;
-            this.ribLabel.Location = new System.Drawing.Point(18, 86);
+            this.ribLabel.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.ribLabel.Location = new System.Drawing.Point(85, 81);
             this.ribLabel.Name = "ribLabel";
-            this.ribLabel.Size = new System.Drawing.Size(75, 13);
+            this.ribLabel.Size = new System.Drawing.Size(100, 18);
             this.ribLabel.TabIndex = 2;
             this.ribLabel.Text = "Rib of Vlad at:";
             // 
             // toothLabel
             // 
             this.toothLabel.AutoSize = true;
-            this.toothLabel.Location = new System.Drawing.Point(5, 62);
+            this.toothLabel.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.toothLabel.Location = new System.Drawing.Point(72, 57);
             this.toothLabel.Name = "toothLabel";
-            this.toothLabel.Size = new System.Drawing.Size(88, 13);
+            this.toothLabel.Size = new System.Drawing.Size(120, 18);
             this.toothLabel.TabIndex = 1;
             this.toothLabel.Text = "Tooth of Vlad at:";
             // 
             // heartLabel
             // 
             this.heartLabel.AutoSize = true;
-            this.heartLabel.Location = new System.Drawing.Point(6, 39);
+            this.heartLabel.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.heartLabel.Location = new System.Drawing.Point(73, 34);
             this.heartLabel.Name = "heartLabel";
-            this.heartLabel.Size = new System.Drawing.Size(87, 13);
+            this.heartLabel.Size = new System.Drawing.Size(117, 18);
             this.heartLabel.TabIndex = 0;
             this.heartLabel.Text = "Heart of Vlad at:";
             // 
@@ -705,12 +717,14 @@ namespace SotnRandoTools
             this.timersTextBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
             this.timersTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.timersTextBox.CausesValidation = false;
-            this.timersTextBox.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.timersTextBox.Cursor = System.Windows.Forms.Cursors.Default;
+            this.timersTextBox.Font = new System.Drawing.Font("Courier New", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.timersTextBox.ForeColor = System.Drawing.Color.White;
-            this.timersTextBox.Location = new System.Drawing.Point(12, 20);
+            this.timersTextBox.Location = new System.Drawing.Point(3, 20);
             this.timersTextBox.Multiline = true;
             this.timersTextBox.Name = "timersTextBox";
-            this.timersTextBox.Size = new System.Drawing.Size(190, 194);
+            this.timersTextBox.ReadOnly = true;
+            this.timersTextBox.Size = new System.Drawing.Size(206, 194);
             this.timersTextBox.TabIndex = 0;
             this.timersTextBox.Text = "\r\n";
             this.timersTextBox.WordWrap = false;

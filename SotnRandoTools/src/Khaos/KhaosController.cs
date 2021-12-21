@@ -88,6 +88,7 @@ namespace SotnRandoTools.Khaos
 		Cheat shineCheat;
 		Cheat VisualEffectPaletteCheat;
 		Cheat VisualEffectTimerCheat;
+		Cheat SavePalette;
 		#endregion
 
 		private uint hordeZone = 0;
@@ -202,6 +203,7 @@ namespace SotnRandoTools.Khaos
 		}
 
 		#region Khaotic Effects
+		//TODO: random action
 		public void KhaosStatus(string user = "Khaos")
 		{
 			bool entranceCutscene = IsInEntranceCutscene();
@@ -862,6 +864,7 @@ namespace SotnRandoTools.Khaos
 			}
 		}
 		//TODO: Split into a random effect of four, 4B on super
+		//TODO: Add contact damage
 		public void FourBeasts(string user = "Khaos")
 		{
 			invincibilityCheat.PokeValue(1);
@@ -940,6 +943,7 @@ namespace SotnRandoTools.Khaos
 			Alert(toolConfig.Khaos.Actions[27]);
 		}
 		//TODO: Necromancer
+		//TODO: Turn Undead
 		#endregion
 
 		public void Update()
@@ -1267,7 +1271,11 @@ namespace SotnRandoTools.Khaos
 			{
 				alucardMapX = alucardApi.MapX;
 				alucardMapY = alucardApi.MapY;
-				alucardSecondCastle = gameApi.SecondCastle;
+				if (alucardSecondCastle != gameApi.SecondCastle)
+				{
+					alucardSecondCastle = gameApi.SecondCastle;
+					SetSaveColorPalette();
+				}
 
 				if (gameApi.InAlucardMode() && gameApi.CanMenu() && alucardApi.CurrentHp > 0 && !gameApi.CanSave() && !IsInKeepRichterRoom() && !IsInLoadingRoom())
 				{
@@ -1336,7 +1344,11 @@ namespace SotnRandoTools.Khaos
 		{
 			alucardMapX = alucardApi.MapX;
 			alucardMapY = alucardApi.MapY;
-			alucardSecondCastle = gameApi.SecondCastle;
+			if (alucardSecondCastle != gameApi.SecondCastle)
+			{
+				alucardSecondCastle = gameApi.SecondCastle;
+				SetSaveColorPalette();
+			}
 
 			bool keepRichterRoom = IsInKeepRichterRoom();
 			bool galamothRoom = IsInGalamothRoom();
@@ -2078,6 +2090,7 @@ namespace SotnRandoTools.Khaos
 		}
 		#endregion
 
+		//TODO: increase meter when player goes to main menu
 		private void StartCheats()
 		{
 			faerieScroll.Enable();
@@ -2095,6 +2108,19 @@ namespace SotnRandoTools.Khaos
 			spriteCardXp.Enable();
 			Cheat noseDevilCardXp = cheats.GetCheatByName("NoseDevilCardXp");
 			noseDevilCardXp.Enable();
+			SavePalette.PokeValue(Constants.Khaos.SaveIcosahedronFirstCastle);
+			SavePalette.Enable();
+		}
+		private void SetSaveColorPalette()
+		{
+			if (alucardSecondCastle)
+			{
+				SavePalette.PokeValue(Constants.Khaos.SaveIcosahedronSecondCastle);
+			}
+			else
+			{
+				SavePalette.PokeValue(Constants.Khaos.SaveIcosahedronFirstCastle);
+			}
 		}
 		private void GetCheats()
 		{
@@ -2115,6 +2141,7 @@ namespace SotnRandoTools.Khaos
 			shineCheat = cheats.GetCheatByName("Shine");
 			VisualEffectPaletteCheat = cheats.GetCheatByName("VisualEffectPalette");
 			VisualEffectTimerCheat = cheats.GetCheatByName("VisualEffectTimer");
+			SavePalette = cheats.GetCheatByName("SavePalette");
 		}
 		private void OverwriteBossNames(string[] subscribers)
 		{

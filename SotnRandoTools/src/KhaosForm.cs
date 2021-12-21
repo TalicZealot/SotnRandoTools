@@ -591,5 +591,6 @@ namespace SotnRandoTools
 			}
 			khaosControler = null;
 		}
+
 	}
 }

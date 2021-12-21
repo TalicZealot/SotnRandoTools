@@ -13,10 +13,11 @@ namespace SotnRandoTools.RandoTracker
 	public class TrackerGraphicsEngine : ITrackerGraphicsEngine
 	{
 		private const int TextPadding = 5;
-		private const int LabelOffset = 40;
+		private const int LabelOffset = 50;
 		private const int ImageSize = 14;
 		private const int CellPadding = 2;
 		private const int Columns = 8;
+		private const int SeedInfoFontSize = 18;
 		private const int CellSize = ImageSize + CellPadding;
 		private const double PixelPerfectSnapMargin = 0.18;
 		private Color DefaultBackground = Color.FromArgb(17, 00, 17);
@@ -166,7 +167,7 @@ namespace SotnRandoTools.RandoTracker
 			if (seedInfo is null) throw new ArgumentNullException(nameof(seedInfo));
 			if (seedInfo == String.Empty) throw new ArgumentException("Parameter seedInfo is empty!");
 
-			int fontSize = 16;
+			int fontSize = SeedInfoFontSize;
 			while (formGraphics.MeasureString(seedInfo, new Font("Tahoma", fontSize)).Width > (toolConfig.Tracker.Width - (TextPadding * 3)))
 			{
 				fontSize--;

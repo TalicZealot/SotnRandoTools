@@ -228,5 +228,7 @@ namespace SotnRandoTools.Constants
 		public static uint GalamothKhaosHp = 2500;
 		public static uint GalamothKhaosPositionOffset = 100;
 		public static float HasteDashFactor = 1.8F;
+		public static int SaveIcosahedronFirstCastle = 0xBCAA;
+		public static int SaveIcosahedronSecondCastle = 0x1150;
 	}
 }
