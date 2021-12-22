@@ -77,10 +77,10 @@ namespace SotnRandoTools
             this.timersBox = new System.Windows.Forms.GroupBox();
             this.timersTextBox = new System.Windows.Forms.TextBox();
             this.controlPanel = new System.Windows.Forms.TabPage();
+            this.lordButton = new System.Windows.Forms.Button();
             this.hnkButton = new System.Windows.Forms.Button();
             this.burstButton = new System.Windows.Forms.Button();
             this.autoKhaosButton = new System.Windows.Forms.Button();
-            this.lordButton = new System.Windows.Forms.Button();
             this.modePanel.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.statusPanel.SuspendLayout();
@@ -617,7 +617,7 @@ namespace SotnRandoTools
             this.eyeLocation.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.eyeLocation.Location = new System.Drawing.Point(209, 129);
             this.eyeLocation.Name = "eyeLocation";
-            this.eyeLocation.Size = new System.Drawing.Size(150, 13);
+            this.eyeLocation.Size = new System.Drawing.Size(150, 18);
             this.eyeLocation.TabIndex = 9;
             // 
             // ringLocation
@@ -625,7 +625,7 @@ namespace SotnRandoTools
             this.ringLocation.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.ringLocation.Location = new System.Drawing.Point(209, 106);
             this.ringLocation.Name = "ringLocation";
-            this.ringLocation.Size = new System.Drawing.Size(150, 13);
+            this.ringLocation.Size = new System.Drawing.Size(150, 18);
             this.ringLocation.TabIndex = 8;
             // 
             // ribLocation
@@ -633,7 +633,7 @@ namespace SotnRandoTools
             this.ribLocation.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.ribLocation.Location = new System.Drawing.Point(209, 81);
             this.ribLocation.Name = "ribLocation";
-            this.ribLocation.Size = new System.Drawing.Size(150, 13);
+            this.ribLocation.Size = new System.Drawing.Size(150, 18);
             this.ribLocation.TabIndex = 7;
             // 
             // toothLocation
@@ -641,15 +641,15 @@ namespace SotnRandoTools
             this.toothLocation.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.toothLocation.Location = new System.Drawing.Point(209, 57);
             this.toothLocation.Name = "toothLocation";
-            this.toothLocation.Size = new System.Drawing.Size(150, 13);
+            this.toothLocation.Size = new System.Drawing.Size(150, 18);
             this.toothLocation.TabIndex = 6;
             // 
             // heartLocation
             // 
             this.heartLocation.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.heartLocation.Location = new System.Drawing.Point(209, 39);
+            this.heartLocation.Location = new System.Drawing.Point(209, 34);
             this.heartLocation.Name = "heartLocation";
-            this.heartLocation.Size = new System.Drawing.Size(150, 13);
+            this.heartLocation.Size = new System.Drawing.Size(150, 18);
             this.heartLocation.TabIndex = 5;
             // 
             // eyeLabel
@@ -769,6 +769,22 @@ namespace SotnRandoTools
             this.controlPanel.TabIndex = 0;
             this.controlPanel.Text = "Control Panel";
             // 
+            // lordButton
+            // 
+            this.lordButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
+            this.lordButton.FlatAppearance.BorderSize = 2;
+            this.lordButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
+            this.lordButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
+            this.lordButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.lordButton.ForeColor = System.Drawing.Color.White;
+            this.lordButton.Location = new System.Drawing.Point(286, 403);
+            this.lordButton.Name = "lordButton";
+            this.lordButton.Size = new System.Drawing.Size(134, 26);
+            this.lordButton.TabIndex = 29;
+            this.lordButton.Text = "Lord";
+            this.lordButton.UseVisualStyleBackColor = true;
+            this.lordButton.Click += new System.EventHandler(this.lordButton_Click);
+            // 
             // hnkButton
             // 
             this.hnkButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
@@ -816,22 +832,6 @@ namespace SotnRandoTools
             this.autoKhaosButton.Text = "Start Auto Khaos";
             this.autoKhaosButton.UseVisualStyleBackColor = true;
             this.autoKhaosButton.Click += new System.EventHandler(this.autoKhaosButton_Click);
-            // 
-            // lordButton
-            // 
-            this.lordButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
-            this.lordButton.FlatAppearance.BorderSize = 2;
-            this.lordButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
-            this.lordButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
-            this.lordButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.lordButton.ForeColor = System.Drawing.Color.White;
-            this.lordButton.Location = new System.Drawing.Point(286, 403);
-            this.lordButton.Name = "lordButton";
-            this.lordButton.Size = new System.Drawing.Size(134, 26);
-            this.lordButton.TabIndex = 29;
-            this.lordButton.Text = "Lord";
-            this.lordButton.UseVisualStyleBackColor = true;
-            this.lordButton.Click += new System.EventHandler(this.lordButton_Click);
             // 
             // KhaosForm
             // 

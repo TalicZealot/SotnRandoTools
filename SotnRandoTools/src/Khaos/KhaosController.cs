@@ -953,7 +953,6 @@ namespace SotnRandoTools.Khaos
 			notificationService.AddMessage(message);
 			Alert(toolConfig.Khaos.Actions[28]);
 		}
-		//TODO: Necromancer
 		//TODO: Turn Undead
 		#endregion
 
@@ -1318,6 +1317,7 @@ namespace SotnRandoTools.Khaos
 							actionUnlocked = false;
 							continue;
 						}
+						//TODO: fix this
 						if (queuedActions[i].LocksSpawning && spawnActive)
 						{
 							actionUnlocked = false;
@@ -1409,7 +1409,7 @@ namespace SotnRandoTools.Khaos
 		private void AutoKhaosAction()
 		{
 			int roll = rng.Next(0, 101);
-			if (roll > 50)
+			if (roll > 55)
 			{
 				int index = rng.Next(0, toolConfig.Khaos.Actions.Count);
 				var actionEvent = new EventAddAction { UserName = "Auto Khaos", ActionIndex = index };
@@ -1528,6 +1528,12 @@ namespace SotnRandoTools.Khaos
 				int result = rng.Next(0, Equipment.Items.Count);
 				sotnApi.AlucardApi.GrantItemByName(Equipment.Items[result]);
 			}
+
+			sotnApi.AlucardApi.HandCursor = 0;
+			sotnApi.AlucardApi.HelmCursor = 0;
+			sotnApi.AlucardApi.ArmorCursor = 0;
+			sotnApi.AlucardApi.CloakCursor = 0;
+			sotnApi.AlucardApi.AccessoryCursor = 0;
 
 			if (hasHolyGlasses)
 			{
@@ -1961,6 +1967,12 @@ namespace SotnRandoTools.Khaos
 			sotnApi.AlucardApi.Accessory1 = Equipment.AccessoryStart;
 			sotnApi.AlucardApi.Accessory2 = Equipment.AccessoryStart;
 			sotnApi.GameApi.RespawnItems();
+
+			sotnApi.AlucardApi.HandCursor = 0;
+			sotnApi.AlucardApi.HelmCursor = 0;
+			sotnApi.AlucardApi.ArmorCursor = 0;
+			sotnApi.AlucardApi.CloakCursor = 0;
+			sotnApi.AlucardApi.AccessoryCursor = 0;
 
 			if (equippedHolyGlasses || hasHolyGlasses)
 			{
