@@ -20,7 +20,6 @@ namespace SotnRandoTools
 	{
 		private readonly ICheatCollectionAdapter adaptedCheats;
 		private KhaosController? khaosControler;
-		private OverlaySocketServer? overlaySocketServer;
 		private readonly IToolConfig toolConfig;
 		private List<ActionTimer> actionTimers = new();
 		private System.Timers.Timer countdownTimer;
@@ -40,8 +39,7 @@ namespace SotnRandoTools
 			this.toolConfig = toolConfig;
 
 			adaptedCheats = new CheatCollectionAdapter(cheats);
-			overlaySocketServer = new OverlaySocketServer();
-			khaosControler = new KhaosController(toolConfig, gameApi, alucardApi, actorApi, adaptedCheats, notificationService, inputService, this, overlaySocketServer);
+			khaosControler = new KhaosController(toolConfig, gameApi, alucardApi, actorApi, adaptedCheats, notificationService, inputService, this);
 
 			InitializeComponent();
 			SuspendLayout();

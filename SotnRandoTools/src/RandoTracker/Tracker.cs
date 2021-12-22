@@ -548,6 +548,10 @@ namespace SotnRandoTools.RandoTracker
 				case "bat-master":
 					guardedExtension = false;
 					spreadExtension = true;
+					LoadLocks(Paths.BatMasterPresetPath, false);
+					break;
+				case "speedrun":
+					LoadLocks(Paths.SpeedrunPresetPath, false);
 					break;
 				case "custom":
 					guardedExtension = toolConfig.Tracker.CustomLocationsGuarded;

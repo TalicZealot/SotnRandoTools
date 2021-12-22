@@ -9,20 +9,18 @@ namespace SotnRandoTools
 	public partial class KhaosSettingsPanel : UserControl
 	{
 		private readonly IToolConfig? toolConfig;
-		private readonly INotificationService notificationService;
 		private BindingSource actionsAlertsSource = new();
 		private BindingSource actionSettingsSource = new();
 		private BindingSource actionCooldownsSource = new();
 
-		public KhaosSettingsPanel(IToolConfig toolConfig, INotificationService notificationService)
+		public KhaosSettingsPanel(IToolConfig toolConfig)
 		{
 			if (toolConfig is null) throw new ArgumentNullException(nameof(toolConfig));
-			if (notificationService is null) throw new ArgumentNullException(nameof(notificationService));
 			this.toolConfig = toolConfig;
-			this.notificationService = notificationService;
 
 			InitializeComponent();
 		}
+		public INotificationService NotificationService { get; set; }
 
 		private void KhaosSettingsPanel_Load(object sender, EventArgs e)
 		{
@@ -74,7 +72,10 @@ namespace SotnRandoTools
 		private void volumeTrackBar_Scroll(object sender, EventArgs e)
 		{
 			toolConfig.Khaos.Volume = volumeTrackBar.Value;
-			notificationService.Volume = (double) volumeTrackBar.Value / 10F;
+			if (NotificationService is not null)
+			{
+				NotificationService.Volume = (double) volumeTrackBar.Value / 10F;
+			}
 		}
 
 		private void alertsCheckbox_CheckedChanged(object sender, EventArgs e)

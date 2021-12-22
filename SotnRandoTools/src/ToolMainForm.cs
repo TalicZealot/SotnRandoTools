@@ -63,6 +63,7 @@ namespace SotnRandoTools
 		});
 		private Config GlobalConfig => (_maybeEmuAPI as EmulationApi ?? throw new Exception("required API wasn't fulfilled")).ForbiddenConfigReference;
 
+		private SotnApi.Main.SotnApi sotnApi;
 		private ActorApi? actorApi;
 		private AlucardApi? alucardApi;
 		private GameApi? gameApi;
@@ -112,7 +113,6 @@ namespace SotnRandoTools
 		private void ToolMainForm_Load(object sender, EventArgs e)
 		{
 			this.Location = toolConfig.Location;
-			notificationService = new NotificationService(toolConfig, _maybeGuiAPI, _maybeClientAPI);
 
 			aboutPanel = new AboutPanel();
 			aboutPanel.Location = new Point(0, PanelOffset);
@@ -123,7 +123,7 @@ namespace SotnRandoTools
 			autotrackerSettingsPanel.Location = new Point(0, PanelOffset);
 			this.Controls.Add(autotrackerSettingsPanel);
 
-			khaosSettingsPanel = new KhaosSettingsPanel(toolConfig, notificationService);
+			khaosSettingsPanel = new KhaosSettingsPanel(toolConfig);
 			khaosSettingsPanel.Location = new Point(0, PanelOffset);
 			this.Controls.Add(khaosSettingsPanel);
 
@@ -148,6 +148,7 @@ namespace SotnRandoTools
 
 			LoadCheats();
 
+			sotnApi = new SotnApi.Main.SotnApi(_maybeMemAPI);
 			actorApi = new ActorApi(_maybeMemAPI);
 			alucardApi = new AlucardApi(_maybeMemAPI);
 			gameApi = new GameApi(_maybeMemAPI);
@@ -270,12 +271,14 @@ namespace SotnRandoTools
 		{
 			if (khaosForm is not null && gameApi is not null && alucardApi is not null && actorApi is not null)
 			{
+				CreateNotificationService();
 				khaosForm.Close();
 				khaosForm = new KhaosForm(toolConfig, this.MainForm.CheatList, gameApi, alucardApi, actorApi, notificationService, inputService);
 				khaosForm.Show();
 			}
 			else if (khaosForm is null && gameApi is not null && alucardApi is not null && actorApi is not null)
 			{
+				CreateNotificationService();
 				khaosForm = new KhaosForm(toolConfig, this.MainForm.CheatList, gameApi, alucardApi, actorApi, notificationService, inputService);
 				khaosForm.Show();
 				if (trackerForm is not null)
@@ -289,14 +292,25 @@ namespace SotnRandoTools
 		{
 			if (coopForm is not null && gameApi is not null && alucardApi is not null && watchlistService is not null && _maybeJoypadApi is not null)
 			{
+				CreateNotificationService();
 				coopForm.Close();
 				coopForm = new CoopForm(toolConfig, watchlistService, inputService, gameApi, alucardApi, _maybeJoypadApi, notificationService);
 				coopForm.Show();
 			}
 			else if (coopForm is null && gameApi is not null && alucardApi is not null && watchlistService is not null && _maybeJoypadApi is not null)
 			{
+				CreateNotificationService();
 				coopForm = new CoopForm(toolConfig, watchlistService, inputService, gameApi, alucardApi, _maybeJoypadApi, notificationService);
 				coopForm.Show();
+			}
+		}
+
+		private void CreateNotificationService()
+		{
+			if (notificationService is null)
+			{
+				notificationService = new NotificationService(toolConfig, _maybeGuiAPI, _maybeClientAPI);
+				khaosSettingsPanel.NotificationService = notificationService;
 			}
 		}
 

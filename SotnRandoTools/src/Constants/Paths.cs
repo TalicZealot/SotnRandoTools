@@ -46,6 +46,7 @@
 		public const string CasualPresetPath = "./ExternalTools/SotnRandoTools/Presets/casual.json";
 		public const string SafePresetPath = "./ExternalTools/SotnRandoTools/Presets/safe.json";
 		public const string SpeedrunPresetPath = "./ExternalTools/SotnRandoTools/Presets/speedrun.json";
+		public const string BatMasterPresetPath = "./ExternalTools/SotnRandoTools/Presets/bat-master.json";
 
 		public const string ConfigPath = "./ExternalTools/SotnRandoTools/ToolConfig.ini";
 		public const string CheatsPath = "./ExternalTools/SotnRandoTools/Cheats/Cheats.cht";

@@ -20,6 +20,7 @@ namespace SotnRandoTools.Configuration
 			PandoraTrigger = 1000;
 			PandoraMinItems = 15;
 			PandoraMaxItems = 35;
+			MeterOnReset = 50;
 			QueueInterval = new System.TimeSpan(0, 0, 21);
 			DynamicInterval = true;
 			KeepVladRelics = false;
@@ -131,6 +132,7 @@ namespace SotnRandoTools.Configuration
 		public int PandoraTrigger { get; set; }
 		public int PandoraMinItems { get; set; }
 		public int PandoraMaxItems { get; set; }
+		public int MeterOnReset { get; set; }
 		public System.TimeSpan QueueInterval { get; set; }
 		public bool DynamicInterval { get; set; }
 		public bool KeepVladRelics { get; set; }

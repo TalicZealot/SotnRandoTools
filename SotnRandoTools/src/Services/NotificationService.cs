@@ -8,11 +8,13 @@ using System.Windows.Forms;
 using BizHawk.Client.Common;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Constants;
+using SotnRandoTools.Khaos.Models;
 
 namespace SotnRandoTools.Services
 {
 	public class NotificationService : INotificationService
 	{
+		private OverlaySocketServer overlaySocketServer;
 		private const int NotificationTime = 4 * 1000;
 		private const int NotificationTimeFast = 1 * 1000;
 		private const int MeterSize = 60;
@@ -49,6 +51,7 @@ namespace SotnRandoTools.Services
 			this.toolConfig = toolConfig;
 			this.clientAPI = clientAPI;
 
+			overlaySocketServer = new OverlaySocketServer();
 			messageTimer = new System.Timers.Timer();
 			messageTimer.Interval = NotificationTime;
 			messageTimer.Elapsed += DequeueMessage;
@@ -118,6 +121,26 @@ namespace SotnRandoTools.Services
 			{
 				messageTimer.Interval = NotificationTime;
 			}
+		}
+
+		public void StartOverlayServer()
+		{
+			overlaySocketServer.StartServer();
+		}
+
+		public void StopOverlayServer()
+		{
+			overlaySocketServer.StopServer();
+		}
+
+		public void AddOverlayTimer(string name, int duration)
+		{
+			overlaySocketServer.AddTimer(name, duration);
+		}
+
+		public void UpdateOverlayQueue(List<QueuedAction> actionQueue)
+		{
+			overlaySocketServer.UpdateQueue(actionQueue);
 		}
 
 		private void DrawUI()

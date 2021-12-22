@@ -2,15 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using SotnRandoTools.Constants;
 using SotnRandoTools.Khaos.Interfaces;
 using SotnRandoTools.Khaos.Models;
-using SotnRandoTools.Services.Models;
 using WatsonWebsocket;
 
-namespace SotnRandoTools.Khaos
+namespace SotnRandoTools.Services
 {
 	public class OverlaySocketServer: IOverlaySocketServer
 	{

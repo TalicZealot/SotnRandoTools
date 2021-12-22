@@ -1,4 +1,7 @@
-﻿namespace SotnRandoTools.Services
+﻿using System.Collections.Generic;
+using SotnRandoTools.Khaos.Models;
+
+namespace SotnRandoTools.Services
 {
 	public interface INotificationService
 	{
@@ -6,5 +9,10 @@
 		short KhaosMeter { get; set; }
 		void AddMessage(string message);
 		void PlayAlert(string uri);
+
+		void StartOverlayServer();
+		void StopOverlayServer();
+		void AddOverlayTimer(string name, int duration);
+		void UpdateOverlayQueue(List<QueuedAction> actionQueue);
 	}
 }

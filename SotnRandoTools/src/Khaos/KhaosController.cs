@@ -35,7 +35,6 @@ namespace SotnRandoTools.Khaos
 		private readonly INotificationService notificationService;
 		private readonly IInputService inputService;
 		private readonly IKhaosActionsInfoDisplay statusInfoDisplay;
-		private readonly IOverlaySocketServer overlaySocketServer;
 		private Random rng = new Random();
 
 		private string[]? subscribers = {};
@@ -49,6 +48,7 @@ namespace SotnRandoTools.Khaos
 		private uint alucardMapX = 0;
 		private uint alucardMapY = 0;
 		private bool alucardSecondCastle = false;
+		private bool inMainMenu = false;
 
 		#region Timers
 		private System.Timers.Timer subweaponsOnlyTimer = new();
@@ -132,7 +132,7 @@ namespace SotnRandoTools.Khaos
 		private bool superHaste = false;
 
 		//TODO: too many dependencies, separate controller responsibilities
-		public KhaosController(IToolConfig toolConfig, IGameApi gameApi, IAlucardApi alucardApi, IActorApi actorApi, ICheatCollectionAdapter cheats, INotificationService notificationService, IInputService inputService, IKhaosActionsInfoDisplay statusInfoDisplay, IOverlaySocketServer overlaySocketServer)
+		public KhaosController(IToolConfig toolConfig, IGameApi gameApi, IAlucardApi alucardApi, IActorApi actorApi, ICheatCollectionAdapter cheats, INotificationService notificationService, IInputService inputService, IKhaosActionsInfoDisplay statusInfoDisplay)
 		{
 			if (toolConfig is null) throw new ArgumentNullException(nameof(toolConfig));
 			if (gameApi is null) throw new ArgumentNullException(nameof(gameApi));
@@ -142,7 +142,6 @@ namespace SotnRandoTools.Khaos
 			if (notificationService == null) throw new ArgumentNullException(nameof(notificationService));
 			if (inputService is null) throw new ArgumentNullException(nameof(inputService));
 			if (statusInfoDisplay is null) throw new ArgumentNullException(nameof(statusInfoDisplay));
-			if (overlaySocketServer is null) throw new ArgumentNullException(nameof(overlaySocketServer));
 			this.toolConfig = toolConfig;
 			this.gameApi = gameApi;
 			this.alucardApi = alucardApi;
@@ -151,7 +150,6 @@ namespace SotnRandoTools.Khaos
 			this.notificationService = notificationService;
 			this.inputService = inputService;
 			this.statusInfoDisplay = statusInfoDisplay;
-			this.overlaySocketServer = overlaySocketServer;
 
 			InitializeTimers();
 			GetCheats();
@@ -189,7 +187,7 @@ namespace SotnRandoTools.Khaos
 					action.LastUsedAt = null;
 				}
 			}
-			overlaySocketServer.StartServer();
+			notificationService.StartOverlayServer();
 			notificationService.AddMessage($"Khaos started");
 			Console.WriteLine("Khaos started");
 		}
@@ -197,7 +195,7 @@ namespace SotnRandoTools.Khaos
 		{
 			StopTimers();
 			faerieScroll.Disable();
-			overlaySocketServer.StopServer();
+			notificationService.StopOverlayServer();
 			notificationService.AddMessage($"Khaos stopped");
 			Console.WriteLine("Khaos stopped");
 		}
@@ -448,7 +446,7 @@ namespace SotnRandoTools.Khaos
 				Name = toolConfig.Khaos.Actions[10].Name,
 				Duration = toolConfig.Khaos.Actions[10].Duration
 			};
-			overlaySocketServer.AddTimer(timer.Name, (int) timer.Duration.TotalMilliseconds);
+			notificationService.AddOverlayTimer(timer.Name, (int) timer.Duration.TotalMilliseconds);
 			statusInfoDisplay.AddTimer(timer);
 			Alert(toolConfig.Khaos.Actions[10]);
 		}
@@ -479,7 +477,7 @@ namespace SotnRandoTools.Khaos
 				Duration = toolConfig.Khaos.Actions[11].Duration
 			};
 
-			overlaySocketServer.AddTimer(timer.Name, (int) timer.Duration.TotalMilliseconds);
+			notificationService.AddOverlayTimer(timer.Name, (int) timer.Duration.TotalMilliseconds);
 			statusInfoDisplay.AddTimer(timer);
 
 			//string message = meterFull ? $"{user} used Super Cripple" : $"{user} used Cripple";
@@ -500,7 +498,7 @@ namespace SotnRandoTools.Khaos
 				Name = toolConfig.Khaos.Actions[12].Name,
 				Duration = toolConfig.Khaos.Actions[12].Duration
 			};
-			overlaySocketServer.AddTimer(timer.Name, (int) timer.Duration.TotalMilliseconds);
+			notificationService.AddOverlayTimer(timer.Name, (int) timer.Duration.TotalMilliseconds);
 			statusInfoDisplay.AddTimer(timer);
 			Alert(toolConfig.Khaos.Actions[12]);
 		}
@@ -523,7 +521,7 @@ namespace SotnRandoTools.Khaos
 				Name = toolConfig.Khaos.Actions[13].Name,
 				Duration = toolConfig.Khaos.Actions[13].Duration
 			};
-			overlaySocketServer.AddTimer(timer.Name, (int)timer.Duration.TotalMilliseconds);
+			notificationService.AddOverlayTimer(timer.Name, (int)timer.Duration.TotalMilliseconds);
 			statusInfoDisplay.AddTimer(timer);
 
 			string message = meterFull ? $"{user} used Super Thirst" : $"{user} used Thirst";
@@ -578,7 +576,7 @@ namespace SotnRandoTools.Khaos
 				Name = "HnK",
 				Duration = toolConfig.Khaos.Actions[16].Duration
 			};
-			overlaySocketServer.AddTimer(timer.Name, (int) timer.Duration.TotalMilliseconds);
+			notificationService.AddOverlayTimer(timer.Name, (int) timer.Duration.TotalMilliseconds);
 			statusInfoDisplay.AddTimer(timer);
 
 			notificationService.AddMessage($"{user} used HnK");
@@ -600,7 +598,7 @@ namespace SotnRandoTools.Khaos
 				Name = toolConfig.Khaos.Actions[17].Name,
 				Duration = toolConfig.Khaos.Actions[17].Duration
 			};
-			overlaySocketServer.AddTimer(timer.Name, (int) timer.Duration.TotalMilliseconds);
+			notificationService.AddOverlayTimer(timer.Name, (int) timer.Duration.TotalMilliseconds);
 			statusInfoDisplay.AddTimer(timer);
 			Alert(toolConfig.Khaos.Actions[17]);
 		}
@@ -805,7 +803,7 @@ namespace SotnRandoTools.Khaos
 				Duration = toolConfig.Khaos.Actions[22].Duration
 			};
 			statusInfoDisplay.AddTimer(timer);
-			overlaySocketServer.AddTimer(timer.Name, (int) timer.Duration.TotalMilliseconds);
+			notificationService.AddOverlayTimer(timer.Name, (int) timer.Duration.TotalMilliseconds);
 
 			string message = meterFull ? $"{user} activated Shapeshifter" : $"{user} activated Magician";
 			notificationService.AddMessage(message);
@@ -847,7 +845,7 @@ namespace SotnRandoTools.Khaos
 					Name = toolConfig.Khaos.Actions[24].Name,
 					Duration = toolConfig.Khaos.Actions[24].Duration
 				};
-				overlaySocketServer.AddTimer(timer.Name, (int) timer.Duration.TotalMilliseconds);
+				notificationService.AddOverlayTimer(timer.Name, (int) timer.Duration.TotalMilliseconds);
 				statusInfoDisplay.AddTimer(timer);
 			}
 			else
@@ -859,7 +857,7 @@ namespace SotnRandoTools.Khaos
 					Name = toolConfig.Khaos.Actions[23].Name,
 					Duration = toolConfig.Khaos.Actions[23].Duration
 				};
-				overlaySocketServer.AddTimer(timer.Name, (int) timer.Duration.TotalMilliseconds);
+				notificationService.AddOverlayTimer(timer.Name, (int) timer.Duration.TotalMilliseconds);
 				statusInfoDisplay.AddTimer(timer);
 			}
 		}
@@ -883,7 +881,7 @@ namespace SotnRandoTools.Khaos
 				Name = toolConfig.Khaos.Actions[25].Name,
 				Duration = toolConfig.Khaos.Actions[25].Duration
 			};
-			overlaySocketServer.AddTimer(timer.Name, (int) timer.Duration.TotalMilliseconds);
+			notificationService.AddOverlayTimer(timer.Name, (int) timer.Duration.TotalMilliseconds);
 			statusInfoDisplay.AddTimer(timer);
 			Alert(toolConfig.Khaos.Actions[25]);
 		}
@@ -911,7 +909,7 @@ namespace SotnRandoTools.Khaos
 				Name = toolConfig.Khaos.Actions[26].Name,
 				Duration = toolConfig.Khaos.Actions[26].Duration
 			};
-			overlaySocketServer.AddTimer(timer.Name, (int) timer.Duration.TotalMilliseconds);
+			notificationService.AddOverlayTimer(timer.Name, (int) timer.Duration.TotalMilliseconds);
 			statusInfoDisplay.AddTimer(timer);
 			Alert(toolConfig.Khaos.Actions[26]);
 		}
@@ -936,7 +934,7 @@ namespace SotnRandoTools.Khaos
 				Name = toolConfig.Khaos.Actions[27].Name,
 				Duration = toolConfig.Khaos.Actions[27].Duration
 			};
-			overlaySocketServer.AddTimer(timer.Name, (int) timer.Duration.TotalMilliseconds);
+			notificationService.AddOverlayTimer(timer.Name, (int) timer.Duration.TotalMilliseconds);
 			statusInfoDisplay.AddTimer(timer);
 			string message = meterFull ? $"{user} activated Super Haste" : $"{user} activated Haste";
 			notificationService.AddMessage(message);
@@ -1194,7 +1192,7 @@ namespace SotnRandoTools.Khaos
 				commandAction.LastUsedAt = DateTime.Now;
 			}
 
-			overlaySocketServer.UpdateQueue(queuedActions);
+			notificationService.UpdateOverlayQueue(queuedActions);
 		}
 		private void InitializeTimers()
 		{
@@ -1271,11 +1269,6 @@ namespace SotnRandoTools.Khaos
 			{
 				alucardMapX = alucardApi.MapX;
 				alucardMapY = alucardApi.MapY;
-				if (alucardSecondCastle != gameApi.SecondCastle)
-				{
-					alucardSecondCastle = gameApi.SecondCastle;
-					SetSaveColorPalette();
-				}
 
 				if (gameApi.InAlucardMode() && gameApi.CanMenu() && alucardApi.CurrentHp > 0 && !gameApi.CanSave() && !IsInKeepRichterRoom() && !IsInLoadingRoom())
 				{
@@ -1308,7 +1301,7 @@ namespace SotnRandoTools.Khaos
 					{
 						queuedActions[index].Invoker();
 						queuedActions.RemoveAt(index);
-						overlaySocketServer.UpdateQueue(queuedActions);
+						notificationService.UpdateOverlayQueue(queuedActions);
 						SetDynamicInterval();
 					}
 					else
@@ -1344,11 +1337,8 @@ namespace SotnRandoTools.Khaos
 		{
 			alucardMapX = alucardApi.MapX;
 			alucardMapY = alucardApi.MapY;
-			if (alucardSecondCastle != gameApi.SecondCastle)
-			{
-				alucardSecondCastle = gameApi.SecondCastle;
-				SetSaveColorPalette();
-			}
+			CheckCastleChanged();
+			CheckMainMenu();
 
 			bool keepRichterRoom = IsInKeepRichterRoom();
 			bool galamothRoom = IsInGalamothRoom();
@@ -1387,7 +1377,6 @@ namespace SotnRandoTools.Khaos
 				AutoKhaosAction();
 			}
 		}
-
 		private void AutoKhaosAction()
 		{
 			int roll = rng.Next(0, 101);
@@ -1740,7 +1729,7 @@ namespace SotnRandoTools.Khaos
 						Duration = toolConfig.Khaos.Actions[14].Duration
 					};
 					statusInfoDisplay.AddTimer(timer);
-					overlaySocketServer.AddTimer(timer.Name, (int) timer.Duration.TotalMilliseconds);
+					notificationService.AddOverlayTimer(timer.Name, (int) timer.Duration.TotalMilliseconds);
 					hordeTimer.Start();
 				}
 				hordeEnemies[enemyIndex].Xpos = (ushort) rng.Next(10, 245);
@@ -2090,7 +2079,6 @@ namespace SotnRandoTools.Khaos
 		}
 		#endregion
 
-		//TODO: increase meter when player goes to main menu
 		private void StartCheats()
 		{
 			faerieScroll.Enable();
@@ -2120,6 +2108,29 @@ namespace SotnRandoTools.Khaos
 			else
 			{
 				SavePalette.PokeValue(Constants.Khaos.SaveIcosahedronFirstCastle);
+			}
+		}
+		private void CheckMainMenu()
+		{
+			if (inMainMenu != (gameApi.Status == SotnApi.Constants.Values.Game.Status.MainMenu))
+			{
+				if (inMainMenu && (gameApi.Status != SotnApi.Constants.Values.Game.Status.InGame))
+				{
+					return;
+				}
+				inMainMenu = gameApi.Status == SotnApi.Constants.Values.Game.Status.MainMenu;
+				if (inMainMenu)
+				{
+					GainKhaosMeter((short) toolConfig.Khaos.MeterOnReset);
+				}
+			}
+		}
+		private void CheckCastleChanged()
+		{
+			if (alucardSecondCastle != gameApi.SecondCastle)
+			{
+				alucardSecondCastle = gameApi.SecondCastle;
+				SetSaveColorPalette();
 			}
 		}
 		private void GetCheats()
