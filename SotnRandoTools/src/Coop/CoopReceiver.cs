@@ -17,23 +17,20 @@ namespace SotnRandoTools.Coop
 	public class CoopReceiver : ICoopReceiver
 	{
 		private readonly IToolConfig toolConfig;
-		private readonly IGameApi gameApi;
-		private readonly IAlucardApi alucardApi;
+		private readonly ISotnApi sotnApi;
 		private readonly INotificationService notificationService;
 		private readonly IWatchlistService watchlistService;
 		private Queue<MethodInvoker> queuedMessages = new();
 		private System.Timers.Timer messageTimer = new();
 
-		public CoopReceiver(IToolConfig toolConfig, IGameApi gameApi, IAlucardApi alucardApi, INotificationService notificationService, IWatchlistService watchlistService)
+		public CoopReceiver(IToolConfig toolConfig, ISotnApi sotnApi, INotificationService notificationService, IWatchlistService watchlistService)
 		{
 			if (toolConfig is null) throw new ArgumentNullException(nameof(toolConfig));
-			if (gameApi is null) throw new ArgumentNullException(nameof(gameApi));
-			if (alucardApi is null) throw new ArgumentNullException(nameof(alucardApi));
+			if (sotnApi is null) throw new ArgumentNullException(nameof(sotnApi));
 			if (notificationService is null) throw new ArgumentNullException(nameof(notificationService));
 			if (watchlistService is null) throw new ArgumentNullException(nameof(watchlistService));
 			this.toolConfig = toolConfig;
-			this.gameApi = gameApi;
-			this.alucardApi = alucardApi;
+			this.sotnApi = sotnApi;
 			this.notificationService = notificationService;
 			this.watchlistService = watchlistService;
 
@@ -59,9 +56,9 @@ namespace SotnRandoTools.Coop
 			switch (type)
 			{
 				case MessageType.Relic:
-					if (!alucardApi.HasRelic((Relic) index))
+					if (!sotnApi.AlucardApi.HasRelic((Relic) index))
 					{
-						alucardApi.GrantRelic((Relic) index);
+						sotnApi.AlucardApi.GrantRelic((Relic) index);
 						watchlistService.UpdateWatchlist(watchlistService.CoopRelicWatches);
 						watchlistService.CoopRelicWatches.ClearChangeCounts();
 						notificationService.AddMessage(((Relic) index).ToString());
@@ -70,12 +67,12 @@ namespace SotnRandoTools.Coop
 					}
 					break;
 				case MessageType.Location:
-					gameApi.SetRoomValue(watchlistService.CoopLocationWatches[indexByte].Address, dataByte);
+					sotnApi.GameApi.SetRoomValue(watchlistService.CoopLocationWatches[indexByte].Address, dataByte);
 					watchlistService.CoopLocationValues[indexByte] = dataByte;
 					Console.WriteLine($"Received location: {watchlistService.CoopLocationWatches[indexByte].Notes} with value {dataByte}");
 					break;
 				case MessageType.Item:
-					alucardApi.GrantItemByName(Equipment.Items[index]);
+					sotnApi.AlucardApi.GrantItemByName(Equipment.Items[index]);
 					notificationService.AddMessage(Equipment.Items[index]);
 					notificationService.PlayAlert(Paths.ItemPickupSound);
 					Console.WriteLine($"Received item: {Equipment.Items[index]}");
@@ -86,14 +83,14 @@ namespace SotnRandoTools.Coop
 				case MessageType.WarpFirstCastle:
 					if (indexByte == 0)
 					{
-						alucardApi.WarpsFirstCastle = dataByte;
+						sotnApi.AlucardApi.WarpsFirstCastle = dataByte;
 						watchlistService.UpdateWatchlist(watchlistService.WarpsAndShortcutsWatches);
 						watchlistService.WarpsAndShortcutsWatches.ClearChangeCounts();
 						notificationService.AddMessage($"Received warps and shortcuts.");
 						Console.WriteLine($"Received first castle warps with value {dataByte}");
 						break;
 					}
-					alucardApi.GrantFirstCastleWarp((Warp) index);
+					sotnApi.AlucardApi.GrantFirstCastleWarp((Warp) index);
 					watchlistService.UpdateWatchlist(watchlistService.WarpsAndShortcutsWatches);
 					watchlistService.WarpsAndShortcutsWatches.ClearChangeCounts();
 					notificationService.AddMessage($"Received warp: {(Warp) index}");
@@ -102,13 +99,13 @@ namespace SotnRandoTools.Coop
 				case MessageType.WarpSecondCastle:
 					if (indexByte == 0)
 					{
-						alucardApi.WarpsSecondCastle = dataByte;
+						sotnApi.AlucardApi.WarpsSecondCastle = dataByte;
 						watchlistService.UpdateWatchlist(watchlistService.WarpsAndShortcutsWatches);
 						watchlistService.WarpsAndShortcutsWatches.ClearChangeCounts();
 						Console.WriteLine($"Received second castle warps with value {dataByte}");
 						break;
 					}
-					alucardApi.GrantSecondCastleWarp((Warp) index);
+					sotnApi.AlucardApi.GrantSecondCastleWarp((Warp) index);
 					watchlistService.UpdateWatchlist(watchlistService.WarpsAndShortcutsWatches);
 					watchlistService.WarpsAndShortcutsWatches.ClearChangeCounts();
 					notificationService.AddMessage($"Received warp: Inverted {(Warp) index}");
@@ -138,8 +135,8 @@ namespace SotnRandoTools.Coop
 		public void ExecuteMessage()
 		{
 			//avoid marble gallery softlock
-			bool insideMarbleGalleryDoorRooms = (gameApi.Room == Various.MarbleGalleryDoorToCavernsRoom || gameApi.Room == Various.MarbleGalleryBlueDoorRoom) && (gameApi.Area == Various.MarbleGalleryArea);
-			if (gameApi.InAlucardMode() && !insideMarbleGalleryDoorRooms)
+			bool insideMarbleGalleryDoorRooms = (sotnApi.GameApi.Room == Various.MarbleGalleryDoorToCavernsRoom || sotnApi.GameApi.Room == Various.MarbleGalleryBlueDoorRoom) && (sotnApi.GameApi.Area == Various.MarbleGalleryArea);
+			if (sotnApi.GameApi.InAlucardMode() && !insideMarbleGalleryDoorRooms)
 			{
 				if (queuedMessages.Count > 0)
 				{
@@ -197,49 +194,49 @@ namespace SotnRandoTools.Coop
 			switch (shortcut)
 			{
 				case Shortcut.OuterWallElevator:
-					alucardApi.OuterWallElevator = true;
+					sotnApi.AlucardApi.OuterWallElevator = true;
 					break;
 				case Shortcut.AlchemyElevator:
-					alucardApi.AlchemyElevator = true;
+					sotnApi.AlucardApi.AlchemyElevator = true;
 					break;
 				case Shortcut.EntranceToMarble:
-					alucardApi.EntranceToMarble = true;
+					sotnApi.AlucardApi.EntranceToMarble = true;
 					break;
 				case Shortcut.ChapelStatue:
-					alucardApi.ChapelStatue = true;
+					sotnApi.AlucardApi.ChapelStatue = true;
 					break;
 				case Shortcut.ColosseumElevator:
-					alucardApi.ColosseumElevator = true;
+					sotnApi.AlucardApi.ColosseumElevator = true;
 					break;
 				case Shortcut.ColosseumToChapel:
-					alucardApi.ColosseumToChapel = true;
+					sotnApi.AlucardApi.ColosseumToChapel = true;
 					break;
 				case Shortcut.MarbleBlueDoor:
-					alucardApi.MarbleBlueDoor = true;
+					sotnApi.AlucardApi.MarbleBlueDoor = true;
 					break;
 				case Shortcut.CavernsSwitchAndBridge:
-					alucardApi.CavernsSwitchAndBridge = true;
+					sotnApi.AlucardApi.CavernsSwitchAndBridge = true;
 					break;
 				case Shortcut.EntranceToCaverns:
-					alucardApi.EntranceToCaverns = true;
+					sotnApi.AlucardApi.EntranceToCaverns = true;
 					break;
 				case Shortcut.EntranceWarp:
-					alucardApi.EntranceWarp = true;
+					sotnApi.AlucardApi.EntranceWarp = true;
 					break;
 				case Shortcut.FirstClockRoomDoor:
-					alucardApi.FirstClockRoomDoor = true;
+					sotnApi.AlucardApi.FirstClockRoomDoor = true;
 					break;
 				case Shortcut.SecondClockRoomDoor:
-					alucardApi.SecondClockRoomDoor = true;
+					sotnApi.AlucardApi.SecondClockRoomDoor = true;
 					break;
 				case Shortcut.FirstDemonButton:
-					alucardApi.FirstDemonButton = true;
+					sotnApi.AlucardApi.FirstDemonButton = true;
 					break;
 				case Shortcut.SecondDemonButton:
-					alucardApi.SecondDemonButton = true;
+					sotnApi.AlucardApi.SecondDemonButton = true;
 					break;
 				case Shortcut.KeepStairs:
-					alucardApi.KeepStairs = true;
+					sotnApi.AlucardApi.KeepStairs = true;
 					break;
 				default:
 					Console.WriteLine($"Shortcut {shortcut} not found!");
@@ -254,77 +251,77 @@ namespace SotnRandoTools.Coop
 		{
 			if ((flags & (int) ShortcutFlags.OuterWallElevator) == (int) ShortcutFlags.OuterWallElevator)
 			{
-				alucardApi.OuterWallElevator = true;
+				sotnApi.AlucardApi.OuterWallElevator = true;
 				Console.WriteLine($"Received shortcut: {ShortcutFlags.OuterWallElevator}");
 			}
 			if ((flags & (int) ShortcutFlags.AlchemyElevator) == (int) ShortcutFlags.AlchemyElevator)
 			{
-				alucardApi.AlchemyElevator = true;
+				sotnApi.AlucardApi.AlchemyElevator = true;
 				Console.WriteLine($"Received shortcut: {ShortcutFlags.AlchemyElevator}");
 			}
 			if ((flags & (int) ShortcutFlags.EntranceToMarble) == (int) ShortcutFlags.EntranceToMarble)
 			{
-				alucardApi.EntranceToMarble = true;
+				sotnApi.AlucardApi.EntranceToMarble = true;
 				Console.WriteLine($"Received shortcut: {ShortcutFlags.EntranceToMarble}");
 			}
 			if ((flags & (int) ShortcutFlags.ChapelStatue) == (int) ShortcutFlags.ChapelStatue)
 			{
-				alucardApi.ChapelStatue = true;
+				sotnApi.AlucardApi.ChapelStatue = true;
 				Console.WriteLine($"Received shortcut: {ShortcutFlags.ChapelStatue}");
 			}
 			if ((flags & (int) ShortcutFlags.ColosseumElevator) == (int) ShortcutFlags.ColosseumElevator)
 			{
-				alucardApi.ColosseumElevator = true;
+				sotnApi.AlucardApi.ColosseumElevator = true;
 				Console.WriteLine($"Received shortcut: {ShortcutFlags.ColosseumElevator}");
 			}
 			if ((flags & (int) ShortcutFlags.ColosseumToChapel) == (int) ShortcutFlags.ColosseumToChapel)
 			{
-				alucardApi.ColosseumToChapel = true;
+				sotnApi.AlucardApi.ColosseumToChapel = true;
 				Console.WriteLine($"Received shortcut: {ShortcutFlags.ColosseumToChapel}");
 			}
 			if ((flags & (int) ShortcutFlags.MarbleBlueDoor) == (int) ShortcutFlags.MarbleBlueDoor)
 			{
-				alucardApi.MarbleBlueDoor = true;
+				sotnApi.AlucardApi.MarbleBlueDoor = true;
 				Console.WriteLine($"Received shortcut: {ShortcutFlags.MarbleBlueDoor}");
 			}
 			if ((flags & (int) ShortcutFlags.CavernsSwitchAndBridge) == (int) ShortcutFlags.CavernsSwitchAndBridge)
 			{
-				alucardApi.CavernsSwitchAndBridge = true;
+				sotnApi.AlucardApi.CavernsSwitchAndBridge = true;
 				Console.WriteLine($"Received shortcut: {ShortcutFlags.CavernsSwitchAndBridge}");
 			}
 			if ((flags & (int) ShortcutFlags.EntranceToCaverns) == (int) ShortcutFlags.EntranceToCaverns)
 			{
-				alucardApi.EntranceToCaverns = true;
+				sotnApi.AlucardApi.EntranceToCaverns = true;
 				Console.WriteLine($"Received shortcut: {ShortcutFlags.EntranceToCaverns}");
 			}
 			if ((flags & (int) ShortcutFlags.EntranceWarp) == (int) ShortcutFlags.EntranceWarp)
 			{
-				alucardApi.EntranceWarp = true;
+				sotnApi.AlucardApi.EntranceWarp = true;
 				Console.WriteLine($"Received shortcut: {ShortcutFlags.EntranceWarp}");
 			}
 			if ((flags & (int) ShortcutFlags.FirstClockRoomDoor) == (int) ShortcutFlags.FirstClockRoomDoor)
 			{
-				alucardApi.FirstClockRoomDoor = true;
+				sotnApi.AlucardApi.FirstClockRoomDoor = true;
 				Console.WriteLine($"Received shortcut: {ShortcutFlags.FirstClockRoomDoor}");
 			}
 			if ((flags & (int) ShortcutFlags.SecondClockRoomDoor) == (int) ShortcutFlags.SecondClockRoomDoor)
 			{
-				alucardApi.SecondClockRoomDoor = true;
+				sotnApi.AlucardApi.SecondClockRoomDoor = true;
 				Console.WriteLine($"Received shortcut: {ShortcutFlags.SecondClockRoomDoor}");
 			}
 			if ((flags & (int) ShortcutFlags.FirstDemonButton) == (int) ShortcutFlags.FirstDemonButton)
 			{
-				alucardApi.FirstDemonButton = true;
+				sotnApi.AlucardApi.FirstDemonButton = true;
 				Console.WriteLine($"Received shortcut: {ShortcutFlags.FirstDemonButton}");
 			}
 			if ((flags & (int) ShortcutFlags.SecondDemonButton) == (int) ShortcutFlags.SecondDemonButton)
 			{
-				alucardApi.SecondDemonButton = true;
+				sotnApi.AlucardApi.SecondDemonButton = true;
 				Console.WriteLine($"Received shortcut: {ShortcutFlags.SecondDemonButton}");
 			}
 			if ((flags & (int) ShortcutFlags.KeepStairs) == (int) ShortcutFlags.KeepStairs)
 			{
-				alucardApi.KeepStairs = true;
+				sotnApi.AlucardApi.KeepStairs = true;
 				Console.WriteLine($"Received shortcut: {ShortcutFlags.KeepStairs}");
 			}
 		}
@@ -334,7 +331,7 @@ namespace SotnRandoTools.Coop
 			Potion potion;
 			if (Enum.TryParse(Regex.Replace(item, "[ .]", ""), true, out potion))
 			{
-				alucardApi.ActivatePotion(potion);
+				sotnApi.AlucardApi.ActivatePotion(potion);
 			}
 			else
 			{

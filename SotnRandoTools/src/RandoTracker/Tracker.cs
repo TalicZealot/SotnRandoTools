@@ -23,9 +23,7 @@ namespace SotnRandoTools.RandoTracker
 		private readonly IToolConfig toolConfig;
 		private readonly TrackerGraphicsEngine trackerGraphicsEngine;
 		private readonly IWatchlistService watchlistService;
-		private readonly IRenderingApi renderingApi;
-		private readonly IGameApi gameApi;
-		private readonly IAlucardApi alucardApi;
+		private readonly ISotnApi sotnApi;
 
 		private List<Relic> relics = new List<Relic>
 		{
@@ -210,20 +208,16 @@ namespace SotnRandoTools.RandoTracker
 		private List<MapLocation> replay = new();
 		private int prologueTime = 0;
 
-		public Tracker(IGraphics? formGraphics, IToolConfig toolConfig, IWatchlistService watchlistService, IRenderingApi renderingApi, IGameApi gameApi, IAlucardApi alucardApi)
+		public Tracker(IGraphics? formGraphics, IToolConfig toolConfig, IWatchlistService watchlistService, ISotnApi sotnApi)
 		{
 			if (formGraphics is null) throw new ArgumentNullException(nameof(formGraphics));
 			if (toolConfig is null) throw new ArgumentNullException(nameof(toolConfig));
 			if (watchlistService is null) throw new ArgumentNullException(nameof(watchlistService));
-			if (renderingApi is null) throw new ArgumentNullException(nameof(renderingApi));
-			if (gameApi is null) throw new ArgumentNullException(nameof(gameApi));
-			if (alucardApi is null) throw new ArgumentNullException(nameof(alucardApi));
+			if (sotnApi is null) throw new ArgumentNullException(nameof(sotnApi));
 			this.formGraphics = formGraphics;
 			this.toolConfig = toolConfig;
 			this.watchlistService = watchlistService;
-			this.renderingApi = renderingApi;
-			this.gameApi = gameApi;
-			this.alucardApi = alucardApi;
+			this.sotnApi = sotnApi;
 
 			if (toolConfig.Tracker.Locations)
 			{
@@ -251,11 +245,11 @@ namespace SotnRandoTools.RandoTracker
 		{
 			UpdateSeedLabel();
 
-			bool inGame = gameApi.Status == Status.InGame;
-			bool updatedSecondCastle = gameApi.SecondCastle;
+			bool inGame = sotnApi.GameApi.Status == Status.InGame;
+			bool updatedSecondCastle = sotnApi.GameApi.SecondCastle;
 			relicOrItemCollected = false;
 
-			if (gameApi.InAlucardMode() && alucardApi.HasHitbox())
+			if (sotnApi.GameApi.InAlucardMode() && sotnApi.AlucardApi.HasHitbox())
 			{
 				restarted = false;
 
@@ -292,7 +286,7 @@ namespace SotnRandoTools.RandoTracker
 			{
 				gameReset = true;
 			}
-			else if (gameApi.InPrologue())
+			else if (sotnApi.GameApi.InPrologue())
 			{
 				prologueTime++;
 				if (!restarted)
@@ -363,7 +357,7 @@ namespace SotnRandoTools.RandoTracker
 
 		private void UpdateSeedLabel()
 		{
-			if (SeedInfo == DefaultSeedInfo && gameApi.Status == Status.MainMenu)
+			if (SeedInfo == DefaultSeedInfo && sotnApi.GameApi.Status == Status.MainMenu)
 			{
 				getSeedData();
 				trackerGraphicsEngine.Render();
@@ -373,7 +367,7 @@ namespace SotnRandoTools.RandoTracker
 
 		private void UpdateLocations()
 		{
-			uint currentRooms = alucardApi.Rooms;
+			uint currentRooms = sotnApi.AlucardApi.Rooms;
 			if (currentRooms > roomCount)
 			{
 				roomCount = currentRooms;
@@ -471,13 +465,13 @@ namespace SotnRandoTools.RandoTracker
 						{
 							case 0:
 							case 1:
-								progressionItems[i].Status = (alucardApi.Accessory1 == progressionItems[i].Value) || (alucardApi.Accessory2 == progressionItems[i].Value);
+								progressionItems[i].Status = (sotnApi.AlucardApi.Accessory1 == progressionItems[i].Value) || (sotnApi.AlucardApi.Accessory2 == progressionItems[i].Value);
 								break;
 							case 2:
-								progressionItems[i].Status = (alucardApi.Armor == progressionItems[i].Value);
+								progressionItems[i].Status = (sotnApi.AlucardApi.Armor == progressionItems[i].Value);
 								break;
 							case 3:
-								progressionItems[i].Status = (alucardApi.Helm == progressionItems[i].Value);
+								progressionItems[i].Status = (sotnApi.AlucardApi.Helm == progressionItems[i].Value);
 								break;
 							default:
 								progressionItems[i].Status = false;
@@ -508,7 +502,7 @@ namespace SotnRandoTools.RandoTracker
 					}
 					else
 					{
-						thrustSwords[i].Status = (alucardApi.RightHand == thrustSwords[i].Value);
+						thrustSwords[i].Status = (sotnApi.AlucardApi.RightHand == thrustSwords[i].Value);
 					}
 					DrawRelicsAndItems();
 					if (toolConfig.Tracker.Locations)
@@ -523,8 +517,8 @@ namespace SotnRandoTools.RandoTracker
 		private void getSeedData()
 
 		{
-			string seedName = gameApi.ReadSeedName();
-			preset = gameApi.ReadPresetName();
+			string seedName = sotnApi.GameApi.ReadSeedName();
+			preset = sotnApi.GameApi.ReadPresetName();
 			if (preset == "tournament" || preset == "")
 			{
 				preset = "custom";
@@ -623,7 +617,7 @@ namespace SotnRandoTools.RandoTracker
 				{
 					roomWatch = watchlistService.EquipmentLocationWatches.Where(x => x.Notes.ToLower() == room.Name.ToLower()).FirstOrDefault();
 				}
-				gameApi.SetRoomToUnvisited(roomWatch.Address);
+				sotnApi.GameApi.SetRoomToUnvisited(roomWatch.Address);
 			}
 		}
 
@@ -640,11 +634,11 @@ namespace SotnRandoTools.RandoTracker
 
 			if (locations[i].EquipmentExtension && spreadExtension == false)
 			{
-				renderingApi.ColorMapLocation(row, col, color);
+				sotnApi.RenderingApi.ColorMapLocation(row, col, color);
 			}
 			else
 			{
-				renderingApi.ColorMapRoom(row, col, color, borderColor);
+				sotnApi.RenderingApi.ColorMapRoom(row, col, color, borderColor);
 			}
 		}
 
@@ -662,7 +656,7 @@ namespace SotnRandoTools.RandoTracker
 					row = (398 / 2) - row;
 					col = (504 / 4) - col;
 				}
-				return renderingApi.RoomIsRendered(row, col);
+				return sotnApi.RenderingApi.RoomIsRendered(row, col);
 			}
 			return true;
 		}
@@ -807,8 +801,8 @@ namespace SotnRandoTools.RandoTracker
 
 		private void SaveReplayLine()
 		{
-			int currentMapX = (int) alucardApi.MapX;
-			int currentMapY = (int) alucardApi.MapY;
+			int currentMapX = (int) sotnApi.AlucardApi.MapX;
+			int currentMapY = (int) sotnApi.AlucardApi.MapY;
 
 			if ((currentMapY == 44 && currentMapX < 19) || (currentMapX < 2 && currentMapY < 3) || currentMapX > 200 || currentMapY > 200)
 			{

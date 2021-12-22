@@ -17,8 +17,7 @@ namespace SotnRandoTools.Coop
 	public class CoopSender
 	{
 		private readonly IToolConfig toolConfig;
-		private readonly IGameApi gameApi;
-		private readonly IAlucardApi alucardApi;
+		private readonly ISotnApi sotnApi;
 		private readonly IWatchlistService watchlistService;
 		private readonly IInputService inputService;
 		private readonly ICoopMessanger coopMessanger;
@@ -28,25 +27,23 @@ namespace SotnRandoTools.Coop
 		private bool selectPressed = false;
 		private bool circlePressed = false;
 
-		public CoopSender(IToolConfig toolConfig, IWatchlistService watchlistService, IInputService inputService, IGameApi gameApi, IAlucardApi alucardApi, ICoopMessanger coopMessanger)
+		public CoopSender(IToolConfig toolConfig, IWatchlistService watchlistService, IInputService inputService, ISotnApi sotnApi, ICoopMessanger coopMessanger)
 		{
 			if (toolConfig is null) throw new ArgumentNullException(nameof(toolConfig));
 			if (watchlistService is null) throw new ArgumentNullException(nameof(watchlistService));
 			if (inputService is null) throw new ArgumentNullException(nameof(inputService));
-			if (gameApi is null) throw new ArgumentNullException(nameof(gameApi));
-			if (alucardApi is null) throw new ArgumentNullException(nameof(alucardApi));
+			if (sotnApi is null) throw new ArgumentNullException(nameof(sotnApi));
 			if (coopMessanger is null) throw new ArgumentNullException(nameof(coopMessanger));
 			this.toolConfig = toolConfig;
 			this.watchlistService = watchlistService;
 			this.inputService = inputService;
-			this.gameApi = gameApi;
-			this.alucardApi = alucardApi;
+			this.sotnApi = sotnApi;
 			this.coopMessanger = coopMessanger;
 		}
 
 		public void Update()
 		{
-			if (!gameApi.InAlucardMode() || !coopMessanger.IsConnected())
+			if (!sotnApi.GameApi.InAlucardMode() || !coopMessanger.IsConnected())
 			{
 				return;
 			}
@@ -90,13 +87,13 @@ namespace SotnRandoTools.Coop
 
 		private void UpdateSendItem()
 		{
-			if (inputService.ButtonPressed(PlaystationInputKeys.R3, Globals.UpdateCooldownFrames) && r3Pressed == false && gameApi.IsInMenu() && gameApi.EquipMenuOpen())
+			if (inputService.ButtonPressed(PlaystationInputKeys.R3, Globals.UpdateCooldownFrames) && r3Pressed == false && sotnApi.GameApi.IsInMenu() && sotnApi.GameApi.EquipMenuOpen())
 			{
 				r3Pressed = true;
-				string item = alucardApi.GetSelectedItemName();
-				if (!item.Contains("empty hand") && !item.Contains("-") && alucardApi.HasItemInInventory(item))
+				string item = sotnApi.AlucardApi.GetSelectedItemName();
+				if (!item.Contains("empty hand") && !item.Contains("-") && sotnApi.AlucardApi.HasItemInInventory(item))
 				{
-					alucardApi.TakeOneItemByName(item);
+					sotnApi.AlucardApi.TakeOneItemByName(item);
 					ushort indexData = (ushort) Equipment.Items.IndexOf(item);
 					queuedMessages.Enqueue(new MethodInvoker(() => { coopMessanger.SendData(MessageType.Item, BitConverter.GetBytes(indexData)); }));
 					Console.WriteLine($"Sending item: {item}");
@@ -114,11 +111,11 @@ namespace SotnRandoTools.Coop
 
 		private void UpdateAssist()
 		{
-			if (inputService.ButtonPressed(PlaystationInputKeys.Circle, Globals.UpdateCooldownFrames) && circlePressed == false && gameApi.IsInMenu() && gameApi.EquipMenuOpen())
+			if (inputService.ButtonPressed(PlaystationInputKeys.Circle, Globals.UpdateCooldownFrames) && circlePressed == false && sotnApi.GameApi.IsInMenu() && sotnApi.GameApi.EquipMenuOpen())
 			{
 				circlePressed = true;
-				string item = alucardApi.GetSelectedItemName();
-				if (!alucardApi.HasItemInInventory(item))
+				string item = sotnApi.AlucardApi.GetSelectedItemName();
+				if (!sotnApi.AlucardApi.HasItemInInventory(item))
 				{
 					Console.WriteLine($"Player doesn't have any {item}!");
 					return;
@@ -127,7 +124,7 @@ namespace SotnRandoTools.Coop
 				Potion potion;
 				if (Enum.TryParse(Regex.Replace(item, "[ .]", ""), true, out potion))
 				{
-					alucardApi.TakeOneItemByName(item);
+					sotnApi.AlucardApi.TakeOneItemByName(item);
 					ushort indexData = (ushort) Equipment.Items.IndexOf(item);
 					coopMessanger.SendData(MessageType.Effect, BitConverter.GetBytes(indexData));
 					Console.WriteLine($"Sending assist: {item}");
@@ -141,34 +138,34 @@ namespace SotnRandoTools.Coop
 			{
 				circlePressed = false;
 
-				if (!gameApi.IsInMenu() && inputService.RegisteredMove(InputKeys.DragonPunch, Globals.UpdateCooldownFrames))
+				if (!sotnApi.GameApi.IsInMenu() && inputService.RegisteredMove(InputKeys.DragonPunch, Globals.UpdateCooldownFrames))
 				{
 					string item = "Manna prism";
-					if (!alucardApi.HasItemInInventory(item))
+					if (!sotnApi.AlucardApi.HasItemInInventory(item))
 					{
 						Console.WriteLine($"Player doesn't have any {item}!");
 						return;
 					}
-					alucardApi.TakeOneItemByName(item);
+					sotnApi.AlucardApi.TakeOneItemByName(item);
 					ushort indexData = (ushort) Equipment.Items.IndexOf(item);
 					coopMessanger.SendData(MessageType.Effect, BitConverter.GetBytes(indexData));
-					alucardApi.ActivatePotion(Potion.Mannaprism);
+					sotnApi.AlucardApi.ActivatePotion(Potion.Mannaprism);
 					Console.WriteLine($"Sending assist: {item}");
 
 				}
-				else if (!gameApi.IsInMenu() && inputService.RegisteredMove(InputKeys.HalfCircleForward, Globals.UpdateCooldownFrames))
+				else if (!sotnApi.GameApi.IsInMenu() && inputService.RegisteredMove(InputKeys.HalfCircleForward, Globals.UpdateCooldownFrames))
 				{
 					string item = "Potion";
-					if (!alucardApi.HasItemInInventory(item))
+					if (!sotnApi.AlucardApi.HasItemInInventory(item))
 					{
 						Console.WriteLine($"Player doesn't have any {item}!");
 						return;
 					}
 
-					alucardApi.TakeOneItemByName(item);
+					sotnApi.AlucardApi.TakeOneItemByName(item);
 					ushort indexData = (ushort) Equipment.Items.IndexOf(item);
 					coopMessanger.SendData(MessageType.Effect, BitConverter.GetBytes(indexData));
-					alucardApi.ActivatePotion(Potion.Potion);
+					sotnApi.AlucardApi.ActivatePotion(Potion.Potion);
 					Console.WriteLine($"Sending assist: {item}");
 				}
 			}
@@ -241,7 +238,7 @@ namespace SotnRandoTools.Coop
 
 		private void UpdateSendAllWarps()
 		{
-			if (inputService.ButtonPressed(PlaystationInputKeys.Select, Globals.UpdateCooldownFrames) && selectPressed == false && gameApi.IsInMenu() && gameApi.RelicMenuOpen())
+			if (inputService.ButtonPressed(PlaystationInputKeys.Select, Globals.UpdateCooldownFrames) && selectPressed == false && sotnApi.GameApi.IsInMenu() && sotnApi.GameApi.RelicMenuOpen())
 			{
 				selectPressed = true;
 				var warpsFirstCastle = new byte[] { 0, (byte) watchlistService.WarpsAndShortcutsWatches.Where(w => w.Notes == "WarpsFirstCastle").FirstOrDefault().Value };

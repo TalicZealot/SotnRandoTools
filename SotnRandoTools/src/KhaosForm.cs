@@ -30,7 +30,7 @@ namespace SotnRandoTools
 		private string eyeOfVladLocation;
 		private bool started = false;
 
-		public KhaosForm(IToolConfig toolConfig, CheatCollection cheats, IGameApi gameApi, IAlucardApi alucardApi, IActorApi actorApi, INotificationService notificationService, IInputService inputService)
+		public KhaosForm(IToolConfig toolConfig, CheatCollection cheats, ISotnApi sotnApi, INotificationService notificationService, IInputService inputService)
 		{
 			if (toolConfig is null) throw new ArgumentNullException(nameof(toolConfig));
 			if (cheats is null) throw new ArgumentNullException(nameof(cheats));
@@ -39,7 +39,7 @@ namespace SotnRandoTools
 			this.toolConfig = toolConfig;
 
 			adaptedCheats = new CheatCollectionAdapter(cheats);
-			khaosControler = new KhaosController(toolConfig, gameApi, alucardApi, actorApi, adaptedCheats, notificationService, inputService, this);
+			khaosControler = new KhaosController(toolConfig, sotnApi, adaptedCheats, notificationService, inputService, this);
 
 			InitializeComponent();
 			SuspendLayout();

@@ -63,11 +63,7 @@ namespace SotnRandoTools
 		});
 		private Config GlobalConfig => (_maybeEmuAPI as EmulationApi ?? throw new Exception("required API wasn't fulfilled")).ForbiddenConfigReference;
 
-		private SotnApi.Main.SotnApi sotnApi;
-		private ActorApi? actorApi;
-		private AlucardApi? alucardApi;
-		private GameApi? gameApi;
-		private RenderingApi? renderingApi;
+		private SotnApi.Main.SotnApi? sotnApi;
 		private ToolConfig toolConfig;
 		private WatchlistService? watchlistService;
 		private NotificationService? notificationService;
@@ -149,12 +145,8 @@ namespace SotnRandoTools
 			LoadCheats();
 
 			sotnApi = new SotnApi.Main.SotnApi(_maybeMemAPI);
-			actorApi = new ActorApi(_maybeMemAPI);
-			alucardApi = new AlucardApi(_maybeMemAPI);
-			gameApi = new GameApi(_maybeMemAPI);
-			renderingApi = new RenderingApi(_maybeMemAPI);
 			watchlistService = new WatchlistService(_memoryDomains, _emu?.SystemId, GlobalConfig);
-			inputService = new InputService(_maybeJoypadApi, alucardApi);
+			inputService = new InputService(_maybeJoypadApi, sotnApi);
 
 			Console.SetOut(log);
 		}
@@ -240,25 +232,22 @@ namespace SotnRandoTools
 				}
 			}
 
-			actorApi = null;
-			alucardApi = null;
-			gameApi = null;
-			renderingApi = null;
+			sotnApi = null;
 			watchlistService = null;
 			inputService = null;
 		}
 
 		private void autotrackerLaunch_Click(object sender, EventArgs e)
 		{
-			if (trackerForm is not null && renderingApi is not null && gameApi is not null && alucardApi is not null && watchlistService is not null)
+			if (trackerForm is not null && sotnApi is not null && watchlistService is not null)
 			{
 				trackerForm.Close();
-				trackerForm = new TrackerForm(toolConfig, watchlistService, renderingApi, gameApi, alucardApi);
+				trackerForm = new TrackerForm(toolConfig, watchlistService, sotnApi);
 				trackerForm.Show();
 			}
-			else if (trackerForm is null && renderingApi is not null && gameApi is not null && alucardApi is not null && watchlistService is not null)
+			else if (trackerForm is null && sotnApi is not null && watchlistService is not null)
 			{
-				trackerForm = new TrackerForm(toolConfig, watchlistService, renderingApi, gameApi, alucardApi);
+				trackerForm = new TrackerForm(toolConfig, watchlistService, sotnApi);
 				trackerForm.Show();
 				if (khaosForm is not null)
 				{
@@ -269,17 +258,17 @@ namespace SotnRandoTools
 
 		private void khaosChatLaunch_Click(object sender, EventArgs e)
 		{
-			if (khaosForm is not null && gameApi is not null && alucardApi is not null && actorApi is not null)
+			if (khaosForm is not null && sotnApi is not null)
 			{
 				CreateNotificationService();
 				khaosForm.Close();
-				khaosForm = new KhaosForm(toolConfig, this.MainForm.CheatList, gameApi, alucardApi, actorApi, notificationService, inputService);
+				khaosForm = new KhaosForm(toolConfig, this.MainForm.CheatList, sotnApi, notificationService, inputService);
 				khaosForm.Show();
 			}
-			else if (khaosForm is null && gameApi is not null && alucardApi is not null && actorApi is not null)
+			else if (khaosForm is null && sotnApi is not null)
 			{
 				CreateNotificationService();
-				khaosForm = new KhaosForm(toolConfig, this.MainForm.CheatList, gameApi, alucardApi, actorApi, notificationService, inputService);
+				khaosForm = new KhaosForm(toolConfig, this.MainForm.CheatList, sotnApi, notificationService, inputService);
 				khaosForm.Show();
 				if (trackerForm is not null)
 				{
@@ -290,17 +279,17 @@ namespace SotnRandoTools
 
 		private void multiplayerLaunch_Click(object sender, EventArgs e)
 		{
-			if (coopForm is not null && gameApi is not null && alucardApi is not null && watchlistService is not null && _maybeJoypadApi is not null)
+			if (coopForm is not null && sotnApi is not null && watchlistService is not null && _maybeJoypadApi is not null)
 			{
 				CreateNotificationService();
 				coopForm.Close();
-				coopForm = new CoopForm(toolConfig, watchlistService, inputService, gameApi, alucardApi, _maybeJoypadApi, notificationService);
+				coopForm = new CoopForm(toolConfig, watchlistService, inputService, sotnApi, _maybeJoypadApi, notificationService);
 				coopForm.Show();
 			}
-			else if (coopForm is null && gameApi is not null && alucardApi is not null && watchlistService is not null && _maybeJoypadApi is not null)
+			else if (coopForm is null && sotnApi is not null && watchlistService is not null && _maybeJoypadApi is not null)
 			{
 				CreateNotificationService();
-				coopForm = new CoopForm(toolConfig, watchlistService, inputService, gameApi, alucardApi, _maybeJoypadApi, notificationService);
+				coopForm = new CoopForm(toolConfig, watchlistService, inputService, sotnApi, _maybeJoypadApi, notificationService);
 				coopForm.Show();
 			}
 		}

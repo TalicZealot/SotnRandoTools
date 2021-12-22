@@ -11,7 +11,7 @@ namespace SotnRandoTools.Services
 	public class InputService : IInputService
 	{
 		private readonly IJoypadApi joypadApi;
-		private readonly IAlucardApi alucardApi;
+		private readonly ISotnApi sotnApi;
 		private List<Dictionary<string, object>> inputHistory = new();
 		private List<Dictionary<string, bool>> moveHistory = new();
 		private Input dragonPunch = new Input
@@ -47,12 +47,12 @@ namespace SotnRandoTools.Services
 			Activator = null
 		};
 
-		public InputService(IJoypadApi joypadApi, IAlucardApi alucardApi)
+		public InputService(IJoypadApi joypadApi, ISotnApi sotnApi)
 		{
 			if (joypadApi is null) throw new ArgumentNullException(nameof(joypadApi));
-			if (alucardApi is null) throw new ArgumentNullException(nameof(alucardApi));
+			if (sotnApi is null) throw new ArgumentNullException(nameof(sotnApi));
 			this.joypadApi = joypadApi;
-			this.alucardApi = alucardApi;
+			this.sotnApi = sotnApi;
 		}
 
 		public void UpdateInputs()
@@ -63,7 +63,7 @@ namespace SotnRandoTools.Services
 				inputHistory.RemoveAt(0);
 			}
 
-			if (alucardApi.FacingLeft)
+			if (sotnApi.AlucardApi.FacingLeft)
 			{
 				inputHistory[inputHistory.Count - 1].Add(InputKeys.Forward, Convert.ToBoolean(inputHistory[inputHistory.Count - 1][PlaystationInputKeys.Left]));
 				inputHistory[inputHistory.Count - 1].Add(InputKeys.Back, Convert.ToBoolean(inputHistory[inputHistory.Count - 1][PlaystationInputKeys.Right]));

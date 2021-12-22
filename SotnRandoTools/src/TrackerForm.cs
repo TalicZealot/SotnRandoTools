@@ -14,26 +14,20 @@ namespace SotnRandoTools
 	{
 		private readonly IToolConfig toolConfig;
 		private readonly IWatchlistService watchlistService;
-		private readonly IRenderingApi renderingApi;
-		private readonly IGameApi gameApi;
-		private readonly IAlucardApi alucardApi;
+		private readonly ISotnApi sotnApi;
 
 		private GraphicsAdapter? formGraphics;
 		private Graphics? internalGraphics;
 		private ITracker? tracker;
 
-		public TrackerForm(IToolConfig toolConfig, IWatchlistService watchlistService, IRenderingApi renderingApi, IGameApi gameApi, IAlucardApi alucardApi)
+		public TrackerForm(IToolConfig toolConfig, IWatchlistService watchlistService, ISotnApi sotnApi)
 		{
 			if (toolConfig is null) throw new ArgumentNullException(nameof(toolConfig));
 			if (watchlistService is null) throw new ArgumentNullException(nameof(watchlistService));
-			if (renderingApi is null) throw new ArgumentNullException(nameof(renderingApi));
-			if (gameApi is null) throw new ArgumentNullException(nameof(gameApi));
-			if (alucardApi is null) throw new ArgumentNullException(nameof(alucardApi));
+			if (sotnApi is null) throw new ArgumentNullException(nameof(sotnApi));
 			this.toolConfig = toolConfig;
 			this.watchlistService = watchlistService;
-			this.renderingApi = renderingApi;
-			this.gameApi = gameApi;
-			this.alucardApi = alucardApi;
+			this.sotnApi = sotnApi;
 
 			InitializeComponent();
 			SuspendLayout();
@@ -57,7 +51,7 @@ namespace SotnRandoTools
 			this.Location = toolConfig.Tracker.Location;
 			this.internalGraphics = this.CreateGraphics();
 			this.formGraphics = new GraphicsAdapter(internalGraphics);
-			this.tracker = new Tracker(formGraphics, toolConfig, watchlistService, renderingApi, gameApi, alucardApi);
+			this.tracker = new Tracker(formGraphics, toolConfig, watchlistService, sotnApi);
 		}
 
 		private void TrackerForm_Paint(object sender, PaintEventArgs e)
