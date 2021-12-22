@@ -10,11 +10,13 @@ namespace SotnRandoTools.Khaos.Models
 			LocksSpeed = false;
 			LocksMana = false;
 			LocksInvincibility = false;
+			LocksSpawning = false;
 		}
 		public string Name { get; set; }
 		public MethodInvoker Invoker { get; set; }
 		public bool LocksSpeed { get; set; }
 		public bool LocksMana { get; set; }
 		public bool LocksInvincibility { get; set; }
+		public bool LocksSpawning { get; set; }
 	}
 }

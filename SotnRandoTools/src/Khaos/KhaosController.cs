@@ -56,6 +56,8 @@ namespace SotnRandoTools.Khaos
 		private System.Timers.Timer thirstTickTimer = new();
 		private System.Timers.Timer hordeTimer = new();
 		private System.Timers.Timer hordeSpawnTimer = new();
+		private System.Timers.Timer lordTimer = new();
+		private System.Timers.Timer lordSpawnTimer = new();
 		private System.Timers.Timer enduranceSpawnTimer = new();
 		private System.Timers.Timer hnkTimer = new();
 		private System.Timers.Timer vampireTimer = new();
@@ -95,6 +97,12 @@ namespace SotnRandoTools.Khaos
 		private uint hordeTriggerRoomY = 0;
 		private List<Actor> hordeEnemies = new();
 
+		private uint lordZone = 0;
+		private uint lordZone2 = 0;
+		private uint lordTriggerRoomX = 0;
+		private uint lordTriggerRoomY = 0;
+		private List<Actor> lordEnemies = new();
+
 		private int enduranceCount = 0;
 		private uint enduranceRoomX = 0;
 		private uint enduranceRoomY = 0;
@@ -115,6 +123,7 @@ namespace SotnRandoTools.Khaos
 		private bool overdriveOn = false;
 		private bool subweaponsOnlyActive = false;
 		private bool gasCloudTaken = false;
+		private bool spawnActive = false;
 
 		private int slowInterval;
 		private int normalInterval;
@@ -524,6 +533,7 @@ namespace SotnRandoTools.Khaos
 		{
 			hordeTriggerRoomX = sotnApi.GameApi.MapXPos;
 			hordeTriggerRoomY = sotnApi.GameApi.MapYPos;
+			spawnActive = true;
 			bool meterFull = KhaosMeterFull();
 			if (meterFull)
 			{
@@ -932,6 +942,17 @@ namespace SotnRandoTools.Khaos
 			notificationService.AddMessage(message);
 			Alert(toolConfig.Khaos.Actions[27]);
 		}
+		public void Lord(string user = "Khaos")
+		{
+			lordTriggerRoomX = sotnApi.GameApi.MapXPos;
+			lordTriggerRoomY = sotnApi.GameApi.MapYPos;
+
+			lordTimer.Start();
+			lordSpawnTimer.Start();
+			string message = $"{user} activated Lord of this Castle";
+			notificationService.AddMessage(message);
+			Alert(toolConfig.Khaos.Actions[28]);
+		}
 		//TODO: Necromancer
 		//TODO: Turn Undead
 		#endregion
@@ -1173,6 +1194,13 @@ namespace SotnRandoTools.Khaos
 						queuedActions.Add(new QueuedAction { Name = commandAction.Name, LocksSpeed = true, Invoker = new MethodInvoker(() => Haste(user)) });
 					}
 					break;
+				case 28:
+					commandAction = toolConfig.Khaos.Actions[28];
+					if (commandAction.Enabled)
+					{
+						queuedActions.Add(new QueuedAction { Name = commandAction.Name, LocksSpawning = true, Invoker = new MethodInvoker(() => Lord(user)) });
+					}
+					break;
 				default:
 					commandAction = null;
 					break;
@@ -1230,6 +1258,10 @@ namespace SotnRandoTools.Khaos
 			hasteOverdriveTimer.Interval = (2 * 1000);
 			hasteOverdriveOffTimer.Elapsed += OverdriveOff;
 			hasteOverdriveOffTimer.Interval = (2 * 1000);
+			lordTimer.Elapsed += LordOff;
+			lordTimer.Interval = 5 * (60 * 1000);
+			lordSpawnTimer.Elapsed += LordSpawn;
+			lordSpawnTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.KhaosHorde].Interval.TotalMilliseconds;
 		}
 		private void StopTimers()
 		{
@@ -1282,6 +1314,11 @@ namespace SotnRandoTools.Khaos
 							continue;
 						}
 						if (queuedActions[i].LocksInvincibility && invincibilityLocked)
+						{
+							actionUnlocked = false;
+							continue;
+						}
+						if (queuedActions[i].LocksSpawning && spawnActive)
 						{
 							actionUnlocked = false;
 							continue;
@@ -1681,6 +1718,7 @@ namespace SotnRandoTools.Khaos
 		private void HordeOff(Object sender, EventArgs e)
 		{
 			superHorde = false;
+			spawnActive = false;
 			hordeEnemies.RemoveRange(0, hordeEnemies.Count);
 			hordeTimer.Interval = 5 * (60 * 1000);
 			hordeTimer.Stop();
@@ -2068,6 +2106,84 @@ namespace SotnRandoTools.Khaos
 			}
 			overdriveOn = false;
 			hasteOverdriveOffTimer.Stop();
+		}
+		private void LordOff(Object sender, EventArgs e)
+		{
+			spawnActive = false;
+			lordEnemies.RemoveRange(0, hordeEnemies.Count);
+			lordTimer.Interval = 5 * (60 * 1000);
+			lordTimer.Stop();
+			lordSpawnTimer.Stop();
+		}
+		private void LordSpawn(Object sender, EventArgs e)
+		{
+			uint mapX = sotnApi.AlucardApi.MapX;
+			uint mapY = sotnApi.AlucardApi.MapY;
+			bool keepRichterRoom = ((mapX >= 31 && mapX <= 34) && mapY == 8);
+			if (!sotnApi.GameApi.InAlucardMode() || !sotnApi.GameApi.CanMenu() || sotnApi.AlucardApi.CurrentHp < 5 || sotnApi.GameApi.CanSave() || keepRichterRoom)
+			{
+				return;
+			}
+
+			uint zone = sotnApi.GameApi.Zone;
+			uint zone2 = sotnApi.GameApi.Zone2;
+
+			if (lordZone != zone || lordZone2 != zone2 || lordEnemies.Count == 0)
+			{
+				lordEnemies.RemoveRange(0, lordEnemies.Count);
+				FindLordEnemy();
+				lordZone = zone;
+				lordZone2 = zone2;
+			}
+			else if (lordEnemies.Count > 0)
+			{
+				FindLordEnemy();
+				int enemyIndex = rng.Next(0, lordEnemies.Count);
+				if (lordTimer.Interval == 5 * (60 * 1000))
+				{
+					lordTimer.Stop();
+					lordTimer.Interval = toolConfig.Khaos.Actions[14].Duration.TotalMilliseconds;
+
+					ActionTimer timer = new()
+					{
+						Name = toolConfig.Khaos.Actions[28].Name,
+						Duration = toolConfig.Khaos.Actions[28].Duration
+					};
+					statusInfoDisplay.AddTimer(timer);
+					notificationService.AddOverlayTimer(timer.Name, (int) timer.Duration.TotalMilliseconds);
+					lordTimer.Start();
+				}
+				lordEnemies[enemyIndex].Xpos = (ushort) rng.Next(10, 245);
+				lordEnemies[enemyIndex].Ypos = (ushort) rng.Next(10, 245);
+				lordEnemies[enemyIndex].Palette += (ushort) rng.Next(1, 10);
+				sotnApi.ActorApi.SpawnActor(lordEnemies[enemyIndex], false);
+			}
+		}
+		private bool FindLordEnemy()
+		{
+			uint roomX = sotnApi.GameApi.MapXPos;
+			uint roomY = sotnApi.GameApi.MapYPos;
+
+			if ((roomX == lordTriggerRoomX && roomY == lordTriggerRoomY) || !sotnApi.GameApi.InAlucardMode() || !sotnApi.GameApi.CanMenu())
+			{
+				return false;
+			}
+
+			long enemy = sotnApi.ActorApi.FindActorFrom(Constants.Khaos.AcceptedHordeEnemies);
+
+			if (enemy > 0)
+			{
+				Actor? lordEnemy = new Actor(sotnApi.ActorApi.GetActor(enemy));
+
+				if (lordEnemy is not null && lordEnemies.Where(e => e.Sprite == lordEnemy.Sprite).Count() < 1)
+				{
+					lordEnemies.Add(lordEnemy);
+					Console.WriteLine($"Added Lord enemy with hp: {lordEnemy.Hp} sprite: {lordEnemy.Sprite} damage: {lordEnemy.Damage}");
+					return true;
+				}
+			}
+
+			return false;
 		}
 		#endregion
 

@@ -53,7 +53,8 @@ namespace SotnRandoTools.Configuration
 				new Action{Name="Guilty Gear", Enabled = true, Meter = 5, Duration = new System.TimeSpan(0, 1, 0), AlertPath = Paths.DragonInstallSound},
 				new Action{Name="Four Beasts", Enabled = true,  Meter = 10, Duration = new System.TimeSpan(0, 1, 0), Cooldown = new System.TimeSpan(0, 15, 0), StartsOnCooldown = true},
 				new Action{Name="ZA WARUDO", Enabled = true, Meter = 4, Duration = new System.TimeSpan(0, 0, 30), AlertPath = Paths.ZaWarudoSound, Cooldown = new System.TimeSpan(0, 6, 0)},
-				new Action{Name="Haste", Enabled = true, Meter = 6, Duration = new System.TimeSpan(0, 0, 30), Cooldown = new System.TimeSpan(0, 5, 0)}
+				new Action{Name="Haste", Enabled = true, Meter = 6, Duration = new System.TimeSpan(0, 0, 30), Cooldown = new System.TimeSpan(0, 5, 0)},
+				new Action{Name="Lord", Enabled = true, Meter = 8, Duration = new System.TimeSpan(0, 2, 00), Interval = new System.TimeSpan(0, 0, 1), Cooldown = new System.TimeSpan(0, 10, 0)}
 			};
 			LightHelpItemRewards = new string[]
 			{

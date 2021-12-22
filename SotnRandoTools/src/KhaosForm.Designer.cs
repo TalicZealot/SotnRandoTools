@@ -80,6 +80,7 @@ namespace SotnRandoTools
             this.hnkButton = new System.Windows.Forms.Button();
             this.burstButton = new System.Windows.Forms.Button();
             this.autoKhaosButton = new System.Windows.Forms.Button();
+            this.lordButton = new System.Windows.Forms.Button();
             this.modePanel.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.statusPanel.SuspendLayout();
@@ -547,7 +548,7 @@ namespace SotnRandoTools
             this.tabControl1.Location = new System.Drawing.Point(3, 54);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(444, 442);
+            this.tabControl1.Size = new System.Drawing.Size(444, 467);
             this.tabControl1.TabIndex = 6;
             // 
             // statusPanel
@@ -558,7 +559,7 @@ namespace SotnRandoTools
             this.statusPanel.Controls.Add(this.timersBox);
             this.statusPanel.Location = new System.Drawing.Point(4, 22);
             this.statusPanel.Name = "statusPanel";
-            this.statusPanel.Size = new System.Drawing.Size(436, 416);
+            this.statusPanel.Size = new System.Drawing.Size(436, 441);
             this.statusPanel.TabIndex = 2;
             this.statusPanel.Text = "Status Panel";
             // 
@@ -568,7 +569,7 @@ namespace SotnRandoTools
             this.queueBox.ForeColor = System.Drawing.Color.White;
             this.queueBox.Location = new System.Drawing.Point(220, 185);
             this.queueBox.Name = "queueBox";
-            this.queueBox.Size = new System.Drawing.Size(211, 225);
+            this.queueBox.Size = new System.Drawing.Size(211, 250);
             this.queueBox.TabIndex = 3;
             this.queueBox.TabStop = false;
             this.queueBox.Text = "Action Queue";
@@ -585,7 +586,7 @@ namespace SotnRandoTools
             this.queueTextBox.Multiline = true;
             this.queueTextBox.Name = "queueTextBox";
             this.queueTextBox.ReadOnly = true;
-            this.queueTextBox.Size = new System.Drawing.Size(172, 194);
+            this.queueTextBox.Size = new System.Drawing.Size(172, 224);
             this.queueTextBox.TabIndex = 1;
             this.queueTextBox.Text = "\r\n";
             this.queueTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -707,7 +708,7 @@ namespace SotnRandoTools
             this.timersBox.ForeColor = System.Drawing.Color.White;
             this.timersBox.Location = new System.Drawing.Point(5, 185);
             this.timersBox.Name = "timersBox";
-            this.timersBox.Size = new System.Drawing.Size(211, 225);
+            this.timersBox.Size = new System.Drawing.Size(211, 250);
             this.timersBox.TabIndex = 1;
             this.timersBox.TabStop = false;
             this.timersBox.Text = "Active Actions";
@@ -724,7 +725,7 @@ namespace SotnRandoTools
             this.timersTextBox.Multiline = true;
             this.timersTextBox.Name = "timersTextBox";
             this.timersTextBox.ReadOnly = true;
-            this.timersTextBox.Size = new System.Drawing.Size(206, 194);
+            this.timersTextBox.Size = new System.Drawing.Size(206, 224);
             this.timersTextBox.TabIndex = 0;
             this.timersTextBox.Text = "\r\n";
             this.timersTextBox.WordWrap = false;
@@ -732,6 +733,7 @@ namespace SotnRandoTools
             // controlPanel
             // 
             this.controlPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
+            this.controlPanel.Controls.Add(this.lordButton);
             this.controlPanel.Controls.Add(this.hnkButton);
             this.controlPanel.Controls.Add(this.burstButton);
             this.controlPanel.Controls.Add(this.enduranceButton);
@@ -763,7 +765,7 @@ namespace SotnRandoTools
             this.controlPanel.Location = new System.Drawing.Point(4, 22);
             this.controlPanel.Name = "controlPanel";
             this.controlPanel.Padding = new System.Windows.Forms.Padding(3);
-            this.controlPanel.Size = new System.Drawing.Size(436, 416);
+            this.controlPanel.Size = new System.Drawing.Size(436, 441);
             this.controlPanel.TabIndex = 0;
             this.controlPanel.Text = "Control Panel";
             // 
@@ -815,12 +817,28 @@ namespace SotnRandoTools
             this.autoKhaosButton.UseVisualStyleBackColor = true;
             this.autoKhaosButton.Click += new System.EventHandler(this.autoKhaosButton_Click);
             // 
+            // lordButton
+            // 
+            this.lordButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
+            this.lordButton.FlatAppearance.BorderSize = 2;
+            this.lordButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
+            this.lordButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
+            this.lordButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.lordButton.ForeColor = System.Drawing.Color.White;
+            this.lordButton.Location = new System.Drawing.Point(286, 403);
+            this.lordButton.Name = "lordButton";
+            this.lordButton.Size = new System.Drawing.Size(134, 26);
+            this.lordButton.TabIndex = 29;
+            this.lordButton.Text = "Lord";
+            this.lordButton.UseVisualStyleBackColor = true;
+            this.lordButton.Click += new System.EventHandler(this.lordButton_Click);
+            // 
             // KhaosForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
-            this.ClientSize = new System.Drawing.Size(450, 498);
+            this.ClientSize = new System.Drawing.Size(450, 523);
             this.Controls.Add(this.autoKhaosButton);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.startButton);
@@ -900,6 +918,7 @@ namespace SotnRandoTools
 		private System.Windows.Forms.Label toothLocation;
 		private System.Windows.Forms.Button burstButton;
 		private System.Windows.Forms.Button hnkButton;
+		private System.Windows.Forms.Button lordButton;
 	}
 }
 

@@ -577,6 +577,17 @@ namespace SotnRandoTools
 				khaosControler.Haste();
 			}
 		}
+		private void lordButton_Click(object sender, EventArgs e)
+		{
+			if (toolConfig.Khaos.ControlPannelQueueActions)
+			{
+				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = 28, UserName = "Khaos" });
+			}
+			else
+			{
+				khaosControler.Lord();
+			}
+		}
 		#endregion
 
 		private void KhaosForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -589,6 +600,5 @@ namespace SotnRandoTools
 			}
 			khaosControler = null;
 		}
-
 	}
 }
