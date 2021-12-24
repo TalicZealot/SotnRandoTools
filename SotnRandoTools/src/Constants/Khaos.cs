@@ -152,6 +152,87 @@ namespace SotnRandoTools.Constants
 			new SearchableActor {Hp = 9, Damage = 8, Sprite = 7536  },
 			new SearchableActor {Hp = 9, Damage = 2, Sprite = 8684  }
 		};
+		public static List<SearchableActor> AcceptedRomhackHordeEnemies = new List<SearchableActor>
+		{
+			new SearchableActor {Sprite = 25776 },
+			new SearchableActor {Sprite = 25188 },
+			new SearchableActor {Sprite = 23212  },
+			new SearchableActor {Sprite = 42580  },
+			new SearchableActor {Sprite = 4612 },
+			new SearchableActor {Sprite = 14308  },
+			new SearchableActor {Sprite = 31064  },
+			new SearchableActor {Sprite = 24516 },
+			new SearchableActor {Sprite = 26412 },
+			new SearchableActor {Sprite = 17852  },
+			new SearchableActor {Sprite = 46300  },
+			new SearchableActor {Sprite = 48588 },
+			new SearchableActor {Sprite = 30320  },
+			new SearchableActor {Sprite = 26360 },
+			new SearchableActor {Sprite = 48588  },
+			new SearchableActor {Sprite = 51080  },
+			new SearchableActor {Sprite = 52040  },
+			new SearchableActor {Sprite = 54896 },
+			new SearchableActor {Sprite = 14964  },
+			new SearchableActor {Sprite = 60200  },
+			new SearchableActor {Sprite = 22572 },
+			new SearchableActor {Sprite = 49236 },
+			new SearchableActor {Sprite = 772  },
+			new SearchableActor {Sprite = 56172 },
+			new SearchableActor {Sprite = 64000 },
+			new SearchableActor {Sprite = 18916 },
+			new SearchableActor {Sprite = 1432  },
+			new SearchableActor {Sprite = 59616 },
+			new SearchableActor {Sprite = 916  },
+			new SearchableActor {Sprite = 43308 },
+			new SearchableActor {Sprite = 50472 },
+			new SearchableActor {Sprite = 34488 },
+			new SearchableActor {Sprite = 38568 },
+			new SearchableActor {Sprite = 16344  },
+			new SearchableActor {Sprite = 14276 },
+			new SearchableActor {Sprite = 12196  },
+			new SearchableActor {Sprite = 15756 },
+			new SearchableActor {Sprite = 18060 },
+			new SearchableActor {Sprite = 21864 },
+			new SearchableActor {Sprite = 11068 },
+			new SearchableActor {Sprite = 18404 },
+			new SearchableActor {Sprite = 20436 },
+			new SearchableActor {Sprite = 15440 },
+			new SearchableActor {Sprite = 49068 },
+			new SearchableActor {Sprite = 36428 },
+			new SearchableActor {Sprite = 31116 },
+			new SearchableActor {Sprite = 33464 },
+			new SearchableActor {Sprite = 33204 },
+			new SearchableActor {Sprite = 38856 },
+			new SearchableActor {Sprite = 8932 },
+			new SearchableActor {Sprite = 64232 },
+			new SearchableActor {Sprite = 22344 },
+			new SearchableActor {Sprite = 17300 },
+			new SearchableActor {Sprite = 10100 },
+			new SearchableActor {Sprite = 48728 },
+			new SearchableActor {Sprite = 45404 },
+			new SearchableActor {Sprite = 54652 },
+			new SearchableActor {Sprite = 18024 },
+			new SearchableActor {Sprite = 24640 },
+			new SearchableActor {Sprite = 14584 },
+			new SearchableActor {Sprite = 45800 },
+			new SearchableActor {Sprite = 43916 },
+			new SearchableActor {Sprite = 29328 },
+			new SearchableActor {Sprite = 14076 },
+			new SearchableActor {Sprite = 2536 },
+			new SearchableActor {Sprite = 9876 },
+			new SearchableActor {Sprite = 27132 },
+			new SearchableActor {Sprite = 64648 },
+			new SearchableActor {Sprite = 33952 },
+			new SearchableActor {Sprite = 39840 },
+			new SearchableActor {Sprite = 38772 },
+			new SearchableActor {Sprite = 27600 },
+			new SearchableActor {Sprite = 23676 },
+			new SearchableActor {Sprite = 43228 },
+			new SearchableActor {Sprite = 33052 },
+			new SearchableActor {Sprite = 15412 },
+			new SearchableActor {Sprite = 7536  },
+			new SearchableActor {Sprite = 8684  }
+		};
 		public static List<SearchableActor> EnduranceBosses = new List<SearchableActor>
 		{
 			new SearchableActor {Hp = 200, Damage = 6, Sprite = 18296},    // Slogra
@@ -175,6 +256,30 @@ namespace SotnRandoTools.Constants
 			new SearchableActor {Hp = 1200, Damage = 40, Sprite = 16564},  // Akmodan
 			new SearchableActor {Hp = 1000, Damage = 9, Sprite = 30724},   // Sypha
 			new SearchableActor {Hp = 1300, Damage = 40, Sprite = 43772}   // Shaft
+		};
+		public static List<SearchableActor> EnduranceRomhackBosses = new List<SearchableActor>
+		{
+			new SearchableActor {Sprite = 18296},    // Slogra
+			new SearchableActor {Sprite = 22392},    // Gaibon
+			new SearchableActor {Sprite = 14260},    // Doppleganger 10
+			new SearchableActor { Sprite = 9884},    // Minotaur
+			new SearchableActor { Sprite = 14428},   // Werewolf
+			new SearchableActor { Sprite = 56036},   // Lesser Demon
+			new SearchableActor { Sprite = 43920},   // Karasuman
+			//new SearchableActor {Hp = 800, Damage = 18, Sprite = 7188},  // Hippogryph - Can trigger the door closing and locking the player on the wrong side.
+			new SearchableActor { Sprite = 54072},   // Olrox
+			new SearchableActor { Sprite = 8452},    // Succubus
+			new SearchableActor { Sprite = 19772},   // Cerberus
+			//new SearchableActor {Hp = 400, Damage = 30, Sprite = 6264},  // Granfaloon
+			new SearchableActor {Sprite = 27332},   // Richter
+			new SearchableActor {Sprite = 40376},   // Darkwing Bat
+			new SearchableActor { Sprite = 31032},  // Creature
+			new SearchableActor {Sprite = 11664},   // Doppleganger 40
+			new SearchableActor {Sprite = 46380},   // Death
+			new SearchableActor { Sprite = 6044},   // Medusa
+			new SearchableActor { Sprite = 16564},  // Akmodan
+			new SearchableActor {Sprite = 30724},   // Sypha
+			new SearchableActor { Sprite = 43772}   // Shaft
 		};
 		public static SearchableActor GalamothTorsoActor = new SearchableActor { Hp = 12000, Damage = 50, Sprite = 23936 };
 		public static SearchableActor GalamothHeadActor = new SearchableActor { Hp = 32767, Damage = 50, Sprite = 31516 };
@@ -230,5 +335,6 @@ namespace SotnRandoTools.Constants
 		public static float HasteDashFactor = 1.8F;
 		public static int SaveIcosahedronFirstCastle = 0xBCAA;
 		public static int SaveIcosahedronSecondCastle = 0x1150;
+		public static int KhaosActionsCount = 29;
 	}
 }

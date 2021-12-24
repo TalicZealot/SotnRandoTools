@@ -86,9 +86,10 @@ namespace SotnRandoTools.Khaos
 		Cheat hitbox2Height;
 		Cheat invincibilityCheat;
 		Cheat shineCheat;
-		Cheat VisualEffectPaletteCheat;
-		Cheat VisualEffectTimerCheat;
-		Cheat SavePalette;
+		Cheat visualEffectPaletteCheat;
+		Cheat visualEffectTimerCheat;
+		Cheat savePalette;
+		Cheat contactDamage;
 		#endregion
 
 		private uint hordeZone = 0;
@@ -864,7 +865,6 @@ namespace SotnRandoTools.Khaos
 			}
 		}
 		//TODO: Split into a random effect of four, 4B on super
-		//TODO: Add contact damage
 		public void FourBeasts(string user = "Khaos")
 		{
 			invincibilityCheat.PokeValue(1);
@@ -875,6 +875,8 @@ namespace SotnRandoTools.Khaos
 			shineCheat.PokeValue(1);
 			shineCheat.Enable();
 			fourBeastsTimer.Start();
+			contactDamage.PokeValue((int) sotnApi.AlucardApi.Str);
+			contactDamage.Enable();
 
 			notificationService.AddMessage($"{user} used Four Beasts");
 
@@ -946,6 +948,7 @@ namespace SotnRandoTools.Khaos
 		{
 			lordTriggerRoomX = sotnApi.GameApi.MapXPos;
 			lordTriggerRoomY = sotnApi.GameApi.MapYPos;
+			spawnActive = true;
 
 			lordTimer.Start();
 			lordSpawnTimer.Start();
@@ -1317,7 +1320,6 @@ namespace SotnRandoTools.Khaos
 							actionUnlocked = false;
 							continue;
 						}
-						//TODO: fix this
 						if (queuedActions[i].LocksSpawning && spawnActive)
 						{
 							actionUnlocked = false;
@@ -1784,7 +1786,7 @@ namespace SotnRandoTools.Khaos
 				return false;
 			}
 
-			long enemy = sotnApi.ActorApi.FindActorFrom(Constants.Khaos.AcceptedHordeEnemies);
+			long enemy = sotnApi.ActorApi.FindActorFrom(toolConfig.Khaos.RomhackMode ? Constants.Khaos.AcceptedRomhackHordeEnemies : Constants.Khaos.AcceptedHordeEnemies);
 
 			if (enemy > 0)
 			{
@@ -1850,7 +1852,7 @@ namespace SotnRandoTools.Khaos
 		{
 			uint roomX = sotnApi.GameApi.MapXPos;
 			uint roomY = sotnApi.GameApi.MapYPos;
-			float healthMultiplier = 2.5F;
+			float healthMultiplier = 3.5F;
 
 			if ((roomX == enduranceRoomX && roomY == enduranceRoomY) || !sotnApi.GameApi.InAlucardMode() || !sotnApi.GameApi.CanMenu() || sotnApi.AlucardApi.CurrentHp < 5)
 			{
@@ -1859,14 +1861,15 @@ namespace SotnRandoTools.Khaos
 
 			Actor? bossCopy = null;
 
-			long enemy = sotnApi.ActorApi.FindActorFrom(Constants.Khaos.EnduranceBosses);
+			long enemy = sotnApi.ActorApi.FindActorFrom(toolConfig.Khaos.RomhackMode ? Constants.Khaos.EnduranceRomhackBosses : Constants.Khaos.EnduranceBosses);
 			if (enemy > 0)
 			{
 				LiveActor boss = sotnApi.ActorApi.GetLiveActor(enemy);
 				bossCopy = new Actor(sotnApi.ActorApi.GetActor(enemy));
 				Console.WriteLine($"Endurance boss found hp: {bossCopy.Hp}, damage: {bossCopy.Damage}, sprite: {bossCopy.Sprite}");
 
-				bossCopy.Xpos = (ushort) (bossCopy.Xpos + rng.Next(-70, 70));
+				bool right = rng.Next(0, 2) > 0;
+				bossCopy.Xpos = right ? (ushort) (bossCopy.Xpos + rng.Next(40, 80)) : (ushort) (bossCopy.Xpos + rng.Next(-80, -40));
 				bossCopy.Palette = (ushort) (bossCopy.Palette + rng.Next(1, 10));
 				bossCopy.Hp = (ushort) (healthMultiplier * bossCopy.Hp);
 				sotnApi.ActorApi.SpawnActor(bossCopy);
@@ -2035,6 +2038,7 @@ namespace SotnRandoTools.Khaos
 			invincibilityLocked = false;
 			attackPotionCheat.Disable();
 			shineCheat.Disable();
+			contactDamage.Disable();
 			fourBeastsTimer.Stop();
 		}
 		private void ZawarudoOff(Object sender, EventArgs e)
@@ -2096,18 +2100,18 @@ namespace SotnRandoTools.Khaos
 		}
 		private void OverdriveOn(object sender, System.Timers.ElapsedEventArgs e)
 		{
-			VisualEffectPaletteCheat.PokeValue(33126);
-			VisualEffectPaletteCheat.Enable();
-			VisualEffectTimerCheat.PokeValue(30);
-			VisualEffectTimerCheat.Enable();
+			visualEffectPaletteCheat.PokeValue(33126);
+			visualEffectPaletteCheat.Enable();
+			visualEffectTimerCheat.PokeValue(30);
+			visualEffectTimerCheat.Enable();
 			sotnApi.AlucardApi.WingsmashHorizontalSpeed = (uint) (DefaultSpeeds.WingsmashHorizontal * (toolConfig.Khaos.HasteFactor / 1.8));
 			overdriveOn = true;
 			hasteOverdriveTimer.Stop();
 		}
 		private void OverdriveOff(object sender, System.Timers.ElapsedEventArgs e)
 		{
-			VisualEffectPaletteCheat.Disable();
-			VisualEffectTimerCheat.Disable();
+			visualEffectPaletteCheat.Disable();
+			visualEffectTimerCheat.Disable();
 			if (hasteActive)
 			{
 				SetHasteStaticSpeeds(superHaste);
@@ -2181,7 +2185,7 @@ namespace SotnRandoTools.Khaos
 				return false;
 			}
 
-			long enemy = sotnApi.ActorApi.FindActorFrom(Constants.Khaos.AcceptedHordeEnemies);
+			long enemy = sotnApi.ActorApi.FindActorFrom(toolConfig.Khaos.RomhackMode ? Constants.Khaos.AcceptedRomhackHordeEnemies : Constants.Khaos.AcceptedHordeEnemies);
 
 			if (enemy > 0)
 			{
@@ -2216,18 +2220,18 @@ namespace SotnRandoTools.Khaos
 			spriteCardXp.Enable();
 			Cheat noseDevilCardXp = cheats.GetCheatByName("NoseDevilCardXp");
 			noseDevilCardXp.Enable();
-			SavePalette.PokeValue(Constants.Khaos.SaveIcosahedronFirstCastle);
-			SavePalette.Enable();
+			savePalette.PokeValue(Constants.Khaos.SaveIcosahedronFirstCastle);
+			savePalette.Enable();
 		}
 		private void SetSaveColorPalette()
 		{
 			if (alucardSecondCastle)
 			{
-				SavePalette.PokeValue(Constants.Khaos.SaveIcosahedronSecondCastle);
+				savePalette.PokeValue(Constants.Khaos.SaveIcosahedronSecondCastle);
 			}
 			else
 			{
-				SavePalette.PokeValue(Constants.Khaos.SaveIcosahedronFirstCastle);
+				savePalette.PokeValue(Constants.Khaos.SaveIcosahedronFirstCastle);
 			}
 		}
 		private void CheckMainMenu()
@@ -2270,9 +2274,10 @@ namespace SotnRandoTools.Khaos
 			hitbox2Height = cheats.GetCheatByName("AlucardAttackHitbox2Height");
 			invincibilityCheat = cheats.GetCheatByName("Invincibility");
 			shineCheat = cheats.GetCheatByName("Shine");
-			VisualEffectPaletteCheat = cheats.GetCheatByName("VisualEffectPalette");
-			VisualEffectTimerCheat = cheats.GetCheatByName("VisualEffectTimer");
-			SavePalette = cheats.GetCheatByName("SavePalette");
+			visualEffectPaletteCheat = cheats.GetCheatByName("VisualEffectPalette");
+			visualEffectTimerCheat = cheats.GetCheatByName("VisualEffectTimer");
+			savePalette = cheats.GetCheatByName("SavePalette");
+			contactDamage = cheats.GetCheatByName("ContactDamage");
 		}
 		private void OverwriteBossNames(string[] subscribers)
 		{

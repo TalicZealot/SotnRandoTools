@@ -24,38 +24,8 @@ namespace SotnRandoTools.Configuration
 			QueueInterval = new System.TimeSpan(0, 0, 21);
 			DynamicInterval = true;
 			KeepVladRelics = false;
-			Actions = new List<Action>
-			{
-				new Action{Name="Khaos Status", Enabled = true, Meter = 2, AlertPath = Paths.AlucardWhatSound, Cooldown = new System.TimeSpan(0, 0, 0)},
-				new Action{Name="Khaos Equipment", Enabled = true, Meter = 7, AlertPath = Paths.AlucardWhatSound, Cooldown = new System.TimeSpan(0, 15, 0)},
-				new Action{Name="Khaos Stats", Enabled = true, Meter = 8, AlertPath = Paths.AlucardWhatSound, Cooldown = new System.TimeSpan(0, 10, 0)},
-				new Action{Name="Khaos Relics", Enabled = true, Meter = 12, AlertPath = Paths.AlucardWhatSound, Cooldown = new System.TimeSpan(0, 25, 0), StartsOnCooldown = true},
-				new Action{Name="Pandora's Box", Enabled = true, Meter = 15, AlertPath = Paths.AlucardWhatSound, Cooldown = new System.TimeSpan(0, 35, 0), StartsOnCooldown = true },
-				new Action{Name="Gamble", Enabled = true, Meter = 2, AlertPath = Paths.LibrarianThankYouSound, Cooldown = new System.TimeSpan(0, 5, 0)},
-				new Action{Name="Khaotic Burst", Enabled = true, Meter = 10, AlertPath = Paths.AlucardWhatSound, Cooldown = new System.TimeSpan(0, 20, 0)},
-				new Action{Name="Bankrupt", Enabled = true, Meter = 12, AlertPath = Paths.DeathLaughSound, Cooldown = new System.TimeSpan(0, 30, 0), StartsOnCooldown = true},
-				new Action{Name="Weaken", Enabled = true, Meter = 8, AlertPath = Paths.RichterLaughSound, Cooldown = new System.TimeSpan(0, 24, 0)},
-				new Action{Name="Respawn Bosses", Enabled = true, Meter = 3, AlertPath = Paths.DeathLaughSound, Cooldown = new System.TimeSpan(0, 10, 0), StartsOnCooldown = true},
-				new Action{Name="Subweapons Only", Enabled = true, Meter = 4, AlertPath = Paths.RichterLaughSound, Cooldown = new System.TimeSpan(0, 6, 0), Duration = new System.TimeSpan(0, 1, 0)},
-				new Action{Name="Cripple", Enabled = true, Meter = 8, Duration = new System.TimeSpan(0, 0, 30), AlertPath = Paths.DeathLaughSound, Cooldown = new System.TimeSpan(0, 5, 0)},
-				new Action{Name="Blood Mana", Enabled = true, Meter = 4, Duration = new System.TimeSpan(0, 1, 0), AlertPath = Paths.DeathLaughSound, Cooldown = new System.TimeSpan(0, 6, 0)},
-				new Action{Name="Thirst", Enabled = true, Meter = 6, Duration = new System.TimeSpan(0, 1, 0), AlertPath = Paths.DeathLaughSound, Cooldown = new System.TimeSpan(0, 6, 0)},
-				new Action{Name="Khaos Horde", Enabled = true, Meter = 8, Duration = new System.TimeSpan(0, 2, 0), Interval = new System.TimeSpan(0, 0, 1), AlertPath = Paths.RichterLaughSound, Cooldown = new System.TimeSpan(0, 10, 0)},
-				new Action{Name="Endurance", Enabled = true, Meter = 7, AlertPath = Paths.DeathLaughSound, Cooldown = new System.TimeSpan(0, 6, 0)},
-				new Action{Name="HnK", Enabled = true, Meter = 7, AlertPath = Paths.DeathLaughSound, Duration = new System.TimeSpan(0, 1, 0), Cooldown = new System.TimeSpan(0, 6, 0)},
-				new Action{Name="Vampire", Enabled = true,  Meter = 2, Duration = new System.TimeSpan(0, 1, 0), Cooldown = new System.TimeSpan(0, 6, 0)},
-				new Action{Name="Light Help", Enabled = true, Meter = 2, AlertPath = Paths.FairyPotionSound, Cooldown = new System.TimeSpan(0, 0, 0)},
-				new Action{Name="Medium Help", Enabled = true, Meter = 5, AlertPath = Paths.FairyPotionSound, Cooldown = new System.TimeSpan(0, 2, 0)},
-				new Action{Name="Heavy Help", Enabled = true, Meter = 8, AlertPath = Paths.FairyPotionSound, Cooldown = new System.TimeSpan(0, 4, 0)},
-				new Action{Name="Battle Orders", Enabled = true,  Meter = 6, Duration = new System.TimeSpan(0, 1, 0), Cooldown = new System.TimeSpan(0, 6, 0)},
-				new Action{Name="Magician", Enabled = true, Meter = 6, Duration = new System.TimeSpan(0, 1, 0), Cooldown = new System.TimeSpan(0, 6, 0)},
-				new Action{Name="Melty Blood", Enabled = true, Meter = 5, Duration = new System.TimeSpan(0, 1, 0), AlertPath = Paths.MeltySound, Cooldown = new System.TimeSpan(0, 6, 0)},
-				new Action{Name="Guilty Gear", Enabled = true, Meter = 5, Duration = new System.TimeSpan(0, 1, 0), AlertPath = Paths.DragonInstallSound},
-				new Action{Name="Four Beasts", Enabled = true,  Meter = 10, Duration = new System.TimeSpan(0, 1, 0), Cooldown = new System.TimeSpan(0, 15, 0), StartsOnCooldown = true},
-				new Action{Name="ZA WARUDO", Enabled = true, Meter = 4, Duration = new System.TimeSpan(0, 0, 30), AlertPath = Paths.ZaWarudoSound, Cooldown = new System.TimeSpan(0, 6, 0)},
-				new Action{Name="Haste", Enabled = true, Meter = 6, Duration = new System.TimeSpan(0, 0, 30), Cooldown = new System.TimeSpan(0, 5, 0)},
-				new Action{Name="Lord", Enabled = true, Meter = 8, Duration = new System.TimeSpan(0, 1, 30), Interval = new System.TimeSpan(0, 0, 1), Cooldown = new System.TimeSpan(0, 8, 0)}
-			};
+			RomhackMode = false;
+			DefaultActions();
 			LightHelpItemRewards = new string[]
 			{
 				"Leather shield",
@@ -140,5 +110,42 @@ namespace SotnRandoTools.Configuration
 		public string[] LightHelpItemRewards { get; set; }
 		public string[] MediumHelpItemRewards { get; set; }
 		public string[] HeavyHelpItemRewards { get; set; }
+		public bool RomhackMode { get; set; }
+
+		public void DefaultActions()
+		{
+			Actions = new List<Action>
+			{
+				new Action{Name="Khaos Status", Enabled = true, Meter = 2, AlertPath = Paths.AlucardWhatSound, Cooldown = new System.TimeSpan(0, 0, 0)},
+				new Action{Name="Khaos Equipment", Enabled = true, Meter = 7, AlertPath = Paths.AlucardWhatSound, Cooldown = new System.TimeSpan(0, 15, 0)},
+				new Action{Name="Khaos Stats", Enabled = true, Meter = 8, AlertPath = Paths.AlucardWhatSound, Cooldown = new System.TimeSpan(0, 10, 0)},
+				new Action{Name="Khaos Relics", Enabled = true, Meter = 12, AlertPath = Paths.AlucardWhatSound, Cooldown = new System.TimeSpan(0, 25, 0), StartsOnCooldown = true},
+				new Action{Name="Pandora's Box", Enabled = true, Meter = 15, AlertPath = Paths.AlucardWhatSound, Cooldown = new System.TimeSpan(0, 35, 0), StartsOnCooldown = true },
+				new Action{Name="Gamble", Enabled = true, Meter = 2, AlertPath = Paths.LibrarianThankYouSound, Cooldown = new System.TimeSpan(0, 5, 0)},
+				new Action{Name="Khaotic Burst", Enabled = true, Meter = 10, AlertPath = Paths.AlucardWhatSound, Cooldown = new System.TimeSpan(0, 20, 0)},
+				new Action{Name="Bankrupt", Enabled = true, Meter = 12, AlertPath = Paths.DeathLaughSound, Cooldown = new System.TimeSpan(0, 30, 0), StartsOnCooldown = true},
+				new Action{Name="Weaken", Enabled = true, Meter = 8, AlertPath = Paths.RichterLaughSound, Cooldown = new System.TimeSpan(0, 24, 0)},
+				new Action{Name="Respawn Bosses", Enabled = true, Meter = 3, AlertPath = Paths.DeathLaughSound, Cooldown = new System.TimeSpan(0, 10, 0), StartsOnCooldown = true},
+				new Action{Name="Subweapons Only", Enabled = true, Meter = 4, AlertPath = Paths.RichterLaughSound, Cooldown = new System.TimeSpan(0, 6, 0), Duration = new System.TimeSpan(0, 1, 0)},
+				new Action{Name="Cripple", Enabled = true, Meter = 8, Duration = new System.TimeSpan(0, 0, 30), AlertPath = Paths.DeathLaughSound, Cooldown = new System.TimeSpan(0, 5, 0)},
+				new Action{Name="Blood Mana", Enabled = true, Meter = 4, Duration = new System.TimeSpan(0, 1, 0), AlertPath = Paths.DeathLaughSound, Cooldown = new System.TimeSpan(0, 6, 0)},
+				new Action{Name="Thirst", Enabled = true, Meter = 6, Duration = new System.TimeSpan(0, 1, 0), AlertPath = Paths.DeathLaughSound, Cooldown = new System.TimeSpan(0, 6, 0)},
+				new Action{Name="Khaos Horde", Enabled = true, Meter = 8, Duration = new System.TimeSpan(0, 2, 0), Interval = new System.TimeSpan(0, 0, 1), AlertPath = Paths.RichterLaughSound, Cooldown = new System.TimeSpan(0, 10, 0)},
+				new Action{Name="Endurance", Enabled = true, Meter = 7, AlertPath = Paths.DeathLaughSound, Cooldown = new System.TimeSpan(0, 6, 0)},
+				new Action{Name="HnK", Enabled = true, Meter = 7, AlertPath = Paths.DeathLaughSound, Duration = new System.TimeSpan(0, 1, 0), Cooldown = new System.TimeSpan(0, 6, 0)},
+				new Action{Name="Vampire", Enabled = true,  Meter = 2, Duration = new System.TimeSpan(0, 1, 0), Cooldown = new System.TimeSpan(0, 6, 0)},
+				new Action{Name="Light Help", Enabled = true, Meter = 2, AlertPath = Paths.FairyPotionSound, Cooldown = new System.TimeSpan(0, 0, 0)},
+				new Action{Name="Medium Help", Enabled = true, Meter = 5, AlertPath = Paths.FairyPotionSound, Cooldown = new System.TimeSpan(0, 2, 0)},
+				new Action{Name="Heavy Help", Enabled = true, Meter = 8, AlertPath = Paths.FairyPotionSound, Cooldown = new System.TimeSpan(0, 4, 0)},
+				new Action{Name="Battle Orders", Enabled = true,  Meter = 6, Duration = new System.TimeSpan(0, 1, 0), Cooldown = new System.TimeSpan(0, 6, 0)},
+				new Action{Name="Magician", Enabled = true, Meter = 6, Duration = new System.TimeSpan(0, 1, 0), Cooldown = new System.TimeSpan(0, 6, 0)},
+				new Action{Name="Melty Blood", Enabled = true, Meter = 5, Duration = new System.TimeSpan(0, 1, 0), AlertPath = Paths.MeltySound, Cooldown = new System.TimeSpan(0, 6, 0)},
+				new Action{Name="Guilty Gear", Enabled = true, Meter = 5, Duration = new System.TimeSpan(0, 1, 0), AlertPath = Paths.DragonInstallSound},
+				new Action{Name="Four Beasts", Enabled = true,  Meter = 10, Duration = new System.TimeSpan(0, 1, 0), Cooldown = new System.TimeSpan(0, 15, 0), StartsOnCooldown = true},
+				new Action{Name="ZA WARUDO", Enabled = true, Meter = 4, Duration = new System.TimeSpan(0, 0, 30), AlertPath = Paths.ZaWarudoSound, Cooldown = new System.TimeSpan(0, 6, 0)},
+				new Action{Name="Haste", Enabled = true, Meter = 6, Duration = new System.TimeSpan(0, 0, 30), Cooldown = new System.TimeSpan(0, 5, 0)},
+				new Action{Name="Lord", Enabled = true, Meter = 8, Duration = new System.TimeSpan(0, 1, 30), Interval = new System.TimeSpan(0, 0, 1), Cooldown = new System.TimeSpan(0, 8, 0)}
+			};
+		}
 	}
 }

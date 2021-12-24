@@ -94,7 +94,11 @@ namespace SotnRandoTools
 			{
 				string configJson = File.ReadAllText(Paths.ConfigPath);
 				toolConfig = JsonConvert.DeserializeObject<ToolConfig>(configJson,
-					new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace }) ?? new ToolConfig();
+					new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, MissingMemberHandling = MissingMemberHandling.Error }) ?? new ToolConfig();
+				if (toolConfig.Khaos.Actions.Count != Constants.Khaos.KhaosActionsCount)
+				{
+					toolConfig.Khaos.DefaultActions();
+				}
 			}
 			else
 			{
