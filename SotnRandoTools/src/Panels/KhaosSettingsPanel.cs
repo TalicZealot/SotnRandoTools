@@ -9,9 +9,7 @@ namespace SotnRandoTools
 	public partial class KhaosSettingsPanel : UserControl
 	{
 		private readonly IToolConfig? toolConfig;
-		private BindingSource actionsAlertsSource = new();
 		private BindingSource actionSettingsSource = new();
-		private BindingSource actionCooldownsSource = new();
 
 		public KhaosSettingsPanel(IToolConfig toolConfig)
 		{
@@ -39,17 +37,17 @@ namespace SotnRandoTools
 
 			foreach (var action in toolConfig.Khaos.Actions)
 			{
-				actionsAlertsSource.Add(action);
 				actionSettingsSource.Add(action);
-				actionCooldownsSource.Add(action);
 			}
 			alertsGridView.AutoGenerateColumns = false;
-			alertsGridView.DataSource = actionsAlertsSource;
+			alertsGridView.DataSource = actionSettingsSource;
 			alertsGridView.CellClick += AlertsGridView_BrowseClick;
 			actionsGridView.AutoGenerateColumns = false;
 			actionsGridView.DataSource = actionSettingsSource;
 			actionCooldownsGridView.AutoGenerateColumns = false;
-			actionCooldownsGridView.DataSource = actionCooldownsSource;
+			actionCooldownsGridView.DataSource = actionSettingsSource;
+			actionPricingGridView.AutoGenerateColumns = false;
+			actionPricingGridView.DataSource = actionSettingsSource;
 		}
 
 		private void AlertsGridView_BrowseClick(object sender, DataGridViewCellEventArgs e)

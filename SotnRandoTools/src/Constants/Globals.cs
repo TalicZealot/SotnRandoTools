@@ -4,6 +4,7 @@
 	{
 		public const int UpdateCooldownFrames = 8;
 		public const int InputBufferSize = 32;
+		public const int InputBufferSizeDash = 15;
 		public const string Author = "TalicZealot";
 		public const string Website = "https://taliczealot.github.io/";
 		public const string SocketUri = "http://localhost:9646";

@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using BizHawk.Client.Common;
-using Newtonsoft.Json.Linq;
 using SotnApi.Constants.Addresses;
 using SotnApi.Constants.Values.Alucard;
 using SotnApi.Constants.Values.Alucard.Enums;
@@ -14,14 +12,13 @@ using SotnApi.Interfaces;
 using SotnApi.Models;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Constants;
-using SotnRandoTools.Khaos.Enums;
 using SotnRandoTools.Khaos.Interfaces;
 using SotnRandoTools.Khaos.Models;
 using SotnRandoTools.Services;
 using SotnRandoTools.Services.Adapters;
 using SotnRandoTools.Services.Models;
 using SotnRandoTools.Utils;
-using WatsonWebsocket;
+using MapLocation = SotnRandoTools.RandoTracker.Models.MapLocation;
 
 namespace SotnRandoTools.Khaos
 {
@@ -47,7 +44,6 @@ namespace SotnRandoTools.Khaos
 		private uint alucardMapY = 0;
 		private bool alucardSecondCastle = false;
 		private bool inMainMenu = false;
-
 		#region Timers
 		private System.Timers.Timer subweaponsOnlyTimer = new();
 		private System.Timers.Timer crippleTimer = new();
@@ -69,6 +65,7 @@ namespace SotnRandoTools.Khaos
 		private System.Timers.Timer hasteTimer = new();
 		private System.Timers.Timer hasteOverdriveTimer = new();
 		private System.Timers.Timer hasteOverdriveOffTimer = new();
+		private System.Timers.Timer bloodManaDeathTimer = new();
 		#endregion
 		#region Cheats
 		Cheat faerieScroll;
@@ -205,10 +202,11 @@ namespace SotnRandoTools.Khaos
 
 		#region Khaotic Effects
 		//TODO: random action
+		//TODO: select music
 		public void KhaosStatus(string user = "Khaos")
 		{
-			bool entranceCutscene = IsInEntranceCutscene();
-			bool succubusRoom = IsInSuccubusRoom();
+			bool entranceCutscene = IsInRoomList(Constants.Khaos.EntranceCutsceneRooms);
+			bool succubusRoom = IsInRoomList(Constants.Khaos.SuccubusRoom);
 			int min = 1;
 			int max = 9;
 
@@ -465,7 +463,7 @@ namespace SotnRandoTools.Khaos
 			speedLocked = true;
 			SetSpeed(toolConfig.Khaos.CrippleFactor * enhancedFactor);*/
 
-			if (IsInEntranceCutscene())
+			if (IsInRoomList(Constants.Khaos.EntranceCutsceneRooms))
 			{
 				queuedActions.Add(new QueuedAction { Name = toolConfig.Khaos.Actions[11].Name, LocksSpeed = true, Invoker = new MethodInvoker(() => Cripple(user)) });
 			}
@@ -1223,6 +1221,9 @@ namespace SotnRandoTools.Khaos
 			actionTimer.Tick += ExecuteAction;
 			actionTimer.Interval = 2 * (1 * 1000);
 
+			bloodManaDeathTimer.Elapsed += KillAlucard;
+			bloodManaDeathTimer.Interval = 1 * (1 * 1500);
+
 			subweaponsOnlyTimer.Elapsed += SubweaponsOnlyOff;
 			subweaponsOnlyTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.SubweaponsOnly].Duration.TotalMilliseconds;
 			crippleTimer.Elapsed += CrippleOff;
@@ -1296,7 +1297,7 @@ namespace SotnRandoTools.Khaos
 				alucardMapX = sotnApi.AlucardApi.MapX;
 				alucardMapY = sotnApi.AlucardApi.MapY;
 
-				if (sotnApi.GameApi.InAlucardMode() && sotnApi.GameApi.CanMenu() && sotnApi.AlucardApi.CurrentHp > 0 && !sotnApi.GameApi.CanSave() && !IsInKeepRichterRoom() && !IsInLoadingRoom())
+				if (sotnApi.GameApi.InAlucardMode() && sotnApi.GameApi.CanMenu() && sotnApi.AlucardApi.CurrentHp > 0 && !sotnApi.GameApi.CanSave() && !IsInRoomList(Constants.Khaos.RichterRooms) && !IsInRoomList(Constants.Khaos.LoadingRooms))
 				{
 					int index = 0;
 					bool actionUnlocked = true;
@@ -1371,16 +1372,21 @@ namespace SotnRandoTools.Khaos
 			CheckCastleChanged();
 			CheckMainMenu();
 
-			bool keepRichterRoom = IsInKeepRichterRoom();
-			bool galamothRoom = IsInGalamothRoom();
+			bool keepRichterRoom = IsInRoomList(Constants.Khaos.RichterRooms);
+			bool galamothRoom = IsInRoomList(Constants.Khaos.GalamothRooms);
 			if (sotnApi.GameApi.InAlucardMode() && sotnApi.AlucardApi.HasControl() && sotnApi.AlucardApi.HasHitbox() && sotnApi.GameApi.CanMenu() && sotnApi.AlucardApi.CurrentHp > 0 && !sotnApi.GameApi.CanSave()
-				&& !keepRichterRoom && !sotnApi.GameApi.InTransition && !sotnApi.GameApi.IsLoading && !sotnApi.AlucardApi.IsInvincible() && !IsInLoadingRoom() && alucardMapX < 99)
+				&& !keepRichterRoom && !sotnApi.GameApi.InTransition && !sotnApi.GameApi.IsLoading && !sotnApi.AlucardApi.IsInvincible() && !IsInRoomList(Constants.Khaos.LoadingRooms) && alucardMapX < 99)
 			{
 				shaftHpSet = false;
+
 				if (queuedFastActions.Count > 0)
 				{
 					queuedFastActions.Dequeue()();
 				}
+			}
+			if (sotnApi.AlucardApi.CurrentHp == 0)
+			{
+
 			}
 			if (sotnApi.GameApi.InAlucardMode() && sotnApi.GameApi.CanMenu() && sotnApi.AlucardApi.CurrentHp > 0 && !sotnApi.GameApi.CanSave()
 				&& keepRichterRoom && !shaftHpSet && !sotnApi.GameApi.InTransition && !sotnApi.GameApi.IsLoading)
@@ -1598,7 +1604,7 @@ namespace SotnRandoTools.Khaos
 				}
 			}
 
-			if (IsInSwitchRoom())
+			if (IsInRoomList(Constants.Khaos.SwitchRoom))
 			{
 				sotnApi.AlucardApi.GrantRelic(Relic.JewelOfOpen);
 			}
@@ -1690,13 +1696,17 @@ namespace SotnRandoTools.Khaos
 				else
 				{
 					sotnApi.AlucardApi.State = States.Standing;
-					queuedFastActions.Enqueue(new MethodInvoker(() => KillAlucard()));
+					bloodManaDeathTimer.Start();
 				}
 			}
 		}
-		private void KillAlucard()
+		private void KillAlucard(Object sender, EventArgs e)
 		{
-			sotnApi.AlucardApi.State = States.Death;
+			if (sotnApi.AlucardApi.State == States.Standing)
+			{
+				sotnApi.AlucardApi.State = States.Death;
+				bloodManaDeathTimer.Stop();
+			}
 		}
 		private void BloodManaOff(Object sender, EventArgs e)
 		{
@@ -1734,10 +1744,7 @@ namespace SotnRandoTools.Khaos
 		}
 		private void HordeSpawn(Object sender, EventArgs e)
 		{
-			uint mapX = sotnApi.AlucardApi.MapX;
-			uint mapY = sotnApi.AlucardApi.MapY;
-			bool keepRichterRoom = ((mapX >= 31 && mapX <= 34) && mapY == 8);
-			if (!sotnApi.GameApi.InAlucardMode() || !sotnApi.GameApi.CanMenu() || sotnApi.AlucardApi.CurrentHp < 5 || sotnApi.GameApi.CanSave() || keepRichterRoom)
+			if (!sotnApi.GameApi.InAlucardMode() || !sotnApi.GameApi.CanMenu() || sotnApi.AlucardApi.CurrentHp < 5 || sotnApi.GameApi.CanSave() || IsInRoomList(Constants.Khaos.RichterRooms) || IsInRoomList(Constants.Khaos.ShopRoom))
 			{
 				return;
 			}
@@ -2133,10 +2140,7 @@ namespace SotnRandoTools.Khaos
 		}
 		private void LordSpawn(Object sender, EventArgs e)
 		{
-			uint mapX = sotnApi.AlucardApi.MapX;
-			uint mapY = sotnApi.AlucardApi.MapY;
-			bool keepRichterRoom = ((mapX >= 31 && mapX <= 34) && mapY == 8);
-			if (!sotnApi.GameApi.InAlucardMode() || !sotnApi.GameApi.CanMenu() || sotnApi.AlucardApi.CurrentHp < 5 || sotnApi.GameApi.CanSave() || keepRichterRoom)
+			if (!sotnApi.GameApi.InAlucardMode() || !sotnApi.GameApi.CanMenu() || sotnApi.AlucardApi.CurrentHp < 5 || sotnApi.GameApi.CanSave() || IsInRoomList(Constants.Khaos.RichterRooms) || IsInRoomList(Constants.Khaos.ShopRoom))
 			{
 				return;
 			}
@@ -2207,14 +2211,17 @@ namespace SotnRandoTools.Khaos
 		{
 			faerieScroll.Enable();
 			Cheat batCardXp = cheats.GetCheatByName("BatCardXp");
+			batCardXp.PokeValue(10000);
 			batCardXp.Enable();
 			Cheat ghostCardXp = cheats.GetCheatByName("GhostCardXp");
+			ghostCardXp.PokeValue(10000);
 			ghostCardXp.Enable();
 			Cheat faerieCardXp = cheats.GetCheatByName("FaerieCardXp");
 			faerieCardXp.Enable();
 			Cheat demonCardXp = cheats.GetCheatByName("DemonCardXp");
 			demonCardXp.Enable();
 			Cheat swordCardXp = cheats.GetCheatByName("SwordCardXp");
+			swordCardXp.PokeValue(7000);
 			swordCardXp.Enable();
 			Cheat spriteCardXp = cheats.GetCheatByName("SpriteCardXp");
 			spriteCardXp.Enable();
@@ -2295,30 +2302,9 @@ namespace SotnRandoTools.Khaos
 				i++;
 			}
 		}
-		private bool IsInGalamothRoom()
+		private bool IsInRoomList(List<MapLocation> rooms)
 		{
-			return alucardMapX >= Constants.Khaos.GalamothRoomMapMinX && alucardMapX <= Constants.Khaos.GalamothRoomMapMaxX 
-				&& alucardMapY >= Constants.Khaos.GalamothRoomMapMinY && alucardMapY <= Constants.Khaos.GalamothRoomMapMaxY;
-		}
-		private bool IsInKeepRichterRoom()
-		{
-			return alucardMapX >= Constants.Khaos.RichterRoomMapMinX && alucardMapX <= Constants.Khaos.RichterRoomMapMaxX && alucardMapY == Constants.Khaos.RichterRoomMapY;
-		}
-		private bool IsInSuccubusRoom()
-		{
-			return alucardMapX == Constants.Khaos.SuccubusMapX && alucardMapY == Constants.Khaos.SuccubusMapY;
-		}
-		private bool IsInEntranceCutscene()
-		{
-			return alucardMapX >= Constants.Khaos.EntranceCutsceneMapMinX && alucardMapX <= Constants.Khaos.EntranceCutsceneMapMaxX && alucardMapY == Constants.Khaos.EntranceCutsceneMapY;
-		}
-		private bool IsInSwitchRoom()
-		{
-			return alucardMapX == 46 && alucardMapY == 24;
-		}
-		private bool IsInLoadingRoom()
-		{
-			return Constants.Khaos.LoadingRooms.Where(r => r.X == alucardMapX && r.Y == alucardMapY && Convert.ToBoolean(r.SecondCastle) == alucardSecondCastle).FirstOrDefault() is not null;
+			return rooms.Where(r => r.X == alucardMapX && r.Y == alucardMapY && Convert.ToBoolean(r.SecondCastle) == alucardSecondCastle).FirstOrDefault() is not null;
 		}
 		private void SetSpeed(float factor = 1)
 		{

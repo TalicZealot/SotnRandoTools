@@ -18,6 +18,11 @@ namespace SotnRandoTools.Configuration.Models
 		public TimeSpan Interval { get; set; }
 		public TimeSpan Cooldown { get; set; }
 		public DateTime? LastUsedAt { get; set; }
+		public uint Bits { get; set; }
+		public uint KhaosPoints { get; set; }
+		public uint CurrentBits { get; set; }
+		public uint CurrentKhaosPoints { get; set; }
+		public double Scaling { get; set; }
 
 		public bool IsOnCooldown()
 		{

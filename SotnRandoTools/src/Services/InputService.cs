@@ -40,6 +40,7 @@ namespace SotnRandoTools.Services
 		{
 			MotionSequence = new List<Dictionary<string, object>>
 			{
+				new Dictionary<string, object> {[InputKeys.Forward] = false},
 				new Dictionary<string, object> {[InputKeys.Forward] = true},
 				new Dictionary<string, object> {[InputKeys.Forward] = false},
 				new Dictionary<string, object> {[InputKeys.Forward] = true}
@@ -93,7 +94,7 @@ namespace SotnRandoTools.Services
 				moveHistory[moveHistory.Count - 1].Add(InputKeys.HalfCircleForward, false);
 			}
 
-			if (ReadInput(dash, Globals.InputBufferSize))
+			if (ReadInput(dash, Globals.InputBufferSizeDash))
 			{
 				moveHistory[moveHistory.Count - 1].Add(InputKeys.Dash, true);
 			}

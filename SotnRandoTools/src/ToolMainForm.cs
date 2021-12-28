@@ -49,6 +49,9 @@ namespace SotnRandoTools
 		[RequiredApi]
 		private IMemoryApi? _maybeMemAPI { get; set; }
 
+		[RequiredApi]
+		private ISQLiteApi? _maybesQLiteApi { get; set; }
+
 		private ApiContainer? _apis;
 
 		private ApiContainer APIs => _apis ??= new ApiContainer(new Dictionary<Type, IExternalApi>
@@ -59,7 +62,8 @@ namespace SotnRandoTools
 			[typeof(IEmulationApi)] = _maybeEmuAPI ?? throw new NullReferenceException(),
 			[typeof(IGameInfoApi)] = _maybeGameInfoAPI ?? throw new NullReferenceException(),
 			[typeof(IGuiApi)] = _maybeGuiAPI ?? throw new NullReferenceException(),
-			[typeof(IMemoryApi)] = _maybeMemAPI ?? throw new NullReferenceException()
+			[typeof(IMemoryApi)] = _maybeMemAPI ?? throw new NullReferenceException(),
+			[typeof(ISQLiteApi)] = _maybesQLiteApi ?? throw new NullReferenceException(),
 		});
 		private Config GlobalConfig => (_maybeEmuAPI as EmulationApi ?? throw new Exception("required API wasn't fulfilled")).ForbiddenConfigReference;
 
@@ -104,6 +108,7 @@ namespace SotnRandoTools
 			{
 				toolConfig = new ToolConfig();
 			}
+
 		}
 
 		protected override string WindowTitle => _windowTitle;
@@ -148,9 +153,9 @@ namespace SotnRandoTools
 
 			LoadCheats();
 
-			sotnApi = new SotnApi.Main.SotnApi(_maybeMemAPI);
+			sotnApi = new SotnApi.Main.SotnApi(APIs.Memory);
 			watchlistService = new WatchlistService(_memoryDomains, _emu?.SystemId, GlobalConfig);
-			inputService = new InputService(_maybeJoypadApi, sotnApi);
+			inputService = new InputService(APIs.Joypad, sotnApi);
 
 			Console.SetOut(log);
 		}
@@ -283,17 +288,17 @@ namespace SotnRandoTools
 
 		private void multiplayerLaunch_Click(object sender, EventArgs e)
 		{
-			if (coopForm is not null && sotnApi is not null && watchlistService is not null && _maybeJoypadApi is not null)
+			if (coopForm is not null && sotnApi is not null && watchlistService is not null && APIs.Joypad is not null)
 			{
 				CreateNotificationService();
 				coopForm.Close();
-				coopForm = new CoopForm(toolConfig, watchlistService, inputService, sotnApi, _maybeJoypadApi, notificationService);
+				coopForm = new CoopForm(toolConfig, watchlistService, inputService, sotnApi, APIs.Joypad, notificationService);
 				coopForm.Show();
 			}
-			else if (coopForm is null && sotnApi is not null && watchlistService is not null && _maybeJoypadApi is not null)
+			else if (coopForm is null && sotnApi is not null && watchlistService is not null && APIs.Joypad is not null)
 			{
 				CreateNotificationService();
-				coopForm = new CoopForm(toolConfig, watchlistService, inputService, sotnApi, _maybeJoypadApi, notificationService);
+				coopForm = new CoopForm(toolConfig, watchlistService, inputService, sotnApi, APIs.Joypad, notificationService);
 				coopForm.Show();
 			}
 		}
@@ -302,7 +307,7 @@ namespace SotnRandoTools
 		{
 			if (notificationService is null)
 			{
-				notificationService = new NotificationService(toolConfig, _maybeGuiAPI, _maybeClientAPI);
+				notificationService = new NotificationService(toolConfig, APIs.Gui, APIs.EmuClient);
 				khaosSettingsPanel.NotificationService = notificationService;
 			}
 		}

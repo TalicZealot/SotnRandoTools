@@ -23,6 +23,7 @@ namespace SotnRandoTools.Constants
 			new Relic[] {Relic.FormOfMist, Relic.PowerOfMist},
 			new Relic[] {Relic.SoulOfWolf, Relic.GravityBoots},
 		};
+
 		public static List<MapLocation> LoadingRooms = new List<MapLocation>
 		{
 			new MapLocation{X =17,Y = 36, SecondCastle = 0},
@@ -71,6 +72,54 @@ namespace SotnRandoTools.Constants
 			new MapLocation{X =27,Y = 42, SecondCastle = 1},
 			new MapLocation{X =34,Y = 51, SecondCastle = 1},
 		};
+		public static List<MapLocation> SuccubusRoom = new List<MapLocation>
+		{
+			new MapLocation{X = 0, Y = 0, SecondCastle = 0}
+		};
+		public static List<MapLocation> ShopRoom = new List<MapLocation>
+		{
+			new MapLocation{X = 49, Y = 20, SecondCastle = 0}
+		};
+		public static List<MapLocation> RichterRooms = new List<MapLocation>
+		{
+			new MapLocation{X = 31, Y = 8, SecondCastle = 0},
+			new MapLocation{X = 32, Y = 8, SecondCastle = 0},
+			new MapLocation{X = 33, Y = 8, SecondCastle = 0},
+			new MapLocation{X = 34, Y = 8, SecondCastle = 0},
+		};
+		public static List<MapLocation> EntranceCutsceneRooms = new List<MapLocation>
+		{
+			new MapLocation{X = 0, Y = 44, SecondCastle = 0},
+			new MapLocation{X = 2, Y = 44, SecondCastle = 0},
+			new MapLocation{X = 3, Y = 44, SecondCastle = 0},
+			new MapLocation{X = 4, Y = 44, SecondCastle = 0},
+			new MapLocation{X = 5, Y = 44, SecondCastle = 0},
+			new MapLocation{X = 6, Y = 44, SecondCastle = 0},
+			new MapLocation{X = 7, Y = 44, SecondCastle = 0},
+			new MapLocation{X = 8, Y = 44, SecondCastle = 0},
+			new MapLocation{X = 9, Y = 44, SecondCastle = 0},
+			new MapLocation{X = 10, Y = 44, SecondCastle = 0},
+			new MapLocation{X = 11, Y = 44, SecondCastle = 0},
+			new MapLocation{X = 12, Y = 44, SecondCastle = 0},
+			new MapLocation{X = 13, Y = 44, SecondCastle = 0},
+			new MapLocation{X = 14, Y = 44, SecondCastle = 0},
+			new MapLocation{X = 15, Y = 44, SecondCastle = 0},
+			new MapLocation{X = 16, Y = 44, SecondCastle = 0},
+			new MapLocation{X = 17, Y = 44, SecondCastle = 0},
+			new MapLocation{X = 18, Y = 44, SecondCastle = 0},
+		};
+		public static List<MapLocation> SwitchRoom = new List<MapLocation>
+		{
+			new MapLocation{X = 46, Y = 24, SecondCastle = 0}
+		};
+		public static List<MapLocation> GalamothRooms = new List<MapLocation>
+		{
+			new MapLocation{X = 44, Y = 12, SecondCastle = 0},
+			new MapLocation{X = 45, Y = 12, SecondCastle = 0},
+			new MapLocation{X = 44, Y = 13, SecondCastle = 0},
+			new MapLocation{X = 45, Y = 13, SecondCastle = 0},
+		};
+
 		public static List<SearchableActor> AcceptedHordeEnemies = new List<SearchableActor>
 		{
 			new SearchableActor {Hp = 1, Damage = 14, Sprite = 25776 },
@@ -285,6 +334,7 @@ namespace SotnRandoTools.Constants
 		public static SearchableActor GalamothHeadActor = new SearchableActor { Hp = 32767, Damage = 50, Sprite = 31516 };
 		public static SearchableActor GalamothPartsActors = new SearchableActor { Hp = 12000, Damage = 50, Sprite = 31516 };
 		public static SearchableActor ShaftActor = new SearchableActor { Hp = 10, Damage = 0, Sprite = 0 };
+
 		public static string[] BuggyQuickSwapWeapons = {
 			"Shuriken",
 			"Cross shuriken",
@@ -306,6 +356,7 @@ namespace SotnRandoTools.Constants
 			"Estoc",
 			"Shotel"
 		};
+
 		public static int RichterRoomMapMinX = 31;
 		public static int RichterRoomMapMaxX = 34;
 		public static int RichterRoomMapY = 8;
@@ -318,6 +369,9 @@ namespace SotnRandoTools.Constants
 		public static int GalamothRoomMapMaxY = 13;
 		public static int SuccubusMapX = 0;
 		public static int SuccubusMapY = 0;
+		public static int ShopRoomX = 49;
+		public static int ShopRoomY = 20;
+
 		public static float SuperWeakenFactor = 0.5F;
 		public static float SuperCrippleFactor = 0.5F;
 		public static int SlowQueueIntervalEnd = 3;
