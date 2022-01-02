@@ -29,8 +29,6 @@ This tool and the accompanying library and app are open source. The idea is to i
 This tool requires Bizhawk version 2.7 or higher.
 Download the full version from the [latest release](https://github.com/TalicZealot/SotnRandoTools/releases/latest) that looks like this `SotnRandoTools-x.x.x.zip`
 Right click on it and select `Extract all...` then navigate to your BizHawk 2.6+ folder and press `Extract`.
-After that copy the files TwitchLib.Api.dll and TwitchLib.Api.Helix.Models.dll from ```BizHawk\ExternalTools\SotnRandoTools\```
-to ```BizHawk\dll\```.
 File structure should look like this:
 ```
 BizHawk
@@ -38,8 +36,10 @@ BizHawk
 │   │   SotnRandoTools.dll
 │   │
 │   └───SotnRandoTools
-│       │   SotnApi.dll
-│       │   ...
+│   │     │   SotnApi.dll
+│   │     │   ...
+│   └───TwitchLib.Api
+│   └───TwitchLib.Api.Helix.Models
 ```
 
 ## Usage
