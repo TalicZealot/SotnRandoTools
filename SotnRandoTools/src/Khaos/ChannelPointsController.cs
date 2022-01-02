@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using SotnRandoTools.Configuration.Interfaces;
@@ -136,6 +137,7 @@ namespace SotnRandoTools.Khaos
 					{
 						Console.WriteLine(ex.Message);
 						//retry
+						Thread.Sleep(1000);
 						try
 						{
 							CreateCustomRewardsResponse response = await api.Helix.ChannelPoints.CreateCustomRewards(
@@ -171,6 +173,8 @@ namespace SotnRandoTools.Khaos
 				}
 				catch (Exception)
 				{
+					//retry
+					Thread.Sleep(1000);
 					try
 					{
 						await api.Helix.ChannelPoints.DeleteCustomReward(

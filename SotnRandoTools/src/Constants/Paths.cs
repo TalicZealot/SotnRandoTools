@@ -11,6 +11,14 @@
 		public const string MeltySound = "./ExternalTools/SotnRandoTools/Sounds/Melty.mp3";
 		public const string DragonInstallSound = "./ExternalTools/SotnRandoTools/Sounds/DragonInstall.mp3";
 		public const string ZaWarudoSound = "./ExternalTools/SotnRandoTools/Sounds/ZaWarudo.mp3";
+		public const string DeathLaughAlternateSound = "./ExternalTools/SotnRandoTools/Sounds/DeathLaughAlternate.mp3";
+		public const string DieSound = "./ExternalTools/SotnRandoTools/Sounds/Die.mp3";
+		public const string DracLaughSound = "./ExternalTools/SotnRandoTools/Sounds/DracLaugh.mp3";
+		public const string HohoSound = "./ExternalTools/SotnRandoTools/Sounds/Hoho.mp3";
+		public const string SlowWhatSound = "./ExternalTools/SotnRandoTools/Sounds/SlowWhat.mp3";
+		public const string SwordBroSound = "./ExternalTools/SotnRandoTools/Sounds/SwordBro.mp3";
+		public const string AlreadyDeadSound = "./ExternalTools/SotnRandoTools/Sounds/AlreadyDead.mp3";
+		public const string BattleOrdersSound = "./ExternalTools/SotnRandoTools/Sounds/BattleOrders.mp3";
 
 		public const string NamesFilePath = "./ExternalTools/SotnRandoTools/Khaos/names.txt";
 
