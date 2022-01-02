@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using BizHawk.Client.Common;
@@ -17,12 +16,11 @@ using SotnRandoTools.Khaos.Models;
 using SotnRandoTools.Services;
 using SotnRandoTools.Services.Adapters;
 using SotnRandoTools.Services.Models;
-using SotnRandoTools.Utils;
 using MapLocation = SotnRandoTools.RandoTracker.Models.MapLocation;
 
 namespace SotnRandoTools.Khaos
 {
-	public class KhaosController
+	public class KhaosController : IKhaosController
 	{
 		private readonly IToolConfig toolConfig;
 		private readonly ISotnApi sotnApi;
@@ -32,7 +30,7 @@ namespace SotnRandoTools.Khaos
 		private readonly IKhaosActionsInfoDisplay statusInfoDisplay;
 		private Random rng = new Random();
 
-		private string[]? subscribers = {};
+		private string[]? subscribers = { };
 
 		private List<QueuedAction> queuedActions = new();
 		private Queue<MethodInvoker> queuedFastActions = new();
@@ -164,16 +162,8 @@ namespace SotnRandoTools.Khaos
 
 		public void StartKhaos()
 		{
-			if (File.Exists(toolConfig.Khaos.NamesFilePath))
-			{
-				subscribers = FileExtensions.GetLines(toolConfig.Khaos.NamesFilePath);
-			}
 			actionTimer.Start();
 			fastActionTimer.Start();
-			if (subscribers is not null && subscribers.Length > 0)
-			{
-				OverwriteBossNames(subscribers);
-			}
 			StartCheats();
 			DateTime startedAt = DateTime.Now;
 			foreach (var action in toolConfig.Khaos.Actions)
@@ -198,6 +188,22 @@ namespace SotnRandoTools.Khaos
 			notificationService.StopOverlayServer();
 			notificationService.AddMessage($"Khaos stopped");
 			Console.WriteLine("Khaos stopped");
+		}
+		public void OverwriteBossNames(string[] subscribers)
+		{
+			subscribers = subscribers.OrderBy(x => rng.Next()).ToArray();
+			var randomizedBosses = Strings.BossNameAddresses.OrderBy(x => rng.Next());
+			int i = 0;
+			foreach (var boss in randomizedBosses)
+			{
+				if (i == subscribers.Length)
+				{
+					break;
+				}
+				sotnApi.GameApi.OverwriteString(boss.Value, subscribers[i]);
+				Console.WriteLine($"{boss.Key} renamed to {subscribers[i]}");
+				i++;
+			}
 		}
 
 		#region Khaotic Effects
@@ -441,7 +447,7 @@ namespace SotnRandoTools.Khaos
 			subweaponsOnlyTimer.Start();
 			notificationService.AddMessage($"{user} used Subweapons Only");
 
-			ActionTimer timer = new ()
+			ActionTimer timer = new()
 			{
 				Name = toolConfig.Khaos.Actions[10].Name,
 				Duration = toolConfig.Khaos.Actions[10].Duration
@@ -521,7 +527,7 @@ namespace SotnRandoTools.Khaos
 				Name = toolConfig.Khaos.Actions[13].Name,
 				Duration = toolConfig.Khaos.Actions[13].Duration
 			};
-			notificationService.AddOverlayTimer(timer.Name, (int)timer.Duration.TotalMilliseconds);
+			notificationService.AddOverlayTimer(timer.Name, (int) timer.Duration.TotalMilliseconds);
 			statusInfoDisplay.AddTimer(timer);
 
 			string message = meterFull ? $"{user} used Super Thirst" : $"{user} used Thirst";
@@ -793,7 +799,7 @@ namespace SotnRandoTools.Khaos
 
 			sotnApi.AlucardApi.GrantItemByName("Wizard hat");
 			sotnApi.AlucardApi.ActivatePotion(Potion.SmartPotion);
-			manaCheat.PokeValue((int)sotnApi.AlucardApi.MaxtMp);
+			manaCheat.PokeValue((int) sotnApi.AlucardApi.MaxtMp);
 			manaCheat.Enable();
 			manaLocked = true;
 			magicianTimer.Start();
@@ -1717,7 +1723,7 @@ namespace SotnRandoTools.Khaos
 		private void ThirstDrain(Object sender, EventArgs e)
 		{
 			uint superDrain = superThirst ? Constants.Khaos.SuperThirstExtraDrain : 0u;
-			if (sotnApi.AlucardApi.CurrentHp > toolConfig.Khaos.ThirstDrainPerSecond + 1 + + superDrain)
+			if (sotnApi.AlucardApi.CurrentHp > toolConfig.Khaos.ThirstDrainPerSecond + 1 + +superDrain)
 			{
 				sotnApi.AlucardApi.CurrentHp -= (toolConfig.Khaos.ThirstDrainPerSecond + superDrain);
 			}
@@ -1859,7 +1865,7 @@ namespace SotnRandoTools.Khaos
 		{
 			uint roomX = sotnApi.GameApi.MapXPos;
 			uint roomY = sotnApi.GameApi.MapYPos;
-			float healthMultiplier = 3.5F;
+			float healthMultiplier = 4F;
 
 			if ((roomX == enduranceRoomX && roomY == enduranceRoomY) || !sotnApi.GameApi.InAlucardMode() || !sotnApi.GameApi.CanMenu() || sotnApi.AlucardApi.CurrentHp < 5)
 			{
@@ -2285,22 +2291,6 @@ namespace SotnRandoTools.Khaos
 			visualEffectTimerCheat = cheats.GetCheatByName("VisualEffectTimer");
 			savePalette = cheats.GetCheatByName("SavePalette");
 			contactDamage = cheats.GetCheatByName("ContactDamage");
-		}
-		private void OverwriteBossNames(string[] subscribers)
-		{
-			subscribers = subscribers.OrderBy(x => rng.Next()).ToArray();
-			var randomizedBosses = Strings.BossNameAddresses.OrderBy(x => rng.Next());
-			int i = 0;
-			foreach (var boss in randomizedBosses)
-			{
-				if (i == subscribers.Length)
-				{
-					break;
-				}
-				sotnApi.GameApi.OverwriteString(boss.Value, subscribers[i]);
-				Console.WriteLine($"{boss.Key} renamed to {subscribers[i]}");
-				i++;
-			}
 		}
 		private bool IsInRoomList(List<MapLocation> rooms)
 		{

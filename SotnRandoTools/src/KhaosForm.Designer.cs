@@ -81,6 +81,7 @@ namespace SotnRandoTools
             this.hnkButton = new System.Windows.Forms.Button();
             this.burstButton = new System.Windows.Forms.Button();
             this.autoKhaosButton = new System.Windows.Forms.Button();
+            this.connectButton = new System.Windows.Forms.Button();
             this.modePanel.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.statusPanel.SuspendLayout();
@@ -532,6 +533,7 @@ namespace SotnRandoTools
             this.startButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.startButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.startButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.startButton.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.startButton.ForeColor = System.Drawing.Color.White;
             this.startButton.Location = new System.Drawing.Point(3, 9);
             this.startButton.Name = "startButton";
@@ -819,11 +821,13 @@ namespace SotnRandoTools
             // 
             // autoKhaosButton
             // 
+            this.autoKhaosButton.Enabled = false;
             this.autoKhaosButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
             this.autoKhaosButton.FlatAppearance.BorderSize = 2;
             this.autoKhaosButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.autoKhaosButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.autoKhaosButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.autoKhaosButton.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.autoKhaosButton.ForeColor = System.Drawing.Color.White;
             this.autoKhaosButton.Location = new System.Drawing.Point(313, 9);
             this.autoKhaosButton.Name = "autoKhaosButton";
@@ -833,16 +837,37 @@ namespace SotnRandoTools
             this.autoKhaosButton.UseVisualStyleBackColor = true;
             this.autoKhaosButton.Click += new System.EventHandler(this.autoKhaosButton_Click);
             // 
+            // connectButton
+            // 
+            this.connectButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
+            this.connectButton.Enabled = false;
+            this.connectButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
+            this.connectButton.FlatAppearance.BorderSize = 2;
+            this.connectButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
+            this.connectButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
+            this.connectButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.connectButton.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.connectButton.ForeColor = System.Drawing.Color.White;
+            this.connectButton.Location = new System.Drawing.Point(158, 9);
+            this.connectButton.Name = "connectButton";
+            this.connectButton.Size = new System.Drawing.Size(134, 39);
+            this.connectButton.TabIndex = 8;
+            this.connectButton.Text = "Connect to Twitch";
+            this.connectButton.UseVisualStyleBackColor = false;
+            this.connectButton.Click += new System.EventHandler(this.connectButton_Click);
+            // 
             // KhaosForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
             this.ClientSize = new System.Drawing.Size(450, 523);
+            this.Controls.Add(this.connectButton);
             this.Controls.Add(this.autoKhaosButton);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.startButton);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.ForeColor = System.Drawing.Color.White;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -919,6 +944,7 @@ namespace SotnRandoTools
 		private System.Windows.Forms.Button burstButton;
 		private System.Windows.Forms.Button hnkButton;
 		private System.Windows.Forms.Button lordButton;
+		private System.Windows.Forms.Button connectButton;
 	}
 }
 

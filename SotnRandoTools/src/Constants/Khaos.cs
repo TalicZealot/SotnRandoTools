@@ -357,21 +357,6 @@ namespace SotnRandoTools.Constants
 			"Shotel"
 		};
 
-		public static int RichterRoomMapMinX = 31;
-		public static int RichterRoomMapMaxX = 34;
-		public static int RichterRoomMapY = 8;
-		public static int EntranceCutsceneMapMinX = 0;
-		public static int EntranceCutsceneMapMaxX = 18;
-		public static int EntranceCutsceneMapY = 44;
-		public static int GalamothRoomMapMinX = 44;
-		public static int GalamothRoomMapMaxX = 45;
-		public static int GalamothRoomMapMinY = 12;
-		public static int GalamothRoomMapMaxY = 13;
-		public static int SuccubusMapX = 0;
-		public static int SuccubusMapY = 0;
-		public static int ShopRoomX = 49;
-		public static int ShopRoomY = 20;
-
 		public static float SuperWeakenFactor = 0.5F;
 		public static float SuperCrippleFactor = 0.5F;
 		public static int SlowQueueIntervalEnd = 3;

@@ -23,7 +23,6 @@ namespace SotnRandoTools
 		private void KhaosSettingsPanel_Load(object sender, EventArgs e)
 		{
 			alertsCheckbox.Checked = toolConfig.Khaos.Alerts;
-			namesPath.Text = toolConfig.Khaos.NamesFilePath;
 			volumeTrackBar.Value = toolConfig.Khaos.Volume;
 			crippleTextBox.Text = (toolConfig.Khaos.CrippleFactor * 100) + "%";
 			hasteTextBox.Text = (toolConfig.Khaos.HasteFactor * 100) + "%";
@@ -48,6 +47,37 @@ namespace SotnRandoTools
 			actionCooldownsGridView.DataSource = actionSettingsSource;
 			actionPricingGridView.AutoGenerateColumns = false;
 			actionPricingGridView.DataSource = actionSettingsSource;
+			actionPricingGridView.CellValidating += ActionPricingGridView_CellValidating;
+		}
+
+		private void ActionPricingGridView_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
+		{
+			string headerText = actionPricingGridView.Columns[e.ColumnIndex].HeaderText;
+
+			if (!headerText.Equals("Scaling")) return;
+
+			if (string.IsNullOrEmpty(e.FormattedValue.ToString()))
+			{
+				actionPricingGridView.Rows[e.RowIndex].ErrorText =
+					"Company Name must not be empty";
+				e.Cancel = true;
+			}
+			else if (Convert.ToDouble(e.FormattedValue) < 1)
+			{
+				actionPricingGridView.Rows[e.RowIndex].ErrorText =
+					"Scaling cannot be lower than 1.";
+				e.Cancel = true;
+			}
+			else if (Convert.ToDouble(e.FormattedValue) > 10)
+			{
+				actionPricingGridView.Rows[e.RowIndex].ErrorText =
+					"Scaling cannot be higher than 10.";
+				e.Cancel = true;
+			}
+			else {
+				actionPricingGridView.Rows[e.RowIndex].ErrorText = "";
+				e.Cancel = false;
+			}
 		}
 
 		private void AlertsGridView_BrowseClick(object sender, DataGridViewCellEventArgs e)
@@ -79,17 +109,6 @@ namespace SotnRandoTools
 		private void alertsCheckbox_CheckedChanged(object sender, EventArgs e)
 		{
 			toolConfig.Khaos.Alerts = alertsCheckbox.Checked;
-		}
-
-		private void namesBrowseButton_Click(object sender, EventArgs e)
-		{
-			namesFileDialog.ShowDialog();
-		}
-
-		private void namesFileDialog_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
-		{
-			namesPath.Text = namesFileDialog.FileName;
-			toolConfig.Khaos.NamesFilePath = namesFileDialog.FileName;
 		}
 
 		private void crippleTextBox_Validated(object sender, EventArgs e)

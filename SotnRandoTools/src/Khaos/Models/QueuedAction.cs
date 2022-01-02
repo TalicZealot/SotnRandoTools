@@ -1,5 +1,4 @@
 ﻿using System.Windows.Forms;
-using SotnRandoTools.Khaos.Enums;
 
 namespace SotnRandoTools.Khaos.Models
 {

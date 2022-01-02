@@ -49,6 +49,7 @@ namespace SotnRandoTools
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle23 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle24 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle21 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -79,11 +80,6 @@ namespace SotnRandoTools
             this.volumeLabel = new System.Windows.Forms.Label();
             this.volumeTrackBar = new System.Windows.Forms.TrackBar();
             this.alertsCheckbox = new System.Windows.Forms.CheckBox();
-            this.inputTab = new System.Windows.Forms.TabPage();
-            this.namesBox = new System.Windows.Forms.GroupBox();
-            this.namesBrowseButton = new System.Windows.Forms.Button();
-            this.namesPath = new System.Windows.Forms.TextBox();
-            this.namesLabel = new System.Windows.Forms.Label();
             this.alertsTab = new System.Windows.Forms.TabPage();
             this.alertsGridView = new System.Windows.Forms.DataGridView();
             this.ActionName = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -107,15 +103,13 @@ namespace SotnRandoTools
             this.valueToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.bits = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.khaosPoints = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.channelPoints = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.scaling = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.khaosTabs.SuspendLayout();
             this.generalTab.SuspendLayout();
             this.generalSettingsBox.SuspendLayout();
             this.audioBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.volumeTrackBar)).BeginInit();
-            this.inputTab.SuspendLayout();
-            this.namesBox.SuspendLayout();
             this.alertsTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.alertsGridView)).BeginInit();
             this.actionSettings.SuspendLayout();
@@ -163,7 +157,6 @@ namespace SotnRandoTools
             // khaosTabs
             // 
             this.khaosTabs.Controls.Add(this.generalTab);
-            this.khaosTabs.Controls.Add(this.inputTab);
             this.khaosTabs.Controls.Add(this.alertsTab);
             this.khaosTabs.Controls.Add(this.actionSettings);
             this.khaosTabs.Controls.Add(this.actionCooldowns);
@@ -404,61 +397,6 @@ namespace SotnRandoTools
             this.alertsCheckbox.Text = "Enable audio alerts on action activation";
             this.alertsCheckbox.UseVisualStyleBackColor = true;
             this.alertsCheckbox.CheckedChanged += new System.EventHandler(this.alertsCheckbox_CheckedChanged);
-            // 
-            // inputTab
-            // 
-            this.inputTab.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
-            this.inputTab.Controls.Add(this.namesBox);
-            this.inputTab.Location = new System.Drawing.Point(4, 22);
-            this.inputTab.Name = "inputTab";
-            this.inputTab.Size = new System.Drawing.Size(374, 265);
-            this.inputTab.TabIndex = 1;
-            this.inputTab.Text = "Input";
-            // 
-            // namesBox
-            // 
-            this.namesBox.Controls.Add(this.namesBrowseButton);
-            this.namesBox.Controls.Add(this.namesPath);
-            this.namesBox.Controls.Add(this.namesLabel);
-            this.namesBox.ForeColor = System.Drawing.Color.White;
-            this.namesBox.Location = new System.Drawing.Point(3, 13);
-            this.namesBox.Name = "namesBox";
-            this.namesBox.Size = new System.Drawing.Size(362, 61);
-            this.namesBox.TabIndex = 2;
-            this.namesBox.TabStop = false;
-            this.namesBox.Text = "Names";
-            // 
-            // namesBrowseButton
-            // 
-            this.namesBrowseButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
-            this.namesBrowseButton.FlatAppearance.BorderSize = 2;
-            this.namesBrowseButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
-            this.namesBrowseButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
-            this.namesBrowseButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.namesBrowseButton.Font = new System.Drawing.Font("Tahoma", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.namesBrowseButton.Location = new System.Drawing.Point(288, 22);
-            this.namesBrowseButton.Name = "namesBrowseButton";
-            this.namesBrowseButton.Size = new System.Drawing.Size(68, 21);
-            this.namesBrowseButton.TabIndex = 5;
-            this.namesBrowseButton.Text = "Browse...";
-            this.namesBrowseButton.UseVisualStyleBackColor = true;
-            this.namesBrowseButton.Click += new System.EventHandler(this.namesBrowseButton_Click);
-            // 
-            // namesPath
-            // 
-            this.namesPath.Location = new System.Drawing.Point(93, 23);
-            this.namesPath.Name = "namesPath";
-            this.namesPath.Size = new System.Drawing.Size(189, 21);
-            this.namesPath.TabIndex = 4;
-            // 
-            // namesLabel
-            // 
-            this.namesLabel.AutoSize = true;
-            this.namesLabel.Location = new System.Drawing.Point(6, 26);
-            this.namesLabel.Name = "namesLabel";
-            this.namesLabel.Size = new System.Drawing.Size(60, 13);
-            this.namesLabel.TabIndex = 3;
-            this.namesLabel.Text = "Names file:";
             // 
             // alertsTab
             // 
@@ -769,7 +707,7 @@ namespace SotnRandoTools
             this.actionPricingGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.dataGridViewTextBoxColumn5,
             this.bits,
-            this.khaosPoints,
+            this.channelPoints,
             this.scaling});
             dataGridViewCellStyle23.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle23.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
@@ -785,7 +723,15 @@ namespace SotnRandoTools
             this.actionPricingGridView.Location = new System.Drawing.Point(3, 3);
             this.actionPricingGridView.MultiSelect = false;
             this.actionPricingGridView.Name = "actionPricingGridView";
-            this.actionPricingGridView.RowHeadersVisible = false;
+            this.actionPricingGridView.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+            dataGridViewCellStyle24.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle24.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
+            dataGridViewCellStyle24.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle24.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle24.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle24.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle24.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.actionPricingGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle24;
             this.actionPricingGridView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.actionPricingGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.actionPricingGridView.Size = new System.Drawing.Size(368, 259);
@@ -797,21 +743,18 @@ namespace SotnRandoTools
             this.alertFileDialog.Title = "Select Alert Sound File";
             this.alertFileDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.alertFileDialog_FileOk);
             // 
-            // namesFileDialog
-            // 
-            this.namesFileDialog.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
-            this.namesFileDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.namesFileDialog_FileOk);
-            // 
             // dataGridViewTextBoxColumn5
             // 
             this.dataGridViewTextBoxColumn5.DataPropertyName = "Name";
             dataGridViewCellStyle19.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
             dataGridViewCellStyle19.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
             this.dataGridViewTextBoxColumn5.DefaultCellStyle = dataGridViewCellStyle19;
+            this.dataGridViewTextBoxColumn5.FillWeight = 90F;
             this.dataGridViewTextBoxColumn5.HeaderText = "Name";
             this.dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
             this.dataGridViewTextBoxColumn5.ReadOnly = true;
             this.dataGridViewTextBoxColumn5.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridViewTextBoxColumn5.Width = 90;
             // 
             // bits
             // 
@@ -819,36 +762,36 @@ namespace SotnRandoTools
             dataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle20.NullValue = null;
             this.bits.DefaultCellStyle = dataGridViewCellStyle20;
-            this.bits.FillWeight = 90F;
+            this.bits.FillWeight = 70F;
             this.bits.HeaderText = "Bits";
             this.bits.MaxInputLength = 8;
             this.bits.Name = "bits";
             this.bits.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.bits.Width = 90;
+            this.bits.Width = 70;
             // 
-            // khaosPoints
+            // channelPoints
             // 
-            this.khaosPoints.DataPropertyName = "KhaosPoints";
+            this.channelPoints.DataPropertyName = "ChannelPoints";
             dataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.khaosPoints.DefaultCellStyle = dataGridViewCellStyle21;
-            this.khaosPoints.FillWeight = 90F;
-            this.khaosPoints.HeaderText = "Khaos Points";
-            this.khaosPoints.MaxInputLength = 8;
-            this.khaosPoints.Name = "khaosPoints";
-            this.khaosPoints.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.khaosPoints.Width = 90;
+            this.channelPoints.DefaultCellStyle = dataGridViewCellStyle21;
+            this.channelPoints.FillWeight = 90F;
+            this.channelPoints.HeaderText = "Channel Points";
+            this.channelPoints.MaxInputLength = 8;
+            this.channelPoints.Name = "channelPoints";
+            this.channelPoints.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.channelPoints.Width = 90;
             // 
             // scaling
             // 
             this.scaling.DataPropertyName = "Scaling";
             dataGridViewCellStyle22.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
             this.scaling.DefaultCellStyle = dataGridViewCellStyle22;
-            this.scaling.FillWeight = 80F;
+            this.scaling.FillWeight = 60F;
             this.scaling.HeaderText = "Scaling";
             this.scaling.MaxInputLength = 8;
             this.scaling.Name = "scaling";
             this.scaling.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.scaling.Width = 80;
+            this.scaling.Width = 60;
             // 
             // KhaosSettingsPanel
             // 
@@ -871,9 +814,6 @@ namespace SotnRandoTools
             this.audioBox.ResumeLayout(false);
             this.audioBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.volumeTrackBar)).EndInit();
-            this.inputTab.ResumeLayout(false);
-            this.namesBox.ResumeLayout(false);
-            this.namesBox.PerformLayout();
             this.alertsTab.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.alertsGridView)).EndInit();
             this.actionSettings.ResumeLayout(false);
@@ -898,7 +838,6 @@ namespace SotnRandoTools
 		private System.Windows.Forms.CheckBox alertsCheckbox;
 		private System.Windows.Forms.Label volumeLabel;
 		private System.Windows.Forms.TrackBar volumeTrackBar;
-		private System.Windows.Forms.TabPage inputTab;
 		private System.Windows.Forms.TabPage alertsTab;
 		private System.Windows.Forms.TabPage actionSettings;
 		private System.Windows.Forms.OpenFileDialog alertFileDialog;
@@ -917,10 +856,6 @@ namespace SotnRandoTools
 		private System.Windows.Forms.TextBox crippleTextBox;
 		private System.Windows.Forms.TextBox pandoraMaxTextBox;
 		private System.Windows.Forms.TextBox pandoraMinTextBox;
-		private System.Windows.Forms.GroupBox namesBox;
-		private System.Windows.Forms.Button namesBrowseButton;
-		private System.Windows.Forms.TextBox namesPath;
-		private System.Windows.Forms.Label namesLabel;
 		private System.Windows.Forms.OpenFileDialog namesFileDialog;
 		private System.Windows.Forms.ToolTip valueToolTip;
 		private System.Windows.Forms.DataGridView alertsGridView;
@@ -943,7 +878,7 @@ namespace SotnRandoTools
 		private System.Windows.Forms.DataGridView actionPricingGridView;
 		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn5;
 		private System.Windows.Forms.DataGridViewTextBoxColumn bits;
-		private System.Windows.Forms.DataGridViewTextBoxColumn khaosPoints;
+		private System.Windows.Forms.DataGridViewTextBoxColumn channelPoints;
 		private System.Windows.Forms.DataGridViewTextBoxColumn scaling;
 	}
 }

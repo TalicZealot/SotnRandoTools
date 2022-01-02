@@ -120,7 +120,7 @@ namespace SotnRandoTools.RandoTracker
 
 			if (scale - roundedScale < PixelPerfectSnapMargin)
 			{
-				scale = (float)roundedScale;
+				scale = (float) roundedScale;
 			}
 
 			relicSlots = new List<Rectangle>();
@@ -138,7 +138,7 @@ namespace SotnRandoTools.RandoTracker
 					row++;
 					col = 0;
 				}
-				relicSlots.Add(new Rectangle((int)(CellPadding + (col * (ImageSize + CellPadding) * scale)), LabelOffset + (int)(row * (ImageSize + CellPadding) * scale), (int) (ImageSize * scale), (int)(ImageSize * scale)));
+				relicSlots.Add(new Rectangle((int) (CellPadding + (col * (ImageSize + CellPadding) * scale)), LabelOffset + (int) (row * (ImageSize + CellPadding) * scale), (int) (ImageSize * scale), (int) (ImageSize * scale)));
 				col++;
 			}
 

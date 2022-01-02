@@ -539,6 +539,9 @@ namespace SotnRandoTools.RandoTracker
 				case "og":
 					guardedExtension = false;
 					break;
+				case "guarded-og":
+					guardedExtension = true;
+					break;
 				case "bat-master":
 					guardedExtension = false;
 					spreadExtension = true;
@@ -576,7 +579,7 @@ namespace SotnRandoTools.RandoTracker
 			{
 				if (!locations[i].Status && locations[i].SecondCastle == secondCastle)
 				{
-					if (locations[i].SpreadExtension && !spreadExtension)
+					if (locations[i].SpreadExtension && !locations[i].GuardedExtension && !spreadExtension)
 					{
 						continue;
 					}

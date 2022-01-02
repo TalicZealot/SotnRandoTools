@@ -1,5 +1,4 @@
 ﻿using System;
-using SotnRandoTools.Khaos.Enums;
 
 namespace SotnRandoTools.Services.Models
 {

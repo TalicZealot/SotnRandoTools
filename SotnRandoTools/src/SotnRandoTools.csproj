@@ -11,15 +11,17 @@
     <OutputType>Library</OutputType>
     <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
     <AnalysisLevel>5.0</AnalysisLevel>
-    <Version>1.1.2</Version>
+    <Version>1.1.3</Version>
     <Description>A collection of tools to enhance the experience of playign the SotN randomizer.</Description>
     <Copyright />
+    <PackageProjectUrl>https://taliczealot.github.io/</PackageProjectUrl>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <Optimize>true</Optimize>
   </PropertyGroup>
   <ItemGroup>
     <None Remove=".stylecop.json" />
+    <None Remove="Resources\BizAlucard.png" />
   </ItemGroup>
   <ItemGroup>
     <AdditionalFiles Include=".stylecop.json" />
@@ -36,10 +38,16 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\BizAlucard.png" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" PrivateAssets="all" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="SuperSimpleTcp" Version="2.4.0" />
     <PackageReference Include="System.Drawing.Common" Version="5.0.2" />
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+    <PackageReference Include="TwitchLib.Api" Version="3.3.0" />
+    <PackageReference Include="TwitchLib.PubSub" Version="3.2.3" />
     <PackageReference Include="WatsonWebsocket" Version="2.3.0" />
     <Reference Include="BizHawk.Emulation.Common">
       <HintPath>..\BizHawk\dll\BizHawk.Emulation.Common.dll</HintPath>
@@ -48,9 +56,7 @@
     <Reference Include="SotnApi">
       <HintPath>..\BizHawk\ExternalTools\SotnRandoTools\SotnApi.dll</HintPath>
     </Reference>
-    <Reference Include="System.Net.Http">
-      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Net.Http.dll</HintPath>
-    </Reference>
+    <Reference Include="System.Web, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="BizHawk.Client.Common" HintPath="$(ProjectDir)../BizHawk/dll/BizHawk.Client.Common.dll" />
     <Reference Include="BizHawk.Client.EmuHawk" HintPath="$(ProjectDir)../BizHawk/EmuHawk.exe" />

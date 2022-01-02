@@ -58,7 +58,7 @@ namespace SotnRandoTools.Services
 
 		public void UpdateInputs()
 		{
-			inputHistory.Add((Dictionary<string, object>)  joypadApi.Get());
+			inputHistory.Add((Dictionary<string, object>) joypadApi.Get());
 			if (inputHistory.Count > 120)
 			{
 				inputHistory.RemoveAt(0);

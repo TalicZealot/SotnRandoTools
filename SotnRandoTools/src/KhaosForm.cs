@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using BizHawk.Client.Common;
 using SotnApi.Interfaces;
 using SotnRandoTools.Configuration.Interfaces;
+using SotnRandoTools.Constants;
 using SotnRandoTools.Khaos;
 using SotnRandoTools.Khaos.Interfaces;
 using SotnRandoTools.Khaos.Models;
@@ -19,8 +20,10 @@ namespace SotnRandoTools
 	public partial class KhaosForm : Form, IKhaosActionsInfoDisplay, INotifyPropertyChanged, IVladRelicLocationDisplay
 	{
 		private readonly ICheatCollectionAdapter adaptedCheats;
-		private KhaosController? khaosControler;
 		private readonly IToolConfig toolConfig;
+		private KhaosController? khaosControler;
+		private TwitchListener? twitchListener;
+		private ChannelPointsController? channelPointsController;
 		private List<ActionTimer> actionTimers = new();
 		private System.Timers.Timer countdownTimer;
 		private string heartOfVladLocation;
@@ -29,6 +32,7 @@ namespace SotnRandoTools
 		private string ringOfVladLocation;
 		private string eyeOfVladLocation;
 		private bool started = false;
+		private bool connected = false;
 
 		public KhaosForm(IToolConfig toolConfig, CheatCollection cheats, ISotnApi sotnApi, INotificationService notificationService, IInputService inputService)
 		{
@@ -40,6 +44,8 @@ namespace SotnRandoTools
 
 			adaptedCheats = new CheatCollectionAdapter(cheats);
 			khaosControler = new KhaosController(toolConfig, sotnApi, adaptedCheats, notificationService, inputService, this);
+			twitchListener = new TwitchListener(Paths.TwitchRedirectUri);
+			channelPointsController = new ChannelPointsController(toolConfig, twitchListener, khaosControler);
 
 			InitializeComponent();
 			SuspendLayout();
@@ -236,13 +242,29 @@ namespace SotnRandoTools
 				khaosControler.StopKhaos();
 				startButton.Text = "Start";
 				startButton.BackColor = System.Drawing.Color.FromArgb(17, 0, 17);
+				startButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(48, 20, 48);
+				connectButton.Enabled = false;
+				connectButton.Text = "Connect to Twitch";
+				if (connected)
+				{
+					var result = channelPointsController.Disconnect();
+					connected = false;
+				}
+				autoKhaosButton.Enabled = false;
+				khaosControler.AutoKhaosOn = false;
+				autoKhaosButton.Text = "Start Auto Khaos";
+				autoKhaosButton.BackColor = System.Drawing.Color.FromArgb(17, 0, 17);
+				autoKhaosButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(48, 20, 48);
 			}
 			else
 			{
 				started = true;
 				khaosControler.StartKhaos();
 				startButton.Text = "Stop";
-				startButton.BackColor = System.Drawing.Color.FromArgb(169, 19, 7);
+				startButton.BackColor = System.Drawing.Color.FromArgb(114, 32, 25);
+				startButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(169, 19, 7);
+				connectButton.Enabled = true;
+				autoKhaosButton.Enabled = true;
 			}
 		}
 		private void autoKhaosButton_Click(object sender, EventArgs e)
@@ -252,12 +274,33 @@ namespace SotnRandoTools
 				khaosControler.AutoKhaosOn = false;
 				autoKhaosButton.Text = "Start Auto Khaos";
 				autoKhaosButton.BackColor = System.Drawing.Color.FromArgb(17, 0, 17);
+				autoKhaosButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(48, 20, 48);
 			}
 			else
 			{
 				khaosControler.AutoKhaosOn = true;
 				autoKhaosButton.Text = "Stop Auto Khaos";
-				autoKhaosButton.BackColor = System.Drawing.Color.FromArgb(72, 81, 118);
+				autoKhaosButton.BackColor = System.Drawing.Color.FromArgb(62, 68, 91);
+				autoKhaosButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(72, 81, 118);
+			}
+		}
+		private void connectButton_Click(object sender, EventArgs e)
+		{
+			if (connected)
+			{
+				connectButton.Text = "Connect to Twitch";
+				var result = channelPointsController.Disconnect();
+				connected = false;
+				connectButton.BackColor = System.Drawing.Color.FromArgb(17, 0, 17);
+				connectButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(48, 20, 48);
+			}
+			else
+			{
+				connectButton.Text = "Disonnect";
+				channelPointsController.Connect();
+				connected = true;
+				connectButton.BackColor = System.Drawing.Color.FromArgb(93, 56, 147);
+				connectButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(145, 70, 255);
 			}
 		}
 
@@ -596,9 +639,20 @@ namespace SotnRandoTools
 			{
 				started = false;
 				khaosControler.StopKhaos();
-				startButton.Text = "Start";
 			}
-			khaosControler = null;
+			startButton.Text = "Start";
+			startButton.BackColor = System.Drawing.Color.FromArgb(17, 0, 17);
+			connectButton.Enabled = false;
+			connectButton.Text = "Connect to Twitch";
+			if (connected)
+			{
+				var resultCtr = channelPointsController.Disconnect();
+				connected = false;
+			};
+			autoKhaosButton.Enabled = false;
+			khaosControler.AutoKhaosOn = false;
+			autoKhaosButton.Text = "Start Auto Khaos";
+			autoKhaosButton.BackColor = System.Drawing.Color.FromArgb(17, 0, 17);
 		}
 	}
 }

@@ -49,7 +49,7 @@ namespace SotnRandoTools.Services
 				Console.WriteLine("Points: " + points);
 				return points;
 			}
-			else 
+			else
 			{
 				return 0;
 			}
