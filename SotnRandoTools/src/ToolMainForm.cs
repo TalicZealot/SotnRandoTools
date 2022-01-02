@@ -19,22 +19,22 @@ namespace SotnRandoTools
 		Description = "A collection of tools to enhance the SotN randomizer experience.",
 		LoadAssemblyFiles = new[]
 		{
-			"./SotnRandoTools/TwitchLib.Api.Helix.Models.dll",
-			"./SotnRandoTools/TwitchLib.Api.dll",
-			"./SotnRandoTools/SotnApi.dll",
-			"./SotnRandoTools/SimpleTCP.dll",
-			"./SotnRandoTools/WatsonWebsocket.dll",
-			"./SotnRandoTools/Microsoft.Extensions.Logging.Abstractions.dll",
-			"./SotnRandoTools/System.Net.Http.dll",
-			"./SotnRandoTools/TwitchLib.Api.Core.Interfaces.dll",
-			"./SotnRandoTools/TwitchLib.Api.Core.Enums.dll",
-			"./SotnRandoTools/TwitchLib.Api.Core.Models.dll",
-			"./SotnRandoTools/TwitchLib.Api.Core.dll",
-			"./SotnRandoTools/TwitchLib.Api.Helix.dll",
-			"./SotnRandoTools/TwitchLib.Api.V5.Models.dll",
-			"./SotnRandoTools/TwitchLib.Api.V5.dll",
-			"./SotnRandoTools/TwitchLib.Communication.dll",
-			"./SotnRandoTools/TwitchLib.PubSub.dll"
+			"SotnRandoTools/SotnApi.dll",
+			"SotnRandoTools/SimpleTCP.dll",
+			"SotnRandoTools/WatsonWebsocket.dll",
+			"SotnRandoTools/Microsoft.Extensions.Logging.Abstractions.dll",
+			"SotnRandoTools/System.Net.Http.dll",
+			"SotnRandoTools/TwitchLib.Api.Core.Enums.dll",
+			"SotnRandoTools/TwitchLib.Api.Core.Interfaces.dll",
+			"SotnRandoTools/TwitchLib.Api.Helix.Models.dll",
+			"SotnRandoTools/TwitchLib.Api.Core.Models.dll",
+			"SotnRandoTools/TwitchLib.Api.Core.dll",
+			"SotnRandoTools/TwitchLib.Api.Helix.dll",
+			"SotnRandoTools/TwitchLib.Api.V5.Models.dll",
+			"SotnRandoTools/TwitchLib.Api.V5.dll",
+			"SotnRandoTools/TwitchLib.Communication.dll",
+			"SotnRandoTools/TwitchLib.Api.dll",
+			"SotnRandoTools/TwitchLib.PubSub.dll"
 		})]
 	[ExternalToolEmbeddedIcon("SotnRandoTools.Resources.BizAlucard.png")]
 	//TODO: Revert after BIzhawk 2.7.1 releases

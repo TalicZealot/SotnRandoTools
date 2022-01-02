@@ -27,6 +27,7 @@ namespace SotnRandoTools.Khaos
 		private TwitchAPI api = new TwitchAPI();
 		private TwitchPubSub client = new TwitchPubSub();
 		private string broadcasterId;
+		private string refreshToken;
 		private List<string> customRewardIds = new();
 
 		public ChannelPointsController(IToolConfig toolConfig, ITwitchListener twitchListener, IKhaosController khaosController)
@@ -48,6 +49,7 @@ namespace SotnRandoTools.Khaos
 			var auth = await twitchListener.Listen();
 			var resp = await api.Auth.GetAccessTokenFromCodeAsync(auth.Code, TwitchConfiguration.TwitchClientSecret, Paths.TwitchRedirectUri);
 			api.Settings.AccessToken = resp.AccessToken;
+			refreshToken = resp.RefreshToken;
 
 			var user = (await api.Helix.Users.GetUsersAsync()).Users[0];
 			broadcasterId = user.Id;
@@ -137,11 +139,12 @@ namespace SotnRandoTools.Khaos
 			return true;
 		}
 
+		//No need to refresh for now, as a normal Khaos session wouldn't last 4 hours.
 		private async void RefreshToken()
 		{
 			try
 			{
-				var refresh = await api.Auth.RefreshAuthTokenAsync(api.Settings.AccessToken, TwitchConfiguration.TwitchClientSecret);
+				var refresh = await api.Auth.RefreshAuthTokenAsync(refreshToken, TwitchConfiguration.TwitchClientSecret, api.Settings.ClientId);
 				api.Settings.AccessToken = refresh.AccessToken;
 			}
 			catch (Exception ex)
