@@ -76,14 +76,22 @@ namespace SotnRandoTools.Khaos
 		private async Task<bool> GetSubscribers()
 		{
 			Console.WriteLine($"Fetching subscribers...");
-			var subs = await api.Helix.Subscriptions.GetBroadcasterSubscriptions(
+
+			try
+			{
+				var subs = await api.Helix.Subscriptions.GetBroadcasterSubscriptions(
 				broadcasterId,
 				null,
 				100,
 				api.Settings.AccessToken
 				);
+				khaosController.OverwriteBossNames(subs.Data.Select(u => u.UserName).ToArray());
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
+			}
 
-			khaosController.OverwriteBossNames(subs.Data.Select(u => u.UserName).ToArray());
 			return true;
 		}
 
@@ -94,6 +102,7 @@ namespace SotnRandoTools.Khaos
 			{
 				if (action.IsUsable && action.ChannelPoints > 0)
 				{
+
 					CreateCustomRewardsRequest request = new CreateCustomRewardsRequest
 					{
 						Title = action.Name,
@@ -112,13 +121,36 @@ namespace SotnRandoTools.Khaos
 
 					Console.WriteLine($"Request parameters: Title: {request.Title} Cost: {request.Cost} CdEn: {request.IsGlobalCooldownEnabled} Cd: {request.GlobalCooldownSeconds}");
 
-					CreateCustomRewardsResponse response = await api.Helix.ChannelPoints.CreateCustomRewards(
-					broadcasterId,
-					request,
-					api.Settings.AccessToken
-					);
+					
 
-					customRewardIds.Add(response.Data[0].Id);
+					try
+					{
+						CreateCustomRewardsResponse response = await api.Helix.ChannelPoints.CreateCustomRewards(
+						broadcasterId,
+						request,
+						api.Settings.AccessToken
+						);
+						customRewardIds.Add(response.Data[0].Id);
+					}
+					catch (Exception ex)
+					{
+						Console.WriteLine(ex.Message);
+						//retry
+						try
+						{
+							CreateCustomRewardsResponse response = await api.Helix.ChannelPoints.CreateCustomRewards(
+							broadcasterId,
+							request,
+							api.Settings.AccessToken
+							);
+							customRewardIds.Add(response.Data[0].Id);
+						}
+						catch (Exception ex2)
+						{
+							throw new Exception("Server error while creating Rewards. Please click Continue, then Disconnect and Reconnect.", ex2);
+						}
+					}
+
 				}
 			}
 			return true;
@@ -129,11 +161,29 @@ namespace SotnRandoTools.Khaos
 			Console.WriteLine($"Deleting rewards...");
 			for (int i = 0; i < customRewardIds.Count; i++)
 			{
-				await api.Helix.ChannelPoints.DeleteCustomReward(
-				broadcasterId,
-				customRewardIds[i],
-				api.Settings.AccessToken
-				);
+				try
+				{
+					await api.Helix.ChannelPoints.DeleteCustomReward(
+					broadcasterId,
+					customRewardIds[i],
+					api.Settings.AccessToken
+					);
+				}
+				catch (Exception)
+				{
+					try
+					{
+						await api.Helix.ChannelPoints.DeleteCustomReward(
+						broadcasterId,
+						customRewardIds[i],
+						api.Settings.AccessToken
+					);
+					}
+					catch (Exception ex)
+					{
+						throw new Exception("Server error while deleting Rewards. Please delete the remainint rewards from the  Dashboard.", ex);
+					}
+				}
 			}
 
 			return true;
