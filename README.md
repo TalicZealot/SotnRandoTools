@@ -61,7 +61,7 @@ Bindings over at: [https://taliczealot.github.io/coop/](https://taliczealot.gith
 ## Khaos-Setup
 Inside the folder ```BizHawk\ExternalTools\SotnRandoTools\Khaos\Overlay\``` you will find ```action-queue.html``` and ```timers.html``` which you can add in OBS as web sources.
 After starting Khaos you will be able to connect to Twitch and start Auto Khaos.
-* Clickign "Connect to Twitch" will take you to a website to confirm that you allow SotN Rando Tools to manage Channel Points and see your subscribers. After accepting it will create custom Channel Point rewards for every action and listen for redemptions. Whne you disconnect or close Khaos the Custom Rewards should get deleted. For now the rewards get automatically set to fulfilled, in the future I may opt to leave them in case the streamer wants to refund some things.
+* Clickign "Connect to Twitch" will take you to a website to confirm that you allow SotN Rando Tools to manage Channel Points and see your subscribers. After accepting it will create custom Channel Point rewards for every action and listen for redemptions. When you disconnect or close Khaos the Custom Rewards should get deleted. (Please wait for about 20 seconds for all the rewards to get deleted by the API) For now the rewards get automatically set to fulfilled, in the future I may opt to leave them in case the streamer wants to refund some things.
 * Auto Khaos automatically activates random actions periodically, adhering to the cooldowns.
 
 ## Useful links
