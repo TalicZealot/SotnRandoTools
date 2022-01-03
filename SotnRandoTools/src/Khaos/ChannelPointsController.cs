@@ -120,7 +120,7 @@ namespace SotnRandoTools.Khaos
 						request.GlobalCooldownSeconds = (int) action.Cooldown.TotalSeconds;
 					}
 
-					Console.WriteLine($"Request parameters: Title: {request.Title} Cost: {request.Cost} CdEn: {request.IsGlobalCooldownEnabled} Cd: {request.GlobalCooldownSeconds}");
+					Console.WriteLine($"Request parameters: Title: {request.Title} Cost: {request.Cost} Cooldown: {request.GlobalCooldownSeconds}");
 
 					
 
@@ -163,6 +163,7 @@ namespace SotnRandoTools.Khaos
 			Console.WriteLine($"Deleting rewards...");
 			for (int i = 0; i < customRewardIds.Count; i++)
 			{
+				Console.WriteLine($"Deleting reward with id: {customRewardIds[i]}");
 				try
 				{
 					await api.Helix.ChannelPoints.DeleteCustomReward(
