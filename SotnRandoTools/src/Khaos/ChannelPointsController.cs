@@ -21,7 +21,8 @@ namespace SotnRandoTools.Khaos
 {
 	public class ChannelPointsController
 	{
-		private const int RetryCount = 4;
+		private const int RetryBaseMs = 20;
+		private const int RetryCount = 3;
 		private readonly IToolConfig toolConfig;
 		private readonly ITwitchListener twitchListener;
 		private readonly IKhaosController khaosController;
@@ -147,7 +148,7 @@ namespace SotnRandoTools.Khaos
 							else
 							{
 								Console.WriteLine(ex.Message);
-								Thread.Sleep((int)Math.Pow(500, i));
+								await Task.Delay((int) Math.Pow(RetryBaseMs, i));
 							}
 						}
 					}
@@ -172,7 +173,8 @@ namespace SotnRandoTools.Khaos
 						broadcasterId,
 						customRewardIds[i],
 						api.Settings.AccessToken
-					);
+						);
+						break;
 					}
 					catch (Exception ex)
 					{
@@ -183,7 +185,7 @@ namespace SotnRandoTools.Khaos
 						else
 						{
 							Console.WriteLine(ex.Message);
-							Thread.Sleep((int) Math.Pow(500, j));
+							await Task.Delay((int) Math.Pow(RetryBaseMs, j));
 						}
 					}
 				}
@@ -236,7 +238,11 @@ namespace SotnRandoTools.Khaos
 			}
 			if (action.MaximumChannelPoints != 0 && toolConfig.Khaos.CostDecay && e.RewardRedeemed.Redemption.Reward.Cost == action.MaximumChannelPoints)
 			{
-				NewCost = (int) action.MaximumChannelPoints / 2;
+				NewCost = (int) Math.Round(action.MaximumChannelPoints * 0.2);
+				if (NewCost < action.ChannelPoints)
+				{
+					NewCost = (int)action.ChannelPoints;
+				}
 			}
 
 			await api.Helix.ChannelPoints.UpdateCustomReward(
@@ -262,7 +268,7 @@ namespace SotnRandoTools.Khaos
 			client.SendTopics(api.Settings.AccessToken);
 		}
 
-		private void Client_OnPubSubServiceClosed(object sender, EventArgs e)
+		private async void Client_OnPubSubServiceClosed(object sender, EventArgs e)
 		{
 			for (int i = 0; i <= RetryCount; i++)
 			{
@@ -279,7 +285,7 @@ namespace SotnRandoTools.Khaos
 					else
 					{
 						Console.WriteLine(ex.Message);
-						Thread.Sleep((int) Math.Pow(500, i));
+						await Task.Delay((int) Math.Pow(RetryBaseMs, i));
 					}
 					throw;
 				}

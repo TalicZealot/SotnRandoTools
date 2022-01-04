@@ -216,7 +216,8 @@ namespace SotnRandoTools
             this.costDecayCheckBox.Size = new System.Drawing.Size(81, 17);
             this.costDecayCheckBox.TabIndex = 16;
             this.costDecayCheckBox.Text = "Cost Decay";
-            this.valueToolTip.SetToolTip(this.costDecayCheckBox, "If the cost is at maximum and gets redeemed it will go to 50% of max.");
+            this.valueToolTip.SetToolTip(this.costDecayCheckBox, "If the cost is at maximum and gets redeemed it will go to 20% of max or the defau" +
+        "lt.");
             this.costDecayCheckBox.UseVisualStyleBackColor = true;
             this.costDecayCheckBox.CheckedChanged += new System.EventHandler(this.costDecayCheckBox_CheckedChanged);
             // 
