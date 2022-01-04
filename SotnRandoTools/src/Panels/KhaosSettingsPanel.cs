@@ -31,6 +31,7 @@ namespace SotnRandoTools
 			queueTextBox.Text = toolConfig.Khaos.QueueInterval.ToString();
 			dynamicIntervalCheckBox.Checked = toolConfig.Khaos.DynamicInterval;
 			keepVladRelicsCheckbox.Checked = toolConfig.Khaos.KeepVladRelics;
+			costDecayCheckBox.Checked = toolConfig.Khaos.CostDecay;
 			pandoraMinTextBox.Text = toolConfig.Khaos.PandoraMinItems.ToString();
 			pandoraMaxTextBox.Text = toolConfig.Khaos.PandoraMaxItems.ToString();
 
@@ -52,31 +53,48 @@ namespace SotnRandoTools
 
 		private void ActionPricingGridView_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
 		{
-			string headerText = actionPricingGridView.Columns[e.ColumnIndex].HeaderText;
+			string property = actionPricingGridView.Columns[e.ColumnIndex].DataPropertyName;
 
-			if (!headerText.Equals("Scaling")) return;
-
-			if (string.IsNullOrEmpty(e.FormattedValue.ToString()))
+			if (property.Equals("Scaling"))
 			{
-				actionPricingGridView.Rows[e.RowIndex].ErrorText =
-					"Company Name must not be empty";
-				e.Cancel = true;
+				if (string.IsNullOrEmpty(e.FormattedValue.ToString()))
+				{
+					actionPricingGridView.Rows[e.RowIndex].ErrorText =
+						"Scaling must not be empty.";
+					e.Cancel = true;
+				}
+				else if (Convert.ToDouble(e.FormattedValue) < 1)
+				{
+					actionPricingGridView.Rows[e.RowIndex].ErrorText =
+						"Scaling cannot be lower than 1.";
+					e.Cancel = true;
+				}
+				else if (Convert.ToDouble(e.FormattedValue) > 10)
+				{
+					actionPricingGridView.Rows[e.RowIndex].ErrorText =
+						"Scaling cannot be higher than 10.";
+					e.Cancel = true;
+				}
+				else
+				{
+					actionPricingGridView.Rows[e.RowIndex].ErrorText = "";
+					e.Cancel = false;
+				}
 			}
-			else if (Convert.ToDouble(e.FormattedValue) < 1)
+			else if (property.Equals("MaximumChannelPoints"))
 			{
-				actionPricingGridView.Rows[e.RowIndex].ErrorText =
-					"Scaling cannot be lower than 1.";
-				e.Cancel = true;
-			}
-			else if (Convert.ToDouble(e.FormattedValue) > 10)
-			{
-				actionPricingGridView.Rows[e.RowIndex].ErrorText =
-					"Scaling cannot be higher than 10.";
-				e.Cancel = true;
-			}
-			else {
-				actionPricingGridView.Rows[e.RowIndex].ErrorText = "";
-				e.Cancel = false;
+				if (string.IsNullOrEmpty(e.FormattedValue.ToString()))
+				{
+					actionPricingGridView.Rows[e.RowIndex].ErrorText =
+						"Maximum Channel Points must not be empty.";
+					e.Cancel = true;
+				}
+				else if (Convert.ToUInt32(e.FormattedValue) <= toolConfig.Khaos.Actions[e.RowIndex].ChannelPoints && Convert.ToUInt32(e.FormattedValue) != 0)
+				{
+					actionPricingGridView.Rows[e.RowIndex].ErrorText =
+						"Maximum Channel Points must be higher than Channel Points or 0(uncapped).";
+					e.Cancel = true;
+				}
 			}
 		}
 
@@ -327,6 +345,11 @@ namespace SotnRandoTools
 		private void keepVladRelicsCheckbox_CheckedChanged(object sender, EventArgs e)
 		{
 			toolConfig.Khaos.KeepVladRelics = keepVladRelicsCheckbox.Checked;
+		}
+
+		private void costDecayCheckBox_CheckedChanged(object sender, EventArgs e)
+		{
+			toolConfig.Khaos.CostDecay = costDecayCheckBox.Checked;
 		}
 	}
 }

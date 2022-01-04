@@ -7,9 +7,10 @@ namespace SotnRandoTools.Configuration.Models
 	{
 		public Action()
 		{
-			this.Enabled = true;
-			this.StartsOnCooldown = false;
-			this.IsUsable = true;
+			Enabled = true;
+			StartsOnCooldown = false;
+			IsUsable = true;
+			MaximumChannelPoints = 0;
 		}
 
 		public string Name { get; set; }
@@ -25,6 +26,7 @@ namespace SotnRandoTools.Configuration.Models
 		public DateTime? LastUsedAt { get; set; }
 		public uint Bits { get; set; }
 		public uint ChannelPoints { get; set; }
+		public uint MaximumChannelPoints { get; set; }
 		public uint CurrentBits { get; set; }
 		public double Scaling { get; set; }
 

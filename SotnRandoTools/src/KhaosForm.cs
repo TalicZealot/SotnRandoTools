@@ -19,7 +19,7 @@ namespace SotnRandoTools
 {
 	public partial class KhaosForm : Form, IKhaosActionsInfoDisplay, INotifyPropertyChanged, IVladRelicLocationDisplay
 	{
-		private readonly ICheatCollectionAdapter adaptedCheats;
+		private ICheatCollectionAdapter adaptedCheats;
 		private readonly IToolConfig toolConfig;
 		private KhaosController? khaosControler;
 		private TwitchListener? twitchListener;
@@ -61,6 +61,20 @@ namespace SotnRandoTools
 			ribLocation.DataBindings.Add(new System.Windows.Forms.Binding("Text", this, "RibOfVladLocation"));
 			ringLocation.DataBindings.Add(new System.Windows.Forms.Binding("Text", this, "RingOfVladLocation"));
 			eyeLocation.DataBindings.Add(new System.Windows.Forms.Binding("Text", this, "EyeOfVladLocation"));
+		}
+
+		public ICheatCollectionAdapter AdaptedCheats
+		{
+			get
+			{
+				return this.adaptedCheats;
+			}
+
+			set
+			{
+				this.adaptedCheats = value;
+				khaosControler.GetCheats();
+			}
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -444,7 +458,7 @@ namespace SotnRandoTools
 			else
 			{
 
-				khaosControler.Cripple();
+				khaosControler.Slow();
 			}
 		}
 		private void bloodManaButton_Click(object sender, EventArgs e)

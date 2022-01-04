@@ -16,7 +16,7 @@ namespace SotnRandoTools.Services
 	{
 		private OverlaySocketServer overlaySocketServer;
 		private const int NotificationTime = 4 * 1000;
-		private const int NotificationTimeFast = 1 * 1000;
+		private const int NotificationTimeFast = 2 * 1000;
 		private const int MeterSize = 60;
 
 		private readonly IGuiApi guiApi;
@@ -27,20 +27,14 @@ namespace SotnRandoTools.Services
 		private System.Timers.Timer countdownTimer;
 		private int scale;
 		private Image textbox;
-		private Image iconSkull;
-		private Image iconFairy;
-		private Image iconEye;
 		private Image scaledTextbox;
-		private Image scaledIconSkull;
-		private Image scaledIconFairy;
-		private Image scaledIconEye;
 		private System.Windows.Media.MediaPlayer audioPlayer = new();
 		private List<string> messageQueue = new();
 		private bool cleared = false;
 		private Color meterForegroundColor = Color.FromArgb(96, 101, 168);
 		private Color meterBackgroundColor = Color.FromArgb(40, 40, 40);
 		private Color meterBorderColor = Color.FromArgb(180, 180, 180);
-		private Color timerPieColor = Color.FromArgb(190, 190, 190, 190);
+		private short khaosMeter = 0;
 
 		public NotificationService(IToolConfig toolConfig, IGuiApi guiApi, IEmuClientApi clientAPI)
 		{
@@ -58,12 +52,9 @@ namespace SotnRandoTools.Services
 			messageTimer.Start();
 			countdownTimer = new System.Timers.Timer();
 			countdownTimer.Interval = 1000;
-			countdownTimer.Elapsed += DecrementTimers;
-			countdownTimer.Start();
+			countdownTimer.Elapsed += RefreshUI;
+			//countdownTimer.Start();
 			textbox = Image.FromFile(Paths.TextboxImage);
-			iconSkull = Image.FromFile(Paths.IconSkull);
-			iconFairy = Image.FromFile(Paths.IconFairy);
-			iconEye = Image.FromFile(Paths.IconEye);
 			scale = GetScale();
 			ResizeImages();
 			audioPlayer.Volume = (double) toolConfig.Khaos.Volume / 10F;
@@ -78,7 +69,21 @@ namespace SotnRandoTools.Services
 			}
 		}
 
-		public short KhaosMeter { get; set; }
+		public short KhaosMeter
+		{
+			get
+			{
+				return khaosMeter;
+			}
+			set
+			{
+				khaosMeter = value;
+				if (!countdownTimer.Enabled)
+				{
+					countdownTimer.Start();
+				}
+			}
+		}
 
 		public void PlayAlert(string url)
 		{
@@ -120,6 +125,10 @@ namespace SotnRandoTools.Services
 			else
 			{
 				messageTimer.Interval = NotificationTime;
+			}
+			if (!countdownTimer.Enabled)
+			{
+				countdownTimer.Start();
 			}
 		}
 
@@ -234,9 +243,13 @@ namespace SotnRandoTools.Services
 			}
 		}
 
-		private void DecrementTimers(object sender, ElapsedEventArgs e)
+		private void RefreshUI(object sender, ElapsedEventArgs e)
 		{
 			DrawUI();
+			if (messageQueue.Count == 0)
+			{
+				countdownTimer.Stop();
+			}
 		}
 
 		private Bitmap ResizeImage(Image image, int width, int height)
@@ -264,9 +277,6 @@ namespace SotnRandoTools.Services
 		private void ResizeImages()
 		{
 			scaledTextbox = ResizeImage(textbox, textbox.Width * scale, textbox.Height * scale);
-			scaledIconSkull = ResizeImage(iconSkull, iconSkull.Width * scale, iconSkull.Height * scale);
-			scaledIconFairy = ResizeImage(iconFairy, iconFairy.Width * scale, iconFairy.Height * scale);
-			scaledIconEye = ResizeImage(iconEye, iconEye.Width * scale, iconEye.Height * scale);
 		}
 	}
 }

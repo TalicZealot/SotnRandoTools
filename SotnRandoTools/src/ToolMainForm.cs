@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using SotnRandoTools.Configuration;
 using SotnRandoTools.Constants;
 using SotnRandoTools.Services;
+using SotnRandoTools.Services.Adapters;
 
 namespace SotnRandoTools
 {
@@ -194,6 +195,13 @@ namespace SotnRandoTools
 			if (checkCheat is null)
 			{
 				File.Copy(Paths.CheatsBackupPath, Paths.CheatsPath);
+				this.MainForm.CheatList.Load(_memoryDomains, Paths.CheatsPath, false);
+				this.MainForm.CheatList.DisableAll();
+			}
+
+			if (khaosForm is not null)
+			{
+				khaosForm.AdaptedCheats = new CheatCollectionAdapter(this.MainForm.CheatList);
 			}
 		}
 

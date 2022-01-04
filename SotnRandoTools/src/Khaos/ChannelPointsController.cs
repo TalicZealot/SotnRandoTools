@@ -21,6 +21,7 @@ namespace SotnRandoTools.Khaos
 {
 	public class ChannelPointsController
 	{
+		private const int RetryCount = 4;
 		private readonly IToolConfig toolConfig;
 		private readonly ITwitchListener twitchListener;
 		private readonly IKhaosController khaosController;
@@ -62,6 +63,7 @@ namespace SotnRandoTools.Khaos
 			client.OnPubSubServiceConnected += onPubSubServiceConnected;
 			client.OnListenResponse += onListenResponse;
 			client.OnChannelPointsRewardRedeemed += Client_OnChannelPointsRewardRedeemed;
+			client.OnPubSubServiceClosed += Client_OnPubSubServiceClosed;
 			client.ListenToChannelPoints(user.Id);
 			client.Connect();
 		}
@@ -95,6 +97,7 @@ namespace SotnRandoTools.Khaos
 
 			return true;
 		}
+		//Can alternatively create rewards once, store ids and onyl thrn them on and adjust prices or off.
 
 		private async Task<bool> CreateRewards()
 		{
@@ -122,22 +125,9 @@ namespace SotnRandoTools.Khaos
 
 					Console.WriteLine($"Request parameters: Title: {request.Title} Cost: {request.Cost} Cooldown: {request.GlobalCooldownSeconds}");
 
-					
 
-					try
+					for (int i = 0; i <= RetryCount; i++)
 					{
-						CreateCustomRewardsResponse response = await api.Helix.ChannelPoints.CreateCustomRewards(
-						broadcasterId,
-						request,
-						api.Settings.AccessToken
-						);
-						customRewardIds.Add(response.Data[0].Id);
-					}
-					catch (Exception ex)
-					{
-						Console.WriteLine(ex.Message);
-						//retry
-						Thread.Sleep(1000);
 						try
 						{
 							CreateCustomRewardsResponse response = await api.Helix.ChannelPoints.CreateCustomRewards(
@@ -146,10 +136,19 @@ namespace SotnRandoTools.Khaos
 							api.Settings.AccessToken
 							);
 							customRewardIds.Add(response.Data[0].Id);
+							break;
 						}
-						catch (Exception ex2)
+						catch (Exception ex)
 						{
-							throw new Exception("Server error while creating Rewards. Please click Continue, then Disconnect and Reconnect.", ex2);
+							if (i == RetryCount)
+							{
+								throw new Exception("Server error while creating Rewards. Please click Continue, then Disconnect and Reconnect.", ex);
+							}
+							else
+							{
+								Console.WriteLine(ex.Message);
+								Thread.Sleep((int)Math.Pow(500, i));
+							}
 						}
 					}
 
@@ -164,18 +163,9 @@ namespace SotnRandoTools.Khaos
 			for (int i = 0; i < customRewardIds.Count; i++)
 			{
 				Console.WriteLine($"Deleting reward with id: {customRewardIds[i]}");
-				try
+
+				for (int j = 0; j <= RetryCount; j++)
 				{
-					await api.Helix.ChannelPoints.DeleteCustomReward(
-					broadcasterId,
-					customRewardIds[i],
-					api.Settings.AccessToken
-					);
-				}
-				catch (Exception)
-				{
-					//retry
-					Thread.Sleep(1000);
 					try
 					{
 						await api.Helix.ChannelPoints.DeleteCustomReward(
@@ -186,7 +176,15 @@ namespace SotnRandoTools.Khaos
 					}
 					catch (Exception ex)
 					{
-						throw new Exception("Server error while deleting Rewards. Please delete the remainint rewards from the  Dashboard.", ex);
+						if (j == RetryCount)
+						{
+							throw new Exception("Server error while deleting Rewards. Please delete the remainint rewards from the  Dashboard.", ex);
+						}
+						else
+						{
+							Console.WriteLine(ex.Message);
+							Thread.Sleep((int) Math.Pow(500, j));
+						}
 					}
 				}
 			}
@@ -231,10 +229,20 @@ namespace SotnRandoTools.Khaos
 				);*/
 
 			//Scale cost
+			int NewCost = (int) Math.Round(e.RewardRedeemed.Redemption.Reward.Cost * action.Scaling);
+			if (action.MaximumChannelPoints != 0 && NewCost > action.MaximumChannelPoints)
+			{
+				NewCost = (int)action.MaximumChannelPoints;
+			}
+			if (action.MaximumChannelPoints != 0 && toolConfig.Khaos.CostDecay && e.RewardRedeemed.Redemption.Reward.Cost == action.MaximumChannelPoints)
+			{
+				NewCost = (int) action.MaximumChannelPoints / 2;
+			}
+
 			await api.Helix.ChannelPoints.UpdateCustomReward(
 				broadcasterId,
 				e.RewardRedeemed.Redemption.Reward.Id,
-				new UpdateCustomRewardRequest { Cost = (int) Math.Round(e.RewardRedeemed.Redemption.Reward.Cost * action.Scaling), },
+				new UpdateCustomRewardRequest { Cost = NewCost, },
 				api.Settings.AccessToken);
 
 			var actionEvent = new EventAddAction { UserName = e.RewardRedeemed.Redemption.User.DisplayName, ActionIndex = toolConfig.Khaos.Actions.IndexOf(action) };
@@ -252,6 +260,30 @@ namespace SotnRandoTools.Khaos
 		private void onPubSubServiceConnected(object sender, EventArgs e)
 		{
 			client.SendTopics(api.Settings.AccessToken);
+		}
+
+		private void Client_OnPubSubServiceClosed(object sender, EventArgs e)
+		{
+			for (int i = 0; i <= RetryCount; i++)
+			{
+				try
+				{
+					client.Connect();
+				}
+				catch (Exception ex)
+				{
+					if (i == RetryCount)
+					{
+						throw new Exception("Failed to reconnect! Click continue and disconnect to delete rewards.", ex);
+					}
+					else
+					{
+						Console.WriteLine(ex.Message);
+						Thread.Sleep((int) Math.Pow(500, i));
+					}
+					throw;
+				}
+			}
 		}
 
 		private string getAuthorizationCodeUrl(string clientId, string redirectUri, List<string> scopes)

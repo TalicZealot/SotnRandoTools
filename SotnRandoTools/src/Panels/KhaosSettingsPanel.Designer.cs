@@ -60,6 +60,7 @@ namespace SotnRandoTools
             this.khaosTabs = new System.Windows.Forms.TabControl();
             this.generalTab = new System.Windows.Forms.TabPage();
             this.generalSettingsBox = new System.Windows.Forms.GroupBox();
+            this.costDecayCheckBox = new System.Windows.Forms.CheckBox();
             this.keepVladRelicsCheckbox = new System.Windows.Forms.CheckBox();
             this.dynamicIntervalCheckBox = new System.Windows.Forms.CheckBox();
             this.pandoraMaxTextBox = new System.Windows.Forms.TextBox();
@@ -98,13 +99,13 @@ namespace SotnRandoTools
             this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.actionPrices = new System.Windows.Forms.TabPage();
             this.actionPricingGridView = new System.Windows.Forms.DataGridView();
+            this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.channelPoints = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.scaling = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.maxChannelPoints = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.alertFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.namesFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.valueToolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.bits = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.channelPoints = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.scaling = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.khaosTabs.SuspendLayout();
             this.generalTab.SuspendLayout();
             this.generalSettingsBox.SuspendLayout();
@@ -182,6 +183,7 @@ namespace SotnRandoTools
             // 
             // generalSettingsBox
             // 
+            this.generalSettingsBox.Controls.Add(this.costDecayCheckBox);
             this.generalSettingsBox.Controls.Add(this.keepVladRelicsCheckbox);
             this.generalSettingsBox.Controls.Add(this.dynamicIntervalCheckBox);
             this.generalSettingsBox.Controls.Add(this.pandoraMaxTextBox);
@@ -206,6 +208,18 @@ namespace SotnRandoTools
             this.generalSettingsBox.TabStop = false;
             this.generalSettingsBox.Text = "General";
             // 
+            // costDecayCheckBox
+            // 
+            this.costDecayCheckBox.AutoSize = true;
+            this.costDecayCheckBox.Location = new System.Drawing.Point(193, 116);
+            this.costDecayCheckBox.Name = "costDecayCheckBox";
+            this.costDecayCheckBox.Size = new System.Drawing.Size(81, 17);
+            this.costDecayCheckBox.TabIndex = 16;
+            this.costDecayCheckBox.Text = "Cost Decay";
+            this.valueToolTip.SetToolTip(this.costDecayCheckBox, "If the cost is at maximum and gets redeemed it will go to 50% of max.");
+            this.costDecayCheckBox.UseVisualStyleBackColor = true;
+            this.costDecayCheckBox.CheckedChanged += new System.EventHandler(this.costDecayCheckBox_CheckedChanged);
+            // 
             // keepVladRelicsCheckbox
             // 
             this.keepVladRelicsCheckbox.AutoSize = true;
@@ -220,7 +234,7 @@ namespace SotnRandoTools
             // dynamicIntervalCheckBox
             // 
             this.dynamicIntervalCheckBox.AutoSize = true;
-            this.dynamicIntervalCheckBox.Location = new System.Drawing.Point(193, 116);
+            this.dynamicIntervalCheckBox.Location = new System.Drawing.Point(193, 93);
             this.dynamicIntervalCheckBox.Name = "dynamicIntervalCheckBox";
             this.dynamicIntervalCheckBox.Size = new System.Drawing.Size(105, 17);
             this.dynamicIntervalCheckBox.TabIndex = 14;
@@ -706,9 +720,9 @@ namespace SotnRandoTools
             this.actionPricingGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.actionPricingGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.dataGridViewTextBoxColumn5,
-            this.bits,
             this.channelPoints,
-            this.scaling});
+            this.scaling,
+            this.maxChannelPoints});
             dataGridViewCellStyle23.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle23.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
             dataGridViewCellStyle23.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -737,12 +751,6 @@ namespace SotnRandoTools
             this.actionPricingGridView.Size = new System.Drawing.Size(368, 259);
             this.actionPricingGridView.TabIndex = 3;
             // 
-            // alertFileDialog
-            // 
-            this.alertFileDialog.Filter = "mp3 files (*.mp3)|*.mp3|wav files (*.wav*)|*.wav*";
-            this.alertFileDialog.Title = "Select Alert Sound File";
-            this.alertFileDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.alertFileDialog_FileOk);
-            // 
             // dataGridViewTextBoxColumn5
             // 
             this.dataGridViewTextBoxColumn5.DataPropertyName = "Name";
@@ -756,24 +764,11 @@ namespace SotnRandoTools
             this.dataGridViewTextBoxColumn5.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.dataGridViewTextBoxColumn5.Width = 90;
             // 
-            // bits
-            // 
-            this.bits.DataPropertyName = "Bits";
-            dataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle20.NullValue = null;
-            this.bits.DefaultCellStyle = dataGridViewCellStyle20;
-            this.bits.FillWeight = 70F;
-            this.bits.HeaderText = "Bits";
-            this.bits.MaxInputLength = 8;
-            this.bits.Name = "bits";
-            this.bits.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.bits.Width = 70;
-            // 
             // channelPoints
             // 
             this.channelPoints.DataPropertyName = "ChannelPoints";
-            dataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.channelPoints.DefaultCellStyle = dataGridViewCellStyle21;
+            dataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.channelPoints.DefaultCellStyle = dataGridViewCellStyle20;
             this.channelPoints.FillWeight = 90F;
             this.channelPoints.HeaderText = "Channel Points";
             this.channelPoints.MaxInputLength = 8;
@@ -784,14 +779,33 @@ namespace SotnRandoTools
             // scaling
             // 
             this.scaling.DataPropertyName = "Scaling";
-            dataGridViewCellStyle22.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.scaling.DefaultCellStyle = dataGridViewCellStyle22;
+            dataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.scaling.DefaultCellStyle = dataGridViewCellStyle21;
             this.scaling.FillWeight = 60F;
             this.scaling.HeaderText = "Scaling";
             this.scaling.MaxInputLength = 8;
             this.scaling.Name = "scaling";
             this.scaling.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.scaling.Width = 60;
+            // 
+            // maxChannelPoints
+            // 
+            this.maxChannelPoints.DataPropertyName = "MaximumChannelPoints";
+            dataGridViewCellStyle22.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle22.NullValue = null;
+            this.maxChannelPoints.DefaultCellStyle = dataGridViewCellStyle22;
+            this.maxChannelPoints.FillWeight = 70F;
+            this.maxChannelPoints.HeaderText = "Max";
+            this.maxChannelPoints.MaxInputLength = 8;
+            this.maxChannelPoints.Name = "maxChannelPoints";
+            this.maxChannelPoints.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.maxChannelPoints.Width = 70;
+            // 
+            // alertFileDialog
+            // 
+            this.alertFileDialog.Filter = "mp3 files (*.mp3)|*.mp3|wav files (*.wav*)|*.wav*";
+            this.alertFileDialog.Title = "Select Alert Sound File";
+            this.alertFileDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.alertFileDialog_FileOk);
             // 
             // KhaosSettingsPanel
             // 
@@ -877,8 +891,9 @@ namespace SotnRandoTools
 		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
 		private System.Windows.Forms.DataGridView actionPricingGridView;
 		private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn5;
-		private System.Windows.Forms.DataGridViewTextBoxColumn bits;
 		private System.Windows.Forms.DataGridViewTextBoxColumn channelPoints;
 		private System.Windows.Forms.DataGridViewTextBoxColumn scaling;
+		private System.Windows.Forms.DataGridViewTextBoxColumn maxChannelPoints;
+		private System.Windows.Forms.CheckBox costDecayCheckBox;
 	}
 }

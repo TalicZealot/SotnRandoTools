@@ -119,6 +119,15 @@ namespace SotnRandoTools.Constants
 			new MapLocation{X = 44, Y = 13, SecondCastle = 0},
 			new MapLocation{X = 45, Y = 13, SecondCastle = 0},
 		};
+		public static List<MapLocation> LesserDemonZone = new List<MapLocation>
+		{
+			new MapLocation{X = 45, Y = 20, SecondCastle = 0},
+			new MapLocation{X = 46, Y = 20, SecondCastle = 0},
+			new MapLocation{X = 47, Y = 20, SecondCastle = 0},
+			new MapLocation{X = 48, Y = 20, SecondCastle = 0},
+			new MapLocation{X = 48, Y = 19, SecondCastle = 0},
+			new MapLocation{X = 47, Y = 19, SecondCastle = 0}
+		};
 
 		public static List<SearchableActor> AcceptedHordeEnemies = new List<SearchableActor>
 		{

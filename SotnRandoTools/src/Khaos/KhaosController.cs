@@ -44,7 +44,7 @@ namespace SotnRandoTools.Khaos
 		private bool inMainMenu = false;
 		#region Timers
 		private System.Timers.Timer subweaponsOnlyTimer = new();
-		private System.Timers.Timer crippleTimer = new();
+		private System.Timers.Timer slowTimer = new();
 		private System.Timers.Timer bloodManaTimer = new();
 		private System.Timers.Timer thirstTimer = new();
 		private System.Timers.Timer thirstTickTimer = new();
@@ -456,7 +456,7 @@ namespace SotnRandoTools.Khaos
 			statusInfoDisplay.AddTimer(timer);
 			Alert(toolConfig.Khaos.Actions[10]);
 		}
-		public void Cripple(string user = "Khaos")
+		public void Slow(string user = "Khaos")
 		{
 			/*bool meterFull = KhaosMeterFull();
 			float enhancedFactor = 1;
@@ -471,11 +471,11 @@ namespace SotnRandoTools.Khaos
 
 			if (IsInRoomList(Constants.Khaos.EntranceCutsceneRooms))
 			{
-				queuedActions.Add(new QueuedAction { Name = toolConfig.Khaos.Actions[11].Name, LocksSpeed = true, Invoker = new MethodInvoker(() => Cripple(user)) });
+				queuedActions.Add(new QueuedAction { Name = toolConfig.Khaos.Actions[11].Name, LocksSpeed = true, Invoker = new MethodInvoker(() => Slow(user)) });
 			}
 
 			underwaterPhysics.Enable();
-			crippleTimer.Start();
+			slowTimer.Start();
 
 			ActionTimer timer = new()
 			{
@@ -487,7 +487,7 @@ namespace SotnRandoTools.Khaos
 			statusInfoDisplay.AddTimer(timer);
 
 			//string message = meterFull ? $"{user} used Super Cripple" : $"{user} used Cripple";
-			string message = $"{user} used Cripple";
+			string message = $"{user} used {toolConfig.Khaos.Actions[11].Name}";
 			notificationService.AddMessage(message);
 			Alert(toolConfig.Khaos.Actions[11]);
 		}
@@ -1090,7 +1090,7 @@ namespace SotnRandoTools.Khaos
 					commandAction = toolConfig.Khaos.Actions[11];
 					if (commandAction.Enabled)
 					{
-						queuedActions.Add(new QueuedAction { Name = commandAction.Name, LocksSpeed = true, Invoker = new MethodInvoker(() => Cripple(user)) });
+						queuedActions.Add(new QueuedAction { Name = commandAction.Name, LocksSpeed = true, Invoker = new MethodInvoker(() => Slow(user)) });
 					}
 					break;
 				case 12:
@@ -1232,8 +1232,8 @@ namespace SotnRandoTools.Khaos
 
 			subweaponsOnlyTimer.Elapsed += SubweaponsOnlyOff;
 			subweaponsOnlyTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.SubweaponsOnly].Duration.TotalMilliseconds;
-			crippleTimer.Elapsed += CrippleOff;
-			crippleTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.Cripple].Duration.TotalMilliseconds;
+			slowTimer.Elapsed += SlowOff;
+			slowTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.Cripple].Duration.TotalMilliseconds;
 			bloodManaTimer.Elapsed += BloodManaOff;
 			bloodManaTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.BloodMana].Duration.TotalMilliseconds;
 			thirstTimer.Elapsed += ThirstOff;
@@ -1278,7 +1278,7 @@ namespace SotnRandoTools.Khaos
 			actionTimer.Stop();
 
 			subweaponsOnlyTimer.Interval = 1;
-			crippleTimer.Interval = 1;
+			slowTimer.Interval = 1;
 			bloodManaTimer.Interval = 1;
 			thirstTimer.Interval = 1;
 			thirstTickTimer.Stop();
@@ -1750,7 +1750,7 @@ namespace SotnRandoTools.Khaos
 		}
 		private void HordeSpawn(Object sender, EventArgs e)
 		{
-			if (!sotnApi.GameApi.InAlucardMode() || !sotnApi.GameApi.CanMenu() || sotnApi.AlucardApi.CurrentHp < 5 || sotnApi.GameApi.CanSave() || IsInRoomList(Constants.Khaos.RichterRooms) || IsInRoomList(Constants.Khaos.ShopRoom))
+			if (!sotnApi.GameApi.InAlucardMode() || !sotnApi.GameApi.CanMenu() || sotnApi.AlucardApi.CurrentHp < 5 || sotnApi.GameApi.CanSave() || IsInRoomList(Constants.Khaos.RichterRooms) || IsInRoomList(Constants.Khaos.ShopRoom) || IsInRoomList(Constants.Khaos.LesserDemonZone))
 			{
 				return;
 			}
@@ -1853,19 +1853,19 @@ namespace SotnRandoTools.Khaos
 			subweaponsOnlyActive = false;
 			sotnApi.AlucardApi.CurrentMp = sotnApi.AlucardApi.MaxtMp;
 		}
-		private void CrippleOff(Object sender, EventArgs e)
+		private void SlowOff(Object sender, EventArgs e)
 		{
 			//SetSpeed();
 			underwaterPhysics.Disable();
 			sotnApi.GameApi.UnderwaterPhysicsEnabled = false;
-			crippleTimer.Stop();
+			slowTimer.Stop();
 			speedLocked = false;
 		}
 		private void EnduranceSpawn(Object sender, EventArgs e)
 		{
 			uint roomX = sotnApi.GameApi.MapXPos;
 			uint roomY = sotnApi.GameApi.MapYPos;
-			float healthMultiplier = 4F;
+			float healthMultiplier = 3.5F;
 
 			if ((roomX == enduranceRoomX && roomY == enduranceRoomY) || !sotnApi.GameApi.InAlucardMode() || !sotnApi.GameApi.CanMenu() || sotnApi.AlucardApi.CurrentHp < 5)
 			{
@@ -1884,10 +1884,10 @@ namespace SotnRandoTools.Khaos
 				bool right = rng.Next(0, 2) > 0;
 				bossCopy.Xpos = right ? (ushort) (bossCopy.Xpos + rng.Next(40, 80)) : (ushort) (bossCopy.Xpos + rng.Next(-80, -40));
 				bossCopy.Palette = (ushort) (bossCopy.Palette + rng.Next(1, 10));
-				bossCopy.Hp = (ushort) (healthMultiplier * bossCopy.Hp);
+				bossCopy.Hp = (ushort) Math.Round(healthMultiplier * bossCopy.Hp);
 				sotnApi.ActorApi.SpawnActor(bossCopy);
 
-				boss.Hp = (ushort) (healthMultiplier * boss.Hp);
+				boss.Hp = (ushort) Math.Round(healthMultiplier * boss.Hp);
 
 				if (superEndurance)
 				{
@@ -1948,6 +1948,7 @@ namespace SotnRandoTools.Khaos
 			hitbox.DamageTypeB = (uint) Actors.Stone;
 			sotnApi.ActorApi.SpawnActor(hitbox);
 		}
+		//TODO: investigate damage
 		private void SpawnSlamHitbox()
 		{
 			bool alucardIsPoisoned = sotnApi.AlucardApi.PoisonTimer > 0;
@@ -2146,7 +2147,7 @@ namespace SotnRandoTools.Khaos
 		}
 		private void LordSpawn(Object sender, EventArgs e)
 		{
-			if (!sotnApi.GameApi.InAlucardMode() || !sotnApi.GameApi.CanMenu() || sotnApi.AlucardApi.CurrentHp < 5 || sotnApi.GameApi.CanSave() || IsInRoomList(Constants.Khaos.RichterRooms) || IsInRoomList(Constants.Khaos.ShopRoom))
+			if (!sotnApi.GameApi.InAlucardMode() || !sotnApi.GameApi.CanMenu() || sotnApi.AlucardApi.CurrentHp < 5 || sotnApi.GameApi.CanSave() || IsInRoomList(Constants.Khaos.RichterRooms) || IsInRoomList(Constants.Khaos.ShopRoom) || IsInRoomList(Constants.Khaos.LesserDemonZone))
 			{
 				return;
 			}
@@ -2270,7 +2271,7 @@ namespace SotnRandoTools.Khaos
 				SetSaveColorPalette();
 			}
 		}
-		private void GetCheats()
+		public void GetCheats()
 		{
 			faerieScroll = cheats.GetCheatByName("FaerieScroll");
 			darkMetamorphasisCheat = cheats.GetCheatByName("DarkMetamorphasis");

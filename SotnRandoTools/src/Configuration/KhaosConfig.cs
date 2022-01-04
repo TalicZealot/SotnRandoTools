@@ -24,6 +24,7 @@ namespace SotnRandoTools.Configuration
 			DynamicInterval = true;
 			KeepVladRelics = false;
 			RomhackMode = false;
+			CostDecay = true;
 			DefaultActions();
 			LightHelpItemRewards = new string[]
 			{
@@ -105,6 +106,7 @@ namespace SotnRandoTools.Configuration
 		public System.TimeSpan QueueInterval { get; set; }
 		public bool DynamicInterval { get; set; }
 		public bool KeepVladRelics { get; set; }
+		public bool CostDecay { get; set; }
 		public string[] LightHelpItemRewards { get; set; }
 		public string[] MediumHelpItemRewards { get; set; }
 		public string[] HeavyHelpItemRewards { get; set; }
@@ -119,10 +121,11 @@ namespace SotnRandoTools.Configuration
 					Description = "Inflicts a random status effect between Poison, Curse, Stone, Slam, Resist an Element, Shield Potion.",
 					Meter = 2,
 					AlertPath = Paths.AlucardWhatSound,
-					Cooldown = new System.TimeSpan(0, 0, 10),
+					Cooldown = new System.TimeSpan(0, 0, 20),
 					Bits = 10,
 					ChannelPoints = 100,
-					Scaling = 1.0
+					MaximumChannelPoints = 300,
+					Scaling = 1.02
 				},
 				new Action{
 					Name = "Khaos Equipment",
@@ -132,6 +135,7 @@ namespace SotnRandoTools.Configuration
 					Cooldown = new System.TimeSpan(0, 15, 0),
 					Bits = 20,
 					ChannelPoints = 200,
+					MaximumChannelPoints = 2000,
 					Scaling = 1.5
 				},
 				new Action{
@@ -142,6 +146,7 @@ namespace SotnRandoTools.Configuration
 					Cooldown = new System.TimeSpan(0, 10, 0),
 					Bits = 20,
 					ChannelPoints = 200,
+					MaximumChannelPoints = 4000,
 					Scaling = 1.5
 				},
 				new Action{
@@ -212,6 +217,7 @@ namespace SotnRandoTools.Configuration
 					StartsOnCooldown = true,
 					Bits = 20,
 					ChannelPoints = 200,
+					MaximumChannelPoints = 2000,
 					Scaling = 1.5
 				},
 				new Action{
@@ -223,6 +229,7 @@ namespace SotnRandoTools.Configuration
 					Duration = new System.TimeSpan(0, 1, 0),
 					Bits = 30,
 					ChannelPoints = 300,
+					MaximumChannelPoints = 3000,
 					Scaling = 1.5
 				},
 				new Action{
@@ -234,6 +241,7 @@ namespace SotnRandoTools.Configuration
 					Cooldown = new System.TimeSpan(0, 5, 0),
 					Bits = 30,
 					ChannelPoints = 300,
+					MaximumChannelPoints = 3000,
 					Scaling = 1.5
 				},
 				new Action{
@@ -245,6 +253,7 @@ namespace SotnRandoTools.Configuration
 					Cooldown = new System.TimeSpan(0, 6, 0),
 					Bits = 20,
 					ChannelPoints = 200,
+					MaximumChannelPoints = 2000,
 					Scaling = 1.5
 				},
 				new Action{
@@ -256,6 +265,7 @@ namespace SotnRandoTools.Configuration
 					Cooldown = new System.TimeSpan(0, 6, 0),
 					Bits = 20,
 					ChannelPoints = 200,
+					MaximumChannelPoints = 2000,
 					Scaling = 1.5
 				},
 				new Action{
@@ -267,8 +277,9 @@ namespace SotnRandoTools.Configuration
 					Interval = new System.TimeSpan(0, 0, 1),
 					Cooldown = new System.TimeSpan(0, 10, 0),
 					Bits = 40,
-					ChannelPoints = 400,
-					Scaling = 2.0
+					ChannelPoints = 300,
+					MaximumChannelPoints = 4000,
+					Scaling = 1.5
 				},
 				new Action{
 					Name = "Endurance",
@@ -278,6 +289,7 @@ namespace SotnRandoTools.Configuration
 					Cooldown = new System.TimeSpan(0, 6, 0),
 					Bits = 30,
 					ChannelPoints = 300,
+					MaximumChannelPoints = 4000,
 					Scaling = 1.5
 				},
 				new Action{
@@ -289,7 +301,8 @@ namespace SotnRandoTools.Configuration
 					Cooldown = new System.TimeSpan(0, 6, 0),
 					Bits = 40,
 					ChannelPoints = 400,
-					Scaling = 2.0
+					MaximumChannelPoints = 4000,
+					Scaling = 1.5
 				},
 				new Action{
 					Name = "Vampire",
@@ -299,6 +312,7 @@ namespace SotnRandoTools.Configuration
 					Cooldown = new System.TimeSpan(0, 6, 0),
 					Bits = 10,
 					ChannelPoints = 100,
+					MaximumChannelPoints = 1000,
 					Scaling = 1.5
 				},
 				new Action{
@@ -309,6 +323,7 @@ namespace SotnRandoTools.Configuration
 					Cooldown = new System.TimeSpan(0, 0, 0),
 					Bits = 10,
 					ChannelPoints = 100,
+					MaximumChannelPoints = 1000,
 					Scaling = 1.5
 				},
 				new Action{
@@ -319,6 +334,7 @@ namespace SotnRandoTools.Configuration
 					Cooldown = new System.TimeSpan(0, 2, 0),
 					Bits = 20,
 					ChannelPoints = 200,
+					MaximumChannelPoints = 2000,
 					Scaling = 1.5
 				},
 				new Action{
@@ -329,6 +345,7 @@ namespace SotnRandoTools.Configuration
 					Cooldown = new System.TimeSpan(0, 4, 0),
 					Bits = 30,
 					ChannelPoints = 300,
+					MaximumChannelPoints = 4000,
 					Scaling = 2.0
 				},
 				new Action{
@@ -340,6 +357,7 @@ namespace SotnRandoTools.Configuration
 					Cooldown = new System.TimeSpan(0, 6, 0),
 					Bits = 20,
 					ChannelPoints = 200,
+					MaximumChannelPoints = 2000,
 					Scaling = 1.5
 				},
 				new Action{
@@ -350,6 +368,7 @@ namespace SotnRandoTools.Configuration
 					Cooldown = new System.TimeSpan(0, 6, 0),
 					Bits = 30,
 					ChannelPoints = 300,
+					MaximumChannelPoints = 3000,
 					Scaling = 1.5
 				},
 				new Action{
@@ -361,6 +380,7 @@ namespace SotnRandoTools.Configuration
 					Cooldown = new System.TimeSpan(0, 6, 0),
 					Bits = 30,
 					ChannelPoints = 300,
+					MaximumChannelPoints = 3000,
 					Scaling = 1.5
 				},
 				new Action{
@@ -380,6 +400,7 @@ namespace SotnRandoTools.Configuration
 					StartsOnCooldown = true,
 					Bits = 50,
 					ChannelPoints = 500,
+					MaximumChannelPoints = 5000,
 					Scaling = 2.0
 				},
 				new Action{
@@ -391,6 +412,7 @@ namespace SotnRandoTools.Configuration
 					Cooldown = new System.TimeSpan(0, 6, 0),
 					Bits = 20,
 					ChannelPoints = 200,
+					MaximumChannelPoints = 2000,
 					Scaling = 1.0
 				},
 				new Action{
@@ -401,6 +423,7 @@ namespace SotnRandoTools.Configuration
 					Cooldown = new System.TimeSpan(0, 5, 0),
 					Bits = 30,
 					ChannelPoints = 300,
+					MaximumChannelPoints = 3000,
 					Scaling = 1.5
 				},
 				new Action{
@@ -413,6 +436,7 @@ namespace SotnRandoTools.Configuration
 					Cooldown = new System.TimeSpan(0, 8, 0),
 					Bits = 30,
 					ChannelPoints = 300,
+					MaximumChannelPoints = 3000,
 					Scaling = 2.0
 				}
 			};
