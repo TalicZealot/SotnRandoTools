@@ -114,10 +114,10 @@ namespace SotnRandoTools.Constants
 		};
 		public static List<MapLocation> GalamothRooms = new List<MapLocation>
 		{
-			new MapLocation{X = 44, Y = 12, SecondCastle = 0},
-			new MapLocation{X = 45, Y = 12, SecondCastle = 0},
-			new MapLocation{X = 44, Y = 13, SecondCastle = 0},
-			new MapLocation{X = 45, Y = 13, SecondCastle = 0},
+			new MapLocation{X = 44, Y = 12, SecondCastle = 1},
+			new MapLocation{X = 45, Y = 12, SecondCastle = 1},
+			new MapLocation{X = 44, Y = 13, SecondCastle = 1},
+			new MapLocation{X = 45, Y = 13, SecondCastle = 1},
 		};
 		public static List<MapLocation> LesserDemonZone = new List<MapLocation>
 		{
@@ -309,7 +309,7 @@ namespace SotnRandoTools.Constants
 			new SearchableActor {Hp = 600, Damage = 35, Sprite = 40376},   // Darkwing Bat
 			new SearchableActor {Hp = 1100, Damage = 30, Sprite = 31032},  // Creature
 			new SearchableActor {Hp = 777, Damage = 35, Sprite = 11664},   // Doppleganger 40
-			new SearchableActor {Hp = 888, Damage = 35, Sprite = 46380},   // Death
+			//new SearchableActor {Hp = 888, Damage = 35, Sprite = 46380}, // Death - Can both hard and softlock the game
 			new SearchableActor {Hp = 1100, Damage = 35, Sprite = 6044},   // Medusa
 			new SearchableActor {Hp = 1200, Damage = 40, Sprite = 16564},  // Akmodan
 			new SearchableActor {Hp = 1000, Damage = 9, Sprite = 30724},   // Sypha
@@ -333,7 +333,7 @@ namespace SotnRandoTools.Constants
 			new SearchableActor {Sprite = 40376},   // Darkwing Bat
 			new SearchableActor { Sprite = 31032},  // Creature
 			new SearchableActor {Sprite = 11664},   // Doppleganger 40
-			new SearchableActor {Sprite = 46380},   // Death
+			//new SearchableActor {Sprite = 46380}, // Death - Can both hard and softlock the game
 			new SearchableActor { Sprite = 6044},   // Medusa
 			new SearchableActor { Sprite = 16564},  // Akmodan
 			new SearchableActor {Sprite = 30724},   // Sypha

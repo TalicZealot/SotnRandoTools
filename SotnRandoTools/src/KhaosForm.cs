@@ -45,7 +45,7 @@ namespace SotnRandoTools
 			adaptedCheats = new CheatCollectionAdapter(cheats);
 			khaosControler = new KhaosController(toolConfig, sotnApi, adaptedCheats, notificationService, inputService, this);
 			twitchListener = new TwitchListener(Paths.TwitchRedirectUri);
-			channelPointsController = new ChannelPointsController(toolConfig, twitchListener, khaosControler);
+			channelPointsController = new ChannelPointsController(toolConfig, twitchListener, khaosControler, notificationService);
 
 			InitializeComponent();
 			SuspendLayout();
@@ -179,6 +179,7 @@ namespace SotnRandoTools
 		private void KhaosForm_PropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
 		}
+
 		private void DecrementTimers(object sender, ElapsedEventArgs e)
 		{
 			foreach (var timer in actionTimers)
@@ -261,7 +262,7 @@ namespace SotnRandoTools
 				connectButton.Text = "Connect to Twitch";
 				if (connected)
 				{
-					var result = channelPointsController.Disconnect();
+					channelPointsController.Disconnect();
 					connected = false;
 				}
 				autoKhaosButton.Enabled = false;
@@ -298,20 +299,20 @@ namespace SotnRandoTools
 				autoKhaosButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(72, 81, 118);
 			}
 		}
-		private void connectButton_Click(object sender, EventArgs e)
+		private async void connectButton_Click(object sender, EventArgs e)
 		{
 			if (connected)
 			{
 				connectButton.Text = "Connect to Twitch";
-				var result = channelPointsController.Disconnect();
+				channelPointsController.Disconnect();
 				connected = false;
 				connectButton.BackColor = System.Drawing.Color.FromArgb(17, 0, 17);
 				connectButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(48, 20, 48);
 			}
 			else
 			{
+				var result = await channelPointsController.Connect();
 				connectButton.Text = "Disonnect";
-				channelPointsController.Connect();
 				connected = true;
 				connectButton.BackColor = System.Drawing.Color.FromArgb(93, 56, 147);
 				connectButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(145, 70, 255);
@@ -660,7 +661,7 @@ namespace SotnRandoTools
 			connectButton.Text = "Connect to Twitch";
 			if (connected)
 			{
-				var resultCtr = channelPointsController.Disconnect();
+				channelPointsController.Disconnect();
 				connected = false;
 			};
 			autoKhaosButton.Enabled = false;

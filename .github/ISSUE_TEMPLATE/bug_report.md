@@ -10,7 +10,7 @@ assignees: TalicZealot
 Please use this template for any bugs or problems you encounter using the tools and label the issue appropriately. Fill as many of the fields listed below as possible.
 
 # Error:
-If an error popped up paste a screenshot of it or the error message.
+If an error popped up paste a screenshot of it or the error message. Please remember to search for similar issues before writing anything, including in closed issues!
 
 # Bug description:
 Provide information relevant to the bug. The more information provided, the

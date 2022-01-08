@@ -102,7 +102,6 @@ namespace SotnRandoTools
 		private string _windowTitle = "Symphony of the Night Randomizer Tools";
 		private const int PanelOffset = 130;
 		private int cooldown = 0;
-		private StringWriter log = new();
 
 		public ToolMainForm()
 		{
@@ -176,8 +175,6 @@ namespace SotnRandoTools
 			sotnApi = new SotnApi.Main.SotnApi(APIs.Memory);
 			watchlistService = new WatchlistService(_memoryDomains, _emu?.SystemId, GlobalConfig);
 			inputService = new InputService(APIs.Joypad, sotnApi);
-
-			Console.SetOut(log);
 		}
 
 		private void LoadCheats()
@@ -207,7 +204,7 @@ namespace SotnRandoTools
 
 		public override bool AskSaveChanges() => true;
 
-		public override void Restart() { }
+		public override void Restart() {}
 
 		public override void UpdateValues(ToolFormUpdateType type)
 		{
@@ -257,15 +254,6 @@ namespace SotnRandoTools
 			{
 				coopForm.Close();
 				coopForm.Dispose();
-			}
-
-			string logPath = Paths.LogsPath + DateTime.Now.ToString("dd-MM-yy hh-mm-ss") + ".txt";
-			if (!File.Exists(logPath))
-			{
-				using (StreamWriter w = File.AppendText(logPath))
-				{
-					w.Write(log.ToString());
-				}
 			}
 
 			sotnApi = null;

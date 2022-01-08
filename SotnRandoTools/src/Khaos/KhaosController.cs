@@ -598,7 +598,7 @@ namespace SotnRandoTools.Khaos
 			attackPotionCheat.PokeValue(1);
 			attackPotionCheat.Enable();
 			vampireTimer.Start();
-			notificationService.AddMessage($"{user} used Vampire");
+			notificationService.AddMessage(user + " used Vampire");
 
 			ActionTimer timer = new()
 			{
@@ -879,10 +879,10 @@ namespace SotnRandoTools.Khaos
 			shineCheat.PokeValue(1);
 			shineCheat.Enable();
 			fourBeastsTimer.Start();
-			contactDamage.PokeValue((int) sotnApi.AlucardApi.Str);
+			contactDamage.PokeValue((int) Math.Ceiling(sotnApi.AlucardApi.Str / 10D));
 			contactDamage.Enable();
 
-			notificationService.AddMessage($"{user} used Four Beasts");
+			notificationService.AddMessage(user + " used Four Beasts");
 
 			ActionTimer timer = new()
 			{
@@ -910,7 +910,7 @@ namespace SotnRandoTools.Khaos
 			zawarudoTimer.Start();
 			zawarudoCheckTimer.Start();
 
-			notificationService.AddMessage($"{user} used ZA WARUDO");
+			notificationService.AddMessage(user + " used ZA WARUDO");
 
 			ActionTimer timer = new()
 			{
@@ -935,7 +935,7 @@ namespace SotnRandoTools.Khaos
 			hasteTimer.Start();
 			hasteActive = true;
 			speedLocked = true;
-			Console.WriteLine($"{user} used {toolConfig.Khaos.Actions[27].Name}");
+			Console.WriteLine(user + " used " + toolConfig.Khaos.Actions[27].Name);
 
 			ActionTimer timer = new()
 			{
@@ -956,7 +956,7 @@ namespace SotnRandoTools.Khaos
 
 			lordTimer.Start();
 			lordSpawnTimer.Start();
-			string message = $"{user} activated Lord of this Castle";
+			string message = user + " activated Lord of this Castle";
 			notificationService.AddMessage(message);
 			Alert(toolConfig.Khaos.Actions[28]);
 		}
@@ -1861,6 +1861,8 @@ namespace SotnRandoTools.Khaos
 			slowTimer.Stop();
 			speedLocked = false;
 		}
+
+		//TODO: Introduce a different effect for problematic bosses
 		private void EnduranceSpawn(Object sender, EventArgs e)
 		{
 			uint roomX = sotnApi.GameApi.MapXPos;
@@ -1948,17 +1950,16 @@ namespace SotnRandoTools.Khaos
 			hitbox.DamageTypeB = (uint) Actors.Stone;
 			sotnApi.ActorApi.SpawnActor(hitbox);
 		}
-		//TODO: investigate damage
 		private void SpawnSlamHitbox()
 		{
-			bool alucardIsPoisoned = sotnApi.AlucardApi.PoisonTimer > 0;
+			//bool alucardIsPoisoned = sotnApi.AlucardApi.PoisonTimer > 0;
 			Actor hitbox = new Actor();
 			int roll = rng.Next(0, 2);
 			hitbox.Xpos = roll == 1 ? (ushort) (sotnApi.AlucardApi.ScreenX + 1) : (ushort) 0;
 			hitbox.HitboxHeight = 255;
 			hitbox.HitboxWidth = 255;
 			hitbox.AutoToggle = 1;
-			hitbox.Damage = (ushort) (sotnApi.AlucardApi.Def + (alucardIsPoisoned ? 3 : 5));
+			hitbox.Damage = (ushort) (sotnApi.AlucardApi.Def + 2);
 			hitbox.DamageTypeA = (uint) Actors.Slam;
 			sotnApi.ActorApi.SpawnActor(hitbox);
 		}
@@ -2052,6 +2053,7 @@ namespace SotnRandoTools.Khaos
 			invincibilityLocked = false;
 			attackPotionCheat.Disable();
 			shineCheat.Disable();
+			contactDamage.PokeValue(0);
 			contactDamage.Disable();
 			fourBeastsTimer.Stop();
 		}

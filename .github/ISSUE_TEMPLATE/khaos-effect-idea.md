@@ -10,7 +10,7 @@ assignees: TalicZealot
 # Name
 
 # Description
-Explain how the effect would work.
+Explain how the effect would work. Please remember to search for similar issues before writing anything, including in closed issues!
 
 # Duration
 Suggest a duration  for this effect. Currently most things last one minute or are instant.

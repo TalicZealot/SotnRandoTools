@@ -417,7 +417,7 @@ namespace SotnRandoTools.Configuration
 				},
 				new Action{
 					Name = "Haste",
-					Description = "Increase movement speed for a period. Affects walk speed and wingsmash speed.",
+					Description = "Increase movement speed for a period. Player can dash by double tapping forward like Richter.",
 					Meter = 6,
 					Duration = new System.TimeSpan(0, 0, 30),
 					Cooldown = new System.TimeSpan(0, 5, 0),

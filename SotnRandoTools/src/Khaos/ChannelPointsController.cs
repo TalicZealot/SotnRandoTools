@@ -9,6 +9,7 @@ using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Constants;
 using SotnRandoTools.Khaos.Interfaces;
 using SotnRandoTools.Khaos.Models;
+using SotnRandoTools.Services;
 using SotnRandoTools.Services.Interfaces;
 using TwitchLib.Api;
 using TwitchLib.Api.Helix.Models.ChannelPoints.CreateCustomReward;
@@ -26,24 +27,28 @@ namespace SotnRandoTools.Khaos
 		private readonly IToolConfig toolConfig;
 		private readonly ITwitchListener twitchListener;
 		private readonly IKhaosController khaosController;
+		private readonly INotificationService notificationService;
 		private List<string> scopes = new List<string> { "channel:read:subscriptions", "channel:read:redemptions", "channel:manage:redemptions" };
 		private TwitchAPI api = new TwitchAPI();
 		private TwitchPubSub client = new TwitchPubSub();
 		private string broadcasterId;
 		private string refreshToken;
 		private List<string> customRewardIds = new();
+		private List<Timer> actionsStartingOnCooldown = new();
 
-		public ChannelPointsController(IToolConfig toolConfig, ITwitchListener twitchListener, IKhaosController khaosController)
+		public ChannelPointsController(IToolConfig toolConfig, ITwitchListener twitchListener, IKhaosController khaosController, INotificationService notificationService)
 		{
 			if (toolConfig is null) throw new ArgumentNullException(nameof(toolConfig));
 			if (twitchListener is null) throw new ArgumentNullException(nameof(twitchListener));
 			if (khaosController is null) throw new ArgumentNullException(nameof(khaosController));
+			if (notificationService is null) throw new ArgumentNullException(nameof(notificationService));
 			this.toolConfig = toolConfig;
 			this.twitchListener = twitchListener;
 			this.khaosController = khaosController;
+			this.notificationService = notificationService;
 		}
 
-		public async void Connect()
+		public async Task<bool> Connect()
 		{
 			Console.WriteLine($"Authenticating...");
 			validateCreds();
@@ -58,8 +63,8 @@ namespace SotnRandoTools.Khaos
 			broadcasterId = user.Id;
 			Console.WriteLine($"Authorization success!\r\nUser: {user.DisplayName}\r\nId: {user.Id}");
 
-			await GetSubscribers();
-			await CreateRewards();
+			GetSubscribers();
+			CreateRewards();
 
 			client.OnPubSubServiceConnected += onPubSubServiceConnected;
 			client.OnListenResponse += onListenResponse;
@@ -67,17 +72,19 @@ namespace SotnRandoTools.Khaos
 			client.OnPubSubServiceClosed += Client_OnPubSubServiceClosed;
 			client.ListenToChannelPoints(user.Id);
 			client.Connect();
-		}
-
-		public async Task<bool> Disconnect()
-		{
-			await DeleteRewards();
-			twitchListener.Stop();
-			client.Disconnect();
+			notificationService.AddMessage("Connected to Twitch");
 			return true;
 		}
 
-		private async Task<bool> GetSubscribers()
+		public void Disconnect()
+		{
+			DeleteRewards();
+			twitchListener.Stop();
+			client.Disconnect();
+			notificationService.AddMessage("Disconnected");
+		}
+
+		private async void GetSubscribers()
 		{
 			Console.WriteLine($"Fetching subscribers...");
 
@@ -95,12 +102,9 @@ namespace SotnRandoTools.Khaos
 			{
 				Console.WriteLine(ex.Message);
 			}
-
-			return true;
 		}
 		//Can alternatively create rewards once, store ids and onyl thrn them on and adjust prices or off.
-
-		private async Task<bool> CreateRewards()
+		private async void CreateRewards()
 		{
 			Console.WriteLine($"Creating rewards...");
 			foreach (var action in toolConfig.Khaos.Actions)
@@ -122,6 +126,15 @@ namespace SotnRandoTools.Khaos
 					{
 						request.IsGlobalCooldownEnabled = true;
 						request.GlobalCooldownSeconds = (int) action.Cooldown.TotalSeconds;
+					}
+
+					if (action.StartsOnCooldown)
+					{
+						actionsStartingOnCooldown.Add(
+							new Timer(CreateDelayedReward, 
+							new DelayedActionCallback { Index = toolConfig.Khaos.Actions.IndexOf(action)}, (int)action.Cooldown.TotalMilliseconds, -1)
+							);
+						continue;
 					}
 
 					Console.WriteLine($"Request parameters: Title: {request.Title} Cost: {request.Cost} Cooldown: {request.GlobalCooldownSeconds}");
@@ -155,10 +168,55 @@ namespace SotnRandoTools.Khaos
 
 				}
 			}
-			return true;
+			notificationService.AddMessage("Channel Point rewards created");
 		}
 
-		private async Task<bool> DeleteRewards()
+		private async void CreateDelayedReward(object state)
+		{
+			DelayedActionCallback action = (DelayedActionCallback) state;
+
+			CreateCustomRewardsRequest request = new CreateCustomRewardsRequest
+			{
+				Title = toolConfig.Khaos.Actions[action.Index].Name,
+				Prompt = toolConfig.Khaos.Actions[action.Index].Description,
+				Cost = (int) toolConfig.Khaos.Actions[action.Index].ChannelPoints,
+				IsEnabled = true,
+				ShouldRedemptionsSkipRequestQueue = true,
+				IsGlobalCooldownEnabled = true,
+				GlobalCooldownSeconds = (int) toolConfig.Khaos.Actions[action.Index].Cooldown.TotalSeconds
+		};
+
+			for (int i = 0; i <= RetryCount; i++)
+			{
+				try
+				{
+					CreateCustomRewardsResponse response = await api.Helix.ChannelPoints.CreateCustomRewards(
+					broadcasterId,
+					request,
+					api.Settings.AccessToken
+					);
+					customRewardIds.Add(response.Data[0].Id);
+
+					Console.WriteLine($"Added new delayed reward {request.Title}.");
+
+					break;
+				}
+				catch (Exception ex)
+				{
+					if (i == RetryCount)
+					{
+						throw new Exception("Server error while creating Rewards. Please click Continue, then Disconnect and Reconnect.", ex);
+					}
+					else
+					{
+						Console.WriteLine(ex.Message);
+						await Task.Delay((int) Math.Pow(RetryBaseMs, i));
+					}
+				}
+			}
+		}
+
+		private async void DeleteRewards()
 		{
 			Console.WriteLine($"Deleting rewards...");
 			for (int i = 0; i < customRewardIds.Count; i++)
@@ -190,8 +248,7 @@ namespace SotnRandoTools.Khaos
 					}
 				}
 			}
-
-			return true;
+			notificationService.AddMessage("Channel Point rewards removed");
 		}
 
 		//No need to refresh for now, as a normal Khaos session wouldn't last 4 hours.
