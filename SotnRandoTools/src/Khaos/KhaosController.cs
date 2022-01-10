@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using BizHawk.Client.Common;
 using SotnApi.Constants.Addresses;
@@ -166,7 +167,7 @@ namespace SotnRandoTools.Khaos
 			fastActionTimer.Start();
 			StartCheats();
 			DateTime startedAt = DateTime.Now;
-			foreach (var action in toolConfig.Khaos.Actions)
+			Parallel.ForEach(toolConfig.Khaos.Actions, (action) =>
 			{
 				if (action.StartsOnCooldown)
 				{
@@ -176,7 +177,8 @@ namespace SotnRandoTools.Khaos
 				{
 					action.LastUsedAt = null;
 				}
-			}
+			});
+
 			notificationService.StartOverlayServer();
 			notificationService.AddMessage($"Khaos started");
 			Console.WriteLine("Khaos started");
@@ -370,6 +372,7 @@ namespace SotnRandoTools.Khaos
 		}
 		#endregion
 		#region Debuffs
+		//TODO: introduce levels of severity 2 slots / 4 slots / all slots, % of money
 		public void Bankrupt(string user = "Khaos")
 		{
 			BankruptActivate();
@@ -879,7 +882,7 @@ namespace SotnRandoTools.Khaos
 			shineCheat.PokeValue(1);
 			shineCheat.Enable();
 			fourBeastsTimer.Start();
-			contactDamage.PokeValue((int) Math.Ceiling(sotnApi.AlucardApi.Str / 10D));
+			contactDamage.PokeValue(1);
 			contactDamage.Enable();
 
 			notificationService.AddMessage(user + " used Four Beasts");
@@ -1861,8 +1864,6 @@ namespace SotnRandoTools.Khaos
 			slowTimer.Stop();
 			speedLocked = false;
 		}
-
-		//TODO: Introduce a different effect for problematic bosses
 		private void EnduranceSpawn(Object sender, EventArgs e)
 		{
 			uint roomX = sotnApi.GameApi.MapXPos;
@@ -1881,7 +1882,8 @@ namespace SotnRandoTools.Khaos
 			{
 				LiveActor boss = sotnApi.ActorApi.GetLiveActor(enemy);
 				bossCopy = new Actor(sotnApi.ActorApi.GetActor(enemy));
-				Console.WriteLine($"Endurance boss found hp: {bossCopy.Hp}, damage: {bossCopy.Damage}, sprite: {bossCopy.Sprite}");
+				string name = Constants.Khaos.EnduranceRomhackBosses.Where(e => e.Sprite == bossCopy.Sprite).FirstOrDefault().Name;
+				Console.WriteLine($"Endurance boss found namne: {name} hp: {bossCopy.Hp}, damage: {bossCopy.Damage}, sprite: {bossCopy.Sprite}");
 
 				bool right = rng.Next(0, 2) > 0;
 				bossCopy.Xpos = right ? (ushort) (bossCopy.Xpos + rng.Next(40, 80)) : (ushort) (bossCopy.Xpos + rng.Next(-80, -40));
@@ -1898,6 +1900,11 @@ namespace SotnRandoTools.Khaos
 					bossCopy.Xpos = rng.Next(0, 2) == 1 ? (ushort) (bossCopy.Xpos + rng.Next(-80, -20)) : (ushort) (bossCopy.Xpos + rng.Next(20, 80));
 					bossCopy.Palette = (ushort) (bossCopy.Palette + rng.Next(1, 10));
 					sotnApi.ActorApi.SpawnActor(bossCopy);
+					notificationService.AddMessage($"Super Endurance {name}");
+				}
+				else
+				{
+					notificationService.AddMessage($"Endurance {name}");
 				}
 
 				enduranceCount--;
@@ -1910,7 +1917,39 @@ namespace SotnRandoTools.Khaos
 			}
 			else
 			{
-				return;
+				enemy = sotnApi.ActorApi.FindActorFrom(toolConfig.Khaos.RomhackMode ? Constants.Khaos.EnduranceAlternateRomhackBosses : Constants.Khaos.EnduranceAlternateBosses);
+				if (enemy > 0)
+				{
+					LiveActor boss = sotnApi.ActorApi.GetLiveActor(enemy);
+					string name = Constants.Khaos.EnduranceAlternateBosses.Where(e => e.Sprite == boss.Sprite).FirstOrDefault().Name;
+					Console.WriteLine($"Endurance alternate boss found namne: {name}");
+
+					boss.Palette = (ushort) (boss.Palette + rng.Next(1, 10));
+
+					if (superEndurance)
+					{
+						boss.Hp = (ushort) Math.Round((healthMultiplier * 2.3) * boss.Hp);
+						superEndurance = false;
+						notificationService.AddMessage($"Super Endurance {name}");
+					}
+					else
+					{
+						boss.Hp = (ushort) Math.Round((healthMultiplier * 1.3) * boss.Hp);
+						notificationService.AddMessage($"Endurance {name}");
+					}
+
+					enduranceCount--;
+					enduranceRoomX = roomX;
+					enduranceRoomY = roomY;
+					if (enduranceCount == 0)
+					{
+						enduranceSpawnTimer.Stop();
+					}
+				}
+				else
+				{
+					return;
+				}
 			}
 		}
 		private void SpawnPoisonHitbox()
@@ -2053,8 +2092,8 @@ namespace SotnRandoTools.Khaos
 			invincibilityLocked = false;
 			attackPotionCheat.Disable();
 			shineCheat.Disable();
-			contactDamage.PokeValue(0);
 			contactDamage.Disable();
+			sotnApi.AlucardApi.ContactDamage = 0;
 			fourBeastsTimer.Stop();
 		}
 		private void ZawarudoOff(Object sender, EventArgs e)
@@ -2348,6 +2387,27 @@ namespace SotnRandoTools.Khaos
 				galamothTorso.Xpos -= Constants.Khaos.GalamothKhaosPositionOffset;
 				Console.WriteLine($"gala def: {galamothTorso.Def}");
 				//galamothTorso.Def = 0; Removes XP gained
+
+				if (enduranceCount > 0)
+				{
+					enduranceCount--;
+					enduranceRoomX = sotnApi.GameApi.MapXPos;
+					enduranceRoomY = sotnApi.GameApi.MapYPos;
+					if (enduranceCount == 0)
+					{
+						enduranceSpawnTimer.Stop();
+					}
+					if (superEndurance)
+					{
+						galamothTorso.Hp = (ushort) Math.Round(3.5 * Constants.Khaos.GalamothKhaosHp);
+						notificationService.AddMessage($"Super Endurance Galamoth");
+					}
+					else
+					{
+						galamothTorso.Hp = (ushort) Math.Round(2.3 * Constants.Khaos.GalamothKhaosHp);
+						notificationService.AddMessage($"Endurance Galamoth");
+					}
+				}
 
 				long galamothHeadAddress = sotnApi.ActorApi.FindActorFrom(new List<SearchableActor> { Constants.Khaos.GalamothHeadActor });
 				LiveActor galamothHead = sotnApi.ActorApi.GetLiveActor(galamothHeadAddress);

@@ -28,6 +28,7 @@ namespace SotnRandoTools.Khaos
 		private readonly ITwitchListener twitchListener;
 		private readonly IKhaosController khaosController;
 		private readonly INotificationService notificationService;
+		private System.Timers.Timer refreshTokenTimer = new();
 		private List<string> scopes = new List<string> { "channel:read:subscriptions", "channel:read:redemptions", "channel:manage:redemptions" };
 		private TwitchAPI api = new TwitchAPI();
 		private TwitchPubSub client = new TwitchPubSub();
@@ -46,6 +47,9 @@ namespace SotnRandoTools.Khaos
 			this.twitchListener = twitchListener;
 			this.khaosController = khaosController;
 			this.notificationService = notificationService;
+
+			refreshTokenTimer.Elapsed += RefreshToken;
+			refreshTokenTimer.Interval = 3 * (60 * (60 * 1000)) + (30 * (60 * 1000)); // 3.5 hours
 		}
 
 		public async Task<bool> Connect()
@@ -61,7 +65,7 @@ namespace SotnRandoTools.Khaos
 
 			var user = (await api.Helix.Users.GetUsersAsync()).Users[0];
 			broadcasterId = user.Id;
-			Console.WriteLine($"Authorization success!\r\nUser: {user.DisplayName}\r\nId: {user.Id}");
+			Console.WriteLine($"Authorization success!\r\nUser: {user.DisplayName}\r\nId: {user.Id} \r\nToken expires in : {resp.ExpiresIn}");
 
 			GetSubscribers();
 			CreateRewards();
@@ -81,6 +85,10 @@ namespace SotnRandoTools.Khaos
 			DeleteRewards();
 			twitchListener.Stop();
 			client.Disconnect();
+			foreach (var delayedTimer in actionsStartingOnCooldown)
+			{
+				delayedTimer.Dispose();
+			}
 			notificationService.AddMessage("Disconnected");
 		}
 
@@ -251,8 +259,7 @@ namespace SotnRandoTools.Khaos
 			notificationService.AddMessage("Channel Point rewards removed");
 		}
 
-		//No need to refresh for now, as a normal Khaos session wouldn't last 4 hours.
-		private async void RefreshToken()
+		private async void RefreshToken(object sender, EventArgs e)
 		{
 			try
 			{

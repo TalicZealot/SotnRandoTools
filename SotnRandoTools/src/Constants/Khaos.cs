@@ -293,51 +293,63 @@ namespace SotnRandoTools.Constants
 		};
 		public static List<SearchableActor> EnduranceBosses = new List<SearchableActor>
 		{
-			new SearchableActor {Hp = 200, Damage = 6, Sprite = 18296},    // Slogra
-			new SearchableActor {Hp = 200, Damage = 7, Sprite = 22392},    // Gaibon
-			new SearchableActor {Hp = 120, Damage = 7, Sprite = 14260},    // Doppleganger 10
-			new SearchableActor {Hp = 300, Damage = 20, Sprite = 9884},    // Minotaur
-			new SearchableActor {Hp = 260, Damage = 20, Sprite = 14428},   // Werewolf
-			new SearchableActor {Hp = 400, Damage = 20, Sprite = 56036},   // Lesser Demon
-			new SearchableActor {Hp = 500, Damage = 20, Sprite = 43920},   // Karasuman
-			//new SearchableActor {Hp = 800, Damage = 18, Sprite = 7188},  // Hippogryph - Can trigger the door closing and locking the player on the wrong side.
-			new SearchableActor {Hp = 666, Damage = 20, Sprite = 54072},   // Olrox
-			new SearchableActor {Hp = 666, Damage = 25, Sprite = 8452},    // Succubus
-			new SearchableActor {Hp = 800, Damage = 20, Sprite = 19772},   // Cerberus
-			//new SearchableActor {Hp = 400, Damage = 30, Sprite = 6264},  // Granfaloon
-			new SearchableActor {Hp = 400, Damage = 25, Sprite = 27332},   // Richter
-			new SearchableActor {Hp = 600, Damage = 35, Sprite = 40376},   // Darkwing Bat
-			new SearchableActor {Hp = 1100, Damage = 30, Sprite = 31032},  // Creature
-			new SearchableActor {Hp = 777, Damage = 35, Sprite = 11664},   // Doppleganger 40
-			//new SearchableActor {Hp = 888, Damage = 35, Sprite = 46380}, // Death - Can both hard and softlock the game
-			new SearchableActor {Hp = 1100, Damage = 35, Sprite = 6044},   // Medusa
-			new SearchableActor {Hp = 1200, Damage = 40, Sprite = 16564},  // Akmodan
-			new SearchableActor {Hp = 1000, Damage = 9, Sprite = 30724},   // Sypha
-			new SearchableActor {Hp = 1300, Damage = 40, Sprite = 43772}   // Shaft
+			//new SearchableActor {Name = "Slogra", Hp = 200, Damage = 6, Sprite = 18296},  //It always detects Slogra, experimenting with Gaibon clone instead
+			new SearchableActor {Name = "Gaibon", Hp = 200, Damage = 7, Sprite = 22392},
+			new SearchableActor {Name = "Doppleganger 10", Hp = 120, Damage = 7, Sprite = 14260},
+			new SearchableActor {Name = "Minotaur", Hp = 300, Damage = 20, Sprite = 9884},
+			new SearchableActor {Name = "Werewolf", Hp = 260, Damage = 20, Sprite = 14428},
+			new SearchableActor {Name = "Lesser Demon", Hp = 400, Damage = 20, Sprite = 56036},
+			new SearchableActor {Name = "Karasuman", Hp = 500, Damage = 20, Sprite = 43920},
+			//new SearchableActor {Name = "Hippogryph", Hp = 800, Damage = 18, Sprite = 7188},  //Can trigger the door closing and locking the player on the wrong side.
+			new SearchableActor {Name = "Olrox", Hp = 666, Damage = 20, Sprite = 54072},
+			new SearchableActor {Name = "Succubus", Hp = 666, Damage = 25, Sprite = 8452},
+			new SearchableActor {Name = "Cerberus", Hp = 800, Damage = 20, Sprite = 19772},
+			//new SearchableActor {Name = "Granfaloon", Hp = 400, Damage = 30, Sprite = 6264},  //Only spawns core, no tentacles or shell
+			new SearchableActor {Name = "Richter", Hp = 400, Damage = 25, Sprite = 27332},
+			new SearchableActor {Name = "Darkwing Bat", Hp = 600, Damage = 35, Sprite = 40376},
+			//new SearchableActor {Name = "Creature", Hp = 1100, Damage = 30, Sprite = 31032},//Hammer doesn't have hitbox and body only does 1 damage
+			new SearchableActor {Name = "Doppleganger 40", Hp = 777, Damage = 35, Sprite = 11664},
+			//new SearchableActor {Name = "Death", Hp = 888, Damage = 35, Sprite = 46380},
+			new SearchableActor {Name = "Medusa", Hp = 1100, Damage = 35, Sprite = 6044},
+			new SearchableActor {Name = "Akmodan", Hp = 1200, Damage = 40, Sprite = 16564},
+			new SearchableActor {Name = "Sypha", Hp = 1000, Damage = 9, Sprite = 30724},
+			new SearchableActor {Name = "Shaft", Hp = 1300, Damage = 40, Sprite = 43772}
+		};
+		public static List<SearchableActor> EnduranceAlternateBosses = new List<SearchableActor>
+		{
+			new SearchableActor {Name = "Hippogryph", Hp = 800, Damage = 18, Sprite = 7188},
+			new SearchableActor {Name = "Scylla", Hp = 200, Damage = 16, Sprite = 10988},
+			new SearchableActor {Name = "Granfaloon", Hp = 400, Damage = 30, Sprite = 6264},
+			new SearchableActor {Name = "Creature", Hp = 1100, Damage = 30, Sprite = 31032},
+			new SearchableActor {Name = "Death", Hp = 888, Damage = 35, Sprite = 46380},
 		};
 		public static List<SearchableActor> EnduranceRomhackBosses = new List<SearchableActor>
 		{
-			new SearchableActor {Sprite = 18296},    // Slogra
-			new SearchableActor {Sprite = 22392},    // Gaibon
-			new SearchableActor {Sprite = 14260},    // Doppleganger 10
-			new SearchableActor { Sprite = 9884},    // Minotaur
-			new SearchableActor { Sprite = 14428},   // Werewolf
-			new SearchableActor { Sprite = 56036},   // Lesser Demon
-			new SearchableActor { Sprite = 43920},   // Karasuman
-			//new SearchableActor {Hp = 800, Damage = 18, Sprite = 7188},  // Hippogryph - Can trigger the door closing and locking the player on the wrong side.
-			new SearchableActor { Sprite = 54072},   // Olrox
-			new SearchableActor { Sprite = 8452},    // Succubus
-			new SearchableActor { Sprite = 19772},   // Cerberus
-			//new SearchableActor {Hp = 400, Damage = 30, Sprite = 6264},  // Granfaloon
-			new SearchableActor {Sprite = 27332},   // Richter
-			new SearchableActor {Sprite = 40376},   // Darkwing Bat
-			new SearchableActor { Sprite = 31032},  // Creature
-			new SearchableActor {Sprite = 11664},   // Doppleganger 40
-			//new SearchableActor {Sprite = 46380}, // Death - Can both hard and softlock the game
-			new SearchableActor { Sprite = 6044},   // Medusa
-			new SearchableActor { Sprite = 16564},  // Akmodan
-			new SearchableActor {Sprite = 30724},   // Sypha
-			new SearchableActor { Sprite = 43772}   // Shaft
+			new SearchableActor {Name = "Gaibon", Sprite = 22392},
+			new SearchableActor {Name = "Doppleganger 10", Sprite = 14260},
+			new SearchableActor {Name = "Minotaur", Sprite = 9884},
+			new SearchableActor {Name = "Werewolf", Sprite = 14428},
+			new SearchableActor {Name = "Lesser Demon", Sprite = 56036},
+			new SearchableActor {Name = "Karasuman", Sprite = 43920},
+			new SearchableActor {Name = "Olrox", Sprite = 54072},
+			new SearchableActor {Name = "Succubus", Sprite = 8452},
+			new SearchableActor {Name = "Cerberus", Sprite = 19772},
+			new SearchableActor {Name = "Richter", Sprite = 27332},
+			new SearchableActor {Name = "Darkwing Bat", Sprite = 40376},
+			new SearchableActor {Name = "Creature", Sprite = 31032},
+			new SearchableActor {Name = "Doppleganger 40", Sprite = 11664},
+			new SearchableActor {Name = "Medusa", Sprite = 6044},
+			new SearchableActor {Name = "Akmodan", Sprite = 16564},
+			new SearchableActor {Name = "Sypha", Sprite = 30724},
+			new SearchableActor {Name = "Shaft", Sprite = 43772}
+		};
+		public static List<SearchableActor> EnduranceAlternateRomhackBosses = new List<SearchableActor>
+		{
+			new SearchableActor {Name = "Hippogryph", Sprite = 7188},
+			new SearchableActor {Name = "Scylla", Sprite = 10988},
+			new SearchableActor {Name = "Granfaloon", Sprite = 6264},
+			new SearchableActor {Name = "Creature", Sprite = 31032},
+			new SearchableActor {Name = "Death", Sprite = 46380},
 		};
 		public static SearchableActor GalamothTorsoActor = new SearchableActor { Hp = 12000, Damage = 50, Sprite = 23936 };
 		public static SearchableActor GalamothHeadActor = new SearchableActor { Hp = 32767, Damage = 50, Sprite = 31516 };
@@ -378,7 +390,7 @@ namespace SotnRandoTools.Constants
 		public static uint GuiltyGearDefence = 50;
 		public static uint GuiltyGearDarkMetamorphosis = 50;
 		public static uint ShaftKhaosHp = 25;
-		public static uint GalamothKhaosHp = 2500;
+		public static uint GalamothKhaosHp = 2000;
 		public static uint GalamothKhaosPositionOffset = 100;
 		public static float HasteDashFactor = 1.8F;
 		public static int SaveIcosahedronFirstCastle = 0xBCAA;

@@ -283,7 +283,7 @@ namespace SotnRandoTools.Configuration
 				},
 				new Action{
 					Name = "Endurance",
-					Description = "The next boss spawns a clone. Both get increased HP. Waits for the next boss, so it will not activate in the current room if it has a boss. Does not apply to Beelzebub, Galamoth, Hippogryph, Dracula.",
+					Description = "The next boss spawns a clone. Both get increased HP. Waits for the next boss, so it will not activate in the current room if it has a boss. Does not apply to Beelzebub and Dracula.",
 					Meter = 7,
 					AlertPath = Paths.DeathLaughAlternateSound,
 					Cooldown = new System.TimeSpan(0, 6, 0),
@@ -297,7 +297,7 @@ namespace SotnRandoTools.Configuration
 					Description = "Alucard loses all invincibility and can get comboed, but gains defense. The player is already dead.",
 					Meter = 7,
 					AlertPath = Paths.AlreadyDeadSound,
-					Duration = new System.TimeSpan(0, 1, 0),
+					Duration = new System.TimeSpan(0, 1, 30),
 					Cooldown = new System.TimeSpan(0, 6, 0),
 					Bits = 40,
 					ChannelPoints = 400,
