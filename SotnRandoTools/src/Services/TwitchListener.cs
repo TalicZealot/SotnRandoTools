@@ -6,6 +6,7 @@ using SotnRandoTools.Services.Interfaces;
 
 namespace SotnRandoTools.Services
 {
+	//Try IDisposable to wrap in a using block
 	public class TwitchListener : ITwitchListener
 	{
 		private HttpListener listener;
@@ -50,7 +51,10 @@ namespace SotnRandoTools.Services
 
 		public void Stop()
 		{
-			listener.Stop();
+			if (listener.IsListening)
+			{
+				listener.Stop();
+			}
 		}
 	}
 }

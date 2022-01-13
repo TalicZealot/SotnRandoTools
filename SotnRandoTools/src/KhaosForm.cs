@@ -21,9 +21,9 @@ namespace SotnRandoTools
 	{
 		private ICheatCollectionAdapter adaptedCheats;
 		private readonly IToolConfig toolConfig;
-		private KhaosController? khaosControler;
-		private TwitchListener? twitchListener;
-		private ChannelPointsController? channelPointsController;
+		private readonly KhaosController? khaosControler;
+		private readonly TwitchListener? twitchListener;
+		private readonly ChannelPointsController? channelPointsController;
 		private List<ActionTimer> actionTimers = new();
 		private System.Timers.Timer countdownTimer;
 		private string heartOfVladLocation;
@@ -65,14 +65,11 @@ namespace SotnRandoTools
 
 		public ICheatCollectionAdapter AdaptedCheats
 		{
-			get
-			{
-				return this.adaptedCheats;
-			}
+			get => adaptedCheats;
 
 			set
 			{
-				this.adaptedCheats = value;
+				adaptedCheats = value;
 				khaosControler.GetCheats();
 			}
 		}
@@ -80,82 +77,52 @@ namespace SotnRandoTools
 		public event PropertyChangedEventHandler PropertyChanged;
 		public string HeartOfVladLocation
 		{
-			get
-			{
-				return heartOfVladLocation;
-			}
+			get => heartOfVladLocation;
 			set
 			{
 				heartOfVladLocation = value;
 
-				if (PropertyChanged != null)
-				{
-					PropertyChanged(this, new PropertyChangedEventArgs("HeartOfVladLocation"));
-				}
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HeartOfVladLocation)));
 			}
 		}
 		public string ToothOfVladLocation
 		{
-			get
-			{
-				return toothOfVladLocation;
-			}
+			get => toothOfVladLocation;
 			set
 			{
 				toothOfVladLocation = value;
 
-				if (PropertyChanged != null)
-				{
-					PropertyChanged(this, new PropertyChangedEventArgs("ToothOfVladLocation"));
-				}
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ToothOfVladLocation)));
 			}
 		}
 		public string RibOfVladLocation
 		{
-			get
-			{
-				return ribOfVladLocation;
-			}
+			get => ribOfVladLocation;
 			set
 			{
 				ribOfVladLocation = value;
 
-				if (PropertyChanged != null)
-				{
-					PropertyChanged(this, new PropertyChangedEventArgs("RibOfVladLocation"));
-				}
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(RibOfVladLocation)));
 			}
 		}
 		public string RingOfVladLocation
 		{
-			get
-			{
-				return ringOfVladLocation;
-			}
+			get => ringOfVladLocation;
 			set
 			{
 				ringOfVladLocation = value;
 
-				if (PropertyChanged != null)
-				{
-					PropertyChanged(this, new PropertyChangedEventArgs("RingOfVladLocation"));
-				}
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(RingOfVladLocation)));
 			}
 		}
 		public string EyeOfVladLocation
 		{
-			get
-			{
-				return eyeOfVladLocation;
-			}
+			get => eyeOfVladLocation;
 			set
 			{
 				eyeOfVladLocation = value;
 
-				if (PropertyChanged != null)
-				{
-					PropertyChanged(this, new PropertyChangedEventArgs("EyeOfVladLocation"));
-				}
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(EyeOfVladLocation)));
 			}
 		}
 		public List<QueuedAction> ActionQueue { get; set; }
@@ -166,7 +133,7 @@ namespace SotnRandoTools
 		}
 		public bool ContainsTimer(string name)
 		{
-			return actionTimers.Where(timer => timer.Name == name).Count() > 0;
+			return actionTimers.Where(timer => timer.Name == name).Any();
 		}
 		public void UpdateKhaosValues()
 		{
@@ -182,7 +149,7 @@ namespace SotnRandoTools
 
 		private void DecrementTimers(object sender, ElapsedEventArgs e)
 		{
-			foreach (var timer in actionTimers)
+			foreach (ActionTimer? timer in actionTimers)
 			{
 				if (timer.TotalDuration == 0)
 				{
@@ -198,7 +165,7 @@ namespace SotnRandoTools
 
 			string timersLines = "";
 
-			foreach (var timer in actionTimers)
+			foreach (ActionTimer? timer in actionTimers)
 			{
 				timersLines += timer.Name.PadRight(16, ' ') + timer.Duration.Minutes + ":" + timer.Duration.Seconds + "\r\n";
 			}
@@ -211,7 +178,7 @@ namespace SotnRandoTools
 		{
 			string queueLines = "";
 
-			foreach (var action in ActionQueue)
+			foreach (QueuedAction? action in ActionQueue)
 			{
 				queueLines += action.Name + "\r\n";
 			}
@@ -311,7 +278,7 @@ namespace SotnRandoTools
 			}
 			else
 			{
-				var result = await channelPointsController.Connect();
+				bool result = await channelPointsController.Connect();
 				connectButton.Text = "Disonnect";
 				connected = true;
 				connectButton.BackColor = System.Drawing.Color.FromArgb(93, 56, 147);

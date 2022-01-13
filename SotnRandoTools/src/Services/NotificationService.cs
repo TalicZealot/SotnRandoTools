@@ -15,8 +15,8 @@ namespace SotnRandoTools.Services
 	public class NotificationService : INotificationService
 	{
 		private OverlaySocketServer overlaySocketServer;
-		private const int NotificationTime = 4 * 1000;
-		private const int NotificationTimeFast = 2 * 1000;
+		private const int NotificationTime = 5 * 1000;
+		private const int NotificationTimeFast = 3 * 1000;
 		private const int MeterSize = 60;
 
 		private readonly IGuiApi guiApi;

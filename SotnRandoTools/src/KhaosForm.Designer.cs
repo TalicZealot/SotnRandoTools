@@ -617,48 +617,48 @@ namespace SotnRandoTools
             // eyeLocation
             // 
             this.eyeLocation.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.eyeLocation.Location = new System.Drawing.Point(209, 129);
+            this.eyeLocation.Location = new System.Drawing.Point(188, 110);
             this.eyeLocation.Name = "eyeLocation";
-            this.eyeLocation.Size = new System.Drawing.Size(150, 18);
+            this.eyeLocation.Size = new System.Drawing.Size(140, 18);
             this.eyeLocation.TabIndex = 9;
             // 
             // ringLocation
             // 
             this.ringLocation.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.ringLocation.Location = new System.Drawing.Point(209, 106);
+            this.ringLocation.Location = new System.Drawing.Point(188, 87);
             this.ringLocation.Name = "ringLocation";
-            this.ringLocation.Size = new System.Drawing.Size(150, 18);
+            this.ringLocation.Size = new System.Drawing.Size(140, 18);
             this.ringLocation.TabIndex = 8;
             // 
             // ribLocation
             // 
             this.ribLocation.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.ribLocation.Location = new System.Drawing.Point(209, 81);
+            this.ribLocation.Location = new System.Drawing.Point(188, 62);
             this.ribLocation.Name = "ribLocation";
-            this.ribLocation.Size = new System.Drawing.Size(150, 18);
+            this.ribLocation.Size = new System.Drawing.Size(140, 18);
             this.ribLocation.TabIndex = 7;
             // 
             // toothLocation
             // 
             this.toothLocation.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.toothLocation.Location = new System.Drawing.Point(209, 57);
+            this.toothLocation.Location = new System.Drawing.Point(188, 38);
             this.toothLocation.Name = "toothLocation";
-            this.toothLocation.Size = new System.Drawing.Size(150, 18);
+            this.toothLocation.Size = new System.Drawing.Size(140, 18);
             this.toothLocation.TabIndex = 6;
             // 
             // heartLocation
             // 
             this.heartLocation.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.heartLocation.Location = new System.Drawing.Point(209, 34);
+            this.heartLocation.Location = new System.Drawing.Point(188, 15);
             this.heartLocation.Name = "heartLocation";
-            this.heartLocation.Size = new System.Drawing.Size(150, 18);
+            this.heartLocation.Size = new System.Drawing.Size(140, 18);
             this.heartLocation.TabIndex = 5;
             // 
             // eyeLabel
             // 
             this.eyeLabel.AutoSize = true;
             this.eyeLabel.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.eyeLabel.Location = new System.Drawing.Point(82, 129);
+            this.eyeLabel.Location = new System.Drawing.Point(75, 110);
             this.eyeLabel.Name = "eyeLabel";
             this.eyeLabel.Size = new System.Drawing.Size(105, 18);
             this.eyeLabel.TabIndex = 4;
@@ -668,7 +668,7 @@ namespace SotnRandoTools
             // 
             this.ringLabel.AutoSize = true;
             this.ringLabel.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.ringLabel.Location = new System.Drawing.Point(79, 106);
+            this.ringLabel.Location = new System.Drawing.Point(72, 87);
             this.ringLabel.Name = "ringLabel";
             this.ringLabel.Size = new System.Drawing.Size(108, 18);
             this.ringLabel.TabIndex = 3;
@@ -678,7 +678,7 @@ namespace SotnRandoTools
             // 
             this.ribLabel.AutoSize = true;
             this.ribLabel.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.ribLabel.Location = new System.Drawing.Point(85, 81);
+            this.ribLabel.Location = new System.Drawing.Point(80, 62);
             this.ribLabel.Name = "ribLabel";
             this.ribLabel.Size = new System.Drawing.Size(100, 18);
             this.ribLabel.TabIndex = 2;
@@ -688,7 +688,7 @@ namespace SotnRandoTools
             // 
             this.toothLabel.AutoSize = true;
             this.toothLabel.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.toothLabel.Location = new System.Drawing.Point(72, 57);
+            this.toothLabel.Location = new System.Drawing.Point(60, 38);
             this.toothLabel.Name = "toothLabel";
             this.toothLabel.Size = new System.Drawing.Size(120, 18);
             this.toothLabel.TabIndex = 1;
@@ -698,7 +698,7 @@ namespace SotnRandoTools
             // 
             this.heartLabel.AutoSize = true;
             this.heartLabel.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.heartLabel.Location = new System.Drawing.Point(73, 34);
+            this.heartLabel.Location = new System.Drawing.Point(63, 15);
             this.heartLabel.Name = "heartLabel";
             this.heartLabel.Size = new System.Drawing.Size(117, 18);
             this.heartLabel.TabIndex = 0;
@@ -861,7 +861,7 @@ namespace SotnRandoTools
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
-            this.ClientSize = new System.Drawing.Size(450, 523);
+            this.ClientSize = new System.Drawing.Size(450, 525);
             this.Controls.Add(this.connectButton);
             this.Controls.Add(this.autoKhaosButton);
             this.Controls.Add(this.tabControl1);

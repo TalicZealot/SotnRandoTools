@@ -22,7 +22,7 @@ namespace SotnRandoTools.Khaos
 {
 	public class ChannelPointsController
 	{
-		private const int RetryBaseMs = 20;
+		private const int RetryBaseMs = 10;
 		private const int RetryCount = 3;
 		private readonly IToolConfig toolConfig;
 		private readonly ITwitchListener twitchListener;
@@ -58,10 +58,11 @@ namespace SotnRandoTools.Khaos
 			validateCreds();
 			api.Settings.ClientId = TwitchConfiguration.TwitchClientId;
 			Process.Start(getAuthorizationCodeUrl(api.Settings.ClientId, Paths.TwitchRedirectUri, scopes));
-			var auth = await twitchListener.Listen();
-			var resp = await api.Auth.GetAccessTokenFromCodeAsync(auth.Code, TwitchConfiguration.TwitchClientSecret, Paths.TwitchRedirectUri);
+			Services.Models.Authorization? auth = await twitchListener.Listen();
+			TwitchLib.Api.Auth.AuthCodeResponse? resp = await api.Auth.GetAccessTokenFromCodeAsync(auth.Code, TwitchConfiguration.TwitchClientSecret, Paths.TwitchRedirectUri);
 			api.Settings.AccessToken = resp.AccessToken;
 			refreshToken = resp.RefreshToken;
+			twitchListener.Stop();
 
 			var user = (await api.Helix.Users.GetUsersAsync()).Users[0];
 			broadcasterId = user.Id;
@@ -83,7 +84,6 @@ namespace SotnRandoTools.Khaos
 		public void Disconnect()
 		{
 			DeleteRewards();
-			twitchListener.Stop();
 			client.Disconnect();
 			foreach (var delayedTimer in actionsStartingOnCooldown)
 			{
@@ -206,6 +206,7 @@ namespace SotnRandoTools.Khaos
 					customRewardIds.Add(response.Data[0].Id);
 
 					Console.WriteLine($"Added new delayed reward {request.Title}.");
+					notificationService.AddMessage($"{request.Title} activated.");
 
 					break;
 				}
@@ -309,11 +310,30 @@ namespace SotnRandoTools.Khaos
 				}
 			}
 
-			await api.Helix.ChannelPoints.UpdateCustomReward(
-				broadcasterId,
-				e.RewardRedeemed.Redemption.Reward.Id,
-				new UpdateCustomRewardRequest { Cost = NewCost, },
-				api.Settings.AccessToken);
+			for (int i = 0; i <= RetryCount; i++)
+			{
+				try
+				{
+					await api.Helix.ChannelPoints.UpdateCustomReward(
+						broadcasterId,
+						e.RewardRedeemed.Redemption.Reward.Id,
+						new UpdateCustomRewardRequest { Cost = NewCost, },
+						api.Settings.AccessToken);
+					break;
+				}
+				catch (Exception ex)
+				{
+					if (i == RetryCount)
+					{
+						throw new Exception("Server error while updating Reward. Click Continue.", ex);
+					}
+					else
+					{
+						Console.WriteLine(ex.Message);
+						await Task.Delay((int) Math.Pow(RetryBaseMs, i));
+					}
+				}
+			}
 
 			var actionEvent = new EventAddAction { UserName = e.RewardRedeemed.Redemption.User.DisplayName, ActionIndex = toolConfig.Khaos.Actions.IndexOf(action) };
 

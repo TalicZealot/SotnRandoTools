@@ -29,20 +29,12 @@ namespace SotnRandoTools.Khaos
 		private readonly INotificationService notificationService;
 		private readonly IInputService inputService;
 		private readonly IKhaosActionsInfoDisplay statusInfoDisplay;
-		private Random rng = new Random();
-
-		private string[]? subscribers = { };
+		private Random rng = new();
 
 		private List<QueuedAction> queuedActions = new();
 		private Queue<MethodInvoker> queuedFastActions = new();
-		private Timer actionTimer = new Timer();
-		private Timer fastActionTimer = new Timer();
-		private int totalMeterGained = 0;
-		private bool pandoraUsed = false;
-		private uint alucardMapX = 0;
-		private uint alucardMapY = 0;
-		private bool alucardSecondCastle = false;
-		private bool inMainMenu = false;
+		private Timer actionTimer = new();
+		private Timer fastActionTimer = new();
 		#region Timers
 		private System.Timers.Timer subweaponsOnlyTimer = new();
 		private System.Timers.Timer slowTimer = new();
@@ -67,26 +59,33 @@ namespace SotnRandoTools.Khaos
 		private System.Timers.Timer bloodManaDeathTimer = new();
 		#endregion
 		#region Cheats
-		Cheat faerieScroll;
-		Cheat darkMetamorphasisCheat;
-		Cheat underwaterPhysics;
-		Cheat hearts;
-		Cheat curse;
-		Cheat manaCheat;
-		Cheat attackPotionCheat;
-		Cheat defencePotionCheat;
-		Cheat stopwatchTimer;
-		Cheat hitboxWidth;
-		Cheat hitboxHeight;
-		Cheat hitbox2Width;
-		Cheat hitbox2Height;
-		Cheat invincibilityCheat;
-		Cheat shineCheat;
-		Cheat visualEffectPaletteCheat;
-		Cheat visualEffectTimerCheat;
-		Cheat savePalette;
-		Cheat contactDamage;
+		private Cheat faerieScroll;
+		private Cheat darkMetamorphasisCheat;
+		private Cheat underwaterPhysics;
+		private Cheat hearts;
+		private Cheat curse;
+		private Cheat manaCheat;
+		private Cheat attackPotionCheat;
+		private Cheat defencePotionCheat;
+		private Cheat stopwatchTimer;
+		private Cheat hitboxWidth;
+		private Cheat hitboxHeight;
+		private Cheat hitbox2Width;
+		private Cheat hitbox2Height;
+		private Cheat invincibilityCheat;
+		private Cheat shineCheat;
+		private Cheat visualEffectPaletteCheat;
+		private Cheat visualEffectTimerCheat;
+		private Cheat savePalette;
+		private Cheat contactDamage;
 		#endregion
+
+		private int totalMeterGained = 0;
+		private bool pandoraUsed = false;
+		private uint alucardMapX = 0;
+		private uint alucardMapY = 0;
+		private bool alucardSecondCastle = false;
+		private bool inMainMenu = false;
 
 		private uint hordeZone = 0;
 		private uint hordeZone2 = 0;
@@ -135,12 +134,14 @@ namespace SotnRandoTools.Khaos
 		private bool superMelty = false;
 		private bool superHaste = false;
 
+		private int bankruptLevel = 1;
+
 		public KhaosController(IToolConfig toolConfig, ISotnApi sotnApi, ICheatCollectionAdapter cheats, INotificationService notificationService, IInputService inputService, IKhaosActionsInfoDisplay statusInfoDisplay)
 		{
 			if (toolConfig is null) throw new ArgumentNullException(nameof(toolConfig));
 			if (sotnApi is null) throw new ArgumentNullException(nameof(sotnApi));
-			if (cheats == null) throw new ArgumentNullException(nameof(cheats));
-			if (notificationService == null) throw new ArgumentNullException(nameof(notificationService));
+			if (cheats is null) throw new ArgumentNullException(nameof(cheats));
+			if (notificationService is null) throw new ArgumentNullException(nameof(notificationService));
 			if (inputService is null) throw new ArgumentNullException(nameof(inputService));
 			if (statusInfoDisplay is null) throw new ArgumentNullException(nameof(statusInfoDisplay));
 			this.toolConfig = toolConfig;
@@ -194,9 +195,9 @@ namespace SotnRandoTools.Khaos
 		public void OverwriteBossNames(string[] subscribers)
 		{
 			subscribers = subscribers.OrderBy(x => rng.Next()).ToArray();
-			var randomizedBosses = Strings.BossNameAddresses.OrderBy(x => rng.Next());
+			IOrderedEnumerable<KeyValuePair<string, long>>? randomizedBosses = Strings.BossNameAddresses.OrderBy(x => rng.Next());
 			int i = 0;
-			foreach (var boss in randomizedBosses)
+			foreach (KeyValuePair<string, long> boss in randomizedBosses)
 			{
 				if (i == subscribers.Length)
 				{
@@ -372,11 +373,10 @@ namespace SotnRandoTools.Khaos
 		}
 		#endregion
 		#region Debuffs
-		//TODO: introduce levels of severity 2 slots / 4 slots / all slots, % of money
 		public void Bankrupt(string user = "Khaos")
 		{
+			notificationService.AddMessage($"{user} used Bankrupt level {bankruptLevel}");
 			BankruptActivate();
-			notificationService.AddMessage($"{user} used Bankrupt");
 			Alert(toolConfig.Khaos.Actions[7]);
 		}
 		public void Weaken(string user = "Khaos")
@@ -698,6 +698,7 @@ namespace SotnRandoTools.Khaos
 					notificationService.AddMessage($"{user} healed you");
 					break;
 				case 3:
+					//TODO: check zawarudo
 					sotnApi.AlucardApi.ActivatePotion(Potion.Mannaprism);
 					Console.WriteLine($"Medium help rolled activate Manna prism.");
 					notificationService.AddMessage($"{user} used a Mana Prism");
@@ -790,6 +791,7 @@ namespace SotnRandoTools.Khaos
 			{
 				SpendKhaosMeter();
 				sotnApi.AlucardApi.GrantRelic(Relic.SoulOfBat);
+				sotnApi.AlucardApi.GrantRelic(Relic.FireOfBat);
 				sotnApi.AlucardApi.GrantRelic(Relic.EchoOfBat);
 				sotnApi.AlucardApi.GrantRelic(Relic.ForceOfEcho);
 				sotnApi.AlucardApi.GrantRelic(Relic.SoulOfWolf);
@@ -871,7 +873,7 @@ namespace SotnRandoTools.Khaos
 				statusInfoDisplay.AddTimer(timer);
 			}
 		}
-		//TODO: Split into a random effect of four, 4B on super
+		//TODO: Split into a random effect of four, 4B on super, alternatively activate 4b once all 4 have been used once
 		public void FourBeasts(string user = "Khaos")
 		{
 			invincibilityCheat.PokeValue(1);
@@ -1273,7 +1275,7 @@ namespace SotnRandoTools.Khaos
 			lordTimer.Elapsed += LordOff;
 			lordTimer.Interval = 5 * (60 * 1000);
 			lordSpawnTimer.Elapsed += LordSpawn;
-			lordSpawnTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.KhaosHorde].Interval.TotalMilliseconds;
+			lordSpawnTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.Lord].Interval.TotalMilliseconds;
 		}
 		private void StopTimers()
 		{
@@ -1429,7 +1431,7 @@ namespace SotnRandoTools.Khaos
 			if (roll > 55)
 			{
 				int index = rng.Next(0, toolConfig.Khaos.Actions.Count);
-				var actionEvent = new EventAddAction { UserName = "Auto Khaos", ActionIndex = index };
+				EventAddAction? actionEvent = new() { UserName = "Auto Khaos", ActionIndex = index };
 
 				if (toolConfig.Khaos.Actions[index].Name != "Guilty Gear" && toolConfig.Khaos.Actions[index].Name != "Pandora's Box" && !toolConfig.Khaos.Actions[index].IsOnCooldown())
 				{
@@ -1445,11 +1447,11 @@ namespace SotnRandoTools.Khaos
 			uint roll = (uint) rng.Next(0, 21);
 			if (roll > 16 && roll < 20)
 			{
-				gold = gold * (uint) rng.Next(1, 11);
+				gold *= (uint) rng.Next(1, 11);
 			}
 			else if (roll > 19)
 			{
-				gold = gold * (uint) rng.Next(10, 81);
+				gold *= (uint) rng.Next(10, 81);
 			}
 			sotnApi.AlucardApi.Gold = gold;
 		}
@@ -1470,11 +1472,11 @@ namespace SotnRandoTools.Khaos
 			int statPoolRoll = rng.Next(1, 4);
 			if (statPoolRoll == 2)
 			{
-				statPool = statPool + offset;
+				statPool += +offset;
 			}
 			else if (statPoolRoll == 3)
 			{
-				statPool = statPool - offset;
+				statPool -= offset;
 			}
 
 			double a = rng.NextDouble();
@@ -1506,11 +1508,11 @@ namespace SotnRandoTools.Khaos
 			int pointsRoll = rng.Next(1, 4);
 			if (pointsRoll == 2)
 			{
-				pointsPool = pointsPool + offset;
+				pointsPool += offset;
 			}
 			else if (pointsRoll == 3)
 			{
-				pointsPool = pointsPool - offset;
+				pointsPool -= offset;
 			}
 
 			double hpPercent = rng.NextDouble();
@@ -1571,13 +1573,13 @@ namespace SotnRandoTools.Khaos
 		}
 		private void RandomizeSubweapon()
 		{
-			var subweapons = Enum.GetValues(typeof(Subweapon));
+			Array? subweapons = Enum.GetValues(typeof(Subweapon));
 			sotnApi.AlucardApi.Subweapon = (Subweapon) subweapons.GetValue(rng.Next(subweapons.Length));
 		}
 		private void RandomizeRelicsActivate(bool randomizeVladRelics = true)
 		{
-			var relics = Enum.GetValues(typeof(Relic));
-			foreach (var relic in relics)
+			Array? relics = Enum.GetValues(typeof(Relic));
+			foreach (object? relic in relics)
 			{
 				if ((int) relic < 25)
 				{
@@ -1607,7 +1609,7 @@ namespace SotnRandoTools.Khaos
 			if (alucardSecondCastle)
 			{
 				int roll = rng.Next(0, Constants.Khaos.FlightRelics.Count);
-				foreach (var relic in Constants.Khaos.FlightRelics[roll])
+				foreach (Relic relic in Constants.Khaos.FlightRelics[roll])
 				{
 					sotnApi.AlucardApi.GrantRelic((Relic) relic);
 				}
@@ -1806,9 +1808,9 @@ namespace SotnRandoTools.Khaos
 
 			if (enemy > 0)
 			{
-				Actor? hordeEnemy = new Actor(sotnApi.ActorApi.GetActor(enemy));
+				Actor? hordeEnemy = new(sotnApi.ActorApi.GetActor(enemy));
 
-				if (hordeEnemy is not null && hordeEnemies.Where(e => e.Sprite == hordeEnemy.Sprite).Count() < 1)
+				if (hordeEnemy is not null && !hordeEnemies.Where(e => e.Sprite == hordeEnemy.Sprite).Any())
 				{
 					if (superHorde)
 					{
@@ -2004,6 +2006,36 @@ namespace SotnRandoTools.Khaos
 		}
 		private void BankruptActivate()
 		{
+			bool clearRightHand = false;
+			bool clearLeftHand = false;
+			bool clearHelm = false;
+			bool clearArmor = false;
+			bool clearCloak = false;
+			bool clearAccessory1 = false;
+			bool clearAccessory2 = false;
+
+			float goldPercentage = 0;
+			int clearedSlots = 0;
+
+			switch (bankruptLevel)
+			{
+				case 1:
+					goldPercentage = 0.5f;
+					clearedSlots = 2;
+					break;
+				case 2:
+					goldPercentage = 0.2f;
+					clearedSlots = 4;
+					break;
+				case 3:
+					goldPercentage = 0;
+					clearedSlots = 7;
+					break;
+
+				default:
+					break;
+			}
+
 			bool hasHolyGlasses = sotnApi.AlucardApi.HasItemInInventory("Holy glasses");
 			bool hasSpikeBreaker = sotnApi.AlucardApi.HasItemInInventory("Spike Breaker");
 			bool hasGoldRing = sotnApi.AlucardApi.HasItemInInventory("Gold Ring");
@@ -2014,15 +2046,94 @@ namespace SotnRandoTools.Khaos
 			bool equippedSilverRing = Equipment.Items[(int) (sotnApi.AlucardApi.Accessory1 + Equipment.HandCount + 1)] == "Silver Ring" || Equipment.Items[(int) (sotnApi.AlucardApi.Accessory2 + Equipment.HandCount + 1)] == "Silver Ring";
 
 
-			sotnApi.AlucardApi.Gold = 0;
+			sotnApi.AlucardApi.Gold = goldPercentage == 0 ? 0 : (uint) Math.Round(sotnApi.AlucardApi.Gold * goldPercentage);
 			sotnApi.AlucardApi.ClearInventory();
-			sotnApi.AlucardApi.RightHand = 0;
-			sotnApi.AlucardApi.LeftHand = 0;
-			sotnApi.AlucardApi.Helm = Equipment.HelmStart;
-			sotnApi.AlucardApi.Armor = 0;
-			sotnApi.AlucardApi.Cloak = Equipment.CloakStart;
-			sotnApi.AlucardApi.Accessory1 = Equipment.AccessoryStart;
-			sotnApi.AlucardApi.Accessory2 = Equipment.AccessoryStart;
+
+			if (clearedSlots == 7)
+			{
+				clearRightHand = true;
+				clearLeftHand = true;
+				clearHelm = true;
+				clearArmor = true;
+				clearCloak = true;
+				clearAccessory1 = true;
+				clearAccessory2 = true;
+			}
+			else
+			{
+				int[] slots = new int[clearedSlots + 1];
+				int slotsIndex = 0;
+				for (int i = 0; i <= clearedSlots; i++)
+				{
+					int result = rng.Next(0, 8);
+					while (slots.Contains(result))
+					{
+						result = rng.Next(0, 8);
+					}
+					slots[slotsIndex] = result;
+					slotsIndex++;
+				}
+
+				for (int i = 0; i < slots.Length; i++)
+				{
+					switch (slots[i])
+					{
+						case 1:
+							clearRightHand = true;
+							break;
+						case 2:
+							clearLeftHand = true;
+							break;
+						case 3:
+							clearHelm = true;
+							break;
+						case 4:
+							clearArmor = true;
+							break;
+						case 5:
+							clearCloak = true;
+							break;
+						case 6:
+							clearAccessory1 = true;
+							break;
+						case 7:
+							clearAccessory1 = true;
+							break;
+						default:
+							break;
+					}
+				}
+			}
+
+			if (clearRightHand)
+			{
+				sotnApi.AlucardApi.RightHand = 0;
+			}
+			if (clearLeftHand)
+			{
+				sotnApi.AlucardApi.LeftHand = 0;
+			}
+			if (!equippedHolyGlasses && clearHelm)
+			{
+				sotnApi.AlucardApi.Helm = Equipment.HelmStart;
+			}
+			if (!equippedSpikeBreaker && clearArmor)
+			{
+				sotnApi.AlucardApi.Armor = 0;
+			}
+			if (clearCloak)
+			{
+				sotnApi.AlucardApi.Cloak = Equipment.CloakStart;
+			}
+			if (clearAccessory1)
+			{
+				sotnApi.AlucardApi.Accessory1 = Equipment.AccessoryStart;
+			}
+			if (clearAccessory2)
+			{
+				sotnApi.AlucardApi.Accessory2 = Equipment.AccessoryStart;
+			}
+
 			sotnApi.GameApi.RespawnItems();
 
 			sotnApi.AlucardApi.HandCursor = 0;
@@ -2031,11 +2142,11 @@ namespace SotnRandoTools.Khaos
 			sotnApi.AlucardApi.CloakCursor = 0;
 			sotnApi.AlucardApi.AccessoryCursor = 0;
 
-			if (equippedHolyGlasses || hasHolyGlasses)
+			if (hasHolyGlasses)
 			{
 				sotnApi.AlucardApi.GrantItemByName("Holy glasses");
 			}
-			if (equippedSpikeBreaker || hasSpikeBreaker)
+			if (hasSpikeBreaker)
 			{
 				sotnApi.AlucardApi.GrantItemByName("Spike Breaker");
 			}
@@ -2046,6 +2157,10 @@ namespace SotnRandoTools.Khaos
 			if (equippedSilverRing || hasSilverRing)
 			{
 				sotnApi.AlucardApi.GrantItemByName("Silver Ring");
+			}
+			if (bankruptLevel < 3)
+			{
+				bankruptLevel++;
 			}
 		}
 		private void HnkOff(object sender, EventArgs e)
@@ -2210,7 +2325,7 @@ namespace SotnRandoTools.Khaos
 				if (lordTimer.Interval == 5 * (60 * 1000))
 				{
 					lordTimer.Stop();
-					lordTimer.Interval = toolConfig.Khaos.Actions[14].Duration.TotalMilliseconds;
+					lordTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.Lord].Duration.TotalMilliseconds;
 
 					ActionTimer timer = new()
 					{
@@ -2243,7 +2358,7 @@ namespace SotnRandoTools.Khaos
 			{
 				Actor? lordEnemy = new Actor(sotnApi.ActorApi.GetActor(enemy));
 
-				if (lordEnemy is not null && lordEnemies.Where(e => e.Sprite == lordEnemy.Sprite).Count() < 1)
+				if (lordEnemy is not null && !lordEnemies.Where(e => e.Sprite == lordEnemy.Sprite).Any())
 				{
 					lordEnemies.Add(lordEnemy);
 					Console.WriteLine($"Added Lord enemy with hp: {lordEnemy.Hp} sprite: {lordEnemy.Sprite} damage: {lordEnemy.Damage}");
@@ -2414,7 +2529,7 @@ namespace SotnRandoTools.Khaos
 				galamothHead.Xpos -= Constants.Khaos.GalamothKhaosPositionOffset;
 
 				List<long> galamothParts = sotnApi.ActorApi.GetAllActors(new List<SearchableActor> { Constants.Khaos.GalamothPartsActors });
-				foreach (var actor in galamothParts)
+				foreach (long actor in galamothParts)
 				{
 					LiveActor galamothAnchor = sotnApi.ActorApi.GetLiveActor(actor);
 					galamothAnchor.Xpos -= Constants.Khaos.GalamothKhaosPositionOffset;

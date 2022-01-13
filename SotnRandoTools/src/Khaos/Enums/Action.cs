@@ -29,6 +29,7 @@
 		GuiltyGear,
 		FourBeasts,
 		ZAWARUDO,
-		Haste
+		Haste,
+		Lord
 	}
 }
