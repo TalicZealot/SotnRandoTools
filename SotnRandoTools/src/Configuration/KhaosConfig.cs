@@ -189,7 +189,7 @@ namespace SotnRandoTools.Configuration
 				},
 				new Action{
 					Name = "Bankrupt",
-					Description = "Alucard loses all gold, equipment and inventory. If the player has a progression item it gets given back to them and put in the inventory. Respawns all items on the map.",
+					Description = "Alucard loses all inventory. Loses some gold and equipment depending on Bankrupt level. Player can't lose progression items. Respawns all items on the map.",
 					Meter = 12,
 					AlertPath = Paths.DeathLaughSound,
 					Cooldown = new System.TimeSpan(0, 30, 0),
