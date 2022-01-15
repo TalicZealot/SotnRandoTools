@@ -26,11 +26,19 @@ namespace SotnRandoTools
 		private readonly ChannelPointsController? channelPointsController;
 		private List<ActionTimer> actionTimers = new();
 		private System.Timers.Timer countdownTimer;
-		private string heartOfVladLocation;
-		private string toothOfVladLocation;
-		private string ribOfVladLocation;
-		private string ringOfVladLocation;
-		private string eyeOfVladLocation;
+
+		private string heartOfVladLocation = String.Empty;
+		private string toothOfVladLocation = String.Empty;
+		private string ribOfVladLocation = String.Empty;
+		private string ringOfVladLocation = String.Empty;
+		private string eyeOfVladLocation = String.Empty;
+
+		private string batLocation = String.Empty;
+		private string mistLocation = String.Empty;
+		private string jewelLocation = String.Empty;
+		private string gravityBootsLocation = String.Empty;
+		private string leapstoneLocation = String.Empty;
+
 		private bool started = false;
 		private bool connected = false;
 
@@ -56,11 +64,17 @@ namespace SotnRandoTools
 			countdownTimer.Start();
 			this.PropertyChanged += KhaosForm_PropertyChanged;
 
-			heartLocation.DataBindings.Add(new System.Windows.Forms.Binding("Text", this, "HeartOfVladLocation"));
-			toothLocation.DataBindings.Add(new System.Windows.Forms.Binding("Text", this, "ToothOfVladLocation"));
-			ribLocation.DataBindings.Add(new System.Windows.Forms.Binding("Text", this, "RibOfVladLocation"));
-			ringLocation.DataBindings.Add(new System.Windows.Forms.Binding("Text", this, "RingOfVladLocation"));
-			eyeLocation.DataBindings.Add(new System.Windows.Forms.Binding("Text", this, "EyeOfVladLocation"));
+			heartLocation.DataBindings.Add(new System.Windows.Forms.Binding("Text", this, nameof(HeartOfVladLocation)));
+			toothLocation.DataBindings.Add(new System.Windows.Forms.Binding("Text", this, nameof(ToothOfVladLocation)));
+			ribLocation.DataBindings.Add(new System.Windows.Forms.Binding("Text", this, nameof(RibOfVladLocation)));
+			ringLocation.DataBindings.Add(new System.Windows.Forms.Binding("Text", this, nameof(RingOfVladLocation)));
+			eyeLocation.DataBindings.Add(new System.Windows.Forms.Binding("Text", this, nameof(EyeOfVladLocation)));
+
+			batLocationLabel.DataBindings.Add(new System.Windows.Forms.Binding("Text", this, nameof(BatLocation)));
+			mistLocationLabel.DataBindings.Add(new System.Windows.Forms.Binding("Text", this, nameof(MistLocation)));
+			jewelLocationLabel.DataBindings.Add(new System.Windows.Forms.Binding("Text", this, nameof(JewelOfOpenLocation)));
+			gravLocationLabel.DataBindings.Add(new System.Windows.Forms.Binding("Text", this, nameof(GravityBootsLocation)));
+			leapLocationLabel.DataBindings.Add(new System.Windows.Forms.Binding("Text", this, nameof(LepastoneLocation)));
 		}
 
 		public ICheatCollectionAdapter AdaptedCheats
@@ -123,6 +137,56 @@ namespace SotnRandoTools
 				eyeOfVladLocation = value;
 
 				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(EyeOfVladLocation)));
+			}
+		}
+		public string BatLocation
+		{
+			get => batLocation;
+			set
+			{
+				batLocation = value;
+
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(BatLocation)));
+			}
+		}
+		public string MistLocation
+		{
+			get => mistLocation;
+			set
+			{
+				mistLocation = value;
+
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(MistLocation)));
+			}
+		}
+		public string JewelOfOpenLocation
+		{
+			get => jewelLocation;
+			set
+			{
+				jewelLocation = value;
+
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(JewelOfOpenLocation)));
+			}
+		}
+		public string GravityBootsLocation
+		{
+			get => gravityBootsLocation;
+			set
+			{
+				gravityBootsLocation = value;
+
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(GravityBootsLocation)));
+			}
+		}
+		public string LepastoneLocation
+		{
+			get => leapstoneLocation;
+			set
+			{
+				leapstoneLocation = value;
+
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(LepastoneLocation)));
 			}
 		}
 		public List<QueuedAction> ActionQueue { get; set; }
@@ -279,10 +343,13 @@ namespace SotnRandoTools
 			else
 			{
 				bool result = await channelPointsController.Connect();
-				connectButton.Text = "Disonnect";
-				connected = true;
-				connectButton.BackColor = System.Drawing.Color.FromArgb(93, 56, 147);
-				connectButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(145, 70, 255);
+				if (result)
+				{
+					connectButton.Text = "Disonnect";
+					connected = true;
+					connectButton.BackColor = System.Drawing.Color.FromArgb(93, 56, 147);
+					connectButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(145, 70, 255);
+				}
 			}
 		}
 

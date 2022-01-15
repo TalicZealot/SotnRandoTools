@@ -9,5 +9,10 @@ namespace SotnRandoTools.Khaos.Interfaces
 		List<QueuedAction> ActionQueue { get; set; }
 		void AddTimer(ActionTimer timer);
 		bool ContainsTimer(string name);
+		string BatLocation { get; set; }
+		string MistLocation { get; set; }
+		string JewelOfOpenLocation { get; set; }
+		string GravityBootsLocation { get; set; }
+		string LepastoneLocation { get; set; }
 	}
 }

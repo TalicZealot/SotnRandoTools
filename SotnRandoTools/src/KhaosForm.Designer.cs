@@ -61,6 +61,17 @@ namespace SotnRandoTools
             this.startButton = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.statusPanel = new System.Windows.Forms.TabPage();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.leapLocationLabel = new System.Windows.Forms.Label();
+            this.gravLocationLabel = new System.Windows.Forms.Label();
+            this.jewelLocationLabel = new System.Windows.Forms.Label();
+            this.mistLocationLabel = new System.Windows.Forms.Label();
+            this.batLocationLabel = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
             this.queueBox = new System.Windows.Forms.GroupBox();
             this.queueTextBox = new System.Windows.Forms.TextBox();
             this.relicLocationsBox = new System.Windows.Forms.GroupBox();
@@ -85,6 +96,7 @@ namespace SotnRandoTools
             this.modePanel.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.statusPanel.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.queueBox.SuspendLayout();
             this.relicLocationsBox.SuspendLayout();
             this.timersBox.SuspendLayout();
@@ -556,6 +568,7 @@ namespace SotnRandoTools
             // statusPanel
             // 
             this.statusPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
+            this.statusPanel.Controls.Add(this.groupBox1);
             this.statusPanel.Controls.Add(this.queueBox);
             this.statusPanel.Controls.Add(this.relicLocationsBox);
             this.statusPanel.Controls.Add(this.timersBox);
@@ -564,6 +577,116 @@ namespace SotnRandoTools
             this.statusPanel.Size = new System.Drawing.Size(436, 441);
             this.statusPanel.TabIndex = 2;
             this.statusPanel.Text = "Status Panel";
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.leapLocationLabel);
+            this.groupBox1.Controls.Add(this.gravLocationLabel);
+            this.groupBox1.Controls.Add(this.jewelLocationLabel);
+            this.groupBox1.Controls.Add(this.mistLocationLabel);
+            this.groupBox1.Controls.Add(this.batLocationLabel);
+            this.groupBox1.Controls.Add(this.label6);
+            this.groupBox1.Controls.Add(this.label7);
+            this.groupBox1.Controls.Add(this.label8);
+            this.groupBox1.Controls.Add(this.label9);
+            this.groupBox1.Controls.Add(this.label10);
+            this.groupBox1.ForeColor = System.Drawing.Color.White;
+            this.groupBox1.Location = new System.Drawing.Point(220, 3);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(208, 176);
+            this.groupBox1.TabIndex = 10;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Progression Relic Locations";
+            // 
+            // leapLocationLabel
+            // 
+            this.leapLocationLabel.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.leapLocationLabel.Location = new System.Drawing.Point(67, 122);
+            this.leapLocationLabel.Name = "leapLocationLabel";
+            this.leapLocationLabel.Size = new System.Drawing.Size(140, 18);
+            this.leapLocationLabel.TabIndex = 9;
+            // 
+            // gravLocationLabel
+            // 
+            this.gravLocationLabel.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.gravLocationLabel.Location = new System.Drawing.Point(67, 99);
+            this.gravLocationLabel.Name = "gravLocationLabel";
+            this.gravLocationLabel.Size = new System.Drawing.Size(140, 18);
+            this.gravLocationLabel.TabIndex = 8;
+            // 
+            // jewelLocationLabel
+            // 
+            this.jewelLocationLabel.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.jewelLocationLabel.Location = new System.Drawing.Point(67, 74);
+            this.jewelLocationLabel.Name = "jewelLocationLabel";
+            this.jewelLocationLabel.Size = new System.Drawing.Size(140, 18);
+            this.jewelLocationLabel.TabIndex = 7;
+            // 
+            // mistLocationLabel
+            // 
+            this.mistLocationLabel.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.mistLocationLabel.Location = new System.Drawing.Point(67, 50);
+            this.mistLocationLabel.Name = "mistLocationLabel";
+            this.mistLocationLabel.Size = new System.Drawing.Size(140, 18);
+            this.mistLocationLabel.TabIndex = 6;
+            // 
+            // batLocationLabel
+            // 
+            this.batLocationLabel.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.batLocationLabel.Location = new System.Drawing.Point(67, 27);
+            this.batLocationLabel.Name = "batLocationLabel";
+            this.batLocationLabel.Size = new System.Drawing.Size(140, 18);
+            this.batLocationLabel.TabIndex = 5;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label6.Location = new System.Drawing.Point(3, 122);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(62, 18);
+            this.label6.TabIndex = 4;
+            this.label6.Text = "Leap at:";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label7.Location = new System.Drawing.Point(5, 99);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(62, 18);
+            this.label7.TabIndex = 3;
+            this.label7.Text = "Grav at:";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label8.Location = new System.Drawing.Point(9, 74);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(56, 18);
+            this.label8.TabIndex = 2;
+            this.label8.Text = "JoO at:";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label9.Location = new System.Drawing.Point(9, 50);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(57, 18);
+            this.label9.TabIndex = 1;
+            this.label9.Text = "Mist at:";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label10.Location = new System.Drawing.Point(12, 27);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(53, 18);
+            this.label10.TabIndex = 0;
+            this.label10.Text = "Bat at:";
             // 
             // queueBox
             // 
@@ -609,15 +732,15 @@ namespace SotnRandoTools
             this.relicLocationsBox.ForeColor = System.Drawing.Color.White;
             this.relicLocationsBox.Location = new System.Drawing.Point(8, 3);
             this.relicLocationsBox.Name = "relicLocationsBox";
-            this.relicLocationsBox.Size = new System.Drawing.Size(423, 176);
+            this.relicLocationsBox.Size = new System.Drawing.Size(208, 176);
             this.relicLocationsBox.TabIndex = 2;
             this.relicLocationsBox.TabStop = false;
-            this.relicLocationsBox.Text = "Relic Locations";
+            this.relicLocationsBox.Text = "Vlad Relic Locations";
             // 
             // eyeLocation
             // 
             this.eyeLocation.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.eyeLocation.Location = new System.Drawing.Point(188, 110);
+            this.eyeLocation.Location = new System.Drawing.Point(67, 122);
             this.eyeLocation.Name = "eyeLocation";
             this.eyeLocation.Size = new System.Drawing.Size(140, 18);
             this.eyeLocation.TabIndex = 9;
@@ -625,7 +748,7 @@ namespace SotnRandoTools
             // ringLocation
             // 
             this.ringLocation.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.ringLocation.Location = new System.Drawing.Point(188, 87);
+            this.ringLocation.Location = new System.Drawing.Point(67, 99);
             this.ringLocation.Name = "ringLocation";
             this.ringLocation.Size = new System.Drawing.Size(140, 18);
             this.ringLocation.TabIndex = 8;
@@ -633,7 +756,7 @@ namespace SotnRandoTools
             // ribLocation
             // 
             this.ribLocation.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.ribLocation.Location = new System.Drawing.Point(188, 62);
+            this.ribLocation.Location = new System.Drawing.Point(67, 74);
             this.ribLocation.Name = "ribLocation";
             this.ribLocation.Size = new System.Drawing.Size(140, 18);
             this.ribLocation.TabIndex = 7;
@@ -641,7 +764,7 @@ namespace SotnRandoTools
             // toothLocation
             // 
             this.toothLocation.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.toothLocation.Location = new System.Drawing.Point(188, 38);
+            this.toothLocation.Location = new System.Drawing.Point(67, 50);
             this.toothLocation.Name = "toothLocation";
             this.toothLocation.Size = new System.Drawing.Size(140, 18);
             this.toothLocation.TabIndex = 6;
@@ -649,7 +772,7 @@ namespace SotnRandoTools
             // heartLocation
             // 
             this.heartLocation.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.heartLocation.Location = new System.Drawing.Point(188, 15);
+            this.heartLocation.Location = new System.Drawing.Point(67, 27);
             this.heartLocation.Name = "heartLocation";
             this.heartLocation.Size = new System.Drawing.Size(140, 18);
             this.heartLocation.TabIndex = 5;
@@ -658,51 +781,51 @@ namespace SotnRandoTools
             // 
             this.eyeLabel.AutoSize = true;
             this.eyeLabel.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.eyeLabel.Location = new System.Drawing.Point(75, 110);
+            this.eyeLabel.Location = new System.Drawing.Point(16, 122);
             this.eyeLabel.Name = "eyeLabel";
-            this.eyeLabel.Size = new System.Drawing.Size(105, 18);
+            this.eyeLabel.Size = new System.Drawing.Size(55, 18);
             this.eyeLabel.TabIndex = 4;
-            this.eyeLabel.Text = "Eye of Vlad at:";
+            this.eyeLabel.Text = "Eye at:";
             // 
             // ringLabel
             // 
             this.ringLabel.AutoSize = true;
             this.ringLabel.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.ringLabel.Location = new System.Drawing.Point(72, 87);
+            this.ringLabel.Location = new System.Drawing.Point(13, 99);
             this.ringLabel.Name = "ringLabel";
-            this.ringLabel.Size = new System.Drawing.Size(108, 18);
+            this.ringLabel.Size = new System.Drawing.Size(58, 18);
             this.ringLabel.TabIndex = 3;
-            this.ringLabel.Text = "Ring of Vlad at:";
+            this.ringLabel.Text = "Ring at:";
             // 
             // ribLabel
             // 
             this.ribLabel.AutoSize = true;
             this.ribLabel.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.ribLabel.Location = new System.Drawing.Point(80, 62);
+            this.ribLabel.Location = new System.Drawing.Point(21, 74);
             this.ribLabel.Name = "ribLabel";
-            this.ribLabel.Size = new System.Drawing.Size(100, 18);
+            this.ribLabel.Size = new System.Drawing.Size(50, 18);
             this.ribLabel.TabIndex = 2;
-            this.ribLabel.Text = "Rib of Vlad at:";
+            this.ribLabel.Text = "Rib at:";
             // 
             // toothLabel
             // 
             this.toothLabel.AutoSize = true;
             this.toothLabel.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.toothLabel.Location = new System.Drawing.Point(60, 38);
+            this.toothLabel.Location = new System.Drawing.Point(1, 50);
             this.toothLabel.Name = "toothLabel";
-            this.toothLabel.Size = new System.Drawing.Size(120, 18);
+            this.toothLabel.Size = new System.Drawing.Size(70, 18);
             this.toothLabel.TabIndex = 1;
-            this.toothLabel.Text = "Tooth of Vlad at:";
+            this.toothLabel.Text = "Tooth at:";
             // 
             // heartLabel
             // 
             this.heartLabel.AutoSize = true;
             this.heartLabel.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.heartLabel.Location = new System.Drawing.Point(63, 15);
+            this.heartLabel.Location = new System.Drawing.Point(4, 27);
             this.heartLabel.Name = "heartLabel";
-            this.heartLabel.Size = new System.Drawing.Size(117, 18);
+            this.heartLabel.Size = new System.Drawing.Size(67, 18);
             this.heartLabel.TabIndex = 0;
-            this.heartLabel.Text = "Heart of Vlad at:";
+            this.heartLabel.Text = "Heart at:";
             // 
             // timersBox
             // 
@@ -881,6 +1004,8 @@ namespace SotnRandoTools
             this.modePanel.PerformLayout();
             this.tabControl1.ResumeLayout(false);
             this.statusPanel.ResumeLayout(false);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.queueBox.ResumeLayout(false);
             this.queueBox.PerformLayout();
             this.relicLocationsBox.ResumeLayout(false);
@@ -945,6 +1070,17 @@ namespace SotnRandoTools
 		private System.Windows.Forms.Button hnkButton;
 		private System.Windows.Forms.Button lordButton;
 		private System.Windows.Forms.Button connectButton;
+		private System.Windows.Forms.GroupBox groupBox1;
+		private System.Windows.Forms.Label leapLocationLabel;
+		private System.Windows.Forms.Label gravLocationLabel;
+		private System.Windows.Forms.Label jewelLocationLabel;
+		private System.Windows.Forms.Label mistLocationLabel;
+		private System.Windows.Forms.Label batLocationLabel;
+		private System.Windows.Forms.Label label6;
+		private System.Windows.Forms.Label label7;
+		private System.Windows.Forms.Label label8;
+		private System.Windows.Forms.Label label9;
+		private System.Windows.Forms.Label label10;
 	}
 }
 

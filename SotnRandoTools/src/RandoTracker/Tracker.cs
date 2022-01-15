@@ -399,33 +399,63 @@ namespace SotnRandoTools.RandoTracker
 							switch (relics[i].Name)
 							{
 								case "HeartOfVlad":
-									if (VladRelicLocationDisplay.HeartOfVladLocation is null)
+									if (VladRelicLocationDisplay.HeartOfVladLocation == String.Empty)
 									{
 										VladRelicLocationDisplay.HeartOfVladLocation = lastLocationVisited;
 									}
 									break;
 								case "ToothOfVlad":
-									if (VladRelicLocationDisplay.ToothOfVladLocation is null)
+									if (VladRelicLocationDisplay.ToothOfVladLocation == String.Empty)
 									{
 										VladRelicLocationDisplay.ToothOfVladLocation = lastLocationVisited;
 									}
 									break;
 								case "RibOfVlad":
-									if (VladRelicLocationDisplay.RibOfVladLocation is null)
+									if (VladRelicLocationDisplay.RibOfVladLocation == String.Empty)
 									{
 										VladRelicLocationDisplay.RibOfVladLocation = lastLocationVisited;
 									}
 									break;
 								case "RingOfVlad":
-									if (VladRelicLocationDisplay.RingOfVladLocation is null)
+									if (VladRelicLocationDisplay.RingOfVladLocation == String.Empty)
 									{
 										VladRelicLocationDisplay.RingOfVladLocation = lastLocationVisited;
 									}
 									break;
 								case "EyeOfVlad":
-									if (VladRelicLocationDisplay.EyeOfVladLocation is null)
+									if (VladRelicLocationDisplay.EyeOfVladLocation == String.Empty)
 									{
 										VladRelicLocationDisplay.EyeOfVladLocation = lastLocationVisited;
+									}
+									break;
+								case "SoulOfBat":
+									if (VladRelicLocationDisplay.BatLocation == String.Empty)
+									{
+										VladRelicLocationDisplay.BatLocation = lastLocationVisited;
+									}
+									break;
+								case "FormOfMist":
+									if (VladRelicLocationDisplay.MistLocation == String.Empty)
+									{
+										VladRelicLocationDisplay.MistLocation = lastLocationVisited;
+									}
+									break;
+								case "JewelOfOpen":
+									if (VladRelicLocationDisplay.JewelOfOpenLocation == String.Empty)
+									{
+										VladRelicLocationDisplay.JewelOfOpenLocation = lastLocationVisited;
+									}
+									break;
+								case "GravityBoots":
+									if (VladRelicLocationDisplay.GravityBootsLocation == String.Empty)
+									{
+										VladRelicLocationDisplay.GravityBootsLocation = lastLocationVisited;
+									}
+									break;
+								case "LeapStone":
+									if (VladRelicLocationDisplay.LepastoneLocation == String.Empty)
+									{
+										VladRelicLocationDisplay.LepastoneLocation = lastLocationVisited;
 									}
 									break;
 								default:
@@ -579,7 +609,7 @@ namespace SotnRandoTools.RandoTracker
 			{
 				if (!locations[i].Status && locations[i].SecondCastle == secondCastle)
 				{
-					if (locations[i].SpreadExtension && !locations[i].GuardedExtension && !spreadExtension)
+					if (locations[i].SpreadExtension && !locations[i].GuardedExtension && !locations[i].EquipmentExtension && !spreadExtension)
 					{
 						continue;
 					}

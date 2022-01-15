@@ -59,10 +59,13 @@ namespace SotnRandoTools.Khaos
 			api.Settings.ClientId = TwitchConfiguration.TwitchClientId;
 			Process.Start(getAuthorizationCodeUrl(api.Settings.ClientId, Paths.TwitchRedirectUri, scopes));
 			Services.Models.Authorization? auth = await twitchListener.Listen();
+			if (auth.Code == String.Empty)
+			{
+				return false;
+			}
 			TwitchLib.Api.Auth.AuthCodeResponse? resp = await api.Auth.GetAccessTokenFromCodeAsync(auth.Code, TwitchConfiguration.TwitchClientSecret, Paths.TwitchRedirectUri);
 			api.Settings.AccessToken = resp.AccessToken;
 			refreshToken = resp.RefreshToken;
-			twitchListener.Stop();
 
 			var user = (await api.Helix.Users.GetUsersAsync()).Users[0];
 			broadcasterId = user.Id;

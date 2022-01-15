@@ -53,7 +53,7 @@ namespace SotnRandoTools.Services
 		{
 			if (listener.IsListening)
 			{
-				listener.Stop();
+				listener.Close();
 			}
 		}
 	}

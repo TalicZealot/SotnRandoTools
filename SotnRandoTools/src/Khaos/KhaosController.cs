@@ -768,6 +768,7 @@ namespace SotnRandoTools.Khaos
 						break;
 					case 2:
 						Console.WriteLine($"Heavy help rolled: {Constants.Khaos.ProgressionRelics[relic]}");
+						SetRelicLocationDisplay(Constants.Khaos.ProgressionRelics[relic], false);
 						sotnApi.AlucardApi.GrantRelic(Constants.Khaos.ProgressionRelics[relic]);
 						notificationService.AddMessage($"{user} gave you {Constants.Khaos.ProgressionRelics[relic]}");
 						break;
@@ -790,6 +791,8 @@ namespace SotnRandoTools.Khaos
 			if (meterFull)
 			{
 				SpendKhaosMeter();
+				SetRelicLocationDisplay(Relic.SoulOfBat, false);
+				SetRelicLocationDisplay(Relic.FormOfMist, false);
 				sotnApi.AlucardApi.GrantRelic(Relic.SoulOfBat);
 				sotnApi.AlucardApi.GrantRelic(Relic.FireOfBat);
 				sotnApi.AlucardApi.GrantRelic(Relic.EchoOfBat);
@@ -844,6 +847,7 @@ namespace SotnRandoTools.Khaos
 			hitboxHeight.Enable();
 			hitbox2Width.Enable();
 			hitbox2Height.Enable();
+			SetRelicLocationDisplay(Relic.LeapStone, false);
 			sotnApi.AlucardApi.GrantRelic(Relic.LeapStone);
 			meltyTimer.Start();
 			string message = meterFull ? $"{user} activated GUILTY GEAR" : $"{user} activated Melty Blood";
@@ -1581,15 +1585,16 @@ namespace SotnRandoTools.Khaos
 			Array? relics = Enum.GetValues(typeof(Relic));
 			foreach (object? relic in relics)
 			{
-				if ((int) relic < 25)
+				/*if ((int) relic < 25)
 				{
 					sotnApi.AlucardApi.GrantRelic((Relic) relic);
-				}
+				}*/
 				int roll = rng.Next(0, 2);
 				if (roll > 0)
 				{
 					if ((int) relic < 25)
 					{
+						SetRelicLocationDisplay((Relic) relic, false);
 						sotnApi.AlucardApi.GrantRelic((Relic) relic);
 					}
 				}
@@ -1597,6 +1602,7 @@ namespace SotnRandoTools.Khaos
 				{
 					if ((int) relic < 25)
 					{
+						SetRelicLocationDisplay((Relic) relic, true);
 						sotnApi.AlucardApi.TakeRelic((Relic) relic);
 					}
 					else if (randomizeVladRelics)
@@ -1611,12 +1617,14 @@ namespace SotnRandoTools.Khaos
 				int roll = rng.Next(0, Constants.Khaos.FlightRelics.Count);
 				foreach (Relic relic in Constants.Khaos.FlightRelics[roll])
 				{
+					SetRelicLocationDisplay((Relic) relic, false);
 					sotnApi.AlucardApi.GrantRelic((Relic) relic);
 				}
 			}
 
 			if (IsInRoomList(Constants.Khaos.SwitchRoom))
 			{
+				SetRelicLocationDisplay(Relic.JewelOfOpen, false);
 				sotnApi.AlucardApi.GrantRelic(Relic.JewelOfOpen);
 			}
 		}
@@ -2448,6 +2456,94 @@ namespace SotnRandoTools.Khaos
 			visualEffectTimerCheat = cheats.GetCheatByName("VisualEffectTimer");
 			savePalette = cheats.GetCheatByName("SavePalette");
 			contactDamage = cheats.GetCheatByName("ContactDamage");
+		}
+		private void SetRelicLocationDisplay(Relic relic, bool take)
+		{
+			switch (relic)
+			{
+				case Relic.SoulOfBat:
+					if (take)
+					{
+						if (statusInfoDisplay.BatLocation == "Khaos")
+						{
+							statusInfoDisplay.BatLocation = String.Empty;
+						}
+					}
+					else
+					{
+						if (statusInfoDisplay.BatLocation == String.Empty)
+						{
+							statusInfoDisplay.BatLocation = "Khaos";
+						}
+					}
+					break;
+				case Relic.FormOfMist:
+					if (take)
+					{
+						if (statusInfoDisplay.MistLocation == "Khaos")
+						{
+							statusInfoDisplay.MistLocation = String.Empty;
+						}
+					}
+					else
+					{
+						if (statusInfoDisplay.MistLocation == String.Empty)
+						{
+							statusInfoDisplay.MistLocation = "Khaos";
+						}
+					}
+					break;
+				case Relic.GravityBoots:
+					if (take)
+					{
+						if (statusInfoDisplay.GravityBootsLocation == "Khaos")
+						{
+							statusInfoDisplay.GravityBootsLocation = String.Empty;
+						}
+					}
+					else
+					{
+						if (statusInfoDisplay.GravityBootsLocation == String.Empty)
+						{
+							statusInfoDisplay.GravityBootsLocation = "Khaos";
+						}
+					}
+					break;
+				case Relic.LeapStone:
+					if (take)
+					{
+						if (statusInfoDisplay.LepastoneLocation == "Khaos")
+						{
+							statusInfoDisplay.LepastoneLocation = String.Empty;
+						}
+					}
+					else
+					{
+						if (statusInfoDisplay.LepastoneLocation == String.Empty)
+						{
+							statusInfoDisplay.LepastoneLocation = "Khaos";
+						}
+					}
+					break;
+				case Relic.JewelOfOpen:
+					if (take)
+					{
+						if (statusInfoDisplay.JewelOfOpenLocation == "Khaos")
+						{
+							statusInfoDisplay.JewelOfOpenLocation = String.Empty;
+						}
+					}
+					else
+					{
+						if (statusInfoDisplay.JewelOfOpenLocation == String.Empty)
+						{
+							statusInfoDisplay.JewelOfOpenLocation = "Khaos";
+						}
+					}
+					break;
+				default:
+					break;
+			}
 		}
 		private bool IsInRoomList(List<MapLocation> rooms)
 		{
