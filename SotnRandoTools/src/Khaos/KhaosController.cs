@@ -1630,8 +1630,6 @@ namespace SotnRandoTools.Khaos
 		}
 		private void RandomizeEquipmentSlots()
 		{
-			bool equippedBuggyQuickSwapWeaponRight = Constants.Khaos.BuggyQuickSwapWeapons.Contains(Equipment.Items[(int) (sotnApi.AlucardApi.RightHand)]);
-			bool equippedBuggyQuickSwapWeaponLeft = Constants.Khaos.BuggyQuickSwapWeapons.Contains(Equipment.Items[(int) (sotnApi.AlucardApi.LeftHand)]);
 			bool equippedHolyGlasses = Equipment.Items[(int) (sotnApi.AlucardApi.Helm + Equipment.HandCount + 1)] == "Holy glasses";
 			bool equippedSpikeBreaker = Equipment.Items[(int) (sotnApi.AlucardApi.Armor + Equipment.HandCount + 1)] == "Spike Breaker";
 			bool equippedGoldRing = Equipment.Items[(int) (sotnApi.AlucardApi.Accessory1 + Equipment.HandCount + 1)] == "Gold Ring" || Equipment.Items[(int) (sotnApi.AlucardApi.Accessory2 + Equipment.HandCount + 1)] == "Gold Ring";
@@ -1645,20 +1643,10 @@ namespace SotnRandoTools.Khaos
 			uint newAccessory1 = Equipment.AccessoryStart + (uint) rng.Next(0, Equipment.AccessoryCount + 1);
 			uint newAccessory2 = Equipment.AccessoryStart + (uint) rng.Next(0, Equipment.AccessoryCount + 1);
 
-			if (equippedBuggyQuickSwapWeaponRight || equippedBuggyQuickSwapWeaponLeft)
-			{
-				while (Constants.Khaos.BuggyQuickSwapWeapons.Contains(Equipment.Items[(int) newRightHand]))
-				{
-					newRightHand = (uint) rng.Next(0, Equipment.HandCount + 1);
-				}
-				while (Constants.Khaos.BuggyQuickSwapWeapons.Contains(Equipment.Items[(int) newLeftHand]))
-				{
-					newLeftHand = (uint) rng.Next(0, Equipment.HandCount + 1);
-				}
-			}
-
-			sotnApi.AlucardApi.RightHand = newRightHand;
-			sotnApi.AlucardApi.LeftHand = newLeftHand;
+			sotnApi.AlucardApi.RightHand = 0;
+			sotnApi.AlucardApi.LeftHand = 0;
+			sotnApi.AlucardApi.GrantItemByName(Equipment.Items[(int) newRightHand]);
+			sotnApi.AlucardApi.GrantItemByName(Equipment.Items[(int) newLeftHand]);
 			sotnApi.AlucardApi.Armor = newArmor;
 			sotnApi.AlucardApi.Helm = newHelm;
 			sotnApi.AlucardApi.Cloak = newCloak;
@@ -1714,18 +1702,30 @@ namespace SotnRandoTools.Khaos
 				}
 				else
 				{
-					sotnApi.AlucardApi.State = States.Standing;
+					sotnApi.AlucardApi.CurrentMp = 0;
+					sotnApi.AlucardApi.CurrentHp = 0;
+					sotnApi.AlucardApi.RightHand = (uint) Equipment.Items.IndexOf("Orange");
+					sotnApi.AlucardApi.LeftHand = (uint) Equipment.Items.IndexOf("Orange");
 					bloodManaDeathTimer.Start();
 				}
 			}
 		}
 		private void KillAlucard(Object sender, EventArgs e)
 		{
-			if (sotnApi.AlucardApi.State == States.Standing)
-			{
-				sotnApi.AlucardApi.State = States.Death;
-				bloodManaDeathTimer.Stop();
-			}
+			Actor hitbox = new Actor();
+			uint offsetPosX = sotnApi.AlucardApi.ScreenX - 255;
+			uint offsetPosY = sotnApi.AlucardApi.ScreenY - 255;
+
+			hitbox.Xpos = 0;
+			hitbox.Ypos = 0;
+			hitbox.HitboxHeight = 255;
+			hitbox.HitboxWidth = 255;
+			hitbox.DamageTypeA = (uint) Actors.Slam;
+			hitbox.AutoToggle = 1;
+			hitbox.Damage = 999;
+			sotnApi.ActorApi.SpawnActor(hitbox);
+			sotnApi.AlucardApi.InvincibilityTimer = 0;
+			bloodManaDeathTimer.Stop();
 		}
 		private void BloodManaOff(Object sender, EventArgs e)
 		{

@@ -356,28 +356,6 @@ namespace SotnRandoTools.Constants
 		public static SearchableActor GalamothPartsActors = new SearchableActor { Hp = 12000, Damage = 50, Sprite = 31516 };
 		public static SearchableActor ShaftActor = new SearchableActor { Hp = 10, Damage = 0, Sprite = 0 };
 
-		public static string[] BuggyQuickSwapWeapons = {
-			"Shuriken",
-			"Cross shuriken",
-			"Buffalo star",
-			"Flame star",
-			"Boomerang",
-			"Javelin",
-			"Heaven sword",
-			"Alucard sword",
-			"Chakram",
-			"Fire boomerang",
-			"Osafune katana",
-			"Masamune",
-			"Runesword",
-			"Claymore",
-			"Flamberge",
-			"Zweihander",
-			"Obsidian sword",
-			"Estoc",
-			"Shotel"
-		};
-
 		public static float SuperWeakenFactor = 0.5F;
 		public static float SuperCrippleFactor = 0.5F;
 		public static int SlowQueueIntervalEnd = 3;
