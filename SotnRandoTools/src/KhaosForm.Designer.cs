@@ -88,6 +88,7 @@ namespace SotnRandoTools
             this.timersBox = new System.Windows.Forms.GroupBox();
             this.timersTextBox = new System.Windows.Forms.TextBox();
             this.controlPanel = new System.Windows.Forms.TabPage();
+            this.khaosTrackButton = new System.Windows.Forms.Button();
             this.lordButton = new System.Windows.Forms.Button();
             this.hnkButton = new System.Windows.Forms.Button();
             this.burstButton = new System.Windows.Forms.Button();
@@ -278,7 +279,7 @@ namespace SotnRandoTools
             this.crippleButton.Name = "crippleButton";
             this.crippleButton.Size = new System.Drawing.Size(134, 26);
             this.crippleButton.TabIndex = 17;
-            this.crippleButton.Text = "Cripple";
+            this.crippleButton.Text = "Slow";
             this.crippleButton.UseVisualStyleBackColor = true;
             this.crippleButton.Click += new System.EventHandler(this.crippleButton_Click);
             // 
@@ -858,6 +859,7 @@ namespace SotnRandoTools
             // controlPanel
             // 
             this.controlPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
+            this.controlPanel.Controls.Add(this.khaosTrackButton);
             this.controlPanel.Controls.Add(this.lordButton);
             this.controlPanel.Controls.Add(this.hnkButton);
             this.controlPanel.Controls.Add(this.burstButton);
@@ -893,6 +895,22 @@ namespace SotnRandoTools
             this.controlPanel.Size = new System.Drawing.Size(436, 441);
             this.controlPanel.TabIndex = 0;
             this.controlPanel.Text = "Control Panel";
+            // 
+            // khaosTrackButton
+            // 
+            this.khaosTrackButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
+            this.khaosTrackButton.FlatAppearance.BorderSize = 2;
+            this.khaosTrackButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
+            this.khaosTrackButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
+            this.khaosTrackButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.khaosTrackButton.ForeColor = System.Drawing.Color.White;
+            this.khaosTrackButton.Location = new System.Drawing.Point(9, 307);
+            this.khaosTrackButton.Name = "khaosTrackButton";
+            this.khaosTrackButton.Size = new System.Drawing.Size(134, 26);
+            this.khaosTrackButton.TabIndex = 30;
+            this.khaosTrackButton.Text = "Khaos Track";
+            this.khaosTrackButton.UseVisualStyleBackColor = true;
+            this.khaosTrackButton.Click += new System.EventHandler(this.khaosTrackButton_Click);
             // 
             // lordButton
             // 
@@ -1081,6 +1099,7 @@ namespace SotnRandoTools
 		private System.Windows.Forms.Label label8;
 		private System.Windows.Forms.Label label9;
 		private System.Windows.Forms.Label label10;
+		private System.Windows.Forms.Button khaosTrackButton;
 	}
 }
 

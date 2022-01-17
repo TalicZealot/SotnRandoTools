@@ -358,7 +358,7 @@ namespace SotnRandoTools
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
 			{
-				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = 0, UserName = "Khaos" });
+				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = (int) Khaos.Enums.Action.KhaosStatus, UserName = "Khaos" });
 			}
 			else
 			{
@@ -369,7 +369,7 @@ namespace SotnRandoTools
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
 			{
-				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = 1, UserName = "Khaos" });
+				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = (int) Khaos.Enums.Action.KhaosEquipment, UserName = "Khaos" });
 			}
 			else
 			{
@@ -381,7 +381,7 @@ namespace SotnRandoTools
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
 			{
-				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = 2, UserName = "Khaos" });
+				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = (int) Khaos.Enums.Action.KhaosStats, UserName = "Khaos" });
 			}
 			else
 			{
@@ -393,7 +393,7 @@ namespace SotnRandoTools
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
 			{
-				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = 3, UserName = "Khaos" });
+				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = (int) Khaos.Enums.Action.KhaosRelics, UserName = "Khaos" });
 			}
 			else
 			{
@@ -405,7 +405,7 @@ namespace SotnRandoTools
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
 			{
-				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = 4, UserName = "Khaos" });
+				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = (int) Khaos.Enums.Action.PandorasBox, UserName = "Khaos" });
 			}
 			else
 			{
@@ -417,7 +417,7 @@ namespace SotnRandoTools
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
 			{
-				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = 5, UserName = "Khaos" });
+				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = (int) Khaos.Enums.Action.Gamble, UserName = "Khaos" });
 			}
 			else
 			{
@@ -429,12 +429,24 @@ namespace SotnRandoTools
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
 			{
-				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = 6, UserName = "Khaos" });
+				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = (int) Khaos.Enums.Action.KhaoticBurst, UserName = "Khaos" });
 			}
 			else
 			{
 
 				khaosControler.KhaoticBurst();
+			}
+		}
+		private void khaosTrackButton_Click(object sender, EventArgs e)
+		{
+			if (toolConfig.Khaos.ControlPannelQueueActions)
+			{
+				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = (int) Khaos.Enums.Action.KhaosTrack, UserName = "Khaos", Data = "random" });
+			}
+			else
+			{
+
+				khaosControler.KhaosTrack("random");
 			}
 		}
 		#endregion
@@ -443,7 +455,7 @@ namespace SotnRandoTools
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
 			{
-				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = 7, UserName = "Khaos" });
+				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = (int) Khaos.Enums.Action.Bankrupt, UserName = "Khaos" });
 			}
 			else
 			{
@@ -454,7 +466,7 @@ namespace SotnRandoTools
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
 			{
-				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = 8, UserName = "Khaos" });
+				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = (int) Khaos.Enums.Action.Weaken, UserName = "Khaos" });
 			}
 			else
 			{
@@ -465,7 +477,7 @@ namespace SotnRandoTools
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
 			{
-				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = 9, UserName = "Khaos" });
+				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = (int) Khaos.Enums.Action.RespawnBosses, UserName = "Khaos" });
 			}
 			else
 			{
@@ -476,7 +488,7 @@ namespace SotnRandoTools
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
 			{
-				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = 10, UserName = "Khaos" });
+				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = (int) Khaos.Enums.Action.SubweaponsOnly, UserName = "Khaos" });
 			}
 			else
 			{
@@ -488,7 +500,7 @@ namespace SotnRandoTools
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
 			{
-				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = 11, UserName = "Khaos" });
+				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = (int) Khaos.Enums.Action.Slow, UserName = "Khaos" });
 			}
 			else
 			{
@@ -500,7 +512,7 @@ namespace SotnRandoTools
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
 			{
-				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = 12, UserName = "Khaos" });
+				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = (int) Khaos.Enums.Action.BloodMana, UserName = "Khaos" });
 			}
 			else
 			{
@@ -511,7 +523,7 @@ namespace SotnRandoTools
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
 			{
-				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = 13, UserName = "Khaos" });
+				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = (int) Khaos.Enums.Action.Thirst, UserName = "Khaos" });
 			}
 			else
 			{
@@ -522,7 +534,7 @@ namespace SotnRandoTools
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
 			{
-				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = 14, UserName = "Khaos" });
+				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = (int) Khaos.Enums.Action.KhaosHorde, UserName = "Khaos" });
 			}
 			else
 			{
@@ -533,7 +545,7 @@ namespace SotnRandoTools
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
 			{
-				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = 15, UserName = "Khaos" });
+				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = (int) Khaos.Enums.Action.Endurance, UserName = "Khaos" });
 			}
 			else
 			{
@@ -544,7 +556,7 @@ namespace SotnRandoTools
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
 			{
-				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = 16, UserName = "Khaos" });
+				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = (int) Khaos.Enums.Action.HnK, UserName = "Khaos" });
 			}
 			else
 			{
@@ -557,7 +569,7 @@ namespace SotnRandoTools
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
 			{
-				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = 17, UserName = "Khaos" });
+				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = (int) Khaos.Enums.Action.Vampire, UserName = "Khaos" });
 			}
 			else
 			{
@@ -569,7 +581,7 @@ namespace SotnRandoTools
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
 			{
-				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = 18, UserName = "Khaos" });
+				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = (int) Khaos.Enums.Action.LightHelp, UserName = "Khaos" });
 			}
 			else
 			{
@@ -580,7 +592,7 @@ namespace SotnRandoTools
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
 			{
-				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = 19, UserName = "Khaos" });
+				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = (int) Khaos.Enums.Action.MediumHelp, UserName = "Khaos" });
 			}
 			else
 			{
@@ -592,7 +604,7 @@ namespace SotnRandoTools
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
 			{
-				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = 20, UserName = "Khaos" });
+				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = (int) Khaos.Enums.Action.HeavyHelp, UserName = "Khaos" });
 			}
 			else
 			{
@@ -604,7 +616,7 @@ namespace SotnRandoTools
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
 			{
-				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = 21, UserName = "Khaos" });
+				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = (int) Khaos.Enums.Action.BattleOrders, UserName = "Khaos" });
 			}
 			else
 			{
@@ -616,7 +628,7 @@ namespace SotnRandoTools
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
 			{
-				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = 22, UserName = "Khaos" });
+				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = (int) Khaos.Enums.Action.Magician, UserName = "Khaos" });
 			}
 			else
 			{
@@ -628,7 +640,7 @@ namespace SotnRandoTools
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
 			{
-				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = 23, UserName = "Khaos" });
+				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = (int) Khaos.Enums.Action.MeltyBlood, UserName = "Khaos" });
 			}
 			else
 			{
@@ -640,7 +652,7 @@ namespace SotnRandoTools
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
 			{
-				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = 25, UserName = "Khaos" });
+				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = (int) Khaos.Enums.Action.FourBeasts, UserName = "Khaos" });
 			}
 			else
 			{
@@ -651,7 +663,7 @@ namespace SotnRandoTools
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
 			{
-				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = 26, UserName = "Khaos" });
+				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = (int) Khaos.Enums.Action.ZAWARUDO, UserName = "Khaos" });
 			}
 			else
 			{
@@ -662,7 +674,7 @@ namespace SotnRandoTools
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
 			{
-				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = 27, UserName = "Khaos" });
+				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = (int) Khaos.Enums.Action.Haste, UserName = "Khaos" });
 			}
 			else
 			{
@@ -673,7 +685,7 @@ namespace SotnRandoTools
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
 			{
-				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = 28, UserName = "Khaos" });
+				khaosControler.EnqueueAction(new EventAddAction { ActionIndex = (int) Khaos.Enums.Action.Lord, UserName = "Khaos" });
 			}
 			else
 			{

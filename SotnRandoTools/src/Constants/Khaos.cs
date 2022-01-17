@@ -356,6 +356,43 @@ namespace SotnRandoTools.Constants
 		public static SearchableActor GalamothPartsActors = new SearchableActor { Hp = 12000, Damage = 50, Sprite = 31516 };
 		public static SearchableActor ShaftActor = new SearchableActor { Hp = 10, Damage = 0, Sprite = 0 };
 
+		public static string[] AcceptedMusicTrackTitles =
+	   {
+			"Lost Painting",
+			"Cursed Sanctuary",
+			"Requiem for the Gods",
+			"Rainbow Cemetary",
+			"Wood Carving Partita",
+			"Crystal Teardrops",
+			"Marble Galery",
+			"Dracula Castle",
+			"The Tragic Prince",
+			"Tower of Evil Mist",
+			"Doorway of Spirits",
+			"Dance of Pearls",
+			"Abandoned Pit",
+			"Heavenly Doorway",
+			"Festival of Servants",
+			"Dance of Illusions",
+			"Prologue",
+			"Wandering Ghosts",
+			"Doorway to the Abyss",
+			"Metamorphosis",
+			"Metamorphosis 2",
+			"Dance of Gold",
+			"Enchanted Banquet",
+			"Prayer",
+			"Death's Ballad",
+			"Blood Relations",
+			"Finale Toccata",
+			"Black Banquet",
+			"I am the Wind",
+			"Silence",
+			"Resting Place",
+			"Nocturne",
+			"Moonlight Nocturne"
+		};
+
 		public static float SuperWeakenFactor = 0.5F;
 		public static float SuperCrippleFactor = 0.5F;
 		public static int SlowQueueIntervalEnd = 3;

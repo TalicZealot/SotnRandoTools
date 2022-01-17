@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 
 namespace SotnRandoTools.Configuration.Models
 {
@@ -11,6 +10,7 @@ namespace SotnRandoTools.Configuration.Models
 			StartsOnCooldown = false;
 			IsUsable = true;
 			MaximumChannelPoints = 0;
+			RequiresUserInput = false;
 		}
 
 		public string Name { get; set; }
@@ -18,6 +18,7 @@ namespace SotnRandoTools.Configuration.Models
 		public short Meter { get; set; }
 		public bool Enabled { get; set; }
 		public bool IsUsable { get; set; }
+		public bool RequiresUserInput { get; set; }
 		public bool StartsOnCooldown { get; set; }
 		public string AlertPath { get; set; }
 		public TimeSpan Duration { get; set; }

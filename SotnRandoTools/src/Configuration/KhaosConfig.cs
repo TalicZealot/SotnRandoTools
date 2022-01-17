@@ -188,6 +188,18 @@ namespace SotnRandoTools.Configuration
 					Scaling = 1.5
 				},
 				new Action{
+					Name = "Khaos Track",
+					Description = "Queues up an in-game music track.",
+					Meter = 10,
+					AlertPath = Paths.AlucardWhatSound,
+					Cooldown = new System.TimeSpan(0, 10, 0),
+					Duration = new System.TimeSpan(0, 3, 0),
+					RequiresUserInput = true,
+					Bits = 15,
+					ChannelPoints = 150,
+					Scaling = 1.5
+				},
+				new Action{
 					Name = "Bankrupt",
 					Description = "Alucard loses all inventory. Loses some gold and equipment depending on Bankrupt level. Player can't lose progression items. Respawns all items on the map.",
 					Meter = 12,
@@ -342,6 +354,7 @@ namespace SotnRandoTools.Configuration
 					Description = "Gives Alucard a top-tier item or a non-Vlad progression relic.",
 					Meter = 8,
 					AlertPath = Paths.FairyPotionSound,
+					StartsOnCooldown = true,
 					Cooldown = new System.TimeSpan(0, 4, 0),
 					Bits = 30,
 					ChannelPoints = 300,

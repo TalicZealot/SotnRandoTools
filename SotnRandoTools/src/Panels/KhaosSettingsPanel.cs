@@ -24,7 +24,7 @@ namespace SotnRandoTools
 		{
 			alertsCheckbox.Checked = toolConfig.Khaos.Alerts;
 			volumeTrackBar.Value = toolConfig.Khaos.Volume;
-			crippleTextBox.Text = (toolConfig.Khaos.CrippleFactor * 100) + "%";
+			pandoraThresholdTextBox.Text = toolConfig.Khaos.PandoraTrigger.ToString();
 			hasteTextBox.Text = (toolConfig.Khaos.HasteFactor * 100) + "%";
 			weakenTextBox.Text = (toolConfig.Khaos.WeakenFactor * 100) + "%";
 			thirstTextBox.Text = toolConfig.Khaos.ThirstDrainPerSecond.ToString();
@@ -129,31 +129,23 @@ namespace SotnRandoTools
 			toolConfig.Khaos.Alerts = alertsCheckbox.Checked;
 		}
 
-		private void crippleTextBox_Validated(object sender, EventArgs e)
+		private void pandoraThresholdTextBox_Validated(object sender, EventArgs e)
 		{
-			string boxText = crippleTextBox.Text.Replace("%", "");
-			int cripplePercentage;
-			bool result = Int32.TryParse(boxText, out cripplePercentage);
-			if (result)
-			{
-				toolConfig.Khaos.CrippleFactor = (cripplePercentage / 100F);
-			}
-			crippleTextBox.BackColor = Color.White;
+			toolConfig.Khaos.PandoraTrigger = Convert.ToInt32(pandoraThresholdTextBox.Text);
+			pandoraThresholdTextBox.BackColor = Color.White;
 			this.valueToolTip.Active = false;
 		}
 
-		private void crippleTextBox_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+		private void pandoraThresholdTextBox_Validating(object sender, System.ComponentModel.CancelEventArgs e)
 		{
 			//if (this.ActiveControl.Equals(sender))
 			//return;
-			string boxText = crippleTextBox.Text.Replace("%", "");
-			int cripplePercentage;
-			bool result = Int32.TryParse(boxText, out cripplePercentage);
-			if (!result || cripplePercentage < 0 || cripplePercentage > 90)
+			int points = Convert.ToInt32(pandoraThresholdTextBox.Text);
+			if (points < 0 || points > 3000)
 			{
-				this.crippleTextBox.Text = "";
-				this.crippleTextBox.BackColor = Color.Red;
-				this.valueToolTip.SetToolTip(crippleTextBox, "Invalid value!");
+				this.pandoraThresholdTextBox.Text = "";
+				this.pandoraThresholdTextBox.BackColor = Color.Red;
+				this.valueToolTip.SetToolTip(pandoraThresholdTextBox, "Invalid value!");
 				this.valueToolTip.ToolTipIcon = ToolTipIcon.Warning;
 				this.valueToolTip.Active = true;
 				e.Cancel = true;

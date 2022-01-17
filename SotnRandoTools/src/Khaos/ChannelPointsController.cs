@@ -14,7 +14,6 @@ using SotnRandoTools.Services.Interfaces;
 using TwitchLib.Api;
 using TwitchLib.Api.Helix.Models.ChannelPoints.CreateCustomReward;
 using TwitchLib.Api.Helix.Models.ChannelPoints.UpdateCustomReward;
-using TwitchLib.Api.Helix.Models.ChannelPoints.UpdateCustomRewardRedemptionStatus;
 using TwitchLib.PubSub;
 using TwitchLib.PubSub.Events;
 
@@ -132,6 +131,11 @@ namespace SotnRandoTools.Khaos
 						ShouldRedemptionsSkipRequestQueue = true
 					};
 
+					if (action.RequiresUserInput)
+					{
+						request.IsUserInputRequired = true;
+					}
+
 
 					if (action.Cooldown.TotalSeconds > 0)
 					{
@@ -142,8 +146,8 @@ namespace SotnRandoTools.Khaos
 					if (action.StartsOnCooldown)
 					{
 						actionsStartingOnCooldown.Add(
-							new Timer(CreateDelayedReward, 
-							new DelayedActionCallback { Index = toolConfig.Khaos.Actions.IndexOf(action)}, (int)action.Cooldown.TotalMilliseconds, -1)
+							new Timer(CreateDelayedReward,
+							new DelayedActionCallback { Index = toolConfig.Khaos.Actions.IndexOf(action) }, (int) action.Cooldown.TotalMilliseconds, -1)
 							);
 						continue;
 					}
@@ -195,7 +199,12 @@ namespace SotnRandoTools.Khaos
 				ShouldRedemptionsSkipRequestQueue = true,
 				IsGlobalCooldownEnabled = true,
 				GlobalCooldownSeconds = (int) toolConfig.Khaos.Actions[action.Index].Cooldown.TotalSeconds
-		};
+			};
+
+			if (toolConfig.Khaos.Actions[action.Index].RequiresUserInput)
+			{
+				request.IsUserInputRequired = true;
+			}
 
 			for (int i = 0; i <= RetryCount; i++)
 			{
@@ -302,14 +311,14 @@ namespace SotnRandoTools.Khaos
 			int NewCost = (int) Math.Round(e.RewardRedeemed.Redemption.Reward.Cost * action.Scaling);
 			if (action.MaximumChannelPoints != 0 && NewCost > action.MaximumChannelPoints)
 			{
-				NewCost = (int)action.MaximumChannelPoints;
+				NewCost = (int) action.MaximumChannelPoints;
 			}
 			if (action.MaximumChannelPoints != 0 && toolConfig.Khaos.CostDecay && e.RewardRedeemed.Redemption.Reward.Cost == action.MaximumChannelPoints)
 			{
 				NewCost = (int) Math.Round(action.MaximumChannelPoints * 0.2);
 				if (NewCost < action.ChannelPoints)
 				{
-					NewCost = (int)action.ChannelPoints;
+					NewCost = (int) action.ChannelPoints;
 				}
 			}
 
@@ -338,7 +347,7 @@ namespace SotnRandoTools.Khaos
 				}
 			}
 
-			var actionEvent = new EventAddAction { UserName = e.RewardRedeemed.Redemption.User.DisplayName, ActionIndex = toolConfig.Khaos.Actions.IndexOf(action) };
+			var actionEvent = new EventAddAction { UserName = e.RewardRedeemed.Redemption.User.DisplayName, ActionIndex = toolConfig.Khaos.Actions.IndexOf(action), Data = e.RewardRedeemed.Redemption.UserInput };
 
 			khaosController.EnqueueAction(actionEvent);
 		}

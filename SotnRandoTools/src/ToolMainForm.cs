@@ -204,7 +204,7 @@ namespace SotnRandoTools
 
 		public override bool AskSaveChanges() => true;
 
-		public override void Restart() {}
+		public override void Restart() { }
 
 		public override void UpdateValues(ToolFormUpdateType type)
 		{
