@@ -94,6 +94,8 @@ namespace SotnRandoTools
             this.burstButton = new System.Windows.Forms.Button();
             this.autoKhaosButton = new System.Windows.Forms.Button();
             this.connectButton = new System.Windows.Forms.Button();
+            this.mermanLocationLabel = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.modePanel.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.statusPanel.SuspendLayout();
@@ -581,6 +583,8 @@ namespace SotnRandoTools
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.mermanLocationLabel);
+            this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.leapLocationLabel);
             this.groupBox1.Controls.Add(this.gravLocationLabel);
             this.groupBox1.Controls.Add(this.jewelLocationLabel);
@@ -602,7 +606,7 @@ namespace SotnRandoTools
             // leapLocationLabel
             // 
             this.leapLocationLabel.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.leapLocationLabel.Location = new System.Drawing.Point(67, 122);
+            this.leapLocationLabel.Location = new System.Drawing.Point(67, 114);
             this.leapLocationLabel.Name = "leapLocationLabel";
             this.leapLocationLabel.Size = new System.Drawing.Size(140, 18);
             this.leapLocationLabel.TabIndex = 9;
@@ -610,7 +614,7 @@ namespace SotnRandoTools
             // gravLocationLabel
             // 
             this.gravLocationLabel.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.gravLocationLabel.Location = new System.Drawing.Point(67, 99);
+            this.gravLocationLabel.Location = new System.Drawing.Point(64, 91);
             this.gravLocationLabel.Name = "gravLocationLabel";
             this.gravLocationLabel.Size = new System.Drawing.Size(140, 18);
             this.gravLocationLabel.TabIndex = 8;
@@ -618,7 +622,7 @@ namespace SotnRandoTools
             // jewelLocationLabel
             // 
             this.jewelLocationLabel.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.jewelLocationLabel.Location = new System.Drawing.Point(67, 74);
+            this.jewelLocationLabel.Location = new System.Drawing.Point(64, 66);
             this.jewelLocationLabel.Name = "jewelLocationLabel";
             this.jewelLocationLabel.Size = new System.Drawing.Size(140, 18);
             this.jewelLocationLabel.TabIndex = 7;
@@ -626,7 +630,7 @@ namespace SotnRandoTools
             // mistLocationLabel
             // 
             this.mistLocationLabel.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.mistLocationLabel.Location = new System.Drawing.Point(67, 50);
+            this.mistLocationLabel.Location = new System.Drawing.Point(64, 42);
             this.mistLocationLabel.Name = "mistLocationLabel";
             this.mistLocationLabel.Size = new System.Drawing.Size(140, 18);
             this.mistLocationLabel.TabIndex = 6;
@@ -634,7 +638,7 @@ namespace SotnRandoTools
             // batLocationLabel
             // 
             this.batLocationLabel.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.batLocationLabel.Location = new System.Drawing.Point(67, 27);
+            this.batLocationLabel.Location = new System.Drawing.Point(64, 19);
             this.batLocationLabel.Name = "batLocationLabel";
             this.batLocationLabel.Size = new System.Drawing.Size(140, 18);
             this.batLocationLabel.TabIndex = 5;
@@ -643,7 +647,7 @@ namespace SotnRandoTools
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label6.Location = new System.Drawing.Point(3, 122);
+            this.label6.Location = new System.Drawing.Point(3, 114);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(62, 18);
             this.label6.TabIndex = 4;
@@ -653,7 +657,7 @@ namespace SotnRandoTools
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label7.Location = new System.Drawing.Point(5, 99);
+            this.label7.Location = new System.Drawing.Point(2, 91);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(62, 18);
             this.label7.TabIndex = 3;
@@ -663,7 +667,7 @@ namespace SotnRandoTools
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label8.Location = new System.Drawing.Point(9, 74);
+            this.label8.Location = new System.Drawing.Point(6, 66);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(56, 18);
             this.label8.TabIndex = 2;
@@ -673,7 +677,7 @@ namespace SotnRandoTools
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label9.Location = new System.Drawing.Point(9, 50);
+            this.label9.Location = new System.Drawing.Point(6, 42);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(57, 18);
             this.label9.TabIndex = 1;
@@ -683,7 +687,7 @@ namespace SotnRandoTools
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label10.Location = new System.Drawing.Point(12, 27);
+            this.label10.Location = new System.Drawing.Point(9, 19);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(53, 18);
             this.label10.TabIndex = 0;
@@ -741,7 +745,7 @@ namespace SotnRandoTools
             // eyeLocation
             // 
             this.eyeLocation.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.eyeLocation.Location = new System.Drawing.Point(67, 122);
+            this.eyeLocation.Location = new System.Drawing.Point(67, 114);
             this.eyeLocation.Name = "eyeLocation";
             this.eyeLocation.Size = new System.Drawing.Size(140, 18);
             this.eyeLocation.TabIndex = 9;
@@ -749,7 +753,7 @@ namespace SotnRandoTools
             // ringLocation
             // 
             this.ringLocation.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.ringLocation.Location = new System.Drawing.Point(67, 99);
+            this.ringLocation.Location = new System.Drawing.Point(67, 91);
             this.ringLocation.Name = "ringLocation";
             this.ringLocation.Size = new System.Drawing.Size(140, 18);
             this.ringLocation.TabIndex = 8;
@@ -757,7 +761,7 @@ namespace SotnRandoTools
             // ribLocation
             // 
             this.ribLocation.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.ribLocation.Location = new System.Drawing.Point(67, 74);
+            this.ribLocation.Location = new System.Drawing.Point(67, 66);
             this.ribLocation.Name = "ribLocation";
             this.ribLocation.Size = new System.Drawing.Size(140, 18);
             this.ribLocation.TabIndex = 7;
@@ -765,7 +769,7 @@ namespace SotnRandoTools
             // toothLocation
             // 
             this.toothLocation.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.toothLocation.Location = new System.Drawing.Point(67, 50);
+            this.toothLocation.Location = new System.Drawing.Point(67, 42);
             this.toothLocation.Name = "toothLocation";
             this.toothLocation.Size = new System.Drawing.Size(140, 18);
             this.toothLocation.TabIndex = 6;
@@ -773,7 +777,7 @@ namespace SotnRandoTools
             // heartLocation
             // 
             this.heartLocation.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.heartLocation.Location = new System.Drawing.Point(67, 27);
+            this.heartLocation.Location = new System.Drawing.Point(67, 19);
             this.heartLocation.Name = "heartLocation";
             this.heartLocation.Size = new System.Drawing.Size(140, 18);
             this.heartLocation.TabIndex = 5;
@@ -782,7 +786,7 @@ namespace SotnRandoTools
             // 
             this.eyeLabel.AutoSize = true;
             this.eyeLabel.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.eyeLabel.Location = new System.Drawing.Point(16, 122);
+            this.eyeLabel.Location = new System.Drawing.Point(16, 114);
             this.eyeLabel.Name = "eyeLabel";
             this.eyeLabel.Size = new System.Drawing.Size(55, 18);
             this.eyeLabel.TabIndex = 4;
@@ -792,7 +796,7 @@ namespace SotnRandoTools
             // 
             this.ringLabel.AutoSize = true;
             this.ringLabel.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.ringLabel.Location = new System.Drawing.Point(13, 99);
+            this.ringLabel.Location = new System.Drawing.Point(13, 91);
             this.ringLabel.Name = "ringLabel";
             this.ringLabel.Size = new System.Drawing.Size(58, 18);
             this.ringLabel.TabIndex = 3;
@@ -802,7 +806,7 @@ namespace SotnRandoTools
             // 
             this.ribLabel.AutoSize = true;
             this.ribLabel.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.ribLabel.Location = new System.Drawing.Point(21, 74);
+            this.ribLabel.Location = new System.Drawing.Point(21, 66);
             this.ribLabel.Name = "ribLabel";
             this.ribLabel.Size = new System.Drawing.Size(50, 18);
             this.ribLabel.TabIndex = 2;
@@ -812,7 +816,7 @@ namespace SotnRandoTools
             // 
             this.toothLabel.AutoSize = true;
             this.toothLabel.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.toothLabel.Location = new System.Drawing.Point(1, 50);
+            this.toothLabel.Location = new System.Drawing.Point(1, 42);
             this.toothLabel.Name = "toothLabel";
             this.toothLabel.Size = new System.Drawing.Size(70, 18);
             this.toothLabel.TabIndex = 1;
@@ -822,7 +826,7 @@ namespace SotnRandoTools
             // 
             this.heartLabel.AutoSize = true;
             this.heartLabel.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.heartLabel.Location = new System.Drawing.Point(4, 27);
+            this.heartLabel.Location = new System.Drawing.Point(4, 19);
             this.heartLabel.Name = "heartLabel";
             this.heartLabel.Size = new System.Drawing.Size(67, 18);
             this.heartLabel.TabIndex = 0;
@@ -997,6 +1001,24 @@ namespace SotnRandoTools
             this.connectButton.UseVisualStyleBackColor = false;
             this.connectButton.Click += new System.EventHandler(this.connectButton_Click);
             // 
+            // mermanLocationLabel
+            // 
+            this.mermanLocationLabel.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.mermanLocationLabel.Location = new System.Drawing.Point(67, 139);
+            this.mermanLocationLabel.Name = "mermanLocationLabel";
+            this.mermanLocationLabel.Size = new System.Drawing.Size(140, 18);
+            this.mermanLocationLabel.TabIndex = 11;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label2.Location = new System.Drawing.Point(1, 139);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(67, 18);
+            this.label2.TabIndex = 10;
+            this.label2.Text = "Merman:";
+            // 
             // KhaosForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -1100,6 +1122,8 @@ namespace SotnRandoTools
 		private System.Windows.Forms.Label label9;
 		private System.Windows.Forms.Label label10;
 		private System.Windows.Forms.Button khaosTrackButton;
+		private System.Windows.Forms.Label mermanLocationLabel;
+		private System.Windows.Forms.Label label2;
 	}
 }
 

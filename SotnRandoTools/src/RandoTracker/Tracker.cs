@@ -673,6 +673,12 @@ namespace SotnRandoTools.RandoTracker
 										VladRelicLocationDisplay.LepastoneLocation = location is not null ? location.Name : "";
 									}
 									break;
+								case "MermanStatue":
+									if (VladRelicLocationDisplay.MermanLocation == String.Empty)
+									{
+										VladRelicLocationDisplay.MermanLocation = location is not null ? location.Name : "";
+									}
+									break;
 								default:
 									break;
 							}

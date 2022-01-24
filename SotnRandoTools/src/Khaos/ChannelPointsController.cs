@@ -113,7 +113,7 @@ namespace SotnRandoTools.Khaos
 				Console.WriteLine(ex.Message);
 			}
 		}
-		//Can alternatively create rewards once, store ids and onyl thrn them on and adjust prices or off.
+
 		private async void CreateRewards()
 		{
 			Console.WriteLine($"Creating rewards...");
@@ -296,6 +296,7 @@ namespace SotnRandoTools.Khaos
 				return;
 			}
 
+			//TODO: fulfil rewards periodically
 			//No need as of now, since rewards auto-redeem.
 			//In the future I might leave them unredeemed until the end and include a tab with a list of redemptions, so that the user can refund channel points.
 			//Complete the redemption

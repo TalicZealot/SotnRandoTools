@@ -38,6 +38,7 @@ namespace SotnRandoTools
 		private string jewelLocation = String.Empty;
 		private string gravityBootsLocation = String.Empty;
 		private string leapstoneLocation = String.Empty;
+		private string mermanLocation = String.Empty;
 
 		private bool started = false;
 		private bool connected = false;
@@ -75,6 +76,7 @@ namespace SotnRandoTools
 			jewelLocationLabel.DataBindings.Add(new System.Windows.Forms.Binding("Text", this, nameof(JewelOfOpenLocation)));
 			gravLocationLabel.DataBindings.Add(new System.Windows.Forms.Binding("Text", this, nameof(GravityBootsLocation)));
 			leapLocationLabel.DataBindings.Add(new System.Windows.Forms.Binding("Text", this, nameof(LepastoneLocation)));
+			mermanLocationLabel.DataBindings.Add(new System.Windows.Forms.Binding("Text", this, nameof(MermanLocation)));
 		}
 
 		public ICheatCollectionAdapter AdaptedCheats
@@ -187,6 +189,16 @@ namespace SotnRandoTools
 				leapstoneLocation = value;
 
 				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(LepastoneLocation)));
+			}
+		}
+		public string MermanLocation
+		{
+			get => mermanLocation;
+			set
+			{
+				mermanLocation = value;
+
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(MermanLocation)));
 			}
 		}
 		public List<QueuedAction> ActionQueue { get; set; }

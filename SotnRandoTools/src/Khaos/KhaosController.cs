@@ -112,6 +112,11 @@ namespace SotnRandoTools.Khaos
 		private uint storedMana = 0;
 		private int spentMana = 0;
 
+		private int fireballCooldown = 0;
+		private List<LiveActor> fireballs = new();
+		private List<LiveActor> fireballsUp = new();
+		private List<LiveActor> fireballsDown = new();
+
 		private bool speedLocked = false;
 		private bool manaLocked = false;
 		private bool invincibilityLocked = false;
@@ -122,7 +127,7 @@ namespace SotnRandoTools.Khaos
 		private bool subweaponsOnlyActive = false;
 		private bool gasCloudTaken = false;
 		private bool spawnActive = false;
-
+		private bool vermilionBirdActive = false;
 		private int slowInterval;
 		private int normalInterval;
 		private int fastInterval;
@@ -376,9 +381,14 @@ namespace SotnRandoTools.Khaos
 		{
 			uint trackIndex = 0;
 			string foundTrack = Constants.Khaos.AcceptedMusicTrackTitles.Where(t => t.ToLower().Trim() == track.ToLower().Trim()).FirstOrDefault();
+			bool alternateTitle = Constants.Khaos.AlternateTrackTitles.ContainsKey(track.ToLower().Trim());
 			if (foundTrack is not null)
 			{
 				trackIndex = SotnApi.Constants.Values.Game.Various.MusicTracks[foundTrack];
+			}
+			else if (alternateTitle)
+			{
+				trackIndex = SotnApi.Constants.Values.Game.Various.MusicTracks[Constants.Khaos.AlternateTrackTitles[track]];
 			}
 			else
 			{
@@ -494,7 +504,8 @@ namespace SotnRandoTools.Khaos
 
 			if (IsInRoomList(Constants.Khaos.EntranceCutsceneRooms))
 			{
-				queuedActions.Add(new QueuedAction { Name = toolConfig.Khaos.Actions[11].Name, LocksSpeed = true, Invoker = new MethodInvoker(() => Slow(user)) });
+				queuedActions.Add(new QueuedAction { Name = toolConfig.Khaos.Actions[(int) Enums.Action.Slow].Name, LocksSpeed = true, Invoker = new MethodInvoker(() => Slow(user)) });
+				return;
 			}
 
 			underwaterPhysics.Enable();
@@ -642,15 +653,20 @@ namespace SotnRandoTools.Khaos
 				rolls++;
 			}
 
-			bool heighHp = sotnApi.AlucardApi.CurrentHp > sotnApi.AlucardApi.MaxtHp * 0.6;
+			bool highHp = sotnApi.AlucardApi.CurrentHp > sotnApi.AlucardApi.MaxtHp * 0.6;
+			bool highMp = sotnApi.AlucardApi.CurrentMp > sotnApi.AlucardApi.MaxtMp * 0.6;
 
 			int roll = rng.Next(1, 4);
-			if (heighHp && roll == 2)
+
+			if (highHp && roll == 2)
 			{
 				roll = 3;
 			}
-
-			if (zaWarudoActive)
+			if (highMp && roll == 3)
+			{
+				roll = 2;
+			}
+			if ((highHp && highMp) || zaWarudoActive)
 			{
 				roll = 1;
 			}
@@ -659,18 +675,15 @@ namespace SotnRandoTools.Khaos
 			{
 				case 1:
 					sotnApi.AlucardApi.GrantItemByName(item);
-					Console.WriteLine($"Light help rolled: {item}");
 					notificationService.AddMessage($"{user} gave you a {item}");
 					break;
 				case 2:
 					sotnApi.AlucardApi.ActivatePotion(Potion.Potion);
-					Console.WriteLine($"Light help rolled activate potion.");
 					notificationService.AddMessage($"{user} healed you");
 					break;
 				case 3:
-					sotnApi.AlucardApi.ActivatePotion(Potion.ShieldPotion);
-					Console.WriteLine($"Light help rolled activate shield potion.");
-					notificationService.AddMessage($"{user} used a Shield Potion");
+					sotnApi.AlucardApi.CurrentMp += 20;
+					notificationService.AddMessage($"{user} used a gave you mana");
 					break;
 				default:
 					break;
@@ -718,7 +731,6 @@ namespace SotnRandoTools.Khaos
 					notificationService.AddMessage($"{user} healed you");
 					break;
 				case 3:
-					//TODO: check zawarudo
 					sotnApi.AlucardApi.ActivatePotion(Potion.Mannaprism);
 					Console.WriteLine($"Medium help rolled activate Manna prism.");
 					notificationService.AddMessage($"{user} used a Mana Prism");
@@ -903,6 +915,7 @@ namespace SotnRandoTools.Khaos
 			invincibilityCheat.PokeValue(1);
 			invincibilityCheat.Enable();
 			invincibilityLocked = true;
+			vermilionBirdActive = true;
 			attackPotionCheat.PokeValue(1);
 			attackPotionCheat.Enable();
 			shineCheat.PokeValue(1);
@@ -994,11 +1007,15 @@ namespace SotnRandoTools.Khaos
 
 		public void Update()
 		{
-			if (!sotnApi.GameApi.InAlucardMode())
+			if (!sotnApi.GameApi.InAlucardMode() ||  !sotnApi.AlucardApi.HasHitbox() || sotnApi.AlucardApi.CurrentHp < 1
+				|| sotnApi.GameApi.InTransition || sotnApi.GameApi.IsLoading)
 			{
 				return;
 			}
+
 			CheckDashInput();
+			CheckFireballs();
+
 			if (bloodManaActive)
 			{
 				CheckManaUsage();
@@ -1819,12 +1836,12 @@ namespace SotnRandoTools.Khaos
 				if (hordeTimer.Interval == 5 * (60 * 1000))
 				{
 					hordeTimer.Stop();
-					hordeTimer.Interval = toolConfig.Khaos.Actions[14].Duration.TotalMilliseconds;
+					hordeTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.KhaosHorde].Duration.TotalMilliseconds;
 
 					ActionTimer timer = new()
 					{
-						Name = toolConfig.Khaos.Actions[14].Name,
-						Duration = toolConfig.Khaos.Actions[14].Duration
+						Name = toolConfig.Khaos.Actions[(int) Enums.Action.KhaosHorde].Name,
+						Duration = toolConfig.Khaos.Actions[(int) Enums.Action.KhaosHorde].Duration
 					};
 					statusInfoDisplay.AddTimer(timer);
 					notificationService.AddOverlayTimer(timer.Name, (int) timer.Duration.TotalMilliseconds);
@@ -2004,7 +2021,7 @@ namespace SotnRandoTools.Khaos
 			hitbox.HitboxHeight = 255;
 			hitbox.HitboxWidth = 255;
 			hitbox.AutoToggle = 1;
-			hitbox.Damage = (ushort) (sotnApi.AlucardApi.Def + 1);
+			hitbox.Damage = 1;
 			hitbox.DamageTypeA = (uint) Actors.Poison;
 			sotnApi.ActorApi.SpawnActor(hitbox);
 		}
@@ -2016,7 +2033,7 @@ namespace SotnRandoTools.Khaos
 			hitbox.HitboxHeight = 255;
 			hitbox.HitboxWidth = 255;
 			hitbox.AutoToggle = 1;
-			hitbox.Damage = (ushort) (sotnApi.AlucardApi.Def + 1);
+			hitbox.Damage = 1;
 			hitbox.DamageTypeB = (uint) Actors.Curse;
 			sotnApi.ActorApi.SpawnActor(hitbox);
 		}
@@ -2028,7 +2045,7 @@ namespace SotnRandoTools.Khaos
 			hitbox.HitboxHeight = 255;
 			hitbox.HitboxWidth = 255;
 			hitbox.AutoToggle = 1;
-			hitbox.Damage = (ushort) (sotnApi.AlucardApi.Def + 1);
+			hitbox.Damage = 1;
 			hitbox.DamageTypeA = (uint) Actors.Stone;
 			hitbox.DamageTypeB = (uint) Actors.Stone;
 			sotnApi.ActorApi.SpawnActor(hitbox);
@@ -2247,6 +2264,7 @@ namespace SotnRandoTools.Khaos
 		{
 			invincibilityCheat.Disable();
 			invincibilityLocked = false;
+			vermilionBirdActive = false;
 			attackPotionCheat.Disable();
 			shineCheat.Disable();
 			contactDamage.Disable();
@@ -2371,8 +2389,8 @@ namespace SotnRandoTools.Khaos
 
 					ActionTimer timer = new()
 					{
-						Name = toolConfig.Khaos.Actions[28].Name,
-						Duration = toolConfig.Khaos.Actions[28].Duration
+						Name = toolConfig.Khaos.Actions[(int) Enums.Action.Lord].Name,
+						Duration = toolConfig.Khaos.Actions[(int) Enums.Action.Lord].Duration
 					};
 					statusInfoDisplay.AddTimer(timer);
 					notificationService.AddOverlayTimer(timer.Name, (int) timer.Duration.TotalMilliseconds);
@@ -2409,6 +2427,22 @@ namespace SotnRandoTools.Khaos
 			}
 
 			return false;
+		}
+		private void AzureDragon()
+		{
+			// + ATK
+		}
+		private void VermilionBird()
+		{
+			//fireballs + fire resist
+		}
+		private void WhiteTiger()
+		{
+			//
+		}
+		private void BlackTortoise()
+		{
+			//mournblade effect + DEF
 		}
 		#endregion
 
@@ -2703,6 +2737,80 @@ namespace SotnRandoTools.Khaos
 				{
 					hasteOverdriveOffTimer.Start();
 				}
+			}
+		}
+		private void CheckFireballs()
+		{
+			if (vermilionBirdActive && inputService.ButtonPressed(PlaystationInputKeys.Square, 10) && fireballCooldown == 0)
+			{
+				Actor fireball = new Actor(Constants.Khaos.FireballActorBytes);
+				bool alucardFacing = sotnApi.AlucardApi.FacingLeft;
+				int offsetX = alucardFacing ? -20 : 20;
+				fireball.Xpos = (ushort) (sotnApi.AlucardApi.ScreenX + offsetX);
+				fireball.Ypos = (ushort) (sotnApi.AlucardApi.ScreenY - 10);
+
+				long address = sotnApi.ActorApi.SpawnActor(fireball, false);
+				LiveActor liveFireball = sotnApi.ActorApi.GetLiveActor(address);
+				if (inputService.ButtonPressed(PlaystationInputKeys.Down, 10))
+				{
+					fireballsDown.Add(liveFireball);
+				}
+				else if (inputService.ButtonPressed(PlaystationInputKeys.Up, 10))
+				{
+					fireballsUp.Add(liveFireball);
+				}
+				else
+				{
+					fireballs.Add(liveFireball);
+				}
+				fireballCooldown = 8;
+			}
+
+			fireballs.RemoveAll(f => f.Damage == 0 || f.Damage == 80);
+			fireballsUp.RemoveAll(f => f.Damage == 0 || f.Damage == 80);
+			fireballsDown.RemoveAll(f => f.Damage == 0 || f.Damage == 80);
+			foreach (var fball in fireballs)
+			{
+				fball.Damage = 80;
+				if (fball.SpeedHorizontal > 1)
+				{
+					fball.SpeedHorizontal = 4;
+				}
+				else
+				{
+					fball.SpeedHorizontal = -5;
+				}
+			}
+			foreach (var fball in fireballsUp)
+			{
+				fball.Damage = 80;
+				if (fball.SpeedHorizontal > 1)
+				{
+					fball.SpeedHorizontal = 4;
+				}
+				else
+				{
+					fball.SpeedHorizontal = -5;
+				}
+				fball.SpeedVertical = -1;
+			}
+			foreach (var fball in fireballsDown)
+			{
+				fball.Damage = 80;
+				if (fball.SpeedHorizontal > 1)
+				{
+					fball.SpeedHorizontal = 4;
+				}
+				else
+				{
+					fball.SpeedHorizontal = -5;
+				}
+				fball.SpeedVertical = 2;
+			}
+
+			if (fireballCooldown > 0)
+			{
+				fireballCooldown--;
 			}
 		}
 		private void CheckExperience()

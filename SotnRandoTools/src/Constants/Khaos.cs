@@ -90,6 +90,7 @@ namespace SotnRandoTools.Constants
 		public static List<MapLocation> EntranceCutsceneRooms = new List<MapLocation>
 		{
 			new MapLocation{X = 0, Y = 44, SecondCastle = 0},
+			new MapLocation{X = 1, Y = 44, SecondCastle = 0},
 			new MapLocation{X = 2, Y = 44, SecondCastle = 0},
 			new MapLocation{X = 3, Y = 44, SecondCastle = 0},
 			new MapLocation{X = 4, Y = 44, SecondCastle = 0},
@@ -356,6 +357,8 @@ namespace SotnRandoTools.Constants
 		public static SearchableActor GalamothPartsActors = new SearchableActor { Hp = 12000, Damage = 50, Sprite = 31516 };
 		public static SearchableActor ShaftActor = new SearchableActor { Hp = 10, Damage = 0, Sprite = 0 };
 
+		public static List<byte> FireballActorBytes = new List<byte> { 0x00, 0xC0, 0xB2, 0x00, 0x00, 0x00, 0xB3, 0x00, 0x00, 0x80, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x96, 0x00, 0x1A, 0x00, 0xDC, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x10, 0x08, 0x00, 0x00, 0x03, 0x00, 0x02, 0x00, 0x00, 0x00, 0x28, 0x00, 0x00, 0x80, 0x00, 0x00, 0x04, 0x04, 0x00, 0x14, 0x00, 0x00, 0x98, 0x07, 0x0B, 0x80, 0x04, 0x00, 0x01, 0x00, 0x09, 0x00, 0x05, 0x00, 0x08 };
+
 		public static string[] AcceptedMusicTrackTitles =
 	   {
 			"Lost Painting",
@@ -391,6 +394,61 @@ namespace SotnRandoTools.Constants
 			"Resting Place",
 			"Nocturne",
 			"Moonlight Nocturne"
+		};
+		public static Dictionary<string, string> AlternateTrackTitles = new Dictionary<string, string>
+		{
+			{ "Deaths Ballad", "Death's Ballad" },
+			{ "Death Ballad", "Death's Ballad" },
+			{ "Poetic Death", "Death's Ballad" },
+			{ "Illusionary Dance", "Dance of Illusions" },
+			{ "Dracula", "Dance of Illusions" },
+			{ "Nocturne in the Moonlight", "Moonlight Nocturne" },
+			{ "Dracula's Castle", "Dracula Castle" },
+			{ "Draculas Castle", "Dracula Castle" },
+			{ "Castle Entrance", "Dracula Castle" },
+			{ "Entrance", "Dracula Castle" },
+			{ "Tower of Mist", "Tower of Evil Mist" },
+			{ "Outer Wall", "Tower of Evil Mist" },
+			{ "Library", "Wood Carving Partita" },
+			{ "Alchemy Lab", "Dance of Gold" },
+			{ "Alchemy Laboratory", "Dance of Gold" },
+			{ "Chapel", "Requiem for the Gods" },
+			{ "Royal Chapel", "Requiem for the Gods" },
+			{ "Crystal Teardrop", "Crystal Teardrops" },
+			{ "Caverns", "Crystal Teardrops" },
+			{ "Underground Caverns", "Crystal Teardrops" },
+			{ "Departer Way", "Abandoned Pit" },
+			{ "Pit", "Abandoned Pit" },
+			{ "Mines", "Abandoned Pit" },
+			{ "Mine", "Abandoned Pit" },
+			{ "Catacombs", "Rainbow Cemetary" },
+			{ "Lost Paintings", "Lost Painting" },
+			{ "Antichapel", "Lost Painting" },
+			{ "Reverse Caverns", "Lost Painting" },
+			{ "Forbidden Library", "Lost Painting" },
+			{ "Waltz of Pearls", "Dance of Pearls" },
+			{ "Olrox's Quarters", "Dance of Pearls" },
+			{ "Olroxs Quarters", "Dance of Pearls" },
+			{ "Olrox Quarters", "Dance of Pearls" },
+			{ "Cursed Zone", "Cursed Sanctuary" },
+			{ "Floating Catacombs", "Cursed Sanctuary" },
+			{ "Reverse Catacombs", "Cursed Sanctuary" },
+			{ "Demonic Banquet", "Enchanted Banquet" },
+			{ "Medusa", "Enchanted Banquet" },
+			{ "Succubus", "Enchanted Banquet" },
+			{ "Colosseum", "Wandering Ghosts" },
+			{ "Pitiful Scion", "The Tragic Prince" },
+			{ "Clock Tower", "The Tragic Prince" },
+			{ "Tragic Prince", "The Tragic Prince" },
+			{ "Alucard", "The Tragic Prince" },
+			{ "Door to the Abyss", "Doorway to the Abyss" },
+			{ "Doorway to Heaven", "Heavenly Doorway" },
+			{ "Keep", "Heavenly Doorway" },
+			{ "Castle Keep", "Heavenly Doorway" },
+			{ "Divine Bloodlines", "Blood Relations" },
+			{ "Strange Bloodlines", "Blood Relations" },
+			{ "Richter Belmont", "Blood Relations" },
+			{ "Richter", "Blood Relations" },
 		};
 
 		public static float SuperWeakenFactor = 0.5F;
