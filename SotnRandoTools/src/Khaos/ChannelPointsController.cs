@@ -218,7 +218,7 @@ namespace SotnRandoTools.Khaos
 					customRewardIds.Add(response.Data[0].Id);
 
 					Console.WriteLine($"Added new delayed reward {request.Title}.");
-					notificationService.AddMessage($"{request.Title} activated.");
+					notificationService.AddMessage($"{request.Title} reward added.");
 
 					break;
 				}

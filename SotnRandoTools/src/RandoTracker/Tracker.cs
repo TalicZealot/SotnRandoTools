@@ -442,6 +442,7 @@ namespace SotnRandoTools.RandoTracker
 		}
 
 		public string SeedInfo { get; set; }
+		//TODO: Spirit org location not detecting
 		public IVladRelicLocationDisplay VladRelicLocationDisplay { get; set; }
 
 		public TrackerGraphicsEngine GraphicsEngine { get; }
@@ -609,7 +610,8 @@ namespace SotnRandoTools.RandoTracker
 						{
 							float adjustedX = sotnApi.AlucardApi.MapX * 2;
 							float adjustedY = (secondCastle ? (sotnApi.AlucardApi.MapY - 8.75f) : (sotnApi.AlucardApi.MapY - 4.5f)) * 4;
-							var location = locations.Where(l => l.MapRow == adjustedY && (l.MapCol == adjustedX || l.MapCol == adjustedX + 2 || l.MapCol == adjustedX - 2)).FirstOrDefault();
+							Console.WriteLine($"relic location: x:{adjustedX}, y:{adjustedY}");
+							var location = locations.Where(l => (l.MapRow >= adjustedY - 3 && l.MapRow <= adjustedY + 3) && (l.MapCol >= adjustedX - 3 && l.MapCol <= adjustedX + 3)).FirstOrDefault();
 
 							switch (relics[i].Name)
 							{

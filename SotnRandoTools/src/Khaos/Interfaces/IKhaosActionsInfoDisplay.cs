@@ -14,5 +14,6 @@ namespace SotnRandoTools.Khaos.Interfaces
 		string JewelOfOpenLocation { get; set; }
 		string GravityBootsLocation { get; set; }
 		string LepastoneLocation { get; set; }
+		string MermanLocation { get; set; }
 	}
 }

@@ -89,6 +89,7 @@ namespace SotnRandoTools.Configuration
 				"Gold Ring",
 				"Silver Ring"
 			};
+			AutoKhaosDifficulty = "Normal";
 		}
 		public Point Location { get; set; }
 		public bool Alerts { get; set; }
@@ -103,6 +104,7 @@ namespace SotnRandoTools.Configuration
 		public int PandoraMinItems { get; set; }
 		public int PandoraMaxItems { get; set; }
 		public int MeterOnReset { get; set; }
+		public string AutoKhaosDifficulty { get; set; }
 		public System.TimeSpan QueueInterval { get; set; }
 		public bool DynamicInterval { get; set; }
 		public bool KeepVladRelics { get; set; }

@@ -27,7 +27,6 @@ namespace SotnRandoTools
 			pandoraThresholdTextBox.Text = toolConfig.Khaos.PandoraTrigger.ToString();
 			hasteTextBox.Text = (toolConfig.Khaos.HasteFactor * 100) + "%";
 			weakenTextBox.Text = (toolConfig.Khaos.WeakenFactor * 100) + "%";
-			thirstTextBox.Text = toolConfig.Khaos.ThirstDrainPerSecond.ToString();
 			queueTextBox.Text = toolConfig.Khaos.QueueInterval.ToString();
 			dynamicIntervalCheckBox.Checked = toolConfig.Khaos.DynamicInterval;
 			keepVladRelicsCheckbox.Checked = toolConfig.Khaos.KeepVladRelics;
@@ -49,6 +48,7 @@ namespace SotnRandoTools
 			actionPricingGridView.AutoGenerateColumns = false;
 			actionPricingGridView.DataSource = actionSettingsSource;
 			actionPricingGridView.CellValidating += ActionPricingGridView_CellValidating;
+			autoDifficultyComboBox.Text = toolConfig.Khaos.AutoKhaosDifficulty;
 		}
 
 		private void ActionPricingGridView_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
@@ -210,33 +210,6 @@ namespace SotnRandoTools
 			}
 		}
 
-		private void thirstTextBox_Validated(object sender, EventArgs e)
-		{
-			int thirstDrain;
-			bool result = Int32.TryParse(thirstTextBox.Text, out thirstDrain);
-			if (result)
-			{
-				toolConfig.Khaos.ThirstDrainPerSecond = (uint) thirstDrain;
-			}
-			thirstTextBox.BackColor = Color.White;
-			this.valueToolTip.Active = false;
-		}
-
-		private void thirstTextBox_Validating(object sender, System.ComponentModel.CancelEventArgs e)
-		{
-			int thirstDrain;
-			bool result = Int32.TryParse(thirstTextBox.Text, out thirstDrain);
-			if (!result || thirstDrain < 1 || thirstDrain > 100)
-			{
-				this.thirstTextBox.Text = "";
-				this.thirstTextBox.BackColor = Color.Red;
-				this.valueToolTip.SetToolTip(thirstTextBox, "Invalid value!");
-				this.valueToolTip.ToolTipIcon = ToolTipIcon.Warning;
-				this.valueToolTip.Active = true;
-				e.Cancel = true;
-			}
-		}
-
 		private void pandoraMinTextBox_Validated(object sender, EventArgs e)
 		{
 			int pandoraMinItems;
@@ -342,6 +315,11 @@ namespace SotnRandoTools
 		private void costDecayCheckBox_CheckedChanged(object sender, EventArgs e)
 		{
 			toolConfig.Khaos.CostDecay = costDecayCheckBox.Checked;
+		}
+
+		private void autoDifficultyComboBox_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			toolConfig.Khaos.AutoKhaosDifficulty = autoDifficultyComboBox.SelectedItem.ToString();
 		}
 	}
 }

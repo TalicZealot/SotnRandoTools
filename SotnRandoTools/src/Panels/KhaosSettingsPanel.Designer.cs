@@ -59,19 +59,21 @@ namespace SotnRandoTools
             this.khaosTabs = new System.Windows.Forms.TabControl();
             this.generalTab = new System.Windows.Forms.TabPage();
             this.generalSettingsBox = new System.Windows.Forms.GroupBox();
+            this.autoDifficultyLabel = new System.Windows.Forms.Label();
+            this.autoDifficultyComboBox = new System.Windows.Forms.ComboBox();
+            this.pandoraThresholdTextBox = new System.Windows.Forms.TextBox();
+            this.pandoraThreshold = new System.Windows.Forms.Label();
             this.costDecayCheckBox = new System.Windows.Forms.CheckBox();
             this.keepVladRelicsCheckbox = new System.Windows.Forms.CheckBox();
             this.dynamicIntervalCheckBox = new System.Windows.Forms.CheckBox();
             this.pandoraMaxTextBox = new System.Windows.Forms.TextBox();
             this.pandoraMinTextBox = new System.Windows.Forms.TextBox();
             this.queueTextBox = new System.Windows.Forms.TextBox();
-            this.thirstTextBox = new System.Windows.Forms.TextBox();
             this.weakenTextBox = new System.Windows.Forms.TextBox();
             this.hasteTextBox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.queueLabel = new System.Windows.Forms.Label();
-            this.thirstLabel = new System.Windows.Forms.Label();
             this.weakenLabel = new System.Windows.Forms.Label();
             this.hasteLabel = new System.Windows.Forms.Label();
             this.audioBox = new System.Windows.Forms.GroupBox();
@@ -103,8 +105,6 @@ namespace SotnRandoTools
             this.alertFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.namesFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.valueToolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.pandoraThresholdTextBox = new System.Windows.Forms.TextBox();
-            this.pandoraThreshold = new System.Windows.Forms.Label();
             this.khaosTabs.SuspendLayout();
             this.generalTab.SuspendLayout();
             this.generalSettingsBox.SuspendLayout();
@@ -182,6 +182,8 @@ namespace SotnRandoTools
             // 
             // generalSettingsBox
             // 
+            this.generalSettingsBox.Controls.Add(this.autoDifficultyLabel);
+            this.generalSettingsBox.Controls.Add(this.autoDifficultyComboBox);
             this.generalSettingsBox.Controls.Add(this.pandoraThresholdTextBox);
             this.generalSettingsBox.Controls.Add(this.pandoraThreshold);
             this.generalSettingsBox.Controls.Add(this.costDecayCheckBox);
@@ -190,13 +192,11 @@ namespace SotnRandoTools
             this.generalSettingsBox.Controls.Add(this.pandoraMaxTextBox);
             this.generalSettingsBox.Controls.Add(this.pandoraMinTextBox);
             this.generalSettingsBox.Controls.Add(this.queueTextBox);
-            this.generalSettingsBox.Controls.Add(this.thirstTextBox);
             this.generalSettingsBox.Controls.Add(this.weakenTextBox);
             this.generalSettingsBox.Controls.Add(this.hasteTextBox);
             this.generalSettingsBox.Controls.Add(this.label2);
             this.generalSettingsBox.Controls.Add(this.label1);
             this.generalSettingsBox.Controls.Add(this.queueLabel);
-            this.generalSettingsBox.Controls.Add(this.thirstLabel);
             this.generalSettingsBox.Controls.Add(this.weakenLabel);
             this.generalSettingsBox.Controls.Add(this.hasteLabel);
             this.generalSettingsBox.ForeColor = System.Drawing.Color.White;
@@ -207,10 +207,48 @@ namespace SotnRandoTools
             this.generalSettingsBox.TabStop = false;
             this.generalSettingsBox.Text = "General";
             // 
+            // autoDifficultyLabel
+            // 
+            this.autoDifficultyLabel.AutoSize = true;
+            this.autoDifficultyLabel.Location = new System.Drawing.Point(33, 123);
+            this.autoDifficultyLabel.Name = "autoDifficultyLabel";
+            this.autoDifficultyLabel.Size = new System.Drawing.Size(79, 13);
+            this.autoDifficultyLabel.TabIndex = 20;
+            this.autoDifficultyLabel.Text = "Auto Difficulty:";
+            // 
+            // autoDifficultyComboBox
+            // 
+            this.autoDifficultyComboBox.FormattingEnabled = true;
+            this.autoDifficultyComboBox.Items.AddRange(new object[] {
+            "Easy",
+            "Normal",
+            "Hard"});
+            this.autoDifficultyComboBox.Location = new System.Drawing.Point(118, 120);
+            this.autoDifficultyComboBox.Name = "autoDifficultyComboBox";
+            this.autoDifficultyComboBox.Size = new System.Drawing.Size(54, 21);
+            this.autoDifficultyComboBox.TabIndex = 19;
+            this.autoDifficultyComboBox.SelectedIndexChanged += new System.EventHandler(this.autoDifficultyComboBox_SelectedIndexChanged);
+            // 
+            // pandoraThresholdTextBox
+            // 
+            this.pandoraThresholdTextBox.Location = new System.Drawing.Point(118, 14);
+            this.pandoraThresholdTextBox.Name = "pandoraThresholdTextBox";
+            this.pandoraThresholdTextBox.Size = new System.Drawing.Size(54, 21);
+            this.pandoraThresholdTextBox.TabIndex = 18;
+            // 
+            // pandoraThreshold
+            // 
+            this.pandoraThreshold.AutoSize = true;
+            this.pandoraThreshold.Location = new System.Drawing.Point(28, 17);
+            this.pandoraThreshold.Name = "pandoraThreshold";
+            this.pandoraThreshold.Size = new System.Drawing.Size(82, 13);
+            this.pandoraThreshold.TabIndex = 17;
+            this.pandoraThreshold.Text = "Pandora meter:";
+            // 
             // costDecayCheckBox
             // 
             this.costDecayCheckBox.AutoSize = true;
-            this.costDecayCheckBox.Location = new System.Drawing.Point(193, 116);
+            this.costDecayCheckBox.Location = new System.Drawing.Point(192, 116);
             this.costDecayCheckBox.Name = "costDecayCheckBox";
             this.costDecayCheckBox.Size = new System.Drawing.Size(81, 17);
             this.costDecayCheckBox.TabIndex = 16;
@@ -223,7 +261,7 @@ namespace SotnRandoTools
             // keepVladRelicsCheckbox
             // 
             this.keepVladRelicsCheckbox.AutoSize = true;
-            this.keepVladRelicsCheckbox.Location = new System.Drawing.Point(193, 68);
+            this.keepVladRelicsCheckbox.Location = new System.Drawing.Point(192, 68);
             this.keepVladRelicsCheckbox.Name = "keepVladRelicsCheckbox";
             this.keepVladRelicsCheckbox.Size = new System.Drawing.Size(103, 17);
             this.keepVladRelicsCheckbox.TabIndex = 15;
@@ -234,7 +272,7 @@ namespace SotnRandoTools
             // dynamicIntervalCheckBox
             // 
             this.dynamicIntervalCheckBox.AutoSize = true;
-            this.dynamicIntervalCheckBox.Location = new System.Drawing.Point(193, 93);
+            this.dynamicIntervalCheckBox.Location = new System.Drawing.Point(192, 93);
             this.dynamicIntervalCheckBox.Name = "dynamicIntervalCheckBox";
             this.dynamicIntervalCheckBox.Size = new System.Drawing.Size(105, 17);
             this.dynamicIntervalCheckBox.TabIndex = 14;
@@ -244,7 +282,7 @@ namespace SotnRandoTools
             // 
             // pandoraMaxTextBox
             // 
-            this.pandoraMaxTextBox.Location = new System.Drawing.Point(300, 39);
+            this.pandoraMaxTextBox.Location = new System.Drawing.Point(118, 66);
             this.pandoraMaxTextBox.Name = "pandoraMaxTextBox";
             this.pandoraMaxTextBox.Size = new System.Drawing.Size(54, 21);
             this.pandoraMaxTextBox.TabIndex = 13;
@@ -253,7 +291,7 @@ namespace SotnRandoTools
             // 
             // pandoraMinTextBox
             // 
-            this.pandoraMinTextBox.Location = new System.Drawing.Point(300, 14);
+            this.pandoraMinTextBox.Location = new System.Drawing.Point(118, 40);
             this.pandoraMinTextBox.Name = "pandoraMinTextBox";
             this.pandoraMinTextBox.Size = new System.Drawing.Size(54, 21);
             this.pandoraMinTextBox.TabIndex = 12;
@@ -262,25 +300,16 @@ namespace SotnRandoTools
             // 
             // queueTextBox
             // 
-            this.queueTextBox.Location = new System.Drawing.Point(100, 114);
+            this.queueTextBox.Location = new System.Drawing.Point(118, 93);
             this.queueTextBox.Name = "queueTextBox";
             this.queueTextBox.Size = new System.Drawing.Size(54, 21);
             this.queueTextBox.TabIndex = 11;
             this.queueTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.queueTextBox_Validating);
             this.queueTextBox.Validated += new System.EventHandler(this.queueTextBox_Validated);
             // 
-            // thirstTextBox
-            // 
-            this.thirstTextBox.Location = new System.Drawing.Point(100, 89);
-            this.thirstTextBox.Name = "thirstTextBox";
-            this.thirstTextBox.Size = new System.Drawing.Size(54, 21);
-            this.thirstTextBox.TabIndex = 10;
-            this.thirstTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.thirstTextBox_Validating);
-            this.thirstTextBox.Validated += new System.EventHandler(this.thirstTextBox_Validated);
-            // 
             // weakenTextBox
             // 
-            this.weakenTextBox.Location = new System.Drawing.Point(100, 64);
+            this.weakenTextBox.Location = new System.Drawing.Point(279, 40);
             this.weakenTextBox.Name = "weakenTextBox";
             this.weakenTextBox.Size = new System.Drawing.Size(54, 21);
             this.weakenTextBox.TabIndex = 9;
@@ -289,7 +318,7 @@ namespace SotnRandoTools
             // 
             // hasteTextBox
             // 
-            this.hasteTextBox.Location = new System.Drawing.Point(100, 39);
+            this.hasteTextBox.Location = new System.Drawing.Point(279, 14);
             this.hasteTextBox.Name = "hasteTextBox";
             this.hasteTextBox.Size = new System.Drawing.Size(54, 21);
             this.hasteTextBox.TabIndex = 8;
@@ -299,7 +328,7 @@ namespace SotnRandoTools
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(190, 42);
+            this.label2.Location = new System.Drawing.Point(8, 69);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(104, 13);
             this.label2.TabIndex = 6;
@@ -308,7 +337,7 @@ namespace SotnRandoTools
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(190, 17);
+            this.label1.Location = new System.Drawing.Point(8, 43);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(100, 13);
             this.label1.TabIndex = 5;
@@ -317,25 +346,16 @@ namespace SotnRandoTools
             // queueLabel
             // 
             this.queueLabel.AutoSize = true;
-            this.queueLabel.Location = new System.Drawing.Point(10, 117);
+            this.queueLabel.Location = new System.Drawing.Point(28, 96);
             this.queueLabel.Name = "queueLabel";
             this.queueLabel.Size = new System.Drawing.Size(84, 13);
             this.queueLabel.TabIndex = 4;
             this.queueLabel.Text = "Queue Interval:";
             // 
-            // thirstLabel
-            // 
-            this.thirstLabel.AutoSize = true;
-            this.thirstLabel.Location = new System.Drawing.Point(10, 92);
-            this.thirstLabel.Name = "thirstLabel";
-            this.thirstLabel.Size = new System.Drawing.Size(66, 13);
-            this.thirstLabel.TabIndex = 3;
-            this.thirstLabel.Text = "Thirst Drain:";
-            // 
             // weakenLabel
             // 
             this.weakenLabel.AutoSize = true;
-            this.weakenLabel.Location = new System.Drawing.Point(10, 67);
+            this.weakenLabel.Location = new System.Drawing.Point(189, 43);
             this.weakenLabel.Name = "weakenLabel";
             this.weakenLabel.Size = new System.Drawing.Size(84, 13);
             this.weakenLabel.TabIndex = 2;
@@ -344,7 +364,7 @@ namespace SotnRandoTools
             // hasteLabel
             // 
             this.hasteLabel.AutoSize = true;
-            this.hasteLabel.Location = new System.Drawing.Point(10, 42);
+            this.hasteLabel.Location = new System.Drawing.Point(189, 17);
             this.hasteLabel.Name = "hasteLabel";
             this.hasteLabel.Size = new System.Drawing.Size(72, 13);
             this.hasteLabel.TabIndex = 1;
@@ -787,22 +807,6 @@ namespace SotnRandoTools
             this.alertFileDialog.Title = "Select Alert Sound File";
             this.alertFileDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.alertFileDialog_FileOk);
             // 
-            // pandoraThresholdTextBox
-            // 
-            this.pandoraThresholdTextBox.Location = new System.Drawing.Point(100, 14);
-            this.pandoraThresholdTextBox.Name = "pandoraThresholdTextBox";
-            this.pandoraThresholdTextBox.Size = new System.Drawing.Size(54, 21);
-            this.pandoraThresholdTextBox.TabIndex = 18;
-            // 
-            // pandoraThreshold
-            // 
-            this.pandoraThreshold.AutoSize = true;
-            this.pandoraThreshold.Location = new System.Drawing.Point(10, 17);
-            this.pandoraThreshold.Name = "pandoraThreshold";
-            this.pandoraThreshold.Size = new System.Drawing.Size(82, 13);
-            this.pandoraThreshold.TabIndex = 17;
-            this.pandoraThreshold.Text = "Pandora meter:";
-            // 
             // KhaosSettingsPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -854,12 +858,10 @@ namespace SotnRandoTools
 		private System.Windows.Forms.GroupBox generalSettingsBox;
 		private System.Windows.Forms.Label weakenLabel;
 		private System.Windows.Forms.Label hasteLabel;
-		private System.Windows.Forms.Label thirstLabel;
 		private System.Windows.Forms.Label queueLabel;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.TextBox queueTextBox;
-		private System.Windows.Forms.TextBox thirstTextBox;
 		private System.Windows.Forms.TextBox weakenTextBox;
 		private System.Windows.Forms.TextBox hasteTextBox;
 		private System.Windows.Forms.TextBox pandoraMaxTextBox;
@@ -891,5 +893,7 @@ namespace SotnRandoTools
 		private System.Windows.Forms.DataGridViewCheckBoxColumn dataGridViewTextBoxColumn4;
 		private System.Windows.Forms.TextBox pandoraThresholdTextBox;
 		private System.Windows.Forms.Label pandoraThreshold;
+		private System.Windows.Forms.Label autoDifficultyLabel;
+		private System.Windows.Forms.ComboBox autoDifficultyComboBox;
 	}
 }

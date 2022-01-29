@@ -468,6 +468,10 @@ namespace SotnRandoTools.Constants
 		public static float HasteDashFactor = 1.8F;
 		public static int SaveIcosahedronFirstCastle = 0xBCAA;
 		public static int SaveIcosahedronSecondCastle = 0x1150;
-		public static int KhaosActionsCount = 29;
+		public static int KhaosActionsCount = 30;
+
+		public static int AutoKhaosDifficultyEasy = 70;
+		public static int AutoKhaosDifficultyNormal = 50;
+		public static int AutoKhaosDifficultyHard = 20;
 	}
 }

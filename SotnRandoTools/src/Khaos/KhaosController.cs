@@ -128,9 +128,11 @@ namespace SotnRandoTools.Khaos
 		private bool gasCloudTaken = false;
 		private bool spawnActive = false;
 		private bool vermilionBirdActive = false;
+
 		private int slowInterval;
 		private int normalInterval;
 		private int fastInterval;
+		private int autoKhaosDifficulty;
 
 		private bool shaftHpSet = false;
 		private bool galamothStatsSet = false;
@@ -164,6 +166,23 @@ namespace SotnRandoTools.Khaos
 			normalInterval = (int) toolConfig.Khaos.QueueInterval.TotalMilliseconds;
 			slowInterval = (int) normalInterval * 2;
 			fastInterval = (int) normalInterval / 2;
+
+			switch (toolConfig.Khaos.AutoKhaosDifficulty)
+			{
+				case "Easy":
+					autoKhaosDifficulty = Constants.Khaos.AutoKhaosDifficultyEasy;
+					break;
+				case "Normal":
+					autoKhaosDifficulty = Constants.Khaos.AutoKhaosDifficultyNormal;
+					break;
+				case "Hard":
+					autoKhaosDifficulty = Constants.Khaos.AutoKhaosDifficultyHard;
+					break;
+				default:
+					autoKhaosDifficulty = Constants.Khaos.AutoKhaosDifficultyNormal;
+					break;
+			}
+
 			Console.WriteLine($"Intervals set. \n normal: {normalInterval / 1000}s, slow:{slowInterval / 1000}s, fast:{fastInterval / 1000}s");
 		}
 
@@ -338,6 +357,8 @@ namespace SotnRandoTools.Khaos
 		public void KhaosRelics(string user = "Khaos")
 		{
 			RandomizeRelicsActivate(false);
+			sotnApi.AlucardApi.GrantItemByName("Library card");
+			sotnApi.AlucardApi.GrantItemByName("Library card");
 			notificationService.AddMessage($"{user} used Khaos Relics");
 			Alert(toolConfig.Khaos.Actions[(int) Enums.Action.KhaosRelics]);
 		}
@@ -407,6 +428,8 @@ namespace SotnRandoTools.Khaos
 		{
 			notificationService.AddMessage($"{user} used Bankrupt level {bankruptLevel}");
 			BankruptActivate();
+			sotnApi.AlucardApi.GrantItemByName("Library card");
+			sotnApi.AlucardApi.GrantItemByName("Library card");
 			Alert(toolConfig.Khaos.Actions[(int) Enums.Action.Bankrupt]);
 		}
 		public void Weaken(string user = "Khaos")
@@ -489,6 +512,7 @@ namespace SotnRandoTools.Khaos
 			statusInfoDisplay.AddTimer(timer);
 			Alert(toolConfig.Khaos.Actions[(int) Enums.Action.SubweaponsOnly]);
 		}
+		//TODO: handle warps
 		public void Slow(string user = "Khaos")
 		{
 			/*bool meterFull = KhaosMeterFull();
@@ -683,7 +707,7 @@ namespace SotnRandoTools.Khaos
 					break;
 				case 3:
 					sotnApi.AlucardApi.CurrentMp += 20;
-					notificationService.AddMessage($"{user} used a gave you mana");
+					notificationService.AddMessage($"{user} gave you mana");
 					break;
 				default:
 					break;
@@ -709,7 +733,7 @@ namespace SotnRandoTools.Khaos
 			{
 				roll = 3;
 			}
-			if (highMp && roll == 3)
+			if ((highMp && roll == 3) || subweaponsOnlyActive)
 			{
 				roll = 2;
 			}
@@ -1005,6 +1029,7 @@ namespace SotnRandoTools.Khaos
 		//TODO: Turn Undead
 		#endregion
 
+		//TODO: axelord jump
 		public void Update()
 		{
 			if (!sotnApi.GameApi.InAlucardMode() ||  !sotnApi.AlucardApi.HasHitbox() || sotnApi.AlucardApi.CurrentHp < 1
@@ -1478,10 +1503,10 @@ namespace SotnRandoTools.Khaos
 		private void AutoKhaosAction()
 		{
 			int roll = rng.Next(0, 101);
-			if (roll > 55)
+			if (roll > autoKhaosDifficulty)
 			{
 				int index = rng.Next(0, toolConfig.Khaos.Actions.Count);
-				EventAddAction? actionEvent = new() { UserName = "Auto Khaos", ActionIndex = index };
+				EventAddAction? actionEvent = new() { UserName = "Auto Khaos", ActionIndex = index, Data="random" };
 
 				if (toolConfig.Khaos.Actions[index].Name != "Guilty Gear" && toolConfig.Khaos.Actions[index].Name != "Pandora's Box" && !toolConfig.Khaos.Actions[index].IsOnCooldown())
 				{
@@ -1609,6 +1634,8 @@ namespace SotnRandoTools.Khaos
 			sotnApi.AlucardApi.CloakCursor = 0;
 			sotnApi.AlucardApi.AccessoryCursor = 0;
 
+			sotnApi.AlucardApi.GrantItemByName("Library card");
+			sotnApi.AlucardApi.GrantItemByName("Library card");
 			if (hasHolyGlasses)
 			{
 				sotnApi.AlucardApi.GrantItemByName("Holy glasses");
@@ -1722,6 +1749,8 @@ namespace SotnRandoTools.Khaos
 				$"\n Accessory1: {Equipment.Items[(int) (newAccessory1 + Equipment.HandCount + 1)]} " +
 				$"\n Accessory2: {Equipment.Items[(int) (newAccessory2 + Equipment.HandCount + 1)]}");
 
+			sotnApi.AlucardApi.GrantItemByName("Library card");
+			sotnApi.AlucardApi.GrantItemByName("Library card");
 			if (equippedHolyGlasses)
 			{
 				sotnApi.AlucardApi.GrantItemByName("Holy glasses");
@@ -2607,6 +2636,22 @@ namespace SotnRandoTools.Khaos
 						if (statusInfoDisplay.JewelOfOpenLocation == String.Empty)
 						{
 							statusInfoDisplay.JewelOfOpenLocation = "Khaos";
+						}
+					}
+					break;
+				case Relic.MermanStatue:
+					if (take)
+					{
+						if (statusInfoDisplay.MermanLocation == "Khaos")
+						{
+							statusInfoDisplay.MermanLocation = String.Empty;
+						}
+					}
+					else
+					{
+						if (statusInfoDisplay.MermanLocation == String.Empty)
+						{
+							statusInfoDisplay.MermanLocation = "Khaos";
 						}
 					}
 					break;
