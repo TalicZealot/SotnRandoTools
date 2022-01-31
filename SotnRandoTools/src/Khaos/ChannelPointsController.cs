@@ -35,6 +35,7 @@ namespace SotnRandoTools.Khaos
 		private string refreshToken;
 		private List<string> customRewardIds = new();
 		private List<Timer> actionsStartingOnCooldown = new();
+		private bool manualDisconnect = false;
 
 		public ChannelPointsController(IToolConfig toolConfig, ITwitchListener twitchListener, IKhaosController khaosController, INotificationService notificationService)
 		{
@@ -80,11 +81,13 @@ namespace SotnRandoTools.Khaos
 			client.ListenToChannelPoints(user.Id);
 			client.Connect();
 			notificationService.AddMessage("Connected to Twitch");
+			refreshTokenTimer.Start();
 			return true;
 		}
 
 		public void Disconnect()
 		{
+			manualDisconnect = true;
 			DeleteRewards();
 			client.Disconnect();
 			foreach (var delayedTimer in actionsStartingOnCooldown)
@@ -278,6 +281,7 @@ namespace SotnRandoTools.Khaos
 			{
 				var refresh = await api.Auth.RefreshAuthTokenAsync(refreshToken, TwitchConfiguration.TwitchClientSecret, api.Settings.ClientId);
 				api.Settings.AccessToken = refresh.AccessToken;
+				Console.WriteLine("Successfully refreshed authentication token!");
 			}
 			catch (Exception ex)
 			{
@@ -367,6 +371,11 @@ namespace SotnRandoTools.Khaos
 
 		private async void Client_OnPubSubServiceClosed(object sender, EventArgs e)
 		{
+			if (manualDisconnect)
+			{
+				manualDisconnect = false;
+				return;
+			}
 			for (int i = 0; i <= RetryCount; i++)
 			{
 				try
@@ -384,7 +393,6 @@ namespace SotnRandoTools.Khaos
 						Console.WriteLine(ex.Message);
 						await Task.Delay((int) Math.Pow(RetryBaseMs, i));
 					}
-					throw;
 				}
 			}
 		}

@@ -28,7 +28,7 @@ This tool and the accompanying library and app are open source. The idea is to i
 ## Installation
 This tool requires Bizhawk version 2.7 or higher.
 Download the full version from the [latest release](https://github.com/TalicZealot/SotnRandoTools/releases/latest) that looks like this `SotnRandoTools-x.x.x.zip`
-Right click on it and select `Extract all...` then navigate to your BizHawk 2.6+ folder and press `Extract`.
+Right click on it and select `Extract all...` then navigate to your BizHawk 2.7+ folder and press `Extract`.
 File structure should look like this:
 ```
 BizHawk
@@ -52,7 +52,7 @@ If the Extarnal Tool says that the game is not supported for the tool and BizHaw
 On lunching the tool it will check for a new release and inform the user. If there is a newer release the update button apepars. Clicking it shuts down BizHawk and updates the tool. If it displays "Installation failed" please run the updater manually by going to ```BizHawk\ExternalTools\SotnRandoTools\Updater\SimpleLatestReleaseUpdater.exe``` or get the [latest release](https://github.com/TalicZealot/SotnRandoTools/releases/latest) from GitHub and update manually. If you get an error notifying you that your system lacks the necessary .NET version to run the updater click [the link](https://dotnet.microsoft.com/download/dotnet/5.0/runtime?utm_source=getdotnetcore&utm_medium=referral) and download the x64 and x86 redistributable packages for desktop apps.
 
 ## Autotracker
-The new tracker has been re-written from the ground up for better performance and usability. Can be manually rescaled. Saves size and location. Locations are drawn on the game map iself instead of relying on BizHawk GUI. It doesn't rely on the PSX display mode anymore and automatically detects everything it needs.
+The new tracker has been re-written from the ground up for better performance and usability. Can be manually rescaled. Saves size and location. Locations are drawn on the game map.
 
 ## Co-Op
 Coop requires the host to have the port they want to use forwarded. Hosting automatically copies your address(ip:port) to the clipboard. The other player uses that address to connect. Please be careful to not leak your IP!
@@ -80,3 +80,4 @@ After starting Khaos you will be able to connect to Twitch and start Auto Khaos.
 * Gods666thChild
 * LordalexZader
 * ziggypigster
+* chrisaegrimm

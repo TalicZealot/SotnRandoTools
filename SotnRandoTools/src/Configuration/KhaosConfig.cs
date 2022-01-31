@@ -365,7 +365,7 @@ namespace SotnRandoTools.Configuration
 				},
 				new Action{
 					Name = "Battle Orders",
-					Description = "A glorious warcry echoes, Alucard's HP is doubled temporarily, mana is refilled, activates a Shield Potion.",
+					Description = "A glorious warcry echoes, Alucard's max HP and MP are doubled for the duration.",
 					Meter = 6,
 					AlertPath = Paths.BattleOrdersSound,
 					Duration = new System.TimeSpan(0, 1, 0),

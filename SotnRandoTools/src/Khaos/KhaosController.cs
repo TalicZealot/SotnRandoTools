@@ -58,6 +58,7 @@ namespace SotnRandoTools.Khaos
 		private System.Timers.Timer hasteOverdriveTimer = new();
 		private System.Timers.Timer hasteOverdriveOffTimer = new();
 		private System.Timers.Timer bloodManaDeathTimer = new();
+		private System.Timers.Timer battleOrdersTimer = new();
 		#endregion
 		#region Cheats
 		private Cheat faerieScroll;
@@ -128,6 +129,10 @@ namespace SotnRandoTools.Khaos
 		private bool gasCloudTaken = false;
 		private bool spawnActive = false;
 		private bool vermilionBirdActive = false;
+
+		private bool battleOrdersActive = false;
+		private uint battleOrdersBonusHp = 0;
+		private uint battleOrdersBonusMp = 0;
 
 		private int slowInterval;
 		private int normalInterval;
@@ -241,65 +246,19 @@ namespace SotnRandoTools.Khaos
 		{
 			bool entranceCutscene = IsInRoomList(Constants.Khaos.EntranceCutsceneRooms);
 			bool succubusRoom = IsInRoomList(Constants.Khaos.SuccubusRoom);
-			int min = 1;
-			int max = 9;
-
-			if (zaWarudoActive)
-			{
-				max = 5;
-			}
-
-			if (true)
-			{
-
-			}
-
-			int result = rng.Next(min, max);
 			bool alucardIsImmuneToCurse = sotnApi.AlucardApi.HasRelic(Relic.HeartOfVlad)
 				|| Equipment.Items[(int) (sotnApi.AlucardApi.Helm + Equipment.HandCount + 1)] == "Coral circlet";
 			bool alucardIsImmuneToStone = Equipment.Items[(int) (sotnApi.AlucardApi.Armor + Equipment.HandCount + 1)] == "Mirror cuirass"
 				|| Equipment.Items[(int) (sotnApi.AlucardApi.RightHand)] == "Medusa shield"
 				|| Equipment.Items[(int) (sotnApi.AlucardApi.LeftHand)] == "Medusa shield";
 			bool alucardIsImmuneToPoison = Equipment.Items[(int) (sotnApi.AlucardApi.Helm + Equipment.HandCount + 1)] == "Topaz circlet";
+			bool highHp = sotnApi.AlucardApi.CurrentHp > sotnApi.AlucardApi.MaxtHp - 15;
 
-			if (succubusRoom && result == 3)
-			{
-				while (result == 3)
-				{
-					result = rng.Next(1, max);
-				}
-			}
+			int result = RollStatus(entranceCutscene, succubusRoom, alucardIsImmuneToCurse, alucardIsImmuneToStone, alucardIsImmuneToPoison, highHp);
 
-			if ((succubusRoom || entranceCutscene) && result == 4)
+			while (result == 0)
 			{
-				while (result == 4)
-				{
-					result = rng.Next(1, max);
-				}
-			}
-
-			if (alucardIsImmuneToCurse && result == 2)
-			{
-				while (result == 2)
-				{
-					result = rng.Next(1, max);
-				}
-			}
-
-			if (alucardIsImmuneToStone && result == 3)
-			{
-				while (result == 3)
-				{
-					result = rng.Next(1, max);
-				}
-			}
-
-			if (alucardIsImmuneToPoison && result == 1)
-			{
-				while (result == 1)
-				{
-					result = rng.Next(1, max);
-				}
+				result = RollStatus(entranceCutscene, succubusRoom, alucardIsImmuneToCurse, alucardIsImmuneToStone, alucardIsImmuneToPoison, highHp);
 			}
 
 			switch (result)
@@ -335,6 +294,10 @@ namespace SotnRandoTools.Khaos
 				case 8:
 					sotnApi.AlucardApi.ActivatePotion(Potion.ShieldPotion);
 					notificationService.AddMessage($"{user} gave you defence");
+					break;
+				case 9:
+					sotnApi.AlucardApi.CurrentMp -= 15;
+					notificationService.AddMessage($"{user} used Mana Burn");
 					break;
 				default:
 					break;
@@ -403,13 +366,15 @@ namespace SotnRandoTools.Khaos
 			uint trackIndex = 0;
 			string foundTrack = Constants.Khaos.AcceptedMusicTrackTitles.Where(t => t.ToLower().Trim() == track.ToLower().Trim()).FirstOrDefault();
 			bool alternateTitle = Constants.Khaos.AlternateTrackTitles.ContainsKey(track.ToLower().Trim());
+
 			if (foundTrack is not null)
 			{
 				trackIndex = SotnApi.Constants.Values.Game.Various.MusicTracks[foundTrack];
 			}
 			else if (alternateTitle)
 			{
-				trackIndex = SotnApi.Constants.Values.Game.Various.MusicTracks[Constants.Khaos.AlternateTrackTitles[track]];
+				foundTrack = Constants.Khaos.AlternateTrackTitles[track.ToLower().Trim()];
+				trackIndex = SotnApi.Constants.Values.Game.Various.MusicTracks[foundTrack];
 			}
 			else
 			{
@@ -442,6 +407,12 @@ namespace SotnRandoTools.Khaos
 				SpendKhaosMeter();
 			}
 
+			if (battleOrdersActive)
+			{
+				sotnApi.AlucardApi.MaxtHp -= (uint) battleOrdersBonusHp;
+				sotnApi.AlucardApi.MaxtMp -= (uint) battleOrdersBonusMp;
+			}
+
 			sotnApi.AlucardApi.CurrentHp = (uint) (sotnApi.AlucardApi.CurrentHp * toolConfig.Khaos.WeakenFactor * enhancedFactor);
 			sotnApi.AlucardApi.CurrentMp = (uint) (sotnApi.AlucardApi.CurrentHp * toolConfig.Khaos.WeakenFactor * enhancedFactor);
 			sotnApi.AlucardApi.CurrentHearts = (uint) (sotnApi.AlucardApi.CurrentHp * toolConfig.Khaos.WeakenFactor * enhancedFactor);
@@ -452,6 +423,15 @@ namespace SotnRandoTools.Khaos
 			sotnApi.AlucardApi.Con = (uint) (sotnApi.AlucardApi.Con * toolConfig.Khaos.WeakenFactor * enhancedFactor);
 			sotnApi.AlucardApi.Int = (uint) (sotnApi.AlucardApi.Int * toolConfig.Khaos.WeakenFactor * enhancedFactor);
 			sotnApi.AlucardApi.Lck = (uint) (sotnApi.AlucardApi.Lck * toolConfig.Khaos.WeakenFactor * enhancedFactor);
+
+			if (battleOrdersActive)
+			{
+				battleOrdersBonusHp = sotnApi.AlucardApi.MaxtHp;
+				battleOrdersBonusMp = sotnApi.AlucardApi.MaxtMp;
+				sotnApi.AlucardApi.MaxtHp += battleOrdersBonusHp;
+				sotnApi.AlucardApi.MaxtMp += battleOrdersBonusMp;
+			}
+
 			uint newLevel = (uint) (sotnApi.AlucardApi.Level * toolConfig.Khaos.WeakenFactor * enhancedFactor);
 			sotnApi.AlucardApi.Level = newLevel;
 			uint newExperience = 0;
@@ -835,11 +815,35 @@ namespace SotnRandoTools.Khaos
 		}
 		public void BattleOrders(string user = "Khaos")
 		{
-			sotnApi.AlucardApi.CurrentHp = (uint) (sotnApi.AlucardApi.MaxtHp * Constants.Khaos.BattleOrdersHpMultiplier);
-			sotnApi.AlucardApi.CurrentMp = sotnApi.AlucardApi.MaxtMp;
-			sotnApi.AlucardApi.ActivatePotion(Potion.ShieldPotion);
+			float currentHpPercentage = sotnApi.AlucardApi.MaxtHp / sotnApi.AlucardApi.CurrentHp;
+			float currentMpPercentage = sotnApi.AlucardApi.MaxtMp / sotnApi.AlucardApi.CurrentMp;
+
+			if (currentHpPercentage < 1)
+			{
+				currentHpPercentage = 1;
+			}
+
+			battleOrdersActive = true;
+			battleOrdersBonusHp = sotnApi.AlucardApi.MaxtHp;
+			battleOrdersBonusMp = sotnApi.AlucardApi.MaxtMp;
+
+			sotnApi.AlucardApi.MaxtHp += battleOrdersBonusHp;
+			sotnApi.AlucardApi.MaxtMp += battleOrdersBonusMp;
+
+			sotnApi.AlucardApi.CurrentHp = (uint) (sotnApi.AlucardApi.MaxtHp * currentHpPercentage);
+			sotnApi.AlucardApi.CurrentMp = (uint) (sotnApi.AlucardApi.MaxtMp * currentMpPercentage);
+
 			notificationService.AddMessage($"{user} used Battle Orders");
 			Alert(toolConfig.Khaos.Actions[(int) Enums.Action.BattleOrders]);
+
+			battleOrdersTimer.Start();
+			ActionTimer timer = new()
+			{
+				Name = toolConfig.Khaos.Actions[(int) Enums.Action.BattleOrders].Name,
+				Duration = toolConfig.Khaos.Actions[(int) Enums.Action.BattleOrders].Duration
+			};
+			statusInfoDisplay.AddTimer(timer);
+			notificationService.AddOverlayTimer(timer.Name, (int) timer.Duration.TotalMilliseconds);
 		}
 		public void Magician(string user = "Khaos")
 		{
@@ -1333,6 +1337,8 @@ namespace SotnRandoTools.Khaos
 			vampireTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.Vampire].Duration.TotalMilliseconds;
 			magicianTimer.Elapsed += MagicianOff;
 			magicianTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.Magician].Duration.TotalMilliseconds;
+			battleOrdersTimer.Elapsed += BattleOrdersOff;
+			battleOrdersTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.BattleOrders].Duration.TotalMilliseconds;
 			meltyTimer.Elapsed += MeltyBloodOff;
 			meltyTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.MeltyBlood].Duration.TotalMilliseconds;
 			fourBeastsTimer.Elapsed += FourBeastsOff;
@@ -1365,6 +1371,7 @@ namespace SotnRandoTools.Khaos
 			hordeTimer.Interval = 1;
 			hordeSpawnTimer.Stop();
 			enduranceSpawnTimer.Stop();
+			hnkTimer.Interval = 1;
 
 			vampireTimer.Interval = 1;
 			magicianTimer.Interval = 1;
@@ -1375,6 +1382,9 @@ namespace SotnRandoTools.Khaos
 			hasteTimer.Interval = 1;
 			hasteOverdriveTimer.Stop();
 			hasteOverdriveOffTimer.Stop();
+			lordSpawnTimer.Stop();
+			lordTimer.Stop();
+			battleOrdersTimer.Interval = 1;
 		}
 		private void ExecuteAction(Object sender, EventArgs e)
 		{
@@ -1516,6 +1526,74 @@ namespace SotnRandoTools.Khaos
 		}
 
 		#region Khaotic events
+		private int RollStatus(bool entranceCutscene, bool succubusRoom, bool alucardIsImmuneToCurse, bool alucardIsImmuneToStone, bool alucardIsImmuneToPoison, bool highHp)
+		{
+			int min = 1;
+			int max = 10;
+			int result = rng.Next(min, max);
+
+			switch (result)
+			{
+				case 1:
+					if (alucardIsImmuneToPoison)
+					{
+						return 0;
+					}
+					break;
+				case 2:
+					if (alucardIsImmuneToPoison)
+					{
+						return 0;
+					}
+					break;
+				case 3:
+					if (alucardIsImmuneToStone || succubusRoom)
+					{
+						return 0;
+					}
+					break;
+				case 4:
+					if (succubusRoom || entranceCutscene)
+					{
+						return 0;
+					}
+					break;
+				case 5:
+					if (zaWarudoActive)
+					{
+						return 0;
+					}
+					break;
+				case 6:
+					if (zaWarudoActive)
+					{
+						return 0;
+					}
+					break;
+				case 7:
+					if (highHp)
+					{
+						return 0;
+					}
+					break;
+				case 8:
+					if (zaWarudoActive)
+					{
+						return 0;
+					}
+					break;
+				case 9:
+					if (sotnApi.AlucardApi.CurrentMp < 15)
+					{
+						return 0;
+					}
+					break;
+				default:
+					break;
+			}
+
+			return result;
+		}
 		private void KhaosTrackOff(Object sender, EventArgs e)
 		{
 			music.Disable();
@@ -1537,6 +1615,12 @@ namespace SotnRandoTools.Khaos
 		}
 		private void RandomizeStatsActivate()
 		{
+			if (battleOrdersActive)
+			{
+				sotnApi.AlucardApi.MaxtHp -= (uint) battleOrdersBonusHp;
+				sotnApi.AlucardApi.MaxtMp -= (uint) battleOrdersBonusMp;
+			}
+
 			uint maxHp = sotnApi.AlucardApi.MaxtHp;
 			uint currentHp = sotnApi.AlucardApi.CurrentHp;
 			uint maxMana = sotnApi.AlucardApi.MaxtMp;
@@ -1610,6 +1694,14 @@ namespace SotnRandoTools.Khaos
 
 			sotnApi.AlucardApi.MaxtHp = pointsHp;
 			sotnApi.AlucardApi.MaxtMp = pointsMp;
+
+			if (battleOrdersActive)
+			{
+				battleOrdersBonusHp = sotnApi.AlucardApi.MaxtHp;
+				battleOrdersBonusMp = sotnApi.AlucardApi.MaxtMp;
+				sotnApi.AlucardApi.MaxtHp += battleOrdersBonusHp;
+				sotnApi.AlucardApi.MaxtMp += battleOrdersBonusMp;
+			}
 		}
 		private void RandomizeInventory()
 		{
@@ -2273,6 +2365,15 @@ namespace SotnRandoTools.Khaos
 			manaCheat.Disable();
 			manaLocked = false;
 			magicianTimer.Stop();
+		}
+		private void BattleOrdersOff(Object sender, EventArgs e)
+		{
+			sotnApi.AlucardApi.MaxtHp -= (uint) battleOrdersBonusHp;
+			sotnApi.AlucardApi.MaxtMp -= (uint) battleOrdersBonusMp;
+			battleOrdersActive = false;
+			battleOrdersBonusHp = 0;
+			battleOrdersBonusMp = 0;
+			battleOrdersTimer.Stop();
 		}
 		private void MeltyBloodOff(Object sender, EventArgs e)
 		{
