@@ -9,6 +9,8 @@ namespace SotnRandoTools.Services.Adapters
 
 		void DisableAll();
 		Cheat GetCheatByName(string name);
-		bool Load(IMemoryDomains domains, string path, bool append);
+		bool Load(string path, bool append);
+		void AddCheat(long address, int value, string name, WatchSize size);
+		void RemoveCheat(Cheat cheat);
 	}
 }

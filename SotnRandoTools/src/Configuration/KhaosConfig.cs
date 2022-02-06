@@ -194,12 +194,12 @@ namespace SotnRandoTools.Configuration
 					Description = "Queues up an in-game music track.",
 					Meter = 10,
 					AlertPath = Paths.AlucardWhatSound,
-					Cooldown = new System.TimeSpan(0, 10, 0),
+					Cooldown = new System.TimeSpan(0, 5, 0),
 					Duration = new System.TimeSpan(0, 3, 0),
 					RequiresUserInput = true,
 					Bits = 15,
-					ChannelPoints = 150,
-					Scaling = 1.5
+					ChannelPoints = 200,
+					Scaling = 1
 				},
 				new Action{
 					Name = "Bankrupt",
@@ -287,7 +287,7 @@ namespace SotnRandoTools.Configuration
 					Description = "Khaos has awakened! The castle begins to continuously spawn enemies. Triggers after a viable enemy is encountered in the area.",
 					Meter = 8,
 					AlertPath = Paths.DracLaughSound,
-					Duration = new System.TimeSpan(0, 2, 0),
+					Duration = new System.TimeSpan(0, 1, 30),
 					Interval = new System.TimeSpan(0, 0, 1),
 					Cooldown = new System.TimeSpan(0, 10, 0),
 					Bits = 40,
@@ -313,6 +313,7 @@ namespace SotnRandoTools.Configuration
 					AlertPath = Paths.AlreadyDeadSound,
 					Duration = new System.TimeSpan(0, 1, 30),
 					Cooldown = new System.TimeSpan(0, 6, 0),
+					StartsOnCooldown = true,
 					Bits = 40,
 					ChannelPoints = 400,
 					MaximumChannelPoints = 4000,

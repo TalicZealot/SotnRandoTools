@@ -5,6 +5,7 @@ using System.Linq;
 using System.Timers;
 using System.Windows.Forms;
 using BizHawk.Client.Common;
+using BizHawk.Emulation.Common;
 using SotnApi.Interfaces;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Constants;
@@ -43,15 +44,16 @@ namespace SotnRandoTools
 		private bool started = false;
 		private bool connected = false;
 
-		public KhaosForm(IToolConfig toolConfig, CheatCollection cheats, ISotnApi sotnApi, INotificationService notificationService, IInputService inputService)
+		public KhaosForm(IToolConfig toolConfig, CheatCollection cheats, ISotnApi sotnApi, INotificationService notificationService, IInputService inputService, IMemoryDomains memoryDomains)
 		{
 			if (toolConfig is null) throw new ArgumentNullException(nameof(toolConfig));
 			if (cheats is null) throw new ArgumentNullException(nameof(cheats));
 			if (toolConfig is null) throw new ArgumentNullException(nameof(toolConfig));
 			if (cheats == null) throw new ArgumentNullException(nameof(cheats));
+			if (memoryDomains == null) throw new ArgumentNullException(nameof(memoryDomains));
 			this.toolConfig = toolConfig;
 
-			adaptedCheats = new CheatCollectionAdapter(cheats);
+			adaptedCheats = new CheatCollectionAdapter(cheats, memoryDomains);
 			khaosControler = new KhaosController(toolConfig, sotnApi, adaptedCheats, notificationService, inputService, this);
 			twitchListener = new TwitchListener(Paths.TwitchRedirectUri);
 			channelPointsController = new ChannelPointsController(toolConfig, twitchListener, khaosControler, notificationService);

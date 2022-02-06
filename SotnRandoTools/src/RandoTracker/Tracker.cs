@@ -442,7 +442,7 @@ namespace SotnRandoTools.RandoTracker
 		}
 
 		public string SeedInfo { get; set; }
-		//TODO: Spirit org location not detecting
+
 		public IVladRelicLocationDisplay VladRelicLocationDisplay { get; set; }
 
 		public TrackerGraphicsEngine GraphicsEngine { get; }

@@ -21,8 +21,9 @@ namespace SotnRandoTools.Khaos
 {
 	public class ChannelPointsController
 	{
-		private const int RetryBaseMs = 10;
+		private const int RetryBaseMs = 12;
 		private const int RetryCount = 3;
+		private const int FulfilRewardDelay = 60 * 1000;
 		private readonly IToolConfig toolConfig;
 		private readonly ITwitchListener twitchListener;
 		private readonly IKhaosController khaosController;
@@ -111,9 +112,9 @@ namespace SotnRandoTools.Khaos
 				);
 				khaosController.OverwriteBossNames(subs.Data.Select(u => u.UserName).ToArray());
 			}
-			catch (Exception ex)
+			catch
 			{
-				Console.WriteLine(ex.Message);
+				Console.WriteLine("Could not fetch subscribers!");
 			}
 		}
 
@@ -131,7 +132,7 @@ namespace SotnRandoTools.Khaos
 						Prompt = action.Description,
 						Cost = (int) action.ChannelPoints,
 						IsEnabled = true,
-						ShouldRedemptionsSkipRequestQueue = true
+						//ShouldRedemptionsSkipRequestQueue = true
 					};
 
 					if (action.RequiresUserInput)
@@ -170,15 +171,14 @@ namespace SotnRandoTools.Khaos
 							customRewardIds.Add(response.Data[0].Id);
 							break;
 						}
-						catch (Exception ex)
+						catch
 						{
 							if (i == RetryCount)
 							{
-								throw new Exception("Server error while creating Rewards. Please click Continue, then Disconnect and Reconnect.", ex);
+								throw new Exception("Server error while creating Rewards. Please click Continue, then Disconnect and Reconnect.");
 							}
 							else
 							{
-								Console.WriteLine(ex.Message);
 								await Task.Delay((int) Math.Pow(RetryBaseMs, i));
 							}
 						}
@@ -199,7 +199,7 @@ namespace SotnRandoTools.Khaos
 				Prompt = toolConfig.Khaos.Actions[action.Index].Description,
 				Cost = (int) toolConfig.Khaos.Actions[action.Index].ChannelPoints,
 				IsEnabled = true,
-				ShouldRedemptionsSkipRequestQueue = true,
+				//ShouldRedemptionsSkipRequestQueue = true,
 				IsGlobalCooldownEnabled = true,
 				GlobalCooldownSeconds = (int) toolConfig.Khaos.Actions[action.Index].Cooldown.TotalSeconds
 			};
@@ -225,15 +225,14 @@ namespace SotnRandoTools.Khaos
 
 					break;
 				}
-				catch (Exception ex)
+				catch
 				{
 					if (i == RetryCount)
 					{
-						throw new Exception("Server error while creating Rewards. Please click Continue, then Disconnect and Reconnect.", ex);
+						throw new Exception("Server error while creating Rewards. Please click Continue, then Disconnect and Reconnect.");
 					}
 					else
 					{
-						Console.WriteLine(ex.Message);
 						await Task.Delay((int) Math.Pow(RetryBaseMs, i));
 					}
 				}
@@ -258,15 +257,14 @@ namespace SotnRandoTools.Khaos
 						);
 						break;
 					}
-					catch (Exception ex)
+					catch
 					{
 						if (j == RetryCount)
 						{
-							throw new Exception("Server error while deleting Rewards. Please delete the remainint rewards from the  Dashboard.", ex);
+							throw new Exception("Server error while deleting Rewards. Please delete the remainint rewards from the  Dashboard.");
 						}
 						else
 						{
-							Console.WriteLine(ex.Message);
 							await Task.Delay((int) Math.Pow(RetryBaseMs, j));
 						}
 					}
@@ -283,9 +281,9 @@ namespace SotnRandoTools.Khaos
 				api.Settings.AccessToken = refresh.AccessToken;
 				Console.WriteLine("Successfully refreshed authentication token!");
 			}
-			catch (Exception ex)
+			catch
 			{
-				Console.WriteLine(ex.Message);
+				throw new Exception("Server error while refreshing connection.");
 			}
 		}
 
@@ -300,7 +298,6 @@ namespace SotnRandoTools.Khaos
 				return;
 			}
 
-			//TODO: fulfil rewards periodically
 			//No need as of now, since rewards auto-redeem.
 			//In the future I might leave them unredeemed until the end and include a tab with a list of redemptions, so that the user can refund channel points.
 			//Complete the redemption
@@ -338,15 +335,14 @@ namespace SotnRandoTools.Khaos
 						api.Settings.AccessToken);
 					break;
 				}
-				catch (Exception ex)
+				catch
 				{
 					if (i == RetryCount)
 					{
-						throw new Exception("Server error while updating Reward. Click Continue.", ex);
+						throw new Exception("Server error while updating Reward. Click Continue.");
 					}
 					else
 					{
-						Console.WriteLine(ex.Message);
 						await Task.Delay((int) Math.Pow(RetryBaseMs, i));
 					}
 				}
@@ -382,15 +378,14 @@ namespace SotnRandoTools.Khaos
 				{
 					client.Connect();
 				}
-				catch (Exception ex)
+				catch
 				{
 					if (i == RetryCount)
 					{
-						throw new Exception("Failed to reconnect! Click continue and disconnect to delete rewards.", ex);
+						throw new Exception("Failed to reconnect! Click continue and disconnect to delete rewards.");
 					}
 					else
 					{
-						Console.WriteLine(ex.Message);
 						await Task.Delay((int) Math.Pow(RetryBaseMs, i));
 					}
 				}

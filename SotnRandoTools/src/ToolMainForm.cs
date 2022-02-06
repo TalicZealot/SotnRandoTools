@@ -38,7 +38,7 @@ namespace SotnRandoTools
 			"SotnRandoTools/TwitchLib.PubSub.dll"
 		})]
 	[ExternalToolEmbeddedIcon("SotnRandoTools.Resources.BizAlucard.png")]
-	//TODO: Revert after BIzhawk 2.7.1 releases
+	//TODO: Revert after Bizhawk 2.8 releases
 	//[ExternalToolApplicability.SingleRom(CoreSystem.Playstation, "0DDCBC3D")]
 	public partial class ToolMainForm : ToolFormBase, IExternalToolForm
 	{
@@ -198,7 +198,7 @@ namespace SotnRandoTools
 
 			if (khaosForm is not null)
 			{
-				khaosForm.AdaptedCheats = new CheatCollectionAdapter(this.MainForm.CheatList);
+				khaosForm.AdaptedCheats = new CheatCollectionAdapter(this.MainForm.CheatList, _memoryDomains);
 			}
 		}
 
@@ -286,13 +286,13 @@ namespace SotnRandoTools
 			{
 				CreateNotificationService();
 				khaosForm.Close();
-				khaosForm = new KhaosForm(toolConfig, this.MainForm.CheatList, sotnApi, notificationService, inputService);
+				khaosForm = new KhaosForm(toolConfig, this.MainForm.CheatList, sotnApi, notificationService, inputService, _memoryDomains);
 				khaosForm.Show();
 			}
 			else if (khaosForm is null && sotnApi is not null)
 			{
 				CreateNotificationService();
-				khaosForm = new KhaosForm(toolConfig, this.MainForm.CheatList, sotnApi, notificationService, inputService);
+				khaosForm = new KhaosForm(toolConfig, this.MainForm.CheatList, sotnApi, notificationService, inputService, _memoryDomains);
 				khaosForm.Show();
 				if (trackerForm is not null)
 				{
