@@ -213,7 +213,7 @@ namespace SotnRandoTools.Khaos
 
 		public void StartKhaos()
 		{
-			InitializeTimers();
+			InitializeTimerIntervals();
 			actionTimer.Start();
 			fastActionTimer.Start();
 			StartCheats();
@@ -1282,7 +1282,7 @@ namespace SotnRandoTools.Khaos
 					commandAction = toolConfig.Khaos.Actions[(int) Enums.Action.KhaosHorde];
 					if (commandAction.Enabled)
 					{
-						queuedActions.Add(new QueuedAction { Name = commandAction.Name, Invoker = new MethodInvoker(() => Horde(user)) });
+						queuedActions.Add(new QueuedAction { Name = commandAction.Name, LocksSpawning = true, Invoker = new MethodInvoker(() => Horde(user)) });
 					}
 					break;
 				case (int) Enums.Action.Endurance:
@@ -1451,6 +1451,36 @@ namespace SotnRandoTools.Khaos
 			lordSpawnTimer.Elapsed += LordSpawn;
 			lordSpawnTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.Lord].Interval.TotalMilliseconds;
 		}
+		private void InitializeTimerIntervals()
+		{
+			fastActionTimer.Interval = 2 * (1 * 1000);
+			actionTimer.Interval = 2 * (1 * 1000);
+			bloodManaDeathTimer.Interval = 1 * (1 * 1500);
+			khaosTrackTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.KhaosTrack].Duration.TotalMilliseconds;
+			subweaponsOnlyTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.SubweaponsOnly].Duration.TotalMilliseconds;
+			slowTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.Slow].Duration.TotalMilliseconds;
+			bloodManaTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.BloodMana].Duration.TotalMilliseconds;
+			thirstTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.Thirst].Duration.TotalMilliseconds;
+			thirstTickTimer.Interval = 1000;
+			hordeTimer.Interval = 5 * (60 * 1000);
+			hordeSpawnTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.KhaosHorde].Interval.TotalMilliseconds;
+			enduranceSpawnTimer.Interval = 2 * (1000);
+			hnkTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.HnK].Duration.TotalMilliseconds;
+			vampireTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.Vampire].Duration.TotalMilliseconds;
+			magicianTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.Magician].Duration.TotalMilliseconds;
+			battleOrdersTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.BattleOrders].Duration.TotalMilliseconds;
+			meltyTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.MeltyBlood].Duration.TotalMilliseconds;
+			fourBeastsTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.FourBeasts].Duration.TotalMilliseconds;
+			azureDragonTimer.Interval = 10 * 1000;
+			whiteTigerBallTimer.Interval = 2 * 1000;
+			zawarudoTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.ZAWARUDO].Duration.TotalMilliseconds;
+			zawarudoCheckTimer.Interval += 2 * 1000;
+			hasteTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.Haste].Duration.TotalMilliseconds;
+			hasteOverdriveTimer.Interval = (2 * 1000);
+			hasteOverdriveOffTimer.Interval = (2 * 1000);
+			lordTimer.Interval = 5 * (60 * 1000);
+			lordSpawnTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.Lord].Interval.TotalMilliseconds;
+		}
 		private void StopTimers()
 		{
 			fastActionTimer.Stop();
@@ -1496,22 +1526,10 @@ namespace SotnRandoTools.Khaos
 					{
 						index = i;
 						actionUnlocked = true;
-						if (queuedActions[i].LocksSpeed && speedLocked)
-						{
-							actionUnlocked = false;
-							continue;
-						}
-						if (queuedActions[i].LocksMana && manaLocked)
-						{
-							actionUnlocked = false;
-							continue;
-						}
-						if (queuedActions[i].LocksInvincibility && invincibilityLocked)
-						{
-							actionUnlocked = false;
-							continue;
-						}
-						if (queuedActions[i].LocksSpawning && spawnActive)
+						if ((queuedActions[i].LocksSpeed && speedLocked) ||
+							(queuedActions[i].LocksMana && manaLocked) ||
+							(queuedActions[i].LocksInvincibility && invincibilityLocked) ||
+							(queuedActions[i].LocksSpawning && spawnActive))
 						{
 							actionUnlocked = false;
 							continue;
@@ -1573,10 +1591,6 @@ namespace SotnRandoTools.Khaos
 				{
 					queuedFastActions.Dequeue()();
 				}
-			}
-			if (sotnApi.AlucardApi.CurrentHp == 0)
-			{
-
 			}
 			if (sotnApi.GameApi.InAlucardMode() && sotnApi.GameApi.CanMenu() && sotnApi.AlucardApi.CurrentHp > 0 && !sotnApi.GameApi.CanSave()
 				&& keepRichterRoom && !shaftHpSet && !sotnApi.GameApi.InTransition && !sotnApi.GameApi.IsLoading)
