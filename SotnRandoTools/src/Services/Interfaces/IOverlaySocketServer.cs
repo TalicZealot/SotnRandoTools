@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using SotnRandoTools.Khaos.Models;
+using SotnRandoTools.RandoTracker.Models;
 
-namespace SotnRandoTools.Khaos.Interfaces
+namespace SotnRandoTools.Services.Interfaces
 {
 	public interface IOverlaySocketServer
 	{
@@ -9,5 +10,6 @@ namespace SotnRandoTools.Khaos.Interfaces
 		void StopServer();
 		void AddTimer(string name, int duration);
 		void UpdateQueue(List<QueuedAction> actionQueue);
+		void UpdateTracker(int relics, int items);
 	}
 }

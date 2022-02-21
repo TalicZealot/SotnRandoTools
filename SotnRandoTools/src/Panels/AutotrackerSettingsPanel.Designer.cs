@@ -41,6 +41,7 @@ namespace SotnRandoTools
             this.windowGroup = new System.Windows.Forms.GroupBox();
             this.alwaysOnTopCheckBox = new System.Windows.Forms.CheckBox();
             this.optionsGroup = new System.Windows.Forms.GroupBox();
+            this.overlayCheckBox = new System.Windows.Forms.CheckBox();
             this.replaysCheckBox = new System.Windows.Forms.CheckBox();
             this.locationsCheckbox = new System.Windows.Forms.CheckBox();
             this.customSeedGroup = new System.Windows.Forms.GroupBox();
@@ -187,6 +188,7 @@ namespace SotnRandoTools
             // 
             // optionsGroup
             // 
+            this.optionsGroup.Controls.Add(this.overlayCheckBox);
             this.optionsGroup.Controls.Add(this.replaysCheckBox);
             this.optionsGroup.Controls.Add(this.locationsCheckbox);
             this.optionsGroup.ForeColor = System.Drawing.Color.White;
@@ -196,6 +198,17 @@ namespace SotnRandoTools
             this.optionsGroup.TabIndex = 6;
             this.optionsGroup.TabStop = false;
             this.optionsGroup.Text = "Options";
+            // 
+            // overlayCheckBox
+            // 
+            this.overlayCheckBox.AutoSize = true;
+            this.overlayCheckBox.Location = new System.Drawing.Point(6, 67);
+            this.overlayCheckBox.Name = "overlayCheckBox";
+            this.overlayCheckBox.Size = new System.Drawing.Size(83, 17);
+            this.overlayCheckBox.TabIndex = 2;
+            this.overlayCheckBox.Text = "Use overlay";
+            this.overlayCheckBox.UseVisualStyleBackColor = true;
+            this.overlayCheckBox.CheckedChanged += new System.EventHandler(this.overlayCheckBox_CheckedChanged);
             // 
             // replaysCheckBox
             // 
@@ -346,5 +359,6 @@ namespace SotnRandoTools
 		private System.Windows.Forms.RadioButton customLocationsGuardedRadio;
 		private System.Windows.Forms.TextBox username;
 		private System.Windows.Forms.GroupBox groupBox1;
+		private System.Windows.Forms.CheckBox overlayCheckBox;
 	}
 }

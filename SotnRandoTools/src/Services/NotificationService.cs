@@ -9,6 +9,7 @@ using BizHawk.Client.Common;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Constants;
 using SotnRandoTools.Khaos.Models;
+using SotnRandoTools.RandoTracker.Models;
 
 namespace SotnRandoTools.Services
 {
@@ -30,7 +31,6 @@ namespace SotnRandoTools.Services
 		private Image scaledTextbox;
 		private System.Windows.Media.MediaPlayer audioPlayer = new();
 		private List<string> messageQueue = new();
-		private bool cleared = false;
 		private Color meterForegroundColor = Color.FromArgb(96, 101, 168);
 		private Color meterBackgroundColor = Color.FromArgb(40, 40, 40);
 		private Color meterBorderColor = Color.FromArgb(180, 180, 180);
@@ -45,7 +45,7 @@ namespace SotnRandoTools.Services
 			this.toolConfig = toolConfig;
 			this.clientAPI = clientAPI;
 
-			overlaySocketServer = new OverlaySocketServer();
+			overlaySocketServer = new OverlaySocketServer(toolConfig);
 			messageTimer = new System.Timers.Timer();
 			messageTimer.Interval = NotificationTime;
 			messageTimer.Elapsed += DequeueMessage;
@@ -152,22 +152,13 @@ namespace SotnRandoTools.Services
 			overlaySocketServer.UpdateQueue(actionQueue);
 		}
 
+		public void UpdateTrackerOverlay(int relics, int items)
+		{
+			overlaySocketServer.UpdateTracker(relics, items);
+		}
+
 		private void DrawUI()
 		{
-			if (messageQueue.Count == 0 && KhaosMeter == 0)
-			{
-				if (!cleared)
-				{
-					guiApi.WithSurface(DisplaySurfaceID.Client, () =>
-					{
-						guiApi.ClearGraphics();
-					});
-				}
-				cleared = true;
-				return;
-			}
-
-			cleared = false;
 			int newScale = GetScale();
 			if (scale != newScale)
 			{

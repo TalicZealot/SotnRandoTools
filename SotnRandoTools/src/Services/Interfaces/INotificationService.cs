@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using SotnRandoTools.Khaos.Models;
+using SotnRandoTools.RandoTracker.Models;
 
 namespace SotnRandoTools.Services
 {
@@ -14,5 +15,6 @@ namespace SotnRandoTools.Services
 		void StopOverlayServer();
 		void AddOverlayTimer(string name, int duration);
 		void UpdateOverlayQueue(List<QueuedAction> actionQueue);
+		void UpdateTrackerOverlay(int relics, int items);
 	}
 }

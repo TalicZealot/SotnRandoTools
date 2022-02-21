@@ -29,6 +29,11 @@ namespace SotnRandoTools
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(KhaosForm));
             this.enduranceButton = new System.Windows.Forms.Button();
             this.hasteButton = new System.Windows.Forms.Button();
@@ -62,6 +67,8 @@ namespace SotnRandoTools
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.statusPanel = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.mermanLocationLabel = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.leapLocationLabel = new System.Windows.Forms.Label();
             this.gravLocationLabel = new System.Windows.Forms.Label();
             this.jewelLocationLabel = new System.Windows.Forms.Label();
@@ -92,10 +99,13 @@ namespace SotnRandoTools
             this.lordButton = new System.Windows.Forms.Button();
             this.hnkButton = new System.Windows.Forms.Button();
             this.burstButton = new System.Windows.Forms.Button();
+            this.redemptions = new System.Windows.Forms.TabPage();
+            this.redemptionsGridView = new System.Windows.Forms.DataGridView();
+            this.ActionName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Username = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Refund = new System.Windows.Forms.DataGridViewButtonColumn();
             this.autoKhaosButton = new System.Windows.Forms.Button();
             this.connectButton = new System.Windows.Forms.Button();
-            this.mermanLocationLabel = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
             this.modePanel.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.statusPanel.SuspendLayout();
@@ -104,6 +114,8 @@ namespace SotnRandoTools
             this.relicLocationsBox.SuspendLayout();
             this.timersBox.SuspendLayout();
             this.controlPanel.SuspendLayout();
+            this.redemptions.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.redemptionsGridView)).BeginInit();
             this.SuspendLayout();
             // 
             // enduranceButton
@@ -562,6 +574,7 @@ namespace SotnRandoTools
             // 
             this.tabControl1.Controls.Add(this.statusPanel);
             this.tabControl1.Controls.Add(this.controlPanel);
+            this.tabControl1.Controls.Add(this.redemptions);
             this.tabControl1.Location = new System.Drawing.Point(3, 54);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -602,6 +615,24 @@ namespace SotnRandoTools
             this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Progression Relic Locations";
+            // 
+            // mermanLocationLabel
+            // 
+            this.mermanLocationLabel.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.mermanLocationLabel.Location = new System.Drawing.Point(67, 139);
+            this.mermanLocationLabel.Name = "mermanLocationLabel";
+            this.mermanLocationLabel.Size = new System.Drawing.Size(140, 18);
+            this.mermanLocationLabel.TabIndex = 11;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label2.Location = new System.Drawing.Point(1, 139);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(67, 18);
+            this.label2.TabIndex = 10;
+            this.label2.Text = "Merman:";
             // 
             // leapLocationLabel
             // 
@@ -964,6 +995,95 @@ namespace SotnRandoTools
             this.burstButton.UseVisualStyleBackColor = true;
             this.burstButton.Click += new System.EventHandler(this.burstButton_Click);
             // 
+            // redemptions
+            // 
+            this.redemptions.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
+            this.redemptions.Controls.Add(this.redemptionsGridView);
+            this.redemptions.Location = new System.Drawing.Point(4, 22);
+            this.redemptions.Name = "redemptions";
+            this.redemptions.Size = new System.Drawing.Size(436, 441);
+            this.redemptions.TabIndex = 3;
+            this.redemptions.Text = "Channel Point Redemptions";
+            // 
+            // redemptionsGridView
+            // 
+            this.redemptionsGridView.AllowUserToAddRows = false;
+            this.redemptionsGridView.AllowUserToDeleteRows = false;
+            this.redemptionsGridView.AllowUserToResizeColumns = false;
+            this.redemptionsGridView.AllowUserToResizeRows = false;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
+            this.redemptionsGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            this.redemptionsGridView.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
+            this.redemptionsGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.redemptionsGridView.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
+            this.redemptionsGridView.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.DimGray;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.redemptionsGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            this.redemptionsGridView.ColumnHeadersHeight = 20;
+            this.redemptionsGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            this.redemptionsGridView.ColumnHeadersVisible = false;
+            this.redemptionsGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.ActionName,
+            this.Username,
+            this.Refund});
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.redemptionsGridView.DefaultCellStyle = dataGridViewCellStyle5;
+            this.redemptionsGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnKeystroke;
+            this.redemptionsGridView.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
+            this.redemptionsGridView.Location = new System.Drawing.Point(15, 11);
+            this.redemptionsGridView.MultiSelect = false;
+            this.redemptionsGridView.Name = "redemptionsGridView";
+            this.redemptionsGridView.RowHeadersVisible = false;
+            this.redemptionsGridView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.redemptionsGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+            this.redemptionsGridView.Size = new System.Drawing.Size(405, 415);
+            this.redemptionsGridView.TabIndex = 1;
+            // 
+            // ActionName
+            // 
+            this.ActionName.DataPropertyName = "Title";
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
+            this.ActionName.DefaultCellStyle = dataGridViewCellStyle3;
+            this.ActionName.HeaderText = "Title";
+            this.ActionName.Name = "ActionName";
+            this.ActionName.ReadOnly = true;
+            this.ActionName.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.ActionName.Width = 150;
+            // 
+            // Username
+            // 
+            this.Username.DataPropertyName = "Username";
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
+            this.Username.DefaultCellStyle = dataGridViewCellStyle4;
+            this.Username.HeaderText = "Username";
+            this.Username.Name = "Username";
+            this.Username.ReadOnly = true;
+            this.Username.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.Username.Width = 150;
+            // 
+            // Refund
+            // 
+            this.Refund.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Refund.HeaderText = "Refund";
+            this.Refund.Name = "Refund";
+            this.Refund.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.Refund.Text = "Refund";
+            this.Refund.UseColumnTextForButtonValue = true;
+            // 
             // autoKhaosButton
             // 
             this.autoKhaosButton.Enabled = false;
@@ -1001,24 +1121,6 @@ namespace SotnRandoTools
             this.connectButton.UseVisualStyleBackColor = false;
             this.connectButton.Click += new System.EventHandler(this.connectButton_Click);
             // 
-            // mermanLocationLabel
-            // 
-            this.mermanLocationLabel.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.mermanLocationLabel.Location = new System.Drawing.Point(67, 139);
-            this.mermanLocationLabel.Name = "mermanLocationLabel";
-            this.mermanLocationLabel.Size = new System.Drawing.Size(140, 18);
-            this.mermanLocationLabel.TabIndex = 11;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label2.Location = new System.Drawing.Point(1, 139);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(67, 18);
-            this.label2.TabIndex = 10;
-            this.label2.Text = "Merman:";
-            // 
             // KhaosForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -1053,6 +1155,8 @@ namespace SotnRandoTools
             this.timersBox.ResumeLayout(false);
             this.timersBox.PerformLayout();
             this.controlPanel.ResumeLayout(false);
+            this.redemptions.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.redemptionsGridView)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1124,6 +1228,11 @@ namespace SotnRandoTools
 		private System.Windows.Forms.Button khaosTrackButton;
 		private System.Windows.Forms.Label mermanLocationLabel;
 		private System.Windows.Forms.Label label2;
+		private System.Windows.Forms.TabPage redemptions;
+		private System.Windows.Forms.DataGridView redemptionsGridView;
+		private System.Windows.Forms.DataGridViewTextBoxColumn ActionName;
+		private System.Windows.Forms.DataGridViewTextBoxColumn Username;
+		private System.Windows.Forms.DataGridViewButtonColumn Refund;
 	}
 }
 

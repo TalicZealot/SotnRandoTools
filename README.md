@@ -26,9 +26,9 @@ This tool and the accompanying library and app are open source. The idea is to i
   - [Special Thanks](#special-thanks)
 
 ## Installation
-This tool requires Bizhawk version 2.7 or higher.
+This tool requires Bizhawk version 2.8 or higher.
 Download the full version from the [latest release](https://github.com/TalicZealot/SotnRandoTools/releases/latest) that looks like this `SotnRandoTools-x.x.x.zip`
-Right click on it and select `Extract all...` then navigate to your BizHawk 2.7+ folder and press `Extract`.
+Right click on it and select `Extract all...` then navigate to your BizHawk 2.8+ folder and press `Extract`.
 File structure should look like this:
 ```
 BizHawk
@@ -53,6 +53,7 @@ On lunching the tool it will check for a new release and inform the user. If the
 
 ## Autotracker
 The new tracker has been re-written from the ground up for better performance and usability. Can be manually rescaled. Saves size and location. Locations are drawn on the game map.
+Supports OBS html widget overlay located in ```BizHawk\ExternalTools\SotnRandoTools\TrackerOverlay\autotracker.html```
 
 ## Co-Op
 Coop requires the host to have the port they want to use forwarded. Hosting automatically copies your address(ip:port) to the clipboard. The other player uses that address to connect. Please be careful to not leak your IP!

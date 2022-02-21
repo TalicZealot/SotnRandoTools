@@ -22,8 +22,9 @@ namespace SotnRandoTools.RandoTracker.Tests.TrackerTests
             var mockedToolConfig = Substitute.For<IToolConfig>();
             var mockedwatchlistService = Substitute.For<IWatchlistService>();
             var mockedSotnApi = Substitute.For<ISotnApi>();
+            var mockedNotificationService = Substitute.For<INotificationService>();
             //Act&Assert
-            Assert.Throws<ArgumentNullException>(() => new Tracker(null, mockedToolConfig, mockedwatchlistService, mockedSotnApi));
+            Assert.Throws<ArgumentNullException>(() => new Tracker(null, mockedToolConfig, mockedwatchlistService, mockedSotnApi, mockedNotificationService));
         }
 
         [Fact]
@@ -34,8 +35,9 @@ namespace SotnRandoTools.RandoTracker.Tests.TrackerTests
             var mockedToolConfig = Substitute.For<IToolConfig>();
             var mockedwatchlistService = Substitute.For<IWatchlistService>();
             var mockedSotnApi = Substitute.For<ISotnApi>();
+            var mockedNotificationService = Substitute.For<INotificationService>();
             //Act&Assert
-            Assert.Throws<ArgumentNullException>(() => new Tracker(mockedGraphics, null, mockedwatchlistService, mockedSotnApi));
+            Assert.Throws<ArgumentNullException>(() => new Tracker(mockedGraphics, null, mockedwatchlistService, mockedSotnApi, mockedNotificationService));
         }
 
         [Fact]
@@ -46,8 +48,9 @@ namespace SotnRandoTools.RandoTracker.Tests.TrackerTests
             var mockedToolConfig = Substitute.For<IToolConfig>();
             var mockedwatchlistService = Substitute.For<IWatchlistService>();
             var mockedSotnApi = Substitute.For<ISotnApi>();
+            var mockedNotificationService = Substitute.For<INotificationService>();
             //Act&Assert
-            Assert.Throws<ArgumentNullException>(() => new Tracker(mockedGraphics, mockedToolConfig, null, mockedSotnApi));
+            Assert.Throws<ArgumentNullException>(() => new Tracker(mockedGraphics, mockedToolConfig, null, mockedSotnApi, mockedNotificationService));
         }
 
         [Fact]
@@ -58,27 +61,22 @@ namespace SotnRandoTools.RandoTracker.Tests.TrackerTests
             var mockedToolConfig = Substitute.For<IToolConfig>();
             var mockedwatchlistService = Substitute.For<IWatchlistService>();
             var mockedSotnApi = Substitute.For<ISotnApi>();
+            var mockedNotificationService = Substitute.For<INotificationService>();
             //Act&Assert
-            Assert.Throws<ArgumentNullException>(() => new Tracker(mockedGraphics, mockedToolConfig, mockedwatchlistService, null));
+            Assert.Throws<ArgumentNullException>(() => new Tracker(mockedGraphics, mockedToolConfig, mockedwatchlistService, null, mockedNotificationService));
         }
 
-        [Fact(Skip = "Skip for now, too many file reads. Would be  more of an integration test atm.")]
-        public void ReturnAnInstance_WhenParametersAreNotNull()
+        [Fact]
+        public void ThrowArgumentNullException_WhenNotificationServiceIsNull()
         {
             //Arrange
             var mockedGraphics = Substitute.For<IGraphics>();
             var mockedToolConfig = Substitute.For<IToolConfig>();
-            TrackerConfig stubTrackerConfig = new TrackerConfig();
-            stubTrackerConfig.Locations = false;
-            mockedToolConfig
-                .Tracker
-                .Returns<TrackerConfig>(stubTrackerConfig);
             var mockedwatchlistService = Substitute.For<IWatchlistService>();
             var mockedSotnApi = Substitute.For<ISotnApi>();
-            //Act
-            var trackerUnderTest = new Tracker(mockedGraphics, mockedToolConfig, mockedwatchlistService, mockedSotnApi);
-            //Assert
-            Assert.NotNull(trackerUnderTest);
+            var mockedNotificationService = Substitute.For<INotificationService>();
+            //Act&Assert
+            Assert.Throws<ArgumentNullException>(() => new Tracker(mockedGraphics, mockedToolConfig, mockedwatchlistService, mockedSotnApi, null));
         }
     }
 }

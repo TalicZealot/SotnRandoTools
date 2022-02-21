@@ -38,8 +38,7 @@ namespace SotnRandoTools
 			"SotnRandoTools/TwitchLib.PubSub.dll"
 		})]
 	[ExternalToolEmbeddedIcon("SotnRandoTools.Resources.BizAlucard.png")]
-	//TODO: Revert after Bizhawk 2.8 releases
-	//[ExternalToolApplicability.SingleRom(CoreSystem.Playstation, "0DDCBC3D")]
+	[ExternalToolApplicability.SingleRom(CoreSystem.Playstation, "0DDCBC3D")]
 	public partial class ToolMainForm : ToolFormBase, IExternalToolForm
 	{
 		[RequiredService]
@@ -175,6 +174,8 @@ namespace SotnRandoTools
 			sotnApi = new SotnApi.Main.SotnApi(APIs.Memory);
 			watchlistService = new WatchlistService(_memoryDomains, _emu?.SystemId, GlobalConfig);
 			inputService = new InputService(APIs.Joypad, sotnApi);
+			notificationService = new NotificationService(toolConfig, APIs.Gui, APIs.EmuClient);
+			khaosSettingsPanel.NotificationService = notificationService;
 		}
 
 		private void LoadCheats()
@@ -266,12 +267,12 @@ namespace SotnRandoTools
 			if (trackerForm is not null && sotnApi is not null && watchlistService is not null)
 			{
 				trackerForm.Close();
-				trackerForm = new TrackerForm(toolConfig, watchlistService, sotnApi);
+				trackerForm = new TrackerForm(toolConfig, watchlistService, sotnApi, notificationService);
 				trackerForm.Show();
 			}
 			else if (trackerForm is null && sotnApi is not null && watchlistService is not null)
 			{
-				trackerForm = new TrackerForm(toolConfig, watchlistService, sotnApi);
+				trackerForm = new TrackerForm(toolConfig, watchlistService, sotnApi, notificationService);
 				trackerForm.Show();
 				if (khaosForm is not null)
 				{
@@ -284,14 +285,12 @@ namespace SotnRandoTools
 		{
 			if (khaosForm is not null && sotnApi is not null)
 			{
-				CreateNotificationService();
 				khaosForm.Close();
 				khaosForm = new KhaosForm(toolConfig, this.MainForm.CheatList, sotnApi, notificationService, inputService, _memoryDomains);
 				khaosForm.Show();
 			}
 			else if (khaosForm is null && sotnApi is not null)
 			{
-				CreateNotificationService();
 				khaosForm = new KhaosForm(toolConfig, this.MainForm.CheatList, sotnApi, notificationService, inputService, _memoryDomains);
 				khaosForm.Show();
 				if (trackerForm is not null)
@@ -305,25 +304,14 @@ namespace SotnRandoTools
 		{
 			if (coopForm is not null && sotnApi is not null && watchlistService is not null && APIs.Joypad is not null)
 			{
-				CreateNotificationService();
 				coopForm.Close();
 				coopForm = new CoopForm(toolConfig, watchlistService, inputService, sotnApi, APIs.Joypad, notificationService);
 				coopForm.Show();
 			}
 			else if (coopForm is null && sotnApi is not null && watchlistService is not null && APIs.Joypad is not null)
 			{
-				CreateNotificationService();
 				coopForm = new CoopForm(toolConfig, watchlistService, inputService, sotnApi, APIs.Joypad, notificationService);
 				coopForm.Show();
-			}
-		}
-
-		private void CreateNotificationService()
-		{
-			if (notificationService is null)
-			{
-				notificationService = new NotificationService(toolConfig, APIs.Gui, APIs.EmuClient);
-				khaosSettingsPanel.NotificationService = notificationService;
 			}
 		}
 

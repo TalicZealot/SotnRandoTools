@@ -24,6 +24,7 @@ namespace SotnRandoTools.RandoTracker
 		private readonly TrackerGraphicsEngine trackerGraphicsEngine;
 		private readonly IWatchlistService watchlistService;
 		private readonly ISotnApi sotnApi;
+		private readonly INotificationService notificationService;
 
 		private List<Relic> relics = new List<Relic>
 		{
@@ -419,22 +420,29 @@ namespace SotnRandoTools.RandoTracker
 		private List<MapLocation> replay = new();
 		private int prologueTime = 0;
 
-		public Tracker(IGraphics? formGraphics, IToolConfig toolConfig, IWatchlistService watchlistService, ISotnApi sotnApi)
+		public Tracker(IGraphics? formGraphics, IToolConfig toolConfig, IWatchlistService watchlistService, ISotnApi sotnApi, INotificationService notificationService)
 		{
 			if (formGraphics is null) throw new ArgumentNullException(nameof(formGraphics));
 			if (toolConfig is null) throw new ArgumentNullException(nameof(toolConfig));
 			if (watchlistService is null) throw new ArgumentNullException(nameof(watchlistService));
 			if (sotnApi is null) throw new ArgumentNullException(nameof(sotnApi));
+			if (notificationService is null) throw new ArgumentNullException(nameof(notificationService));
 			this.formGraphics = formGraphics;
 			this.toolConfig = toolConfig;
 			this.watchlistService = watchlistService;
 			this.sotnApi = sotnApi;
+			this.notificationService = notificationService;
 
 			if (toolConfig.Tracker.Locations)
 			{
 				InitializeAllLocks();
 				CheckReachability();
 			}
+			if (toolConfig.Tracker.UseOverlay)
+			{
+				notificationService.StartOverlayServer();
+			}
+
 			trackerGraphicsEngine = new TrackerGraphicsEngine(formGraphics, relics, progressionItems, thrustSwords, toolConfig);
 			trackerGraphicsEngine.CalculateGrid(toolConfig.Tracker.Width, toolConfig.Tracker.Height);
 			this.GraphicsEngine = trackerGraphicsEngine;
@@ -479,6 +487,7 @@ namespace SotnRandoTools.RandoTracker
 				UpdateProgressionItems();
 				UpdateThrustSwords();
 				SaveReplayLine();
+				UpdateOverlay();
 
 				if (toolConfig.Tracker.Locations)
 				{
@@ -605,7 +614,8 @@ namespace SotnRandoTools.RandoTracker
 					{
 						relics[i].Collected = true;
 						relicOrItemCollected = true;
-						Console.WriteLine($"Found relic {relics[i].Name} at: {lastLocationVisited}");
+						Console.WriteLine($"Found relic " + relics[i].Name);
+
 						if (VladRelicLocationDisplay is not null)
 						{
 							float adjustedX = sotnApi.AlucardApi.MapX * 2;
@@ -685,6 +695,7 @@ namespace SotnRandoTools.RandoTracker
 									break;
 							}
 						}
+
 					}
 					else
 					{
@@ -1053,6 +1064,17 @@ namespace SotnRandoTools.RandoTracker
 			}
 
 			return false;
+		}
+
+		private void UpdateOverlay()
+		{
+			if (toolConfig.Tracker.UseOverlay)
+			{
+				if (relicOrItemCollected)
+				{
+					notificationService.UpdateTrackerOverlay(EncodeRelics(), EncodeItems());
+				}
+			}
 		}
 
 		private void SaveReplayLine()

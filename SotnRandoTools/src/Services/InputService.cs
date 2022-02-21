@@ -59,6 +59,7 @@ namespace SotnRandoTools.Services
 		public void UpdateInputs()
 		{
 			inputHistory.Add((Dictionary<string, object>) joypadApi.Get());
+
 			if (inputHistory.Count > 120)
 			{
 				inputHistory.RemoveAt(0);
@@ -76,6 +77,7 @@ namespace SotnRandoTools.Services
 			}
 
 			moveHistory.Add(new Dictionary<string, bool>());
+
 			if (ReadInput(dragonPunch, Globals.InputBufferSize))
 			{
 				moveHistory[moveHistory.Count - 1].Add(InputKeys.DragonPunch, true);

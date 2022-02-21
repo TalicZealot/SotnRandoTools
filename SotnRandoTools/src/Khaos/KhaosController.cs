@@ -238,7 +238,6 @@ namespace SotnRandoTools.Khaos
 		{
 			StopTimers();
 			faerieScroll.Disable();
-			notificationService.StopOverlayServer();
 			notificationService.AddMessage($"Khaos stopped");
 			Console.WriteLine("Khaos stopped");
 		}
@@ -832,15 +831,11 @@ namespace SotnRandoTools.Khaos
 				}
 			}
 		}
+
 		public void BattleOrders(string user = "Khaos")
 		{
-			float currentHpPercentage = sotnApi.AlucardApi.CurrentHp / sotnApi.AlucardApi.MaxtHp;
-			float currentMpPercentage = sotnApi.AlucardApi.CurrentMp / sotnApi.AlucardApi.MaxtMp;
-
-			if (currentHpPercentage < 1)
-			{
-				currentHpPercentage = 1;
-			}
+			float currentHpPercentage = (float) sotnApi.AlucardApi.CurrentHp / (float) sotnApi.AlucardApi.MaxtHp;
+			float currentMpPercentage = (float) sotnApi.AlucardApi.CurrentMp / (float) sotnApi.AlucardApi.MaxtMp;
 
 			battleOrdersActive = true;
 			battleOrdersBonusHp = sotnApi.AlucardApi.MaxtHp;
@@ -1062,7 +1057,7 @@ namespace SotnRandoTools.Khaos
 
 		public void Update()
 		{
-			if (!sotnApi.GameApi.InAlucardMode() ||  !sotnApi.AlucardApi.HasHitbox() || sotnApi.AlucardApi.CurrentHp < 1
+			if (!sotnApi.GameApi.InAlucardMode() || !sotnApi.AlucardApi.HasHitbox() || sotnApi.AlucardApi.CurrentHp < 1
 				|| sotnApi.GameApi.InTransition || sotnApi.GameApi.IsLoading)
 			{
 				return;
@@ -1106,7 +1101,7 @@ namespace SotnRandoTools.Khaos
 				int offsetX = alucardFacing ? -20 : 20;
 				fireball.Xpos = (ushort) (sotnApi.AlucardApi.ScreenX + offsetX);
 				fireball.Ypos = (ushort) (sotnApi.AlucardApi.ScreenY - 10);
-				fireball.SpeedHorizontal = alucardFacing ? (ushort)0xFFFF : (ushort) 0;
+				fireball.SpeedHorizontal = alucardFacing ? (ushort) 0xFFFF : (ushort) 0;
 
 				long address = sotnApi.ActorApi.SpawnActor(fireball, false);
 				LiveActor liveFireball = sotnApi.ActorApi.GetLiveActor(address);
@@ -1624,7 +1619,7 @@ namespace SotnRandoTools.Khaos
 			if (roll > autoKhaosDifficulty)
 			{
 				int index = rng.Next(0, toolConfig.Khaos.Actions.Count);
-				EventAddAction? actionEvent = new() { UserName = "Auto Khaos", ActionIndex = index, Data="random" };
+				EventAddAction? actionEvent = new() { UserName = "Auto Khaos", ActionIndex = index, Data = "random" };
 
 				if (toolConfig.Khaos.Actions[index].Name != "Guilty Gear" && toolConfig.Khaos.Actions[index].Name != "Pandora's Box" && !toolConfig.Khaos.Actions[index].IsOnCooldown())
 				{

@@ -79,6 +79,10 @@ namespace SotnRandoTools
 			gravLocationLabel.DataBindings.Add(new System.Windows.Forms.Binding("Text", this, nameof(GravityBootsLocation)));
 			leapLocationLabel.DataBindings.Add(new System.Windows.Forms.Binding("Text", this, nameof(LepastoneLocation)));
 			mermanLocationLabel.DataBindings.Add(new System.Windows.Forms.Binding("Text", this, nameof(MermanLocation)));
+
+			redemptionsGridView.AutoGenerateColumns = false;
+			redemptionsGridView.DataSource = channelPointsController.Redemptions;
+			redemptionsGridView.CellClick += RefundRedemption;
 		}
 
 		public ICheatCollectionAdapter AdaptedCheats
@@ -225,6 +229,11 @@ namespace SotnRandoTools
 		{
 		}
 
+		private void RefundRedemption(object sender, DataGridViewCellEventArgs e)
+		{
+			if (e.RowIndex < 0 || e.ColumnIndex != redemptionsGridView.Columns["Refund"].Index) return;
+			channelPointsController.CancelRedemption(channelPointsController.Redemptions[e.RowIndex]);
+		}
 		private void DecrementTimers(object sender, ElapsedEventArgs e)
 		{
 			foreach (ActionTimer? timer in actionTimers)

@@ -365,7 +365,7 @@ namespace SotnRandoTools.Constants
 		public static SearchableActor GalamothHeadActor = new SearchableActor { Hp = 32767, Damage = 50, Sprite = 31516 };
 		public static SearchableActor GalamothPartsActors = new SearchableActor { Hp = 12000, Damage = 50, Sprite = 31516 };
 		public static SearchableActor ShaftActor = new SearchableActor { Hp = 10, Damage = 0, Sprite = 0, };
-		public static SearchableActor SpiritActor = new SearchableActor { Hp = 0, Sprite = 39012};
+		public static SearchableActor SpiritActor = new SearchableActor { Hp = 0, Sprite = 39012 };
 		public static uint SpiritPalette = 0x5B;
 		public static uint SpiritLockOn = 2;
 		public static string SpiritLockOnName = "SpiritLockOn";

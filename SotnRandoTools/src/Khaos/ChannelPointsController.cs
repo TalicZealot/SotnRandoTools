@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
@@ -12,8 +13,10 @@ using SotnRandoTools.Khaos.Models;
 using SotnRandoTools.Services;
 using SotnRandoTools.Services.Interfaces;
 using TwitchLib.Api;
+using TwitchLib.Api.Core.Exceptions;
 using TwitchLib.Api.Helix.Models.ChannelPoints.CreateCustomReward;
 using TwitchLib.Api.Helix.Models.ChannelPoints.UpdateCustomReward;
+using TwitchLib.Api.Helix.Models.ChannelPoints.UpdateCustomRewardRedemptionStatus;
 using TwitchLib.PubSub;
 using TwitchLib.PubSub.Events;
 
@@ -23,12 +26,15 @@ namespace SotnRandoTools.Khaos
 	{
 		private const int RetryBaseMs = 12;
 		private const int RetryCount = 3;
+		private const int UpdateRetryCount = 4;
 		private const int FulfilRewardDelay = 60 * 1000;
+		private const int FulfilTimerInterval = 3 * 30 * 1000;
+		private const int RefreshTokenInterval = 3 * (60 * (60 * 1000)) + (30 * (60 * 1000)); // 3.5 hours
 		private readonly IToolConfig toolConfig;
 		private readonly ITwitchListener twitchListener;
 		private readonly IKhaosController khaosController;
 		private readonly INotificationService notificationService;
-		private System.Timers.Timer refreshTokenTimer = new();
+		private System.Windows.Forms.Timer refreshTokenTimer = new();
 		private List<string> scopes = new List<string> { "channel:read:subscriptions", "channel:read:redemptions", "channel:manage:redemptions" };
 		private TwitchAPI api = new TwitchAPI();
 		private TwitchPubSub client = new TwitchPubSub();
@@ -36,6 +42,9 @@ namespace SotnRandoTools.Khaos
 		private string refreshToken;
 		private List<string> customRewardIds = new();
 		private List<Timer> actionsStartingOnCooldown = new();
+		private BindingList<Redemption> redemptions = new();
+		private System.Windows.Forms.Timer redemptionFulfilTimer = new();
+
 		private bool manualDisconnect = false;
 
 		public ChannelPointsController(IToolConfig toolConfig, ITwitchListener twitchListener, IKhaosController khaosController, INotificationService notificationService)
@@ -49,8 +58,18 @@ namespace SotnRandoTools.Khaos
 			this.khaosController = khaosController;
 			this.notificationService = notificationService;
 
-			refreshTokenTimer.Elapsed += RefreshToken;
-			refreshTokenTimer.Interval = 3 * (60 * (60 * 1000)) + (30 * (60 * 1000)); // 3.5 hours
+			refreshTokenTimer.Tick += RefreshToken;
+			refreshTokenTimer.Interval = RefreshTokenInterval;
+			redemptionFulfilTimer.Tick += FulfilOldRedemptions;
+			redemptionFulfilTimer.Interval = FulfilTimerInterval;
+		}
+
+		public BindingList<Redemption> Redemptions
+		{
+			get
+			{
+				return this.redemptions;
+			}
 		}
 
 		public async Task<bool> Connect()
@@ -83,11 +102,14 @@ namespace SotnRandoTools.Khaos
 			client.Connect();
 			notificationService.AddMessage("Connected to Twitch");
 			refreshTokenTimer.Start();
+			redemptionFulfilTimer.Start();
 			return true;
 		}
 
 		public void Disconnect()
 		{
+			refreshTokenTimer.Stop();
+			redemptionFulfilTimer.Stop();
 			manualDisconnect = true;
 			DeleteRewards();
 			client.Disconnect();
@@ -102,19 +124,30 @@ namespace SotnRandoTools.Khaos
 		{
 			Console.WriteLine($"Fetching subscribers...");
 
-			try
+			for (int i = 0; i <= RetryCount; i++)
 			{
-				var subs = await api.Helix.Subscriptions.GetBroadcasterSubscriptions(
-				broadcasterId,
-				null,
-				100,
-				api.Settings.AccessToken
-				);
-				khaosController.OverwriteBossNames(subs.Data.Select(u => u.UserName).ToArray());
-			}
-			catch
-			{
-				Console.WriteLine("Could not fetch subscribers!");
+				try
+				{
+					var subs = await api.Helix.Subscriptions.GetBroadcasterSubscriptions(
+					broadcasterId,
+					null,
+					100,
+					api.Settings.AccessToken
+					);
+					khaosController.OverwriteBossNames(subs.Data.Select(u => u.UserName).ToArray());
+					break;
+				}
+				catch (Exception e)
+				{
+					if (i == RetryCount)
+					{
+						Console.WriteLine("Could not fetch subscribers! " + e.Message);
+					}
+					else
+					{
+						await Task.Delay((int) Math.Pow(RetryBaseMs, i));
+					}
+				}
 			}
 		}
 
@@ -132,7 +165,6 @@ namespace SotnRandoTools.Khaos
 						Prompt = action.Description,
 						Cost = (int) action.ChannelPoints,
 						IsEnabled = true,
-						//ShouldRedemptionsSkipRequestQueue = true
 					};
 
 					if (action.RequiresUserInput)
@@ -171,11 +203,11 @@ namespace SotnRandoTools.Khaos
 							customRewardIds.Add(response.Data[0].Id);
 							break;
 						}
-						catch
+						catch (Exception e)
 						{
 							if (i == RetryCount)
 							{
-								throw new Exception("Server error while creating Rewards. Please click Continue, then Disconnect and Reconnect.");
+								throw new Exception("Server error while creating Rewards. Please click Continue, then Disconnect and Reconnect.", e);
 							}
 							else
 							{
@@ -199,7 +231,6 @@ namespace SotnRandoTools.Khaos
 				Prompt = toolConfig.Khaos.Actions[action.Index].Description,
 				Cost = (int) toolConfig.Khaos.Actions[action.Index].ChannelPoints,
 				IsEnabled = true,
-				//ShouldRedemptionsSkipRequestQueue = true,
 				IsGlobalCooldownEnabled = true,
 				GlobalCooldownSeconds = (int) toolConfig.Khaos.Actions[action.Index].Cooldown.TotalSeconds
 			};
@@ -225,11 +256,11 @@ namespace SotnRandoTools.Khaos
 
 					break;
 				}
-				catch
+				catch (Exception e)
 				{
 					if (i == RetryCount)
 					{
-						throw new Exception("Server error while creating Rewards. Please click Continue, then Disconnect and Reconnect.");
+						throw new Exception("Server error while creating Rewards. Please click Continue, then Disconnect and Reconnect.", e);
 					}
 					else
 					{
@@ -257,11 +288,11 @@ namespace SotnRandoTools.Khaos
 						);
 						break;
 					}
-					catch
+					catch (Exception e)
 					{
 						if (j == RetryCount)
 						{
-							throw new Exception("Server error while deleting Rewards. Please delete the remainint rewards from the  Dashboard.");
+							throw new Exception("Server error while deleting Rewards. Please delete the remainint rewards from the  Dashboard.", e);
 						}
 						else
 						{
@@ -281,9 +312,9 @@ namespace SotnRandoTools.Khaos
 				api.Settings.AccessToken = refresh.AccessToken;
 				Console.WriteLine("Successfully refreshed authentication token!");
 			}
-			catch
+			catch (Exception ex)
 			{
-				throw new Exception("Server error while refreshing connection.");
+				throw new Exception("Server error while refreshing connection.", ex);
 			}
 		}
 
@@ -298,18 +329,16 @@ namespace SotnRandoTools.Khaos
 				return;
 			}
 
-			//No need as of now, since rewards auto-redeem.
-			//In the future I might leave them unredeemed until the end and include a tab with a list of redemptions, so that the user can refund channel points.
-			//Complete the redemption
-			/*await api.Helix.ChannelPoints.UpdateCustomRewardRedemptionStatus(
-				broadcasterId,
-				e.RewardRedeemed.Redemption.Reward.Id,
-				new List<string> { e.RewardRedeemed.Redemption.Id },
-				new UpdateCustomRewardRedemptionStatusRequest { Status = TwitchLib.Api.Core.Enums.CustomRewardRedemptionStatus.FULFILLED },
-				api.Settings.AccessToken
-				);*/
+			redemptions.Add(
+				new Redemption
+				{
+					RedemptionId = e.RewardRedeemed.Redemption.Id,
+					RewardId = e.RewardRedeemed.Redemption.Reward.Id,
+					Title = e.RewardRedeemed.Redemption.Reward.Title,
+					Username = e.RewardRedeemed.Redemption.User.DisplayName,
+					RedeemedAt = DateTime.Now
+				});
 
-			//Scale cost
 			int NewCost = (int) Math.Round(e.RewardRedeemed.Redemption.Reward.Cost * action.Scaling);
 			if (action.MaximumChannelPoints != 0 && NewCost > action.MaximumChannelPoints)
 			{
@@ -335,11 +364,11 @@ namespace SotnRandoTools.Khaos
 						api.Settings.AccessToken);
 					break;
 				}
-				catch
+				catch (Exception ex)
 				{
 					if (i == RetryCount)
 					{
-						throw new Exception("Server error while updating Reward. Click Continue.");
+						throw new Exception("Server error while updating Reward. Click Continue.", ex);
 					}
 					else
 					{
@@ -351,6 +380,100 @@ namespace SotnRandoTools.Khaos
 			var actionEvent = new EventAddAction { UserName = e.RewardRedeemed.Redemption.User.DisplayName, ActionIndex = toolConfig.Khaos.Actions.IndexOf(action), Data = e.RewardRedeemed.Redemption.UserInput };
 
 			khaosController.EnqueueAction(actionEvent);
+		}
+
+		public async void FulfillRedemption(Redemption redemption)
+		{
+			for (int i = 0; i <= UpdateRetryCount; i++)
+			{
+				try
+				{
+					await api.Helix.ChannelPoints.UpdateCustomRewardRedemptionStatus(
+						broadcasterId,
+						redemption.RewardId,
+						new List<string> { redemption.RedemptionId },
+						new UpdateCustomRewardRedemptionStatusRequest { Status = TwitchLib.Api.Core.Enums.CustomRewardRedemptionStatus.FULFILLED },
+						api.Settings.AccessToken
+					);
+				}
+				catch (Exception e)
+				{
+					if (i == UpdateRetryCount)
+					{
+						if (e.GetType() == typeof(BadResourceException))
+						{
+							Console.WriteLine("Server responded with 404 while updating redemption status on attempt: " + i);
+						}
+						else
+						{
+							throw new Exception("Server error while updating redemption status. Click Continue.", e);
+						}
+					}
+					else
+					{
+						await Task.Delay((int) Math.Pow(RetryBaseMs, i));
+					}
+				}
+			}
+		}
+
+		public async void CancelRedemption(Redemption redemption)
+		{
+			for (int i = 0; i <= UpdateRetryCount; i++)
+			{
+				try
+				{
+					await api.Helix.ChannelPoints.UpdateCustomRewardRedemptionStatus(
+						broadcasterId,
+						redemption.RewardId,
+						new List<string> { redemption.RedemptionId },
+						new UpdateCustomRewardRedemptionStatusRequest { Status = TwitchLib.Api.Core.Enums.CustomRewardRedemptionStatus.CANCELED },
+						api.Settings.AccessToken
+					);
+
+					redemptions.Remove(redemption);
+				}
+				catch (Exception e)
+				{
+					if (i == UpdateRetryCount)
+					{
+						if (e.GetType() == typeof(BadResourceException))
+						{
+							Console.WriteLine("Server responded with 404 while updating redemption status.");
+						}
+						else
+						{
+							throw new Exception("Server error while updating redemption status. Click Continue.", e);
+						}
+					}
+					else
+					{
+						await Task.Delay((int) Math.Pow(RetryBaseMs, i));
+					}
+				}
+			}
+		}
+
+		private async void FulfilOldRedemptions(object sender, EventArgs e)
+		{
+			DateTime currentTime = DateTime.Now;
+
+			int requestDelay = 2000;
+
+			while (redemptions.Count * requestDelay > FulfilTimerInterval)
+			{
+				requestDelay /= 2;
+			}
+
+			for (int i = redemptions.Count - 1; i >= 0; i--)
+			{
+				if ((currentTime - redemptions[i].RedeemedAt).TotalSeconds > 60)
+				{
+					FulfillRedemption(redemptions[i]);
+					redemptions.Remove(redemptions[i]);
+					await Task.Delay(requestDelay);
+				}
+			}
 		}
 
 		private void onListenResponse(object sender, OnListenResponseArgs e)
@@ -378,11 +501,11 @@ namespace SotnRandoTools.Khaos
 				{
 					client.Connect();
 				}
-				catch
+				catch (Exception ex)
 				{
 					if (i == RetryCount)
 					{
-						throw new Exception("Failed to reconnect! Click continue and disconnect to delete rewards.");
+						throw new Exception("Failed to reconnect! Click continue and disconnect to delete rewards.", ex);
 					}
 					else
 					{

@@ -42,6 +42,7 @@ namespace SotnRandoTools
 			alwaysOnTopCheckBox.Checked = toolConfig.Tracker.AlwaysOnTop;
 			locationsCheckbox.Checked = toolConfig.Tracker.Locations;
 			replaysCheckBox.Checked = toolConfig.Tracker.SaveReplays;
+			overlayCheckBox.Checked = toolConfig.Tracker.UseOverlay;
 
 			customLocationsGuardedRadio.Checked = toolConfig.Tracker.CustomLocationsGuarded;
 			customLocationsEquipmentRadio.Checked = toolConfig.Tracker.CustomLocationsEquipment;
@@ -112,6 +113,11 @@ namespace SotnRandoTools
 		private void username_TextChanged(object sender, EventArgs e)
 		{
 			toolConfig.Tracker.Username = username.Text;
+		}
+
+		private void overlayCheckBox_CheckedChanged(object sender, EventArgs e)
+		{
+			toolConfig.Tracker.UseOverlay = overlayCheckBox.Checked;
 		}
 	}
 }
