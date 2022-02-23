@@ -37,7 +37,7 @@ namespace SotnRandoTools.Services
 
 		public void StopServer()
 		{
-			if (!socketServer.IsListening)
+			if (socketServer.IsListening)
 			{
 				socketServer.Stop();
 			}
