@@ -19,7 +19,7 @@ namespace SotnRandoTools
 
 		private GraphicsAdapter? formGraphics;
 		private Graphics? internalGraphics;
-		private ITracker? tracker;
+		private Tracker? tracker;
 
 		public TrackerForm(IToolConfig toolConfig, IWatchlistService watchlistService, ISotnApi sotnApi, INotificationService notificationService)
 		{
@@ -103,6 +103,8 @@ namespace SotnRandoTools
 			{
 				tracker.SaveReplay();
 			}
+
+			tracker.CloseAutosplitter();
 		}
 	}
 }

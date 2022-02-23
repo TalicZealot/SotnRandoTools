@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Timers;
 using System.Windows.Forms;
 using BizHawk.Client.Common;
 using BizHawk.Emulation.Common;
@@ -26,7 +25,7 @@ namespace SotnRandoTools
 		private readonly TwitchListener? twitchListener;
 		private readonly ChannelPointsController? channelPointsController;
 		private List<ActionTimer> actionTimers = new();
-		private System.Timers.Timer countdownTimer;
+		private System.Windows.Forms.Timer countdownTimer;
 
 		private string heartOfVladLocation = String.Empty;
 		private string toothOfVladLocation = String.Empty;
@@ -61,9 +60,9 @@ namespace SotnRandoTools
 			InitializeComponent();
 			SuspendLayout();
 			ResumeLayout();
-			countdownTimer = new System.Timers.Timer();
+			countdownTimer = new();
 			countdownTimer.Interval = 1000;
-			countdownTimer.Elapsed += DecrementTimers;
+			countdownTimer.Tick += DecrementTimers;
 			countdownTimer.Start();
 			this.PropertyChanged += KhaosForm_PropertyChanged;
 
@@ -234,7 +233,7 @@ namespace SotnRandoTools
 			if (e.RowIndex < 0 || e.ColumnIndex != redemptionsGridView.Columns["Refund"].Index) return;
 			channelPointsController.CancelRedemption(channelPointsController.Redemptions[e.RowIndex]);
 		}
-		private void DecrementTimers(object sender, ElapsedEventArgs e)
+		private void DecrementTimers(Object sender, EventArgs e)
 		{
 			foreach (ActionTimer? timer in actionTimers)
 			{

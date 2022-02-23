@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using System.Timers;
 using System.Windows.Forms;
 using BizHawk.Client.Common;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Constants;
 using SotnRandoTools.Khaos.Models;
-using SotnRandoTools.RandoTracker.Models;
 
 namespace SotnRandoTools.Services
 {
@@ -24,8 +22,8 @@ namespace SotnRandoTools.Services
 		private readonly IToolConfig toolConfig;
 		private readonly IEmuClientApi clientAPI;
 
-		private System.Timers.Timer messageTimer;
-		private System.Timers.Timer countdownTimer;
+		private System.Windows.Forms.Timer messageTimer;
+		private System.Windows.Forms.Timer countdownTimer;
 		private int scale;
 		private Image textbox;
 		private Image scaledTextbox;
@@ -46,14 +44,13 @@ namespace SotnRandoTools.Services
 			this.clientAPI = clientAPI;
 
 			overlaySocketServer = new OverlaySocketServer(toolConfig);
-			messageTimer = new System.Timers.Timer();
+			messageTimer = new();
 			messageTimer.Interval = NotificationTime;
-			messageTimer.Elapsed += DequeueMessage;
+			messageTimer.Tick += DequeueMessage;
 			messageTimer.Start();
-			countdownTimer = new System.Timers.Timer();
+			countdownTimer = new();
 			countdownTimer.Interval = 1000;
-			countdownTimer.Elapsed += RefreshUI;
-			//countdownTimer.Start();
+			countdownTimer.Tick += RefreshUI;
 			textbox = Image.FromFile(Paths.TextboxImage);
 			scale = GetScale();
 			ResizeImages();
@@ -226,7 +223,7 @@ namespace SotnRandoTools.Services
 			guiApi.DrawString(xpos + (int) (0.38 * (MeterSize * scale)), ypos, "KHAOS", Color.White, null, 4 * scale, "Arial", "bold");
 		}
 
-		private void DequeueMessage(object sender, ElapsedEventArgs e)
+		private void DequeueMessage(Object sender, EventArgs e)
 		{
 			if (messageQueue.Count > 0)
 			{
@@ -234,7 +231,7 @@ namespace SotnRandoTools.Services
 			}
 		}
 
-		private void RefreshUI(object sender, ElapsedEventArgs e)
+		private void RefreshUI(Object sender, EventArgs e)
 		{
 			DrawUI();
 			if (messageQueue.Count == 0)

@@ -33,34 +33,34 @@ namespace SotnRandoTools.Khaos
 
 		private List<QueuedAction> queuedActions = new();
 		private Queue<MethodInvoker> queuedFastActions = new();
-		private Timer actionTimer = new();
-		private Timer fastActionTimer = new();
 		#region Timers
-		private System.Timers.Timer khaosTrackTimer = new();
-		private System.Timers.Timer subweaponsOnlyTimer = new();
-		private System.Timers.Timer slowTimer = new();
-		private System.Timers.Timer bloodManaTimer = new();
-		private System.Timers.Timer thirstTimer = new();
-		private System.Timers.Timer thirstTickTimer = new();
-		private System.Timers.Timer hordeTimer = new();
-		private System.Timers.Timer hordeSpawnTimer = new();
-		private System.Timers.Timer lordTimer = new();
-		private System.Timers.Timer lordSpawnTimer = new();
-		private System.Timers.Timer enduranceSpawnTimer = new();
-		private System.Timers.Timer hnkTimer = new();
-		private System.Timers.Timer vampireTimer = new();
-		private System.Timers.Timer magicianTimer = new();
-		private System.Timers.Timer meltyTimer = new();
-		private System.Timers.Timer fourBeastsTimer = new();
-		private System.Timers.Timer zawarudoTimer = new();
-		private System.Timers.Timer zawarudoCheckTimer = new();
-		private System.Timers.Timer hasteTimer = new();
-		private System.Timers.Timer hasteOverdriveTimer = new();
-		private System.Timers.Timer hasteOverdriveOffTimer = new();
-		private System.Timers.Timer bloodManaDeathTimer = new();
-		private System.Timers.Timer battleOrdersTimer = new();
-		private System.Timers.Timer azureDragonTimer = new();
-		private System.Timers.Timer whiteTigerBallTimer = new();
+		private System.Windows.Forms.Timer actionTimer = new();
+		private System.Windows.Forms.Timer fastActionTimer = new();
+		private System.Windows.Forms.Timer khaosTrackTimer = new();
+		private System.Windows.Forms.Timer subweaponsOnlyTimer = new();
+		private System.Windows.Forms.Timer slowTimer = new();
+		private System.Windows.Forms.Timer bloodManaTimer = new();
+		private System.Windows.Forms.Timer thirstTimer = new();
+		private System.Windows.Forms.Timer thirstTickTimer = new();
+		private System.Windows.Forms.Timer hordeTimer = new();
+		private System.Windows.Forms.Timer hordeSpawnTimer = new();
+		private System.Windows.Forms.Timer lordTimer = new();
+		private System.Windows.Forms.Timer lordSpawnTimer = new();
+		private System.Windows.Forms.Timer enduranceSpawnTimer = new();
+		private System.Windows.Forms.Timer hnkTimer = new();
+		private System.Windows.Forms.Timer vampireTimer = new();
+		private System.Windows.Forms.Timer magicianTimer = new();
+		private System.Windows.Forms.Timer meltyTimer = new();
+		private System.Windows.Forms.Timer fourBeastsTimer = new();
+		private System.Windows.Forms.Timer zawarudoTimer = new();
+		private System.Windows.Forms.Timer zawarudoCheckTimer = new();
+		private System.Windows.Forms.Timer hasteTimer = new();
+		private System.Windows.Forms.Timer hasteOverdriveTimer = new();
+		private System.Windows.Forms.Timer hasteOverdriveOffTimer = new();
+		private System.Windows.Forms.Timer bloodManaDeathTimer = new();
+		private System.Windows.Forms.Timer battleOrdersTimer = new();
+		private System.Windows.Forms.Timer azureDragonTimer = new();
+		private System.Windows.Forms.Timer whiteTigerBallTimer = new();
 		#endregion
 		#region Cheats
 		private Cheat faerieScroll;
@@ -1393,88 +1393,88 @@ namespace SotnRandoTools.Khaos
 			actionTimer.Tick += ExecuteAction;
 			actionTimer.Interval = 2 * (1 * 1000);
 
-			bloodManaDeathTimer.Elapsed += KillAlucard;
+			bloodManaDeathTimer.Tick += KillAlucard;
 			bloodManaDeathTimer.Interval = 1 * (1 * 1500);
 
-			khaosTrackTimer.Elapsed += KhaosTrackOff;
-			khaosTrackTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.KhaosTrack].Duration.TotalMilliseconds;
-			subweaponsOnlyTimer.Elapsed += SubweaponsOnlyOff;
-			subweaponsOnlyTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.SubweaponsOnly].Duration.TotalMilliseconds;
-			slowTimer.Elapsed += SlowOff;
-			slowTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.Slow].Duration.TotalMilliseconds;
-			bloodManaTimer.Elapsed += BloodManaOff;
-			bloodManaTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.BloodMana].Duration.TotalMilliseconds;
-			thirstTimer.Elapsed += ThirstOff;
-			thirstTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.Thirst].Duration.TotalMilliseconds;
-			thirstTickTimer.Elapsed += ThirstDrain;
+			khaosTrackTimer.Tick += KhaosTrackOff;
+			khaosTrackTimer.Interval = (int) toolConfig.Khaos.Actions[(int) Enums.Action.KhaosTrack].Duration.TotalMilliseconds;
+			subweaponsOnlyTimer.Tick += SubweaponsOnlyOff;
+			subweaponsOnlyTimer.Interval = (int) toolConfig.Khaos.Actions[(int) Enums.Action.SubweaponsOnly].Duration.TotalMilliseconds;
+			slowTimer.Tick += SlowOff;
+			slowTimer.Interval = (int) toolConfig.Khaos.Actions[(int) Enums.Action.Slow].Duration.TotalMilliseconds;
+			bloodManaTimer.Tick += BloodManaOff;
+			bloodManaTimer.Interval = (int) toolConfig.Khaos.Actions[(int) Enums.Action.BloodMana].Duration.TotalMilliseconds;
+			thirstTimer.Tick += ThirstOff;
+			thirstTimer.Interval = (int) toolConfig.Khaos.Actions[(int) Enums.Action.Thirst].Duration.TotalMilliseconds;
+			thirstTickTimer.Tick += ThirstDrain;
 			thirstTickTimer.Interval = 1000;
-			hordeTimer.Elapsed += HordeOff;
+			hordeTimer.Tick += HordeOff;
 			hordeTimer.Interval = 5 * (60 * 1000);
-			hordeSpawnTimer.Elapsed += HordeSpawn;
-			hordeSpawnTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.KhaosHorde].Interval.TotalMilliseconds;
-			enduranceSpawnTimer.Elapsed += EnduranceSpawn;
+			hordeSpawnTimer.Tick += HordeSpawn;
+			hordeSpawnTimer.Interval = (int) toolConfig.Khaos.Actions[(int) Enums.Action.KhaosHorde].Interval.TotalMilliseconds;
+			enduranceSpawnTimer.Tick += EnduranceSpawn;
 			enduranceSpawnTimer.Interval = 2 * (1000);
-			hnkTimer.Elapsed += HnkOff;
-			hnkTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.HnK].Duration.TotalMilliseconds;
+			hnkTimer.Tick += HnkOff;
+			hnkTimer.Interval = (int) toolConfig.Khaos.Actions[(int) Enums.Action.HnK].Duration.TotalMilliseconds;
 
-			vampireTimer.Elapsed += VampireOff;
-			vampireTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.Vampire].Duration.TotalMilliseconds;
-			magicianTimer.Elapsed += MagicianOff;
-			magicianTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.Magician].Duration.TotalMilliseconds;
-			battleOrdersTimer.Elapsed += BattleOrdersOff;
-			battleOrdersTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.BattleOrders].Duration.TotalMilliseconds;
-			meltyTimer.Elapsed += MeltyBloodOff;
-			meltyTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.MeltyBlood].Duration.TotalMilliseconds;
-			fourBeastsTimer.Elapsed += FourBeastsOff;
-			fourBeastsTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.FourBeasts].Duration.TotalMilliseconds;
-			azureDragonTimer.Elapsed += AzureDragonOff;
+			vampireTimer.Tick += VampireOff;
+			vampireTimer.Interval = (int) toolConfig.Khaos.Actions[(int) Enums.Action.Vampire].Duration.TotalMilliseconds;
+			magicianTimer.Tick += MagicianOff;
+			magicianTimer.Interval = (int) toolConfig.Khaos.Actions[(int) Enums.Action.Magician].Duration.TotalMilliseconds;
+			battleOrdersTimer.Tick += BattleOrdersOff;
+			battleOrdersTimer.Interval = (int) toolConfig.Khaos.Actions[(int) Enums.Action.BattleOrders].Duration.TotalMilliseconds;
+			meltyTimer.Tick += MeltyBloodOff;
+			meltyTimer.Interval = (int) toolConfig.Khaos.Actions[(int) Enums.Action.MeltyBlood].Duration.TotalMilliseconds;
+			fourBeastsTimer.Tick += FourBeastsOff;
+			fourBeastsTimer.Interval = (int) toolConfig.Khaos.Actions[(int) Enums.Action.FourBeasts].Duration.TotalMilliseconds;
+			azureDragonTimer.Tick += AzureDragonOff;
 			azureDragonTimer.Interval = 10 * 1000;
-			whiteTigerBallTimer.Elapsed += WhiteTigerOff;
+			whiteTigerBallTimer.Tick += WhiteTigerOff;
 			whiteTigerBallTimer.Interval = 2 * 1000;
-			zawarudoTimer.Elapsed += ZawarudoOff;
-			zawarudoTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.ZAWARUDO].Duration.TotalMilliseconds;
-			zawarudoCheckTimer.Elapsed += ZaWarudoAreaCheck;
+			zawarudoTimer.Tick += ZawarudoOff;
+			zawarudoTimer.Interval = (int) toolConfig.Khaos.Actions[(int) Enums.Action.ZAWARUDO].Duration.TotalMilliseconds;
+			zawarudoCheckTimer.Tick += ZaWarudoAreaCheck;
 			zawarudoCheckTimer.Interval += 2 * 1000;
-			hasteTimer.Elapsed += HasteOff;
-			hasteTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.Haste].Duration.TotalMilliseconds;
-			hasteOverdriveTimer.Elapsed += OverdriveOn;
+			hasteTimer.Tick += HasteOff;
+			hasteTimer.Interval = (int) toolConfig.Khaos.Actions[(int) Enums.Action.Haste].Duration.TotalMilliseconds;
+			hasteOverdriveTimer.Tick += OverdriveOn;
 			hasteOverdriveTimer.Interval = (2 * 1000);
-			hasteOverdriveOffTimer.Elapsed += OverdriveOff;
+			hasteOverdriveOffTimer.Tick += OverdriveOff;
 			hasteOverdriveOffTimer.Interval = (2 * 1000);
-			lordTimer.Elapsed += LordOff;
+			lordTimer.Tick += LordOff;
 			lordTimer.Interval = 5 * (60 * 1000);
-			lordSpawnTimer.Elapsed += LordSpawn;
-			lordSpawnTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.Lord].Interval.TotalMilliseconds;
+			lordSpawnTimer.Tick += LordSpawn;
+			lordSpawnTimer.Interval = (int) toolConfig.Khaos.Actions[(int) Enums.Action.Lord].Interval.TotalMilliseconds;
 		}
 		private void InitializeTimerIntervals()
 		{
 			fastActionTimer.Interval = 2 * (1 * 1000);
 			actionTimer.Interval = 2 * (1 * 1000);
 			bloodManaDeathTimer.Interval = 1 * (1 * 1500);
-			khaosTrackTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.KhaosTrack].Duration.TotalMilliseconds;
-			subweaponsOnlyTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.SubweaponsOnly].Duration.TotalMilliseconds;
-			slowTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.Slow].Duration.TotalMilliseconds;
-			bloodManaTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.BloodMana].Duration.TotalMilliseconds;
-			thirstTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.Thirst].Duration.TotalMilliseconds;
+			khaosTrackTimer.Interval = (int) toolConfig.Khaos.Actions[(int) Enums.Action.KhaosTrack].Duration.TotalMilliseconds;
+			subweaponsOnlyTimer.Interval = (int) toolConfig.Khaos.Actions[(int) Enums.Action.SubweaponsOnly].Duration.TotalMilliseconds;
+			slowTimer.Interval = (int) toolConfig.Khaos.Actions[(int) Enums.Action.Slow].Duration.TotalMilliseconds;
+			bloodManaTimer.Interval = (int) toolConfig.Khaos.Actions[(int) Enums.Action.BloodMana].Duration.TotalMilliseconds;
+			thirstTimer.Interval = (int) toolConfig.Khaos.Actions[(int) Enums.Action.Thirst].Duration.TotalMilliseconds;
 			thirstTickTimer.Interval = 1000;
 			hordeTimer.Interval = 5 * (60 * 1000);
-			hordeSpawnTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.KhaosHorde].Interval.TotalMilliseconds;
+			hordeSpawnTimer.Interval = (int) toolConfig.Khaos.Actions[(int) Enums.Action.KhaosHorde].Interval.TotalMilliseconds;
 			enduranceSpawnTimer.Interval = 2 * (1000);
-			hnkTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.HnK].Duration.TotalMilliseconds;
-			vampireTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.Vampire].Duration.TotalMilliseconds;
-			magicianTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.Magician].Duration.TotalMilliseconds;
-			battleOrdersTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.BattleOrders].Duration.TotalMilliseconds;
-			meltyTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.MeltyBlood].Duration.TotalMilliseconds;
-			fourBeastsTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.FourBeasts].Duration.TotalMilliseconds;
+			hnkTimer.Interval = (int) toolConfig.Khaos.Actions[(int) Enums.Action.HnK].Duration.TotalMilliseconds;
+			vampireTimer.Interval = (int) toolConfig.Khaos.Actions[(int) Enums.Action.Vampire].Duration.TotalMilliseconds;
+			magicianTimer.Interval = (int) toolConfig.Khaos.Actions[(int) Enums.Action.Magician].Duration.TotalMilliseconds;
+			battleOrdersTimer.Interval = (int) toolConfig.Khaos.Actions[(int) Enums.Action.BattleOrders].Duration.TotalMilliseconds;
+			meltyTimer.Interval = (int) toolConfig.Khaos.Actions[(int) Enums.Action.MeltyBlood].Duration.TotalMilliseconds;
+			fourBeastsTimer.Interval = (int) toolConfig.Khaos.Actions[(int) Enums.Action.FourBeasts].Duration.TotalMilliseconds;
 			azureDragonTimer.Interval = 10 * 1000;
 			whiteTigerBallTimer.Interval = 2 * 1000;
-			zawarudoTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.ZAWARUDO].Duration.TotalMilliseconds;
+			zawarudoTimer.Interval = (int) toolConfig.Khaos.Actions[(int) Enums.Action.ZAWARUDO].Duration.TotalMilliseconds;
 			zawarudoCheckTimer.Interval += 2 * 1000;
-			hasteTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.Haste].Duration.TotalMilliseconds;
+			hasteTimer.Interval = (int) toolConfig.Khaos.Actions[(int) Enums.Action.Haste].Duration.TotalMilliseconds;
 			hasteOverdriveTimer.Interval = (2 * 1000);
 			hasteOverdriveOffTimer.Interval = (2 * 1000);
 			lordTimer.Interval = 5 * (60 * 1000);
-			lordSpawnTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.Lord].Interval.TotalMilliseconds;
+			lordSpawnTimer.Interval = (int) toolConfig.Khaos.Actions[(int) Enums.Action.Lord].Interval.TotalMilliseconds;
 		}
 		private void StopTimers()
 		{
@@ -2060,7 +2060,7 @@ namespace SotnRandoTools.Khaos
 				if (hordeTimer.Interval == 5 * (60 * 1000))
 				{
 					hordeTimer.Stop();
-					hordeTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.KhaosHorde].Duration.TotalMilliseconds;
+					hordeTimer.Interval = (int) toolConfig.Khaos.Actions[(int) Enums.Action.KhaosHorde].Duration.TotalMilliseconds;
 
 					ActionTimer timer = new()
 					{
@@ -2175,10 +2175,15 @@ namespace SotnRandoTools.Khaos
 				bool right = rng.Next(0, 2) > 0;
 				bossCopy.Xpos = right ? (ushort) (bossCopy.Xpos + rng.Next(40, 80)) : (ushort) (bossCopy.Xpos + rng.Next(-80, -40));
 				bossCopy.Palette = (ushort) (bossCopy.Palette + rng.Next(1, 10));
-				bossCopy.Hp = (ushort) Math.Round(healthMultiplier * bossCopy.Hp);
+				int newhp = (int) Math.Round(healthMultiplier * bossCopy.Hp);
+				if (newhp > Int16.MaxValue)
+				{
+					newhp = Int16.MaxValue - 200;
+				}
+				bossCopy.Hp = (ushort) newhp;
 				sotnApi.ActorApi.SpawnActor(bossCopy);
 
-				boss.Hp = (ushort) Math.Round(healthMultiplier * boss.Hp);
+				boss.Hp = (ushort) newhp;
 
 				if (superEndurance)
 				{
@@ -2215,13 +2220,23 @@ namespace SotnRandoTools.Khaos
 
 					if (superEndurance)
 					{
-						boss.Hp = (ushort) Math.Round((healthMultiplier * 2.3) * boss.Hp);
+						int newhp = (int) Math.Round((healthMultiplier * 2.3) * boss.Hp);
+						if (newhp > Int16.MaxValue)
+						{
+							newhp = Int16.MaxValue - 200;
+						}
+						boss.Hp = (ushort) newhp;
 						superEndurance = false;
 						notificationService.AddMessage($"Super Endurance {name}");
 					}
 					else
 					{
-						boss.Hp = (ushort) Math.Round((healthMultiplier * 1.3) * boss.Hp);
+						int newhp = (int) Math.Round((healthMultiplier * 1.3) * boss.Hp);
+						if (newhp > Int16.MaxValue)
+						{
+							newhp = Int16.MaxValue - 200;
+						}
+						boss.Hp = (ushort) newhp;
 						notificationService.AddMessage($"Endurance {name}");
 					}
 
@@ -2624,7 +2639,7 @@ namespace SotnRandoTools.Khaos
 				if (lordTimer.Interval == 5 * (60 * 1000))
 				{
 					lordTimer.Stop();
-					lordTimer.Interval = toolConfig.Khaos.Actions[(int) Enums.Action.Lord].Duration.TotalMilliseconds;
+					lordTimer.Interval = (int) toolConfig.Khaos.Actions[(int) Enums.Action.Lord].Duration.TotalMilliseconds;
 
 					ActionTimer timer = new()
 					{
@@ -2941,6 +2956,8 @@ namespace SotnRandoTools.Khaos
 				if (inMainMenu)
 				{
 					GainKhaosMeter((short) toolConfig.Khaos.MeterOnReset);
+					battleOrdersBonusHp = 0;
+					battleOrdersBonusMp = 0;
 				}
 			}
 		}
@@ -3109,11 +3126,11 @@ namespace SotnRandoTools.Khaos
 		}
 		private void SetShaftHp()
 		{
-			long shaftAddress = sotnApi.ActorApi.FindActorFrom(new List<SearchableActor> { Constants.Khaos.ShaftActor });
+			long shaftAddress = sotnApi.ActorApi.FindActorFrom(new List<SearchableActor> { Constants.Khaos.ShaftOrbActor });
 			if (shaftAddress > 0)
 			{
 				LiveActor shaft = sotnApi.ActorApi.GetLiveActor(shaftAddress);
-				shaft.Hp = Constants.Khaos.ShaftKhaosHp;
+				shaft.Hp = (int) Constants.Khaos.ShaftKhaosHp;
 				shaftHpSet = true;
 				Console.WriteLine("Found Shaft actor and set HP to 25.");
 			}
@@ -3128,7 +3145,7 @@ namespace SotnRandoTools.Khaos
 			if (galamothTorsoAddress > 0)
 			{
 				LiveActor galamothTorso = sotnApi.ActorApi.GetLiveActor(galamothTorsoAddress);
-				galamothTorso.Hp = Constants.Khaos.GalamothKhaosHp;
+				galamothTorso.Hp = (int) Constants.Khaos.GalamothKhaosHp;
 				galamothTorso.Xpos -= Constants.Khaos.GalamothKhaosPositionOffset;
 				Console.WriteLine($"gala def: {galamothTorso.Def}");
 				//galamothTorso.Def = 0; Removes XP gained

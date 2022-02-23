@@ -21,7 +21,6 @@ namespace SotnRandoTools.Coop
 		private readonly INotificationService notificationService;
 		private readonly IWatchlistService watchlistService;
 		private Queue<MethodInvoker> queuedMessages = new();
-		private System.Timers.Timer messageTimer = new();
 
 		public CoopReceiver(IToolConfig toolConfig, ISotnApi sotnApi, INotificationService notificationService, IWatchlistService watchlistService)
 		{
@@ -33,9 +32,6 @@ namespace SotnRandoTools.Coop
 			this.sotnApi = sotnApi;
 			this.notificationService = notificationService;
 			this.watchlistService = watchlistService;
-
-			messageTimer.Interval = 1 * 100;
-			messageTimer.Start();
 		}
 
 		public void EnqueMessage(byte[] data)

@@ -43,6 +43,7 @@ namespace SotnRandoTools
 			locationsCheckbox.Checked = toolConfig.Tracker.Locations;
 			replaysCheckBox.Checked = toolConfig.Tracker.SaveReplays;
 			overlayCheckBox.Checked = toolConfig.Tracker.UseOverlay;
+			autosplitterCheckBox.Checked = toolConfig.Tracker.EnableAutosplitter;
 
 			customLocationsGuardedRadio.Checked = toolConfig.Tracker.CustomLocationsGuarded;
 			customLocationsEquipmentRadio.Checked = toolConfig.Tracker.CustomLocationsEquipment;
@@ -118,6 +119,11 @@ namespace SotnRandoTools
 		private void overlayCheckBox_CheckedChanged(object sender, EventArgs e)
 		{
 			toolConfig.Tracker.UseOverlay = overlayCheckBox.Checked;
+		}
+
+		private void autosplitterCheckBox_CheckedChanged(object sender, EventArgs e)
+		{
+			toolConfig.Tracker.EnableAutosplitter = autosplitterCheckBox.Checked;
 		}
 	}
 }

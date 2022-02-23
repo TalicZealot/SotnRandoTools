@@ -6,6 +6,7 @@ using BizHawk.Client.Common;
 using Newtonsoft.Json.Linq;
 using SotnApi.Constants.Values.Game;
 using SotnApi.Interfaces;
+using SotnApi.Models;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Constants;
 using SotnRandoTools.Khaos.Interfaces;
@@ -18,6 +19,7 @@ namespace SotnRandoTools.RandoTracker
 	public class Tracker : ITracker
 	{
 		const string DefaultSeedInfo = "seed(preset)";
+		const long DraculaActorAddress = 0x076e98;
 
 		private readonly IGraphics? formGraphics;
 		private readonly IToolConfig toolConfig;
@@ -419,6 +421,9 @@ namespace SotnRandoTools.RandoTracker
 		private string lastLocationVisited = "";
 		private List<MapLocation> replay = new();
 		private int prologueTime = 0;
+		private Autosplitter autosplitter;
+		private bool autosplitterConnected = false;
+		private bool draculaSpawned = false;
 
 		public Tracker(IGraphics? formGraphics, IToolConfig toolConfig, IWatchlistService watchlistService, ISotnApi sotnApi, INotificationService notificationService)
 		{
@@ -441,6 +446,10 @@ namespace SotnRandoTools.RandoTracker
 			if (toolConfig.Tracker.UseOverlay)
 			{
 				notificationService.StartOverlayServer();
+			}
+			if (toolConfig.Tracker.EnableAutosplitter)
+			{
+				autosplitter = new();
 			}
 
 			trackerGraphicsEngine = new TrackerGraphicsEngine(formGraphics, relics, progressionItems, thrustSwords, toolConfig);
@@ -516,6 +525,17 @@ namespace SotnRandoTools.RandoTracker
 					DrawRelicsAndItems();
 					restarted = true;
 				}
+			}
+
+			if (toolConfig.Tracker.EnableAutosplitter && !autosplitterConnected)
+			{
+				autosplitterConnected = autosplitter.AtemptConnect();
+			}
+			if (toolConfig.Tracker.EnableAutosplitter && autosplitterConnected)
+			{
+				CheckStart();
+				CheckReset();
+				CheckSplit();
 			}
 		}
 
@@ -789,6 +809,7 @@ namespace SotnRandoTools.RandoTracker
 			}
 			SeedInfo = seedName + "(" + preset + ")";
 			Console.WriteLine("Randomizer seed information: " + SeedInfo);
+			SaveSeedInfo(SeedInfo);
 			switch (preset)
 			{
 				case "adventure":
@@ -1173,6 +1194,64 @@ namespace SotnRandoTools.RandoTracker
 					string line = $"{room.X}:{room.Y}:{time}:{room.SecondCastle}:{room.Relics}:{room.ProgressionItems}";
 					w.WriteLine(line);
 				}
+			}
+		}
+
+		private void SaveSeedInfo(string info)
+		{
+			if (File.Exists(Paths.SeedInfoPath))
+			{
+				File.WriteAllText(Paths.SeedInfoPath, info);
+			}
+			else
+			{
+				using (StreamWriter sw = File.CreateText(Paths.SeedInfoPath))
+				{
+					sw.Write(info);
+				}
+			}
+		}
+
+		private void CheckStart()
+		{
+			if (!autosplitter.Started && sotnApi.GameApi.Hours == 0 && sotnApi.GameApi.Minutes == 0 && sotnApi.GameApi.Seconds == 3 && sotnApi.GameApi.Status == Status.InGame)
+			{
+				autosplitter.StartTImer();
+				Console.WriteLine("StartTimer");
+			}
+		}
+
+		private void CheckReset()
+		{
+			if (autosplitter.Started && sotnApi.GameApi.Hours == 0 && sotnApi.GameApi.Minutes == 0 && sotnApi.GameApi.Seconds == 0 && sotnApi.GameApi.Frames < 20)
+			{
+				autosplitter.Restart();
+				Console.WriteLine("Restart");
+			}
+		}
+
+		private void CheckSplit()
+		{
+			if (autosplitter.Started && sotnApi.AlucardApi.MapX == 31 && sotnApi.AlucardApi.MapY == 30)
+			{
+				LiveActor boss = sotnApi.ActorApi.GetLiveActor(DraculaActorAddress);
+				if (boss.Hp > 13 && boss.Hp < 10000)
+				{
+					draculaSpawned = true;
+				}
+				else if (draculaSpawned && boss.Hp < 1)
+				{
+					autosplitter.Split();
+					Console.WriteLine("Split");
+				}
+			}
+		}
+
+		public void CloseAutosplitter()
+		{
+			if (toolConfig.Tracker.EnableAutosplitter)
+			{
+				autosplitter.Disconnect();
 			}
 		}
 	}

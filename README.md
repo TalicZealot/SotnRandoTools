@@ -26,9 +26,9 @@ This tool and the accompanying library and app are open source. The idea is to i
   - [Special Thanks](#special-thanks)
 
 ## Installation
-This tool requires Bizhawk version 2.8 or higher.
+This tool requires Bizhawk version 2.7 or higher.
 Download the full version from the [latest release](https://github.com/TalicZealot/SotnRandoTools/releases/latest) that looks like this `SotnRandoTools-x.x.x.zip`
-Right click on it and select `Extract all...` then navigate to your BizHawk 2.8+ folder and press `Extract`.
+Right click on it and select `Extract all...` then navigate to your BizHawk 2.7+ folder and press `Extract`.
 File structure should look like this:
 ```
 BizHawk
@@ -53,7 +53,7 @@ On lunching the tool it will check for a new release and inform the user. If the
 
 ## Autotracker
 The new tracker has been re-written from the ground up for better performance and usability. Can be manually rescaled. Saves size and location. Locations are drawn on the game map.
-Supports OBS html widget overlay located in ```BizHawk\ExternalTools\SotnRandoTools\TrackerOverlay\autotracker.html```
+Supports OBS html widget overlay located in ```BizHawk\ExternalTools\SotnRandoTools\TrackerOverlay\autotracker.html``` and seed info text in  ```BizHawk\ExternalTools\SotnRandoTools\TrackerOverlay\SeedInfo.txt```
 
 ## Co-Op
 Coop requires the host to have the port they want to use forwarded. Hosting automatically copies your address(ip:port) to the clipboard. The other player uses that address to connect. Please be careful to not leak your IP!
@@ -62,8 +62,8 @@ Bindings over at: [https://taliczealot.github.io/coop/](https://taliczealot.gith
 ## Khaos-Setup
 Inside the folder ```BizHawk\ExternalTools\SotnRandoTools\Khaos\Overlay\``` you will find ```action-queue.html``` and ```timers.html``` which you can add in OBS as web sources.
 After starting Khaos you will be able to connect to Twitch and start Auto Khaos.
-* Clickign "Connect to Twitch" will take you to a website to confirm that you allow SotN Rando Tools to manage Channel Points and see your subscribers. After accepting it will create custom Channel Point rewards for every action and listen for redemptions. When you disconnect or close Khaos the Custom Rewards should get deleted. (Please wait for about 20 seconds for all the rewards to get deleted by the API) For now the rewards get automatically set to fulfilled, in the future I may opt to leave them in case the streamer wants to refund some things.
-* Auto Khaos automatically activates random actions periodically, adhering to the cooldowns.
+* Clickign "Connect to Twitch" will take you to a website to confirm that you allow SotN Rando Tools to manage Channel Points and see your subscribers. After accepting it will create custom Channel Point rewards for every action and listen for redemptions. When you disconnect or close Khaos the Custom Rewards should get deleted. Please wait for about 20 seconds for all the rewards to get deleted by the API. Redemptions get automatically fulfilled after about a minute and a half, before that the streamer can see them in the redemptions panel in the Khaos window and have the option to refund it.
+* Auto Khaos automatically activates random actions periodically, adhering to the cooldowns. Action frequency is dependant on difficulty setting.
 
 ## Useful links
 * [SotN Randomizer](https://sotn.io)

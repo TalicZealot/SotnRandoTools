@@ -50,6 +50,7 @@ namespace SotnRandoTools
             this.customLocationsGuardedRadio = new System.Windows.Forms.RadioButton();
             this.username = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.autosplitterCheckBox = new System.Windows.Forms.CheckBox();
             this.relicDisplayGroup.SuspendLayout();
             this.layoutGroup.SuspendLayout();
             this.windowGroup.SuspendLayout();
@@ -188,6 +189,7 @@ namespace SotnRandoTools
             // 
             // optionsGroup
             // 
+            this.optionsGroup.Controls.Add(this.autosplitterCheckBox);
             this.optionsGroup.Controls.Add(this.overlayCheckBox);
             this.optionsGroup.Controls.Add(this.replaysCheckBox);
             this.optionsGroup.Controls.Add(this.locationsCheckbox);
@@ -202,7 +204,7 @@ namespace SotnRandoTools
             // overlayCheckBox
             // 
             this.overlayCheckBox.AutoSize = true;
-            this.overlayCheckBox.Location = new System.Drawing.Point(6, 67);
+            this.overlayCheckBox.Location = new System.Drawing.Point(6, 88);
             this.overlayCheckBox.Name = "overlayCheckBox";
             this.overlayCheckBox.Size = new System.Drawing.Size(83, 17);
             this.overlayCheckBox.TabIndex = 2;
@@ -301,6 +303,17 @@ namespace SotnRandoTools
             this.groupBox1.Tag = "Username";
             this.groupBox1.Text = "Username";
             // 
+            // autosplitterCheckBox
+            // 
+            this.autosplitterCheckBox.AutoSize = true;
+            this.autosplitterCheckBox.Location = new System.Drawing.Point(6, 65);
+            this.autosplitterCheckBox.Name = "autosplitterCheckBox";
+            this.autosplitterCheckBox.Size = new System.Drawing.Size(117, 17);
+            this.autosplitterCheckBox.TabIndex = 3;
+            this.autosplitterCheckBox.Text = "Enable Autosplitter";
+            this.autosplitterCheckBox.UseVisualStyleBackColor = true;
+            this.autosplitterCheckBox.CheckedChanged += new System.EventHandler(this.autosplitterCheckBox_CheckedChanged);
+            // 
             // AutotrackerSettingsPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -360,5 +373,6 @@ namespace SotnRandoTools
 		private System.Windows.Forms.TextBox username;
 		private System.Windows.Forms.GroupBox groupBox1;
 		private System.Windows.Forms.CheckBox overlayCheckBox;
+		private System.Windows.Forms.CheckBox autosplitterCheckBox;
 	}
 }

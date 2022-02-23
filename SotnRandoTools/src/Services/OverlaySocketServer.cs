@@ -37,7 +37,10 @@ namespace SotnRandoTools.Services
 
 		public void StopServer()
 		{
-			socketServer.Stop();
+			if (!socketServer.IsListening)
+			{
+				socketServer.Stop();
+			}
 		}
 
 		public void AddTimer(string name, int duration)

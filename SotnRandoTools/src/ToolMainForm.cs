@@ -175,7 +175,10 @@ namespace SotnRandoTools
 			watchlistService = new WatchlistService(_memoryDomains, _emu?.SystemId, GlobalConfig);
 			inputService = new InputService(APIs.Joypad, sotnApi);
 			notificationService = new NotificationService(toolConfig, APIs.Gui, APIs.EmuClient);
-			khaosSettingsPanel.NotificationService = notificationService;
+			lock (notificationService)
+			{
+				khaosSettingsPanel.NotificationService = notificationService;
+			}
 		}
 
 		private void LoadCheats()
@@ -257,6 +260,12 @@ namespace SotnRandoTools
 				coopForm.Dispose();
 			}
 
+			if (notificationService != null)
+			{
+				notificationService.StopOverlayServer();
+				notificationService = null;
+			}
+
 			sotnApi = null;
 			watchlistService = null;
 			inputService = null;
@@ -264,53 +273,50 @@ namespace SotnRandoTools
 
 		private void autotrackerLaunch_Click(object sender, EventArgs e)
 		{
-			if (trackerForm is not null && sotnApi is not null && watchlistService is not null)
+			if (sotnApi is not null && watchlistService is not null)
 			{
-				trackerForm.Close();
-				trackerForm = new TrackerForm(toolConfig, watchlistService, sotnApi, notificationService);
-				trackerForm.Show();
-			}
-			else if (trackerForm is null && sotnApi is not null && watchlistService is not null)
-			{
-				trackerForm = new TrackerForm(toolConfig, watchlistService, sotnApi, notificationService);
-				trackerForm.Show();
-				if (khaosForm is not null)
+				if (trackerForm is not null)
 				{
-					trackerForm.SetTrackerVladRelicLocationDisplay(khaosForm);
+					trackerForm.Close();
 				}
+
+				lock (notificationService)
+				{
+					trackerForm = new TrackerForm(toolConfig, watchlistService, sotnApi, notificationService);
+				}
+				trackerForm.Show();
 			}
 		}
 
 		private void khaosChatLaunch_Click(object sender, EventArgs e)
 		{
-			if (khaosForm is not null && sotnApi is not null)
+			if (sotnApi is not null)
 			{
-				khaosForm.Close();
-				khaosForm = new KhaosForm(toolConfig, this.MainForm.CheatList, sotnApi, notificationService, inputService, _memoryDomains);
-				khaosForm.Show();
-			}
-			else if (khaosForm is null && sotnApi is not null)
-			{
-				khaosForm = new KhaosForm(toolConfig, this.MainForm.CheatList, sotnApi, notificationService, inputService, _memoryDomains);
-				khaosForm.Show();
-				if (trackerForm is not null)
+				if (khaosForm is not null)
 				{
-					trackerForm.SetTrackerVladRelicLocationDisplay(khaosForm);
+					khaosForm.Close();
 				}
+
+				lock (notificationService)
+				{
+					khaosForm = new KhaosForm(toolConfig, this.MainForm.CheatList, sotnApi, notificationService, inputService, _memoryDomains);
+				}
+				khaosForm.Show();
 			}
 		}
 
 		private void multiplayerLaunch_Click(object sender, EventArgs e)
 		{
-			if (coopForm is not null && sotnApi is not null && watchlistService is not null && APIs.Joypad is not null)
+			if (sotnApi is not null && watchlistService is not null && APIs.Joypad is not null)
 			{
-				coopForm.Close();
-				coopForm = new CoopForm(toolConfig, watchlistService, inputService, sotnApi, APIs.Joypad, notificationService);
-				coopForm.Show();
-			}
-			else if (coopForm is null && sotnApi is not null && watchlistService is not null && APIs.Joypad is not null)
-			{
-				coopForm = new CoopForm(toolConfig, watchlistService, inputService, sotnApi, APIs.Joypad, notificationService);
+				if (coopForm is not null)
+				{
+					coopForm.Close();
+				}
+				lock (notificationService)
+				{
+					coopForm = new CoopForm(toolConfig, watchlistService, inputService, sotnApi, APIs.Joypad, notificationService);
+				}
 				coopForm.Show();
 			}
 		}

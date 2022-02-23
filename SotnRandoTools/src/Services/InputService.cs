@@ -47,6 +47,9 @@ namespace SotnRandoTools.Services
 			},
 			Activator = null
 		};
+		private bool numashockCore = true;
+		private string leftKey = PlaystationInputKeys.Left;
+		private string rightKey = PlaystationInputKeys.Right;
 
 		public InputService(IJoypadApi joypadApi, ISotnApi sotnApi)
 		{
@@ -54,6 +57,36 @@ namespace SotnRandoTools.Services
 			if (sotnApi is null) throw new ArgumentNullException(nameof(sotnApi));
 			this.joypadApi = joypadApi;
 			this.sotnApi = sotnApi;
+
+			if (!CheckNymashock())
+			{
+				numashockCore = false;
+				leftKey = OctoshockPlaystationInputKeys.Left;
+				rightKey = OctoshockPlaystationInputKeys.Right;
+
+				dragonPunch = new Input
+				{
+					MotionSequence = new List<Dictionary<string, object>>
+					{
+						new Dictionary<string, object> {[InputKeys.Forward] = true, [OctoshockPlaystationInputKeys.Down] = false},
+						new Dictionary<string, object> {[InputKeys.Forward] = false, [OctoshockPlaystationInputKeys.Down] = true},
+						new Dictionary<string, object> {[InputKeys.Forward] = true, [OctoshockPlaystationInputKeys.Down] = true}
+				},
+					Activator = new Dictionary<string, object> { [OctoshockPlaystationInputKeys.L2] = true }
+				};
+				halfCircle = new Input
+				{
+					MotionSequence = new List<Dictionary<string, object>>
+					{
+						new Dictionary<string, object> {[InputKeys.Back] = true, [OctoshockPlaystationInputKeys.Up] = false},
+						new Dictionary<string, object> {[InputKeys.Forward] = true, [OctoshockPlaystationInputKeys.Up] = true},
+						new Dictionary<string, object> {[InputKeys.Forward] = false, [OctoshockPlaystationInputKeys.Up] = true},
+						new Dictionary<string, object> {[InputKeys.Back] = true, [OctoshockPlaystationInputKeys.Up] = true},
+						new Dictionary<string, object> {[InputKeys.Forward] = true, [OctoshockPlaystationInputKeys.Up] = false}
+					},
+					Activator = new Dictionary<string, object> { [OctoshockPlaystationInputKeys.L2] = true }
+				};
+			}
 		}
 
 		public void UpdateInputs()
@@ -67,13 +100,13 @@ namespace SotnRandoTools.Services
 
 			if (sotnApi.AlucardApi.FacingLeft)
 			{
-				inputHistory[inputHistory.Count - 1].Add(InputKeys.Forward, Convert.ToBoolean(inputHistory[inputHistory.Count - 1][PlaystationInputKeys.Left]));
-				inputHistory[inputHistory.Count - 1].Add(InputKeys.Back, Convert.ToBoolean(inputHistory[inputHistory.Count - 1][PlaystationInputKeys.Right]));
+				inputHistory[inputHistory.Count - 1].Add(InputKeys.Forward, Convert.ToBoolean(inputHistory[inputHistory.Count - 1][leftKey]));
+				inputHistory[inputHistory.Count - 1].Add(InputKeys.Back, Convert.ToBoolean(inputHistory[inputHistory.Count - 1][rightKey]));
 			}
 			else
 			{
-				inputHistory[inputHistory.Count - 1].Add(InputKeys.Forward, Convert.ToBoolean(inputHistory[inputHistory.Count - 1][PlaystationInputKeys.Right]));
-				inputHistory[inputHistory.Count - 1].Add(InputKeys.Back, Convert.ToBoolean(inputHistory[inputHistory.Count - 1][PlaystationInputKeys.Left]));
+				inputHistory[inputHistory.Count - 1].Add(InputKeys.Forward, Convert.ToBoolean(inputHistory[inputHistory.Count - 1][rightKey]));
+				inputHistory[inputHistory.Count - 1].Add(InputKeys.Back, Convert.ToBoolean(inputHistory[inputHistory.Count - 1][leftKey]));
 			}
 
 			moveHistory.Add(new Dictionary<string, bool>());
@@ -130,6 +163,13 @@ namespace SotnRandoTools.Services
 
 		public bool ButtonPressed(string button, int frames)
 		{
+			string buttonKey = button;
+
+			if (!numashockCore)
+			{
+				buttonKey = PlaystationInputKeys.OctoshockKeys[button];
+			}
+
 			for (int i = 0; i < frames; i++)
 			{
 				if (inputHistory.Count < 10)
@@ -137,7 +177,7 @@ namespace SotnRandoTools.Services
 					return false;
 				}
 
-				if (Convert.ToBoolean(inputHistory[inputHistory.Count - 1 - i][button]) == true)
+				if (Convert.ToBoolean(inputHistory[inputHistory.Count - 1 - i][buttonKey]) == true)
 				{
 					return true;
 				}
@@ -261,6 +301,11 @@ namespace SotnRandoTools.Services
 				}
 			}
 			return directionalInput;
+		}
+
+		private bool CheckNymashock()
+		{
+			return joypadApi.Get().ContainsKey(PlaystationInputKeys.Circle);
 		}
 	}
 }

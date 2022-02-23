@@ -332,6 +332,8 @@ namespace SotnRandoTools.Constants
 			new SearchableActor {Name = "Granfaloon", Hp = 400, Damage = 30, Sprite = 6264},
 			new SearchableActor {Name = "Creature", Hp = 1100, Damage = 30, Sprite = 31032},
 			new SearchableActor {Name = "Death", Hp = 888, Damage = 35, Sprite = 46380},
+			new SearchableActor {Name = "Beelzebub", Hp = 2000, Damage = 60, Sprite = 11356},
+			new SearchableActor {Name = "Dracula", Hp = 10000, Damage = 39, Sprite = 56220},
 		};
 		public static List<SearchableActor> EnduranceRomhackBosses = new List<SearchableActor>
 		{
@@ -360,11 +362,15 @@ namespace SotnRandoTools.Constants
 			new SearchableActor {Name = "Granfaloon", Sprite = 6264},
 			new SearchableActor {Name = "Creature", Sprite = 31032},
 			new SearchableActor {Name = "Death", Sprite = 46380},
+			new SearchableActor {Name = "Beelzebub", Sprite = 11356},
+			new SearchableActor {Name = "Dracula", Sprite = 56220},
 		};
+		public static SearchableActor DraculaActor = new SearchableActor { Hp = 10000, Damage = 39, Sprite = 56220 };
 		public static SearchableActor GalamothTorsoActor = new SearchableActor { Hp = 12000, Damage = 50, Sprite = 23936 };
 		public static SearchableActor GalamothHeadActor = new SearchableActor { Hp = 32767, Damage = 50, Sprite = 31516 };
 		public static SearchableActor GalamothPartsActors = new SearchableActor { Hp = 12000, Damage = 50, Sprite = 31516 };
-		public static SearchableActor ShaftActor = new SearchableActor { Hp = 10, Damage = 0, Sprite = 0, };
+		public static SearchableActor ShaftOrbActor = new SearchableActor { Hp = 10, Damage = 0, Sprite = 0, };
+
 		public static SearchableActor SpiritActor = new SearchableActor { Hp = 0, Sprite = 39012 };
 		public static uint SpiritPalette = 0x5B;
 		public static uint SpiritLockOn = 2;

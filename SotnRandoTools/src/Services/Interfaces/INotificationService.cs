@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using SotnRandoTools.Khaos.Models;
-using SotnRandoTools.RandoTracker.Models;
 
 namespace SotnRandoTools.Services
 {

@@ -57,6 +57,7 @@
 		public const string BatMasterPresetPath = "./ExternalTools/SotnRandoTools/Presets/bat-master.json";
 
 		public const string ConfigPath = "./ExternalTools/SotnRandoTools/ToolConfig.ini";
+		public const string SeedInfoPath = "./ExternalTools/SotnRandoTools/TrackerOverlay/SeedInfo.txt";
 		public const string CheatsPath = "./ExternalTools/SotnRandoTools/Cheats/Cheats.cht";
 		public const string CheatsBackupPath = "./ExternalTools/SotnRandoTools/Cheats/Cheats.cht.bkp";
 

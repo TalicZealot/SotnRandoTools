@@ -1,7 +1,6 @@
 ﻿using BizHawk.Client.Common;
 using NSubstitute;
 using SotnApi.Interfaces;
-using SotnRandoTools.Configuration;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.RandoTracker.Interfaces;
 using SotnRandoTools.Services;
