@@ -14,9 +14,9 @@ namespace SotnRandoTools
 	public partial class CoopForm : Form
 	{
 		private readonly IToolConfig toolConfig;
-		private readonly CoopSender coopSender;
-		private readonly CoopMessanger coopMessanger;
-		private readonly CoopReceiver coopReceiver;
+		private CoopSender? coopSender;
+		private CoopMessanger? coopMessanger;
+		private CoopReceiver? coopReceiver;
 		private readonly INotificationService notificationService;
 		private CoopViewModel coopViewModel = new CoopViewModel();
 		private bool addressValidated = false;
@@ -170,6 +170,9 @@ namespace SotnRandoTools
 			coopMessanger.Disconnect();
 			coopMessanger.StopServer();
 			coopMessanger.DisposeAll();
+			coopMessanger = null;
+			coopReceiver = null;
+			coopSender = null;
 		}
 
 		private void targetIp_TextChanged(object sender, EventArgs e)

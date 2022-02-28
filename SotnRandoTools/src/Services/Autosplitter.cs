@@ -77,15 +77,28 @@ namespace SotnRandoTools.Services
 
 		public void Disconnect()
 		{
-			if (pipeClient is not null)
+			if (pipeClient is not null && pipeClient.IsConnected)
 			{
-				pipeClient.Dispose();
+				try
+				{
+					pipeClient.Dispose();
+				}
+				catch
+				{
+					Console.WriteLine("Pipe closed");
+				}
 			}
 			if (pipeWriter is not null)
 			{
-				pipeWriter.Dispose();
+				try
+				{
+					pipeWriter.Dispose();
+				}
+				catch
+				{
+					Console.WriteLine("Pipe closed");
+				}
 			};
-
 		}
 	}
 }

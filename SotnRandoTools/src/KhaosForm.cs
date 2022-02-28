@@ -21,9 +21,9 @@ namespace SotnRandoTools
 	{
 		private ICheatCollectionAdapter adaptedCheats;
 		private readonly IToolConfig toolConfig;
-		private readonly KhaosController? khaosControler;
 		private readonly TwitchListener? twitchListener;
 		private readonly ChannelPointsController? channelPointsController;
+		private KhaosController? khaosControler;
 		private List<ActionTimer> actionTimers = new();
 		private System.Windows.Forms.Timer countdownTimer;
 
@@ -235,17 +235,17 @@ namespace SotnRandoTools
 		}
 		private void DecrementTimers(Object sender, EventArgs e)
 		{
-			foreach (ActionTimer? timer in actionTimers)
+			for (int i = actionTimers.Count - 1; i >= 0; i--)
 			{
-				if (timer.TotalDuration == 0)
+				if (actionTimers[i].TotalDuration == 0)
 				{
-					timer.TotalDuration = (int) timer.Duration.TotalSeconds;
+					actionTimers[i].TotalDuration = (int) actionTimers[i].Duration.TotalSeconds;
 				}
 
-				timer.Duration -= TimeSpan.FromSeconds(1);
-				if (timer.Duration.TotalSeconds < 1)
+				actionTimers[i].Duration -= TimeSpan.FromSeconds(1);
+				if (actionTimers[i].Duration.TotalSeconds < 1)
 				{
-					actionTimers.Remove(timer);
+					actionTimers.Remove(actionTimers[i]);
 				}
 			}
 
@@ -736,6 +736,7 @@ namespace SotnRandoTools
 			khaosControler.AutoKhaosOn = false;
 			autoKhaosButton.Text = "Start Auto Khaos";
 			autoKhaosButton.BackColor = System.Drawing.Color.FromArgb(17, 0, 17);
+			khaosControler = null;
 		}
 	}
 }

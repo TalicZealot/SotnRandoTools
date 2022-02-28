@@ -38,7 +38,10 @@ namespace SotnRandoTools
 		}
 		public void UpdateTracker()
 		{
-			this.tracker.Update();
+			if (tracker is not null)
+			{
+				this.tracker.Update();
+			}
 		}
 
 		public void SetTrackerVladRelicLocationDisplay(IVladRelicLocationDisplay vladRelicLocationDisplay)
@@ -105,6 +108,7 @@ namespace SotnRandoTools
 			}
 
 			tracker.CloseAutosplitter();
+			tracker = null;
 		}
 	}
 }

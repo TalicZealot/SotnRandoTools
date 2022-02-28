@@ -154,30 +154,12 @@ namespace SotnRandoTools
 			coopSettingsPanel.Location = new Point(0, PanelOffset);
 			this.Controls.Add(coopSettingsPanel);
 
-			if (_memoryDomains is null)
+			if (notificationService is not null)
 			{
-				string message = "Castlevania: Symphony of the Night must be open to use this tool";
-				string caption = "Error Rom Not Loaded";
-				MessageBoxButtons buttons = MessageBoxButtons.OK;
-				DialogResult result;
-
-				result = MessageBox.Show(message, caption, buttons);
-				if (result == System.Windows.Forms.DialogResult.OK)
+				lock (notificationService)
 				{
-					this.Close();
-					return;
+					khaosSettingsPanel.NotificationService = notificationService;
 				}
-			}
-
-			LoadCheats();
-
-			sotnApi = new SotnApi.Main.SotnApi(APIs.Memory);
-			watchlistService = new WatchlistService(_memoryDomains, _emu?.SystemId, GlobalConfig);
-			inputService = new InputService(APIs.Joypad, sotnApi);
-			notificationService = new NotificationService(toolConfig, APIs.Gui, APIs.EmuClient);
-			lock (notificationService)
-			{
-				khaosSettingsPanel.NotificationService = notificationService;
 			}
 		}
 
@@ -200,7 +182,7 @@ namespace SotnRandoTools
 				this.MainForm.CheatList.DisableAll();
 			}
 
-			if (khaosForm is not null)
+			if (khaosForm is not null && !khaosForm.IsDisposed)
 			{
 				khaosForm.AdaptedCheats = new CheatCollectionAdapter(this.MainForm.CheatList, _memoryDomains);
 			}
@@ -208,7 +190,58 @@ namespace SotnRandoTools
 
 		public override bool AskSaveChanges() => true;
 
-		public override void Restart() { }
+		public override void Restart()
+		{
+			if (trackerForm is not null && !trackerForm.IsDisposed)
+			{
+				trackerForm.Close();
+				trackerForm.Dispose();
+			}
+			if (khaosForm is not null && !khaosForm.IsDisposed)
+			{
+				khaosForm.Close();
+				khaosForm.Dispose();
+			}
+			if (coopForm is not null && !coopForm.IsDisposed)
+			{
+				coopForm.Close();
+				coopForm.Dispose();
+			}
+
+			if (notificationService is not null)
+			{
+				notificationService.StopOverlayServer();
+			}
+
+			if (_memoryDomains is null)
+			{
+				string message = "Castlevania: Symphony of the Night must be open to use this tool";
+				string caption = "Error Rom Not Loaded";
+				MessageBoxButtons buttons = MessageBoxButtons.OK;
+				DialogResult result;
+
+				result = MessageBox.Show(message, caption, buttons);
+				if (result == System.Windows.Forms.DialogResult.OK)
+				{
+					this.Close();
+					return;
+				}
+			}
+
+			LoadCheats();
+
+			sotnApi = new SotnApi.Main.SotnApi(_maybeMemAPI);
+			watchlistService = new WatchlistService(_memoryDomains, _emu?.SystemId, GlobalConfig);
+			inputService = new InputService(_maybeJoypadApi, sotnApi);
+			notificationService = new NotificationService(toolConfig, _maybeGuiAPI, _maybeClientAPI);
+			if (khaosSettingsPanel is not null)
+			{
+				lock (notificationService)
+				{
+					khaosSettingsPanel.NotificationService = notificationService;
+				}
+			}
+		}
 
 		public override void UpdateValues(ToolFormUpdateType type)
 		{
@@ -278,13 +311,17 @@ namespace SotnRandoTools
 				if (trackerForm is not null)
 				{
 					trackerForm.Close();
+					trackerForm.Dispose();
 				}
-
 				lock (notificationService)
 				{
 					trackerForm = new TrackerForm(toolConfig, watchlistService, sotnApi, notificationService);
 				}
 				trackerForm.Show();
+				if (khaosForm is not null && !khaosForm.IsDisposed)
+				{
+					trackerForm.SetTrackerVladRelicLocationDisplay(khaosForm);
+				}
 			}
 		}
 
@@ -295,13 +332,17 @@ namespace SotnRandoTools
 				if (khaosForm is not null)
 				{
 					khaosForm.Close();
+					khaosForm.Dispose();
 				}
-
 				lock (notificationService)
 				{
 					khaosForm = new KhaosForm(toolConfig, this.MainForm.CheatList, sotnApi, notificationService, inputService, _memoryDomains);
 				}
 				khaosForm.Show();
+				if (trackerForm is not null && !trackerForm.IsDisposed)
+				{
+					trackerForm.SetTrackerVladRelicLocationDisplay(khaosForm);
+				}
 			}
 		}
 
@@ -312,6 +353,7 @@ namespace SotnRandoTools
 				if (coopForm is not null)
 				{
 					coopForm.Close();
+					coopForm.Dispose();
 				}
 				lock (notificationService)
 				{

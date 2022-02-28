@@ -1009,6 +1009,7 @@ namespace SotnRandoTools.RandoTracker
 
 			foreach (var location in locations)
 			{
+				location.AvailabilityColor = MapColor.Unavailable;
 				if (location.Locks.Count == 0)
 				{
 					location.AvailabilityColor = MapColor.Available;
@@ -1223,7 +1224,7 @@ namespace SotnRandoTools.RandoTracker
 
 		private void CheckReset()
 		{
-			if (autosplitter.Started && sotnApi.GameApi.Hours == 0 && sotnApi.GameApi.Minutes == 0 && sotnApi.GameApi.Seconds == 0 && sotnApi.GameApi.Frames < 20)
+			if (autosplitter.Started && sotnApi.GameApi.Hours == 0 && sotnApi.GameApi.Minutes == 0 && sotnApi.GameApi.Seconds == 0 && sotnApi.GameApi.Frames < 20 && sotnApi.GameApi.Status == Status.InGame)
 			{
 				autosplitter.Restart();
 				Console.WriteLine("Restart");
@@ -1232,18 +1233,22 @@ namespace SotnRandoTools.RandoTracker
 
 		private void CheckSplit()
 		{
-			if (autosplitter.Started && sotnApi.AlucardApi.MapX == 31 && sotnApi.AlucardApi.MapY == 30)
+			if (autosplitter.Started && sotnApi.AlucardApi.MapX == 31 && sotnApi.AlucardApi.MapY == 30 && sotnApi.GameApi.Status == Status.InGame)
 			{
 				LiveActor boss = sotnApi.ActorApi.GetLiveActor(DraculaActorAddress);
-				if (boss.Hp > 13 && boss.Hp < 10000)
+				if (boss.Hp > 13 && boss.Hp < 10000 && boss.Sprite != 0)
 				{
 					draculaSpawned = true;
 				}
-				else if (draculaSpawned && boss.Hp < 1)
+				else if (draculaSpawned && boss.Hp < 1 && boss.Sprite != 0)
 				{
 					autosplitter.Split();
 					Console.WriteLine("Split");
 				}
+			}
+			else
+			{
+				draculaSpawned = false;
 			}
 		}
 

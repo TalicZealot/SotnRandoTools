@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Profile 1": {
+      "commandName": "Executable",
+      "executablePath": "D:\\Programming\\SotnRandoTools\\SotnRandoTools\\BizHawk\\EmuHawk.exe",
+      "commandLineArgs": "--open-ext-tool-dll=SotnRandoTools",
+      "workingDirectory": "D:\\Programming\\SotnRandoTools\\SotnRandoTools\\BizHawk"
+    }
+  }
+}
