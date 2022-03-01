@@ -22,8 +22,8 @@ namespace SotnRandoTools.Services
 		private readonly IToolConfig toolConfig;
 		private readonly IEmuClientApi clientAPI;
 
-		private System.Windows.Forms.Timer messageTimer;
-		private System.Windows.Forms.Timer countdownTimer;
+		private System.Timers.Timer messageTimer;
+		private System.Timers.Timer countdownTimer;
 		private int scale;
 		private Image textbox;
 		private Image scaledTextbox;
@@ -46,11 +46,11 @@ namespace SotnRandoTools.Services
 			overlaySocketServer = new OverlaySocketServer(toolConfig);
 			messageTimer = new();
 			messageTimer.Interval = NotificationTime;
-			messageTimer.Tick += DequeueMessage;
+			messageTimer.Elapsed += DequeueMessage;
 			messageTimer.Start();
 			countdownTimer = new();
 			countdownTimer.Interval = 1000;
-			countdownTimer.Tick += RefreshUI;
+			countdownTimer.Elapsed += RefreshUI;
 			textbox = Image.FromFile(Paths.TextboxImage);
 			scale = GetScale();
 			ResizeImages();

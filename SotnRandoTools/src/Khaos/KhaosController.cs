@@ -381,25 +381,24 @@ namespace SotnRandoTools.Khaos
 		}
 		public void KhaosTrack(string track, string user = "Khaos")
 		{
-			uint trackIndex = 0;
-			string foundTrack = Constants.Khaos.AcceptedMusicTrackTitles.Where(t => t.ToLower().Trim() == track.ToLower().Trim()).FirstOrDefault();
+			int trackIndex = Array.IndexOf(Constants.Khaos.AcceptedMusicTrackTitles, track.ToLower().Trim());
 			bool alternateTitle = Constants.Khaos.AlternateTrackTitles.ContainsKey(track.ToLower().Trim());
 
-			if (foundTrack is not null)
+			if (trackIndex >= 0)
 			{
-				trackIndex = SotnApi.Constants.Values.Game.Various.MusicTracks[foundTrack];
+				trackIndex = (int)SotnApi.Constants.Values.Game.Various.MusicTracks[Constants.Khaos.AcceptedMusicTrackTitles[trackIndex]];
 			}
 			else if (alternateTitle)
 			{
-				foundTrack = Constants.Khaos.AlternateTrackTitles[track.ToLower().Trim()];
-				trackIndex = SotnApi.Constants.Values.Game.Various.MusicTracks[foundTrack];
+				string foundTrack = Constants.Khaos.AlternateTrackTitles[track.ToLower().Trim()];
+				trackIndex = (int)SotnApi.Constants.Values.Game.Various.MusicTracks[foundTrack];
 			}
 			else
 			{
-				int roll = rng.Next(0, Constants.Khaos.AcceptedMusicTrackTitles.Length);
-				trackIndex = SotnApi.Constants.Values.Game.Various.MusicTracks[Constants.Khaos.AcceptedMusicTrackTitles[roll]];
+				int roll = rng.Next(0, Constants.Khaos.AcceptedMusicTrackTitles.Length - 1);
+				trackIndex = (int)SotnApi.Constants.Values.Game.Various.MusicTracks[Constants.Khaos.AcceptedMusicTrackTitles[roll]];
 			}
-			music.PokeValue((int) trackIndex);
+			music.PokeValue(trackIndex);
 			music.Enable();
 			khaosTrackTimer.Start();
 			notificationService.AddMessage($"{user} queued {track}");

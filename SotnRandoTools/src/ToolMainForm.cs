@@ -153,14 +153,6 @@ namespace SotnRandoTools
 			coopSettingsPanel = new CoopSettingsPanel(toolConfig);
 			coopSettingsPanel.Location = new Point(0, PanelOffset);
 			this.Controls.Add(coopSettingsPanel);
-
-			if (notificationService is not null)
-			{
-				lock (notificationService)
-				{
-					khaosSettingsPanel.NotificationService = notificationService;
-				}
-			}
 		}
 
 		private void LoadCheats()
@@ -236,10 +228,7 @@ namespace SotnRandoTools
 			notificationService = new NotificationService(toolConfig, _maybeGuiAPI, _maybeClientAPI);
 			if (khaosSettingsPanel is not null)
 			{
-				lock (notificationService)
-				{
-					khaosSettingsPanel.NotificationService = notificationService;
-				}
+				khaosSettingsPanel.NotificationService = notificationService;
 			}
 		}
 
@@ -313,10 +302,7 @@ namespace SotnRandoTools
 					trackerForm.Close();
 					trackerForm.Dispose();
 				}
-				lock (notificationService)
-				{
-					trackerForm = new TrackerForm(toolConfig, watchlistService, sotnApi, notificationService);
-				}
+				trackerForm = new TrackerForm(toolConfig, watchlistService, sotnApi, notificationService);
 				trackerForm.Show();
 				if (khaosForm is not null && !khaosForm.IsDisposed)
 				{
@@ -334,10 +320,7 @@ namespace SotnRandoTools
 					khaosForm.Close();
 					khaosForm.Dispose();
 				}
-				lock (notificationService)
-				{
-					khaosForm = new KhaosForm(toolConfig, this.MainForm.CheatList, sotnApi, notificationService, inputService, _memoryDomains);
-				}
+				khaosForm = new KhaosForm(toolConfig, this.MainForm.CheatList, sotnApi, notificationService, inputService, _memoryDomains);
 				khaosForm.Show();
 				if (trackerForm is not null && !trackerForm.IsDisposed)
 				{
@@ -355,10 +338,7 @@ namespace SotnRandoTools
 					coopForm.Close();
 					coopForm.Dispose();
 				}
-				lock (notificationService)
-				{
-					coopForm = new CoopForm(toolConfig, watchlistService, inputService, sotnApi, APIs.Joypad, notificationService);
-				}
+				coopForm = new CoopForm(toolConfig, watchlistService, inputService, sotnApi, APIs.Joypad, notificationService);
 				coopForm.Show();
 			}
 		}

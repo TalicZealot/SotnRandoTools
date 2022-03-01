@@ -467,7 +467,6 @@ namespace SotnRandoTools
 			}
 			else
 			{
-
 				khaosControler.KhaosTrack("random");
 			}
 		}

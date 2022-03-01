@@ -298,7 +298,7 @@ namespace SotnRandoTools.Configuration
 				},
 				new Action{
 					Name = "Endurance",
-					Description = "The next boss spawns a clone. Both get increased HP. Waits for the next boss, so it will not activate in the current room if it has a boss. Does not apply to Beelzebub and Dracula.",
+					Description = "The next boss spawns a clone or gets buffed. Both get increased HP. Waits for the next boss, so it will not activate in the current room if it has a boss.",
 					Meter = 7,
 					AlertPath = Paths.DeathLaughAlternateSound,
 					Cooldown = new System.TimeSpan(0, 6, 0),
