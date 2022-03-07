@@ -36,42 +36,22 @@ namespace SotnRandoTools.Services
 			}
 		}
 
+
 		public void StartTImer()
 		{
-			if (!pipeClient.IsConnected)
-			{
-				Console.WriteLine("LiveSplit pipe is not connected!");
-				return;
-			}
-
-			pipeWriter.WriteLine("starttimer");
-			pipeWriter.Flush();
+			SendString("starttimer");
 			Started = true;
 		}
 
 		public void Restart()
 		{
-			if (!pipeClient.IsConnected)
-			{
-				Console.WriteLine("LiveSplit pipe is not connected!");
-				return;
-			}
-
-			pipeWriter.WriteLine("reset");
-			pipeWriter.Flush();
+			SendString("reset");
 			Started = false;
 		}
 
 		public void Split()
 		{
-			if (!pipeClient.IsConnected)
-			{
-				Console.WriteLine("LiveSplit pipe is not connected!");
-				return;
-			}
-
-			pipeWriter.WriteLine("split");
-			pipeWriter.Flush();
+			SendString("split");
 			Started = false;
 		}
 
@@ -99,6 +79,25 @@ namespace SotnRandoTools.Services
 					Console.WriteLine("Pipe closed");
 				}
 			};
+		}
+
+		private void SendString(string data)
+		{
+			if (!pipeClient.IsConnected)
+			{
+				Console.WriteLine("LiveSplit pipe is not connected!");
+				return;
+			}
+
+			try
+			{
+				pipeWriter.WriteLine(data);
+				pipeWriter.Flush();
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e.Message);
+			}
 		}
 	}
 }

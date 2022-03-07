@@ -93,13 +93,11 @@ namespace SotnRandoTools.Khaos
 		private bool inMainMenu = false;
 
 		private uint hordeZone = 0;
-		private uint hordeZone2 = 0;
 		private uint hordeTriggerRoomX = 0;
 		private uint hordeTriggerRoomY = 0;
 		private List<Actor> hordeEnemies = new();
 
 		private uint lordZone = 0;
-		private uint lordZone2 = 0;
 		private uint lordTriggerRoomX = 0;
 		private uint lordTriggerRoomY = 0;
 		private List<Actor> lordEnemies = new();
@@ -110,7 +108,6 @@ namespace SotnRandoTools.Khaos
 
 		private bool zaWarudoActive = false;
 		private uint zaWarudoZone = 0;
-		private uint zaWarudoZone2 = 0;
 
 		private uint storedMana = 0;
 		private int spentMana = 0;
@@ -241,19 +238,30 @@ namespace SotnRandoTools.Khaos
 			notificationService.AddMessage($"Khaos stopped");
 			Console.WriteLine("Khaos stopped");
 		}
-		public void OverwriteBossNames(string[] subscribers)
+		public void OverwriteNames(string[] subscribers)
 		{
 			subscribers = subscribers.OrderBy(x => rng.Next()).ToArray();
 			IOrderedEnumerable<KeyValuePair<string, long>>? randomizedBosses = Strings.BossNameAddresses.OrderBy(x => rng.Next());
+			IOrderedEnumerable<KeyValuePair<string, long>>? randomizedEnemies = Strings.EnemyNameAddresses.OrderBy(x => rng.Next());
 			int i = 0;
 			foreach (KeyValuePair<string, long> boss in randomizedBosses)
 			{
 				if (i == subscribers.Length)
 				{
-					break;
+					return;
 				}
 				sotnApi.GameApi.OverwriteString(boss.Value, subscribers[i]);
 				Console.WriteLine($"{boss.Key} renamed to {subscribers[i]}");
+				i++;
+			}
+			foreach (KeyValuePair<string, long> enemy in randomizedEnemies)
+			{
+				if (i == subscribers.Length)
+				{
+					return;
+				}
+				sotnApi.GameApi.OverwriteString(enemy.Value, subscribers[i]);
+				Console.WriteLine($"{enemy.Key} renamed to {subscribers[i]}");
 				i++;
 			}
 		}
@@ -591,8 +599,8 @@ namespace SotnRandoTools.Khaos
 		}
 		public void Horde(string user = "Khaos")
 		{
-			hordeTriggerRoomX = sotnApi.GameApi.MapXPos;
-			hordeTriggerRoomY = sotnApi.GameApi.MapYPos;
+			hordeTriggerRoomX = sotnApi.GameApi.RoomX;
+			hordeTriggerRoomY = sotnApi.GameApi.RoomY;
 			spawnActive = true;
 			bool meterFull = KhaosMeterFull();
 			if (meterFull)
@@ -603,14 +611,15 @@ namespace SotnRandoTools.Khaos
 
 			hordeTimer.Start();
 			hordeSpawnTimer.Start();
+			hordeEnemies.Clear();
 			string message = meterFull ? $"{user} summoned the Super Horde" : $"{user} summoned the Horde";
 			notificationService.AddMessage(message);
 			Alert(toolConfig.Khaos.Actions[(int) Enums.Action.KhaosHorde]);
 		}
 		public void Endurance(string user = "Khaos")
 		{
-			enduranceRoomX = sotnApi.GameApi.MapXPos;
-			enduranceRoomY = sotnApi.GameApi.MapYPos;
+			enduranceRoomX = sotnApi.GameApi.RoomX;
+			enduranceRoomY = sotnApi.GameApi.RoomY;
 			bool meterFull = KhaosMeterFull();
 			if (meterFull)
 			{
@@ -830,7 +839,6 @@ namespace SotnRandoTools.Khaos
 				}
 			}
 		}
-
 		public void BattleOrders(string user = "Khaos")
 		{
 			float currentHpPercentage = (float) sotnApi.AlucardApi.CurrentHp / (float) sotnApi.AlucardApi.MaxtHp;
@@ -957,6 +965,7 @@ namespace SotnRandoTools.Khaos
 			{
 				beast = 5;
 			}
+			manaLocked = true;
 
 			while (beast == 0)
 			{
@@ -987,8 +996,7 @@ namespace SotnRandoTools.Khaos
 		public void ZaWarudo(string user = "Khaos")
 		{
 			sotnApi.AlucardApi.ActivateStopwatch();
-			zaWarudoZone = sotnApi.GameApi.Zone;
-			zaWarudoZone2 = sotnApi.GameApi.Zone2;
+			zaWarudoZone = sotnApi.GameApi.Zone2;
 			zaWarudoActive = true;
 
 			if (!subweaponsOnlyActive)
@@ -1041,12 +1049,13 @@ namespace SotnRandoTools.Khaos
 		}
 		public void Lord(string user = "Khaos")
 		{
-			lordTriggerRoomX = sotnApi.GameApi.MapXPos;
-			lordTriggerRoomY = sotnApi.GameApi.MapYPos;
+			lordTriggerRoomX = sotnApi.GameApi.RoomX;
+			lordTriggerRoomY = sotnApi.GameApi.RoomY;
 			spawnActive = true;
 
 			lordTimer.Start();
 			lordSpawnTimer.Start();
+			lordEnemies.Clear();
 			string message = user + " activated Lord of this Castle";
 			notificationService.AddMessage(message);
 			Alert(toolConfig.Khaos.Actions[(int) Enums.Action.Lord]);
@@ -1348,7 +1357,7 @@ namespace SotnRandoTools.Khaos
 					commandAction = toolConfig.Khaos.Actions[(int) Enums.Action.FourBeasts];
 					if (commandAction.Enabled)
 					{
-						queuedActions.Add(new QueuedAction { Name = commandAction.Name, LocksInvincibility = true, Invoker = new MethodInvoker(() => FourBeasts(user)) });
+						queuedActions.Add(new QueuedAction { Name = commandAction.Name, LocksInvincibility = true, LocksMana = true, Invoker = new MethodInvoker(() => FourBeasts(user)) });
 					}
 					break;
 				case (int) Enums.Action.ZAWARUDO:
@@ -2042,19 +2051,18 @@ namespace SotnRandoTools.Khaos
 				return;
 			}
 
-			uint zone = sotnApi.GameApi.Zone;
 			uint zone2 = sotnApi.GameApi.Zone2;
 
-			if (hordeZone != zone || hordeZone2 != zone2 || hordeEnemies.Count == 0)
+			if (hordeZone != zone2)
 			{
-				hordeEnemies.RemoveRange(0, hordeEnemies.Count);
-				FindHordeEnemy();
-				hordeZone = zone;
-				hordeZone2 = zone2;
+				hordeEnemies.Clear();
+				hordeZone = zone2;
 			}
-			else if (hordeEnemies.Count > 0)
+
+			FindHordeEnemy();
+
+			if (hordeEnemies.Count > 0)
 			{
-				FindHordeEnemy();
 				int enemyIndex = rng.Next(0, hordeEnemies.Count);
 				if (hordeTimer.Interval == 5 * (60 * 1000))
 				{
@@ -2078,8 +2086,8 @@ namespace SotnRandoTools.Khaos
 		}
 		private bool FindHordeEnemy()
 		{
-			uint roomX = sotnApi.GameApi.MapXPos;
-			uint roomY = sotnApi.GameApi.MapYPos;
+			uint roomX = sotnApi.GameApi.RoomX;
+			uint roomY = sotnApi.GameApi.RoomY;
 
 			if ((roomX == hordeTriggerRoomX && roomY == hordeTriggerRoomY) || !sotnApi.GameApi.InAlucardMode() || !sotnApi.GameApi.CanMenu())
 			{
@@ -2152,8 +2160,8 @@ namespace SotnRandoTools.Khaos
 		}
 		private void EnduranceSpawn(Object sender, EventArgs e)
 		{
-			uint roomX = sotnApi.GameApi.MapXPos;
-			uint roomY = sotnApi.GameApi.MapYPos;
+			uint roomX = sotnApi.GameApi.RoomX;
+			uint roomY = sotnApi.GameApi.RoomY;
 			float healthMultiplier = 3.5F;
 
 			if ((roomX == enduranceRoomX && roomY == enduranceRoomY) || !sotnApi.GameApi.InAlucardMode() || !sotnApi.GameApi.CanMenu() || sotnApi.AlucardApi.CurrentHp < 5)
@@ -2512,6 +2520,7 @@ namespace SotnRandoTools.Khaos
 		private void FourBeastsOff(Object sender, EventArgs e)
 		{
 			invincibilityCheat.Disable();
+			manaLocked = false;
 			invincibilityLocked = false;
 			vermilionBirdActive = false;
 			attackPotionCheat.Disable();
@@ -2533,13 +2542,11 @@ namespace SotnRandoTools.Khaos
 		}
 		private void ZaWarudoAreaCheck(Object sender, EventArgs e)
 		{
-			uint zone = sotnApi.GameApi.Zone;
 			uint zone2 = sotnApi.GameApi.Zone2;
 
-			if (zaWarudoZone != zone || zaWarudoZone2 != zone2)
+			if (zaWarudoZone != zone2)
 			{
-				zaWarudoZone = zone;
-				zaWarudoZone2 = zone2;
+				zaWarudoZone = zone2;
 				sotnApi.AlucardApi.ActivateStopwatch();
 			}
 		}
@@ -2621,19 +2628,18 @@ namespace SotnRandoTools.Khaos
 				return;
 			}
 
-			uint zone = sotnApi.GameApi.Zone;
 			uint zone2 = sotnApi.GameApi.Zone2;
 
-			if (lordZone != zone || lordZone2 != zone2 || lordEnemies.Count == 0)
+			if (lordZone != zone2)
 			{
-				lordEnemies.RemoveRange(0, lordEnemies.Count);
-				FindLordEnemy();
-				lordZone = zone;
-				lordZone2 = zone2;
+				lordEnemies.Clear();
+				lordZone = zone2;
 			}
-			else if (lordEnemies.Count > 0)
+
+			FindLordEnemy();
+
+			if (lordEnemies.Count > 0)
 			{
-				FindLordEnemy();
 				int enemyIndex = rng.Next(0, lordEnemies.Count);
 				if (lordTimer.Interval == 5 * (60 * 1000))
 				{
@@ -2657,8 +2663,8 @@ namespace SotnRandoTools.Khaos
 		}
 		private bool FindLordEnemy()
 		{
-			uint roomX = sotnApi.GameApi.MapXPos;
-			uint roomY = sotnApi.GameApi.MapYPos;
+			uint roomX = sotnApi.GameApi.RoomX;
+			uint roomY = sotnApi.GameApi.RoomY;
 
 			if ((roomX == lordTriggerRoomX && roomY == lordTriggerRoomY) || !sotnApi.GameApi.InAlucardMode() || !sotnApi.GameApi.CanMenu())
 			{
@@ -2727,10 +2733,10 @@ namespace SotnRandoTools.Khaos
 
 			ActionTimer timer = new()
 			{
-				Name = toolConfig.Khaos.Actions[(int) Enums.Action.FourBeasts].Name,
+				Name = "Azure Dragon",
 				Duration = toolConfig.Khaos.Actions[(int) Enums.Action.FourBeasts].Duration
 			};
-			notificationService.AddOverlayTimer(timer.Name, (int) timer.Duration.TotalMilliseconds);
+			notificationService.AddOverlayTimer("Azure Dragon", (int) timer.Duration.TotalMilliseconds);
 			statusInfoDisplay.AddTimer(timer);
 			Alert(toolConfig.Khaos.Actions[(int) Enums.Action.FourBeasts]);
 		}
@@ -2744,10 +2750,10 @@ namespace SotnRandoTools.Khaos
 
 			ActionTimer timer = new()
 			{
-				Name = toolConfig.Khaos.Actions[(int) Enums.Action.FourBeasts].Name,
+				Name = "Vermilion Bird",
 				Duration = toolConfig.Khaos.Actions[(int) Enums.Action.FourBeasts].Duration
 			};
-			notificationService.AddOverlayTimer(timer.Name, (int) timer.Duration.TotalMilliseconds);
+			notificationService.AddOverlayTimer("Vermilion Bird", (int) timer.Duration.TotalMilliseconds);
 			statusInfoDisplay.AddTimer(timer);
 			Alert(toolConfig.Khaos.Actions[(int) Enums.Action.FourBeasts]);
 		}
@@ -2761,10 +2767,10 @@ namespace SotnRandoTools.Khaos
 
 			ActionTimer timer = new()
 			{
-				Name = toolConfig.Khaos.Actions[(int) Enums.Action.FourBeasts].Name,
+				Name = "White Tiger",
 				Duration = toolConfig.Khaos.Actions[(int) Enums.Action.FourBeasts].Duration
 			};
-			notificationService.AddOverlayTimer(timer.Name, (int) timer.Duration.TotalMilliseconds);
+			notificationService.AddOverlayTimer("White Tiger", (int) timer.Duration.TotalMilliseconds);
 			statusInfoDisplay.AddTimer(timer);
 			Alert(toolConfig.Khaos.Actions[(int) Enums.Action.FourBeasts]);
 		}
@@ -2778,10 +2784,10 @@ namespace SotnRandoTools.Khaos
 
 			ActionTimer timer = new()
 			{
-				Name = toolConfig.Khaos.Actions[(int) Enums.Action.FourBeasts].Name,
+				Name = "Black Tortoise",
 				Duration = toolConfig.Khaos.Actions[(int) Enums.Action.FourBeasts].Duration
 			};
-			notificationService.AddOverlayTimer(timer.Name, (int) timer.Duration.TotalMilliseconds);
+			notificationService.AddOverlayTimer("Black Tortoise", (int) timer.Duration.TotalMilliseconds);
 			statusInfoDisplay.AddTimer(timer);
 			Alert(toolConfig.Khaos.Actions[(int) Enums.Action.FourBeasts]);
 		}
@@ -3152,8 +3158,8 @@ namespace SotnRandoTools.Khaos
 				if (enduranceCount > 0)
 				{
 					enduranceCount--;
-					enduranceRoomX = sotnApi.GameApi.MapXPos;
-					enduranceRoomY = sotnApi.GameApi.MapYPos;
+					enduranceRoomX = sotnApi.GameApi.RoomX;
+					enduranceRoomY = sotnApi.GameApi.RoomY;
 					if (enduranceCount == 0)
 					{
 						enduranceSpawnTimer.Stop();

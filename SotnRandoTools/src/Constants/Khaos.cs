@@ -371,6 +371,36 @@ namespace SotnRandoTools.Constants
 		public static SearchableActor GalamothPartsActors = new SearchableActor { Hp = 12000, Damage = 50, Sprite = 31516 };
 		public static SearchableActor ShaftOrbActor = new SearchableActor { Hp = 10, Damage = 0, Sprite = 0, };
 
+		public static string[] RandomNames =
+	   {
+			"Josh",
+			"Jimmy",
+			"Steve",
+			"John",
+			"Jack",
+			"Nick",
+			"Tony",
+			"Tom",
+			"James",
+			"Rob",
+			"Mike",
+			"Will",
+			"Charlie",
+			"Chris",
+			"Matt",
+			"Mark",
+			"Paul",
+			"Kenny",
+			"Kevin",
+			"Karen",
+			"Mary",
+			"Mimi",
+			"Linda",
+			"Sarah",
+			"Lisa",
+			"Emily",
+		};
+
 		public static SearchableActor SpiritActor = new SearchableActor { Hp = 0, Sprite = 39012 };
 		public static uint SpiritPalette = 0x5B;
 		public static uint SpiritLockOn = 2;
@@ -458,6 +488,7 @@ namespace SotnRandoTools.Constants
 			{ "medusa", "enchanted banquet" },
 			{ "succubus", "enchanted banquet" },
 			{ "colosseum", "wandering ghosts" },
+			{ "wandering ghost", "wandering ghosts" },
 			{ "pitiful scion", "the tragic prince" },
 			{ "clock tower", "the tragic prince" },
 			{ "tragic prince", "the tragic prince" },

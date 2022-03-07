@@ -117,6 +117,7 @@ namespace SotnRandoTools.Khaos
 			{
 				delayedTimer.Dispose();
 			}
+			redemptions.Clear();
 			notificationService.AddMessage("Disconnected");
 		}
 
@@ -134,7 +135,7 @@ namespace SotnRandoTools.Khaos
 					100,
 					api.Settings.AccessToken
 					);
-					khaosController.OverwriteBossNames(subs.Data.Select(u => u.UserName).ToArray());
+					khaosController.OverwriteNames(subs.Data.Select(u => u.UserName).ToArray());
 					break;
 				}
 				catch (Exception e)

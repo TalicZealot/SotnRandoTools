@@ -4,7 +4,7 @@ namespace SotnRandoTools.Khaos.Interfaces
 {
 	public interface IKhaosController
 	{
-		void OverwriteBossNames(string[] subscribers);
+		void OverwriteNames(string[] subscribers);
 		public void EnqueueAction(EventAddAction eventData);
 	}
 }
