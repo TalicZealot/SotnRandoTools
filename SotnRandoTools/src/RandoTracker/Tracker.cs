@@ -650,7 +650,7 @@ namespace SotnRandoTools.RandoTracker
 									{
 										VladRelicLocationDisplay.HeartOfVladLocation = location is not null ? location.Name : "";
 									}
-									else
+									else if (VladRelicLocationDisplay.HeartOfVladLocation == "Khaos")
 									{
 										VladRelicLocationDisplay.HeartOfVladLocation = String.Empty;
 									}
@@ -660,7 +660,7 @@ namespace SotnRandoTools.RandoTracker
 									{
 										VladRelicLocationDisplay.ToothOfVladLocation = location is not null ? location.Name : "";
 									}
-									else
+									else if (VladRelicLocationDisplay.ToothOfVladLocation == "Khaos")
 									{
 										VladRelicLocationDisplay.ToothOfVladLocation = String.Empty;
 									}
@@ -670,7 +670,7 @@ namespace SotnRandoTools.RandoTracker
 									{
 										VladRelicLocationDisplay.RibOfVladLocation = location is not null ? location.Name : "";
 									}
-									else
+									else if (VladRelicLocationDisplay.RibOfVladLocation == "Khaos")
 									{
 										VladRelicLocationDisplay.RibOfVladLocation = String.Empty;
 									}
@@ -680,7 +680,7 @@ namespace SotnRandoTools.RandoTracker
 									{
 										VladRelicLocationDisplay.RingOfVladLocation = location is not null ? location.Name : "";
 									}
-									else
+									else if (VladRelicLocationDisplay.RingOfVladLocation == "Khaos")
 									{
 										VladRelicLocationDisplay.RingOfVladLocation = String.Empty;
 									}
@@ -690,7 +690,7 @@ namespace SotnRandoTools.RandoTracker
 									{
 										VladRelicLocationDisplay.EyeOfVladLocation = location is not null ? location.Name : "";
 									}
-									else
+									else if (VladRelicLocationDisplay.EyeOfVladLocation == "Khaos")
 									{
 										VladRelicLocationDisplay.EyeOfVladLocation = String.Empty;
 									}
@@ -700,7 +700,7 @@ namespace SotnRandoTools.RandoTracker
 									{
 										VladRelicLocationDisplay.BatLocation = location is not null ? location.Name : "";
 									}
-									else
+									else if (VladRelicLocationDisplay.BatLocation == "Khaos")
 									{
 										VladRelicLocationDisplay.BatLocation = String.Empty;
 									}
@@ -710,7 +710,7 @@ namespace SotnRandoTools.RandoTracker
 									{
 										VladRelicLocationDisplay.MistLocation = location is not null ? location.Name : "";
 									}
-									else
+									else if (VladRelicLocationDisplay.MistLocation == "Khaos")
 									{
 										VladRelicLocationDisplay.MistLocation = String.Empty;
 									}
@@ -720,7 +720,7 @@ namespace SotnRandoTools.RandoTracker
 									{
 										VladRelicLocationDisplay.JewelOfOpenLocation = location is not null ? location.Name : "";
 									}
-									else
+									else if (VladRelicLocationDisplay.JewelOfOpenLocation == "Khaos")
 									{
 										VladRelicLocationDisplay.JewelOfOpenLocation = String.Empty;
 									}
@@ -730,7 +730,7 @@ namespace SotnRandoTools.RandoTracker
 									{
 										VladRelicLocationDisplay.GravityBootsLocation = location is not null ? location.Name : "";
 									}
-									else
+									else if (VladRelicLocationDisplay.GravityBootsLocation == "Khaos")
 									{
 										VladRelicLocationDisplay.GravityBootsLocation = String.Empty;
 									}
@@ -740,7 +740,7 @@ namespace SotnRandoTools.RandoTracker
 									{
 										VladRelicLocationDisplay.LepastoneLocation = location is not null ? location.Name : "";
 									}
-									else
+									else if (VladRelicLocationDisplay.LepastoneLocation == "Khaos")
 									{
 										VladRelicLocationDisplay.LepastoneLocation = String.Empty;
 									}
@@ -750,7 +750,7 @@ namespace SotnRandoTools.RandoTracker
 									{
 										VladRelicLocationDisplay.MermanLocation = location is not null ? location.Name : "";
 									}
-									else
+									else if (VladRelicLocationDisplay.MermanLocation == "Khaos")
 									{
 										VladRelicLocationDisplay.MermanLocation = String.Empty;
 									}
