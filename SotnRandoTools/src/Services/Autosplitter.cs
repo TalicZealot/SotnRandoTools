@@ -22,10 +22,11 @@ namespace SotnRandoTools.Services
 			{
 				try
 				{
-					pipeClient.Connect(10);
+					pipeClient.Connect(5);
 				}
-				catch
+				catch (Exception e)
 				{
+					Console.WriteLine("Could not connect. " + e.Message);
 				}
 				return false;
 			}
@@ -35,7 +36,6 @@ namespace SotnRandoTools.Services
 				return true;
 			}
 		}
-
 
 		public void StartTImer()
 		{
@@ -96,7 +96,7 @@ namespace SotnRandoTools.Services
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine(e.Message);
+				Console.WriteLine("Pipe Error:" + e.Message);
 			}
 		}
 	}

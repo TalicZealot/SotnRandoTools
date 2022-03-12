@@ -43,6 +43,19 @@ namespace SotnRandoTools.Services
 			}
 		}
 
+		public void UpdateMeter(int meter)
+		{
+			JObject data = JObject.FromObject(new
+			{
+				meter = meter,
+				type = "meter"
+			});
+
+			foreach (var client in socketServer.ListClients())
+			{
+				socketServer.SendAsync(client, data.ToString());
+			}
+		}
 		public void AddTimer(string name, int duration)
 		{
 			JObject data = JObject.FromObject(new

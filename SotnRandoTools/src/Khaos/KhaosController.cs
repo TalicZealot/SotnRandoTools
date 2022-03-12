@@ -85,7 +85,9 @@ namespace SotnRandoTools.Khaos
 		private Cheat music;
 		#endregion
 
+		private int khaosMeter = 0;
 		private int totalMeterGained = 0;
+		private int pandoraProgress = 0;
 		private bool pandoraUsed = false;
 		private uint alucardMapX = 0;
 		private uint alucardMapY = 0;
@@ -383,7 +385,7 @@ namespace SotnRandoTools.Khaos
 		}
 		public void KhaoticBurst(string user = "Khaos")
 		{
-			notificationService.KhaosMeter += 100;
+			GainKhaosMeter(100);
 			notificationService.AddMessage($"{user} used Khaotic Burst");
 			Alert(toolConfig.Khaos.Actions[(int) Enums.Action.KhaoticBurst]);
 		}
@@ -493,7 +495,7 @@ namespace SotnRandoTools.Khaos
 			}
 			sotnApi.AlucardApi.Subweapon = (Subweapon) roll;
 			sotnApi.AlucardApi.ActivatePotion(Potion.SmartPotion);
-			sotnApi.AlucardApi.GrantRelic(Relic.CubeOfZoe);
+			sotnApi.AlucardApi.GrantRelic(Relic.CubeOfZoe, true);
 			if (sotnApi.AlucardApi.HasRelic(Relic.GasCloud))
 			{
 				sotnApi.AlucardApi.TakeRelic(Relic.GasCloud);
@@ -831,7 +833,7 @@ namespace SotnRandoTools.Khaos
 					case 2:
 						Console.WriteLine($"Heavy help rolled: {Constants.Khaos.ProgressionRelics[relic]}");
 						SetRelicLocationDisplay(Constants.Khaos.ProgressionRelics[relic], false);
-						sotnApi.AlucardApi.GrantRelic(Constants.Khaos.ProgressionRelics[relic]);
+						sotnApi.AlucardApi.GrantRelic(Constants.Khaos.ProgressionRelics[relic], true);
 						notificationService.AddMessage($"{user} gave you {Constants.Khaos.ProgressionRelics[relic]}");
 						break;
 					default:
@@ -874,16 +876,16 @@ namespace SotnRandoTools.Khaos
 				SpendKhaosMeter();
 				SetRelicLocationDisplay(Relic.SoulOfBat, false);
 				SetRelicLocationDisplay(Relic.FormOfMist, false);
-				sotnApi.AlucardApi.GrantRelic(Relic.SoulOfBat);
-				sotnApi.AlucardApi.GrantRelic(Relic.FireOfBat);
-				sotnApi.AlucardApi.GrantRelic(Relic.EchoOfBat);
-				sotnApi.AlucardApi.GrantRelic(Relic.ForceOfEcho);
-				sotnApi.AlucardApi.GrantRelic(Relic.SoulOfWolf);
-				sotnApi.AlucardApi.GrantRelic(Relic.PowerOfWolf);
-				sotnApi.AlucardApi.GrantRelic(Relic.SkillOfWolf);
-				sotnApi.AlucardApi.GrantRelic(Relic.FormOfMist);
-				sotnApi.AlucardApi.GrantRelic(Relic.PowerOfMist);
-				sotnApi.AlucardApi.GrantRelic(Relic.GasCloud);
+				sotnApi.AlucardApi.GrantRelic(Relic.SoulOfBat, true);
+				sotnApi.AlucardApi.GrantRelic(Relic.FireOfBat, true);
+				sotnApi.AlucardApi.GrantRelic(Relic.EchoOfBat, true);
+				sotnApi.AlucardApi.GrantRelic(Relic.ForceOfEcho, true);
+				sotnApi.AlucardApi.GrantRelic(Relic.SoulOfWolf, true);
+				sotnApi.AlucardApi.GrantRelic(Relic.PowerOfWolf, true);
+				sotnApi.AlucardApi.GrantRelic(Relic.SkillOfWolf, true);
+				sotnApi.AlucardApi.GrantRelic(Relic.FormOfMist, true);
+				sotnApi.AlucardApi.GrantRelic(Relic.PowerOfMist, true);
+				sotnApi.AlucardApi.GrantRelic(Relic.GasCloud, true);
 			}
 
 			sotnApi.AlucardApi.GrantItemByName("Wizard hat");
@@ -929,7 +931,7 @@ namespace SotnRandoTools.Khaos
 			hitbox2Width.Enable();
 			hitbox2Height.Enable();
 			SetRelicLocationDisplay(Relic.LeapStone, false);
-			sotnApi.AlucardApi.GrantRelic(Relic.LeapStone);
+			sotnApi.AlucardApi.GrantRelic(Relic.LeapStone, true);
 			meltyTimer.Start();
 			string message = meterFull ? $"{user} activated GUILTY GEAR" : $"{user} activated Melty Blood";
 			notificationService.AddMessage(message);
@@ -1876,7 +1878,7 @@ namespace SotnRandoTools.Khaos
 					if ((int) relic < 25)
 					{
 						SetRelicLocationDisplay((Relic) relic, false);
-						sotnApi.AlucardApi.GrantRelic((Relic) relic);
+						sotnApi.AlucardApi.GrantRelic((Relic) relic, true);
 					}
 				}
 				else
@@ -1899,14 +1901,14 @@ namespace SotnRandoTools.Khaos
 				foreach (Relic relic in Constants.Khaos.FlightRelics[roll])
 				{
 					SetRelicLocationDisplay((Relic) relic, false);
-					sotnApi.AlucardApi.GrantRelic((Relic) relic);
+					sotnApi.AlucardApi.GrantRelic((Relic) relic, true);
 				}
 			}
 
 			if (IsInRoomList(Constants.Khaos.SwitchRoom))
 			{
 				SetRelicLocationDisplay(Relic.JewelOfOpen, false);
-				sotnApi.AlucardApi.GrantRelic(Relic.JewelOfOpen);
+				sotnApi.AlucardApi.GrantRelic(Relic.JewelOfOpen, true);
 			}
 		}
 		private void RandomizeEquipmentSlots()
@@ -2141,7 +2143,7 @@ namespace SotnRandoTools.Khaos
 			hearts.Disable();
 			if (gasCloudTaken)
 			{
-				sotnApi.AlucardApi.GrantRelic(Relic.GasCloud);
+				sotnApi.AlucardApi.GrantRelic(Relic.GasCloud, true);
 				gasCloudTaken = false;
 			}
 			subweaponsOnlyTimer.Stop();
@@ -3228,16 +3230,26 @@ namespace SotnRandoTools.Khaos
 		}
 		private bool KhaosMeterFull()
 		{
-			return notificationService.KhaosMeter >= 100;
+			return khaosMeter >= 100;
 		}
 		private void GainKhaosMeter(short meter)
 		{
-			notificationService.KhaosMeter += meter;
+			khaosMeter += meter;
 			totalMeterGained += meter;
+
+			notificationService.UpdateOverlayMeter(khaosMeter);
+
+			if (!pandoraUsed && pandoraProgress < 6 && totalMeterGained >= (toolConfig.Khaos.PandoraTrigger / 7) * (pandoraProgress + 1))
+			{
+				string label = "PANDORA";
+				notificationService.AddMessage(label.Substring(0, pandoraProgress + 1));
+				pandoraProgress++;
+			}
 		}
 		private void SpendKhaosMeter()
 		{
-			notificationService.KhaosMeter -= 100;
+			khaosMeter -= 100;
+			notificationService.UpdateOverlayMeter(khaosMeter);
 		}
 		private void Alert(Configuration.Models.Action action)
 		{

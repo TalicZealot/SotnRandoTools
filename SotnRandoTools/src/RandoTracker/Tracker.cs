@@ -650,11 +650,19 @@ namespace SotnRandoTools.RandoTracker
 									{
 										VladRelicLocationDisplay.HeartOfVladLocation = location is not null ? location.Name : "";
 									}
+									else
+									{
+										VladRelicLocationDisplay.HeartOfVladLocation = String.Empty;
+									}
 									break;
 								case "ToothOfVlad":
 									if (VladRelicLocationDisplay.ToothOfVladLocation == String.Empty)
 									{
 										VladRelicLocationDisplay.ToothOfVladLocation = location is not null ? location.Name : "";
+									}
+									else
+									{
+										VladRelicLocationDisplay.ToothOfVladLocation = String.Empty;
 									}
 									break;
 								case "RibOfVlad":
@@ -662,11 +670,19 @@ namespace SotnRandoTools.RandoTracker
 									{
 										VladRelicLocationDisplay.RibOfVladLocation = location is not null ? location.Name : "";
 									}
+									else
+									{
+										VladRelicLocationDisplay.RibOfVladLocation = String.Empty;
+									}
 									break;
 								case "RingOfVlad":
 									if (VladRelicLocationDisplay.RingOfVladLocation == String.Empty)
 									{
 										VladRelicLocationDisplay.RingOfVladLocation = location is not null ? location.Name : "";
+									}
+									else
+									{
+										VladRelicLocationDisplay.RingOfVladLocation = String.Empty;
 									}
 									break;
 								case "EyeOfVlad":
@@ -674,11 +690,19 @@ namespace SotnRandoTools.RandoTracker
 									{
 										VladRelicLocationDisplay.EyeOfVladLocation = location is not null ? location.Name : "";
 									}
+									else
+									{
+										VladRelicLocationDisplay.EyeOfVladLocation = String.Empty;
+									}
 									break;
 								case "SoulOfBat":
 									if (VladRelicLocationDisplay.BatLocation == String.Empty)
 									{
 										VladRelicLocationDisplay.BatLocation = location is not null ? location.Name : "";
+									}
+									else
+									{
+										VladRelicLocationDisplay.BatLocation = String.Empty;
 									}
 									break;
 								case "FormOfMist":
@@ -686,11 +710,19 @@ namespace SotnRandoTools.RandoTracker
 									{
 										VladRelicLocationDisplay.MistLocation = location is not null ? location.Name : "";
 									}
+									else
+									{
+										VladRelicLocationDisplay.MistLocation = String.Empty;
+									}
 									break;
 								case "JewelOfOpen":
 									if (VladRelicLocationDisplay.JewelOfOpenLocation == String.Empty)
 									{
 										VladRelicLocationDisplay.JewelOfOpenLocation = location is not null ? location.Name : "";
+									}
+									else
+									{
+										VladRelicLocationDisplay.JewelOfOpenLocation = String.Empty;
 									}
 									break;
 								case "GravityBoots":
@@ -698,17 +730,29 @@ namespace SotnRandoTools.RandoTracker
 									{
 										VladRelicLocationDisplay.GravityBootsLocation = location is not null ? location.Name : "";
 									}
+									else
+									{
+										VladRelicLocationDisplay.GravityBootsLocation = String.Empty;
+									}
 									break;
 								case "LeapStone":
 									if (VladRelicLocationDisplay.LepastoneLocation == String.Empty)
 									{
 										VladRelicLocationDisplay.LepastoneLocation = location is not null ? location.Name : "";
 									}
+									else
+									{
+										VladRelicLocationDisplay.LepastoneLocation = String.Empty;
+									}
 									break;
 								case "MermanStatue":
 									if (VladRelicLocationDisplay.MermanLocation == String.Empty)
 									{
 										VladRelicLocationDisplay.MermanLocation = location is not null ? location.Name : "";
+									}
+									else
+									{
+										VladRelicLocationDisplay.MermanLocation = String.Empty;
 									}
 									break;
 								default:
