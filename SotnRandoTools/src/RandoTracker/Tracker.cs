@@ -418,11 +418,11 @@ namespace SotnRandoTools.RandoTracker
 		private bool secondCastle = false;
 		private bool restarted = false;
 		private bool relicOrItemCollected = false;
-		private string lastLocationVisited = "";
 		private List<MapLocation> replay = new();
 		private int prologueTime = 0;
 		private Autosplitter autosplitter;
 		private bool autosplitterConnected = false;
+		private int autosplitterReconnectCounter = 0;
 		private bool draculaSpawned = false;
 
 		public Tracker(IGraphics? formGraphics, IToolConfig toolConfig, IWatchlistService watchlistService, ISotnApi sotnApi, INotificationService notificationService)
@@ -527,9 +527,14 @@ namespace SotnRandoTools.RandoTracker
 				}
 			}
 
-			if (toolConfig.Tracker.EnableAutosplitter && !autosplitterConnected)
+			if (toolConfig.Tracker.EnableAutosplitter && !autosplitterConnected && autosplitterReconnectCounter == 120)
 			{
 				autosplitterConnected = autosplitter.AtemptConnect();
+				autosplitterReconnectCounter = 0;
+			}
+			if (toolConfig.Tracker.EnableAutosplitter && !autosplitterConnected && autosplitterReconnectCounter < 120)
+			{
+				autosplitterReconnectCounter++;
 			}
 			if (toolConfig.Tracker.EnableAutosplitter && autosplitterConnected)
 			{
@@ -591,7 +596,7 @@ namespace SotnRandoTools.RandoTracker
 			}
 			foreach (var location in locations)
 			{
-				location.Status = false;
+				location.Visited = false;
 				location.AvailabilityColor = MapColor.Unavailable;
 			}
 		}
@@ -642,122 +647,7 @@ namespace SotnRandoTools.RandoTracker
 							float adjustedY = (secondCastle ? (sotnApi.AlucardApi.MapY - 8.75f) : (sotnApi.AlucardApi.MapY - 4.5f)) * 4;
 							Console.WriteLine($"relic location: x:{adjustedX}, y:{adjustedY}");
 							var location = locations.Where(l => (l.MapRow >= adjustedY - 3 && l.MapRow <= adjustedY + 3) && (l.MapCol >= adjustedX - 3 && l.MapCol <= adjustedX + 3)).FirstOrDefault();
-
-							switch (relics[i].Name)
-							{
-								case "HeartOfVlad":
-									if (VladRelicLocationDisplay.HeartOfVladLocation == String.Empty)
-									{
-										VladRelicLocationDisplay.HeartOfVladLocation = location is not null ? location.Name : "";
-									}
-									else if (VladRelicLocationDisplay.HeartOfVladLocation == "Khaos")
-									{
-										VladRelicLocationDisplay.HeartOfVladLocation = String.Empty;
-									}
-									break;
-								case "ToothOfVlad":
-									if (VladRelicLocationDisplay.ToothOfVladLocation == String.Empty)
-									{
-										VladRelicLocationDisplay.ToothOfVladLocation = location is not null ? location.Name : "";
-									}
-									else if (VladRelicLocationDisplay.ToothOfVladLocation == "Khaos")
-									{
-										VladRelicLocationDisplay.ToothOfVladLocation = String.Empty;
-									}
-									break;
-								case "RibOfVlad":
-									if (VladRelicLocationDisplay.RibOfVladLocation == String.Empty)
-									{
-										VladRelicLocationDisplay.RibOfVladLocation = location is not null ? location.Name : "";
-									}
-									else if (VladRelicLocationDisplay.RibOfVladLocation == "Khaos")
-									{
-										VladRelicLocationDisplay.RibOfVladLocation = String.Empty;
-									}
-									break;
-								case "RingOfVlad":
-									if (VladRelicLocationDisplay.RingOfVladLocation == String.Empty)
-									{
-										VladRelicLocationDisplay.RingOfVladLocation = location is not null ? location.Name : "";
-									}
-									else if (VladRelicLocationDisplay.RingOfVladLocation == "Khaos")
-									{
-										VladRelicLocationDisplay.RingOfVladLocation = String.Empty;
-									}
-									break;
-								case "EyeOfVlad":
-									if (VladRelicLocationDisplay.EyeOfVladLocation == String.Empty)
-									{
-										VladRelicLocationDisplay.EyeOfVladLocation = location is not null ? location.Name : "";
-									}
-									else if (VladRelicLocationDisplay.EyeOfVladLocation == "Khaos")
-									{
-										VladRelicLocationDisplay.EyeOfVladLocation = String.Empty;
-									}
-									break;
-								case "SoulOfBat":
-									if (VladRelicLocationDisplay.BatLocation == String.Empty)
-									{
-										VladRelicLocationDisplay.BatLocation = location is not null ? location.Name : "";
-									}
-									else if (VladRelicLocationDisplay.BatLocation == "Khaos")
-									{
-										VladRelicLocationDisplay.BatLocation = String.Empty;
-									}
-									break;
-								case "FormOfMist":
-									if (VladRelicLocationDisplay.MistLocation == String.Empty)
-									{
-										VladRelicLocationDisplay.MistLocation = location is not null ? location.Name : "";
-									}
-									else if (VladRelicLocationDisplay.MistLocation == "Khaos")
-									{
-										VladRelicLocationDisplay.MistLocation = String.Empty;
-									}
-									break;
-								case "JewelOfOpen":
-									if (VladRelicLocationDisplay.JewelOfOpenLocation == String.Empty)
-									{
-										VladRelicLocationDisplay.JewelOfOpenLocation = location is not null ? location.Name : "";
-									}
-									else if (VladRelicLocationDisplay.JewelOfOpenLocation == "Khaos")
-									{
-										VladRelicLocationDisplay.JewelOfOpenLocation = String.Empty;
-									}
-									break;
-								case "GravityBoots":
-									if (VladRelicLocationDisplay.GravityBootsLocation == String.Empty)
-									{
-										VladRelicLocationDisplay.GravityBootsLocation = location is not null ? location.Name : "";
-									}
-									else if (VladRelicLocationDisplay.GravityBootsLocation == "Khaos")
-									{
-										VladRelicLocationDisplay.GravityBootsLocation = String.Empty;
-									}
-									break;
-								case "LeapStone":
-									if (VladRelicLocationDisplay.LepastoneLocation == String.Empty)
-									{
-										VladRelicLocationDisplay.LepastoneLocation = location is not null ? location.Name : "";
-									}
-									else if (VladRelicLocationDisplay.LepastoneLocation == "Khaos")
-									{
-										VladRelicLocationDisplay.LepastoneLocation = String.Empty;
-									}
-									break;
-								case "MermanStatue":
-									if (VladRelicLocationDisplay.MermanLocation == String.Empty)
-									{
-										VladRelicLocationDisplay.MermanLocation = location is not null ? location.Name : "";
-									}
-									else if (VladRelicLocationDisplay.MermanLocation == "Khaos")
-									{
-										VladRelicLocationDisplay.MermanLocation = String.Empty;
-									}
-									break;
-								default:
-									break;
-							}
+							SetLocationDisplay(location, relics[i].Name);
 						}
 
 					}
@@ -773,6 +663,147 @@ namespace SotnRandoTools.RandoTracker
 				}
 			}
 			watchlistService.RelicWatches.ClearChangeCounts();
+		}
+
+		private void SetLocationDisplay(Location location, string relicName)
+		{
+			if (location == null) return;
+
+			switch (relicName)
+			{
+				case "HeartOfVlad":
+					if (VladRelicLocationDisplay.HeartOfVladLocation == String.Empty)
+					{
+						VladRelicLocationDisplay.HeartOfVladLocation = location.Name;
+					}
+					else if (VladRelicLocationDisplay.HeartOfVladLocation == "Khaos")
+					{
+						VladRelicLocationDisplay.HeartOfVladLocation = String.Empty;
+						return;
+					}
+					break;
+				case "ToothOfVlad":
+					if (VladRelicLocationDisplay.ToothOfVladLocation == String.Empty)
+					{
+						VladRelicLocationDisplay.ToothOfVladLocation = location.Name;
+					}
+					else if (VladRelicLocationDisplay.ToothOfVladLocation == "Khaos")
+					{
+						VladRelicLocationDisplay.ToothOfVladLocation = String.Empty;
+						return;
+					}
+					break;
+				case "RibOfVlad":
+					if (VladRelicLocationDisplay.RibOfVladLocation == String.Empty)
+					{
+						VladRelicLocationDisplay.RibOfVladLocation = location.Name;
+					}
+					else if (VladRelicLocationDisplay.RibOfVladLocation == "Khaos")
+					{
+						VladRelicLocationDisplay.RibOfVladLocation = String.Empty;
+						return;
+					}
+					break;
+				case "RingOfVlad":
+					if (VladRelicLocationDisplay.RingOfVladLocation == String.Empty)
+					{
+						VladRelicLocationDisplay.RingOfVladLocation = location.Name;
+					}
+					else if (VladRelicLocationDisplay.RingOfVladLocation == "Khaos")
+					{
+						VladRelicLocationDisplay.RingOfVladLocation = String.Empty;
+						return;
+					}
+					break;
+				case "EyeOfVlad":
+					if (VladRelicLocationDisplay.EyeOfVladLocation == String.Empty)
+					{
+						VladRelicLocationDisplay.EyeOfVladLocation = location.Name;
+					}
+					else if (VladRelicLocationDisplay.EyeOfVladLocation == "Khaos")
+					{
+						VladRelicLocationDisplay.EyeOfVladLocation = String.Empty;
+						return;
+					}
+					break;
+				case "SoulOfBat":
+					if (VladRelicLocationDisplay.BatLocation == String.Empty)
+					{
+						VladRelicLocationDisplay.BatLocation = location.Name;
+					}
+					else if (VladRelicLocationDisplay.BatLocation == "Khaos")
+					{
+						VladRelicLocationDisplay.BatLocation = String.Empty;
+						return;
+					}
+					break;
+				case "FormOfMist":
+					if (VladRelicLocationDisplay.MistLocation == String.Empty)
+					{
+						VladRelicLocationDisplay.MistLocation = location.Name;
+					}
+					else if (VladRelicLocationDisplay.MistLocation == "Khaos")
+					{
+						VladRelicLocationDisplay.MistLocation = String.Empty;
+						return;
+					}
+					break;
+				case "JewelOfOpen":
+					if (VladRelicLocationDisplay.JewelOfOpenLocation == String.Empty)
+					{
+						VladRelicLocationDisplay.JewelOfOpenLocation = location.Name;
+					}
+					else if (VladRelicLocationDisplay.JewelOfOpenLocation == "Khaos")
+					{
+						VladRelicLocationDisplay.JewelOfOpenLocation = String.Empty;
+						return;
+					}
+					break;
+				case "GravityBoots":
+					if (VladRelicLocationDisplay.GravityBootsLocation == String.Empty)
+					{
+						VladRelicLocationDisplay.GravityBootsLocation = location.Name;
+					}
+					else if (VladRelicLocationDisplay.GravityBootsLocation == "Khaos")
+					{
+						VladRelicLocationDisplay.GravityBootsLocation = String.Empty;
+						return;
+					}
+					break;
+				case "LeapStone":
+					if (VladRelicLocationDisplay.LepastoneLocation == String.Empty)
+					{
+						VladRelicLocationDisplay.LepastoneLocation = location.Name;
+					}
+					else if (VladRelicLocationDisplay.LepastoneLocation == "Khaos")
+					{
+						VladRelicLocationDisplay.LepastoneLocation = String.Empty;
+						return;
+					}
+					break;
+				case "MermanStatue":
+					if (VladRelicLocationDisplay.MermanLocation == String.Empty)
+					{
+						VladRelicLocationDisplay.MermanLocation = location.Name;
+					}
+					else if (VladRelicLocationDisplay.MermanLocation == "Khaos")
+					{
+						VladRelicLocationDisplay.MermanLocation = String.Empty;
+						return;
+					}
+					break;
+				default:
+					return;
+			}
+
+			if (location.SecondCastle)
+			{
+				notificationService.SetInvertedRelicCoordinates(relicName, location.MapCol, location.MapRow);
+			}
+			else
+			{
+				notificationService.SetRelicCoordinates(relicName, location.MapCol, location.MapRow);
+			}
 		}
 
 		private void UpdateProgressionItems()
@@ -906,7 +937,7 @@ namespace SotnRandoTools.RandoTracker
 		{
 			for (int i = 0; i < locations.Count; i++)
 			{
-				if (!locations[i].Status && locations[i].SecondCastle == secondCastle)
+				if (!locations[i].Visited && locations[i].SecondCastle == secondCastle)
 				{
 					if (locations[i].SpreadExtension && !locations[i].GuardedExtension && !locations[i].EquipmentExtension && !spreadExtension)
 					{
@@ -976,7 +1007,7 @@ namespace SotnRandoTools.RandoTracker
 
 		private bool LocationsDrawn()
 		{
-			Location uncheckedLocation = locations.Where(l => (!l.Status && l.SecondCastle == secondCastle &&
+			Location uncheckedLocation = locations.Where(l => (!l.Visited && l.SecondCastle == secondCastle &&
 			(l.EquipmentExtension == false || l.EquipmentExtension == equipmentExtension) &&
 			(l.GuardedExtension == false || l.GuardedExtension == guardedExtension))).FirstOrDefault();
 			if (uncheckedLocation != null)
@@ -1007,7 +1038,7 @@ namespace SotnRandoTools.RandoTracker
 					}
 					Location location = locations.Where(x => x.Name.ToLower() == locationName.ToLower()).FirstOrDefault();
 
-					if (location != null && !location.Status && watch.Value > 0)
+					if (location != null && !location.Visited && watch.Value > 0)
 					{
 						Room room = location.Rooms.Where(y => y.Name.ToLower() == watch.Notes.ToLower()).FirstOrDefault();
 						if (room != null)
@@ -1016,7 +1047,7 @@ namespace SotnRandoTools.RandoTracker
 							{
 								if ((watch.Value & value) == value)
 								{
-									location.Status = true;
+									location.Visited = true;
 									Console.WriteLine($"Tracker: {location.Name} checked.");
 									Watch? coopWatch = null;
 									int watchIndex = 0;
@@ -1037,8 +1068,6 @@ namespace SotnRandoTools.RandoTracker
 										Console.WriteLine($"Added {coopWatch.Notes} at index {watchIndex} value {watchlistService.CoopLocationValues[watchIndex]} to coopValues.");
 									}
 									ClearMapLocation(locations.IndexOf(location));
-
-									lastLocationVisited = location.Name;
 								}
 							}
 						}
@@ -1279,12 +1308,12 @@ namespace SotnRandoTools.RandoTracker
 		{
 			if (autosplitter.Started && sotnApi.AlucardApi.MapX == 31 && sotnApi.AlucardApi.MapY == 30 && sotnApi.GameApi.Status == Status.InGame)
 			{
-				LiveActor boss = sotnApi.ActorApi.GetLiveActor(DraculaActorAddress);
-				if (boss.Hp > 13 && boss.Hp < 10000 && boss.Sprite != 0)
+				LiveEntity boss = sotnApi.EntityApi.GetLiveEntity(DraculaActorAddress);
+				if (boss.Hp > 13 && boss.Hp < 10000 && boss.AiId != 0)
 				{
 					draculaSpawned = true;
 				}
-				else if (draculaSpawned && boss.Hp < 1 && boss.Sprite != 0)
+				else if (draculaSpawned && boss.Hp < 1 && boss.AiId != 0)
 				{
 					autosplitter.Split();
 					Console.WriteLine("Split");

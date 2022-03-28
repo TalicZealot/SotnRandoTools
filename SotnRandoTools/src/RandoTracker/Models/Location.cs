@@ -13,7 +13,7 @@ namespace SotnRandoTools.RandoTracker.Models
 			GuardedExtension = false;
 			EquipmentExtension = false;
 			SpreadExtension = false;
-			Status = false;
+			Visited = false;
 		}
 		public string Name { get; set; }
 		public bool SecondCastle { get; set; }
@@ -21,7 +21,7 @@ namespace SotnRandoTools.RandoTracker.Models
 		public bool EquipmentExtension { get; set; }
 		public bool SpreadExtension { get; set; }
 		public MapColor AvailabilityColor { get; set; }
-		public bool Status { get; set; }
+		public bool Visited { get; set; }
 		public int MapRow { get; set; }
 		public int MapCol { get; set; }
 		public List<string[]>? Locks { get; set; }

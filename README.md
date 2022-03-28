@@ -86,4 +86,3 @@ After starting Khaos you will be able to connect to Twitch and start Auto Khaos.
 * LordalexZader
 * ziggypigster
 * chrisaegrimm
-* Gods666thChild

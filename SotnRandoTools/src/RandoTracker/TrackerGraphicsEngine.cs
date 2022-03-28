@@ -291,9 +291,9 @@ namespace SotnRandoTools.RandoTracker
 
 		private void LoadImages()
 		{
-			foreach (var relic in relics)
+			foreach (var relic in Constants.Paths.RelicImages)
 			{
-				relicImages.Add(new Bitmap(Image.FromFile(Paths.ImagesPath + relic.Name + ".png")));
+				relicImages.Add(new Bitmap(Image.FromFile(relic.Value)));
 			}
 
 			foreach (var item in progressionItems)

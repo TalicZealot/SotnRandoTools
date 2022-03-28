@@ -132,7 +132,7 @@ namespace SotnRandoTools.Khaos
 					var subs = await api.Helix.Subscriptions.GetBroadcasterSubscriptions(
 					broadcasterId,
 					null,
-					100,
+					150,
 					api.Settings.AccessToken
 					);
 					khaosController.OverwriteNames(subs.Data.Select(u => u.UserName).ToArray());

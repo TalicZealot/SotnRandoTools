@@ -29,7 +29,7 @@ namespace SotnRandoTools.Khaos
 		private readonly INotificationService notificationService;
 		private readonly IInputService inputService;
 		private readonly IKhaosActionsInfoDisplay statusInfoDisplay;
-		private Random rng = new();
+		private readonly Random rng = new();
 
 		private List<QueuedAction> queuedActions = new();
 		private Queue<MethodInvoker> queuedFastActions = new();
@@ -97,12 +97,12 @@ namespace SotnRandoTools.Khaos
 		private uint hordeZone = 0;
 		private uint hordeTriggerRoomX = 0;
 		private uint hordeTriggerRoomY = 0;
-		private List<Actor> hordeEnemies = new();
+		private List<Entity> hordeEnemies = new();
 
 		private uint lordZone = 0;
 		private uint lordTriggerRoomX = 0;
 		private uint lordTriggerRoomY = 0;
-		private List<Actor> lordEnemies = new();
+		private List<Entity> lordEnemies = new();
 
 		private int enduranceCount = 0;
 		private uint enduranceRoomX = 0;
@@ -115,9 +115,9 @@ namespace SotnRandoTools.Khaos
 		private int spentMana = 0;
 
 		private int fireballCooldown = 0;
-		private List<LiveActor> fireballs = new();
-		private List<LiveActor> fireballsUp = new();
-		private List<LiveActor> fireballsDown = new();
+		private List<LiveEntity> fireballs = new();
+		private List<LiveEntity> fireballsUp = new();
+		private List<LiveEntity> fireballsDown = new();
 
 		private bool speedLocked = false;
 		private bool manaLocked = false;
@@ -1073,21 +1073,38 @@ namespace SotnRandoTools.Khaos
 				return;
 			}
 
+			if (sotnApi.GameApi.MapOpen)
+			{
+				if (sotnApi.GameApi.SecondCastle)
+				{
+					notificationService.InvertedMapOpen = true;
+				}
+				else
+				{
+					notificationService.MapOpen = true;
+				}
+			}
+			else
+			{
+				notificationService.MapOpen = false;
+				notificationService.InvertedMapOpen = false;
+			}
+
 			CheckDashInput();
 			CheckVermillionBirdFireballs();
 
 			if (azureDragonActive && !azureSpiritActive)
 			{
-				var spiritAddress = sotnApi.ActorApi.FindActorFrom(new List<SearchableActor> { Constants.Khaos.SpiritActor }, false);
+				var spiritAddress = sotnApi.EntityApi.FindEntityFrom(new List<SearchableActor> { Constants.Khaos.SpiritActor }, false);
 				if (spiritAddress > 0)
 				{
-					LiveActor liveSpirit = sotnApi.ActorApi.GetLiveActor(spiritAddress);
-					if (liveSpirit.LockOn == SotnApi.Constants.Values.Game.Actors.LockedOn)
+					LiveEntity liveSpirit = sotnApi.EntityApi.GetLiveEntity(spiritAddress);
+					if (liveSpirit.LockOn == SotnApi.Constants.Values.Game.Entities.LockedOn)
 					{
 						liveSpirit.Palette = Constants.Khaos.SpiritPalette;
 						liveSpirit.InvincibilityFrames = 4;
 						azureSpiritActive = true;
-						cheats.AddCheat(spiritAddress + SotnApi.Constants.Values.Game.Actors.LockOnOffset, SotnApi.Constants.Values.Game.Actors.LockedOn, Constants.Khaos.SpiritLockOnName, WatchSize.Byte);
+						cheats.AddCheat(spiritAddress + SotnApi.Constants.Values.Game.Entities.LockOnOffset, SotnApi.Constants.Values.Game.Entities.LockedOn, Constants.Khaos.SpiritLockOnName, WatchSize.Byte);
 						azureDragonTimer.Start();
 					}
 				}
@@ -1106,18 +1123,18 @@ namespace SotnRandoTools.Khaos
 
 			if (whiteTigerActive && !whiteTigerBallActive && !hellfireCasted && sotnApi.AlucardApi.State == SotnApi.Constants.Values.Alucard.States.Hellfire)
 			{
-				Actor fireball = new Actor(Constants.Khaos.DarkFireballActorBytes);
+				Entity fireball = new Entity(Constants.Khaos.DarkFireballEntityBytes);
 				bool alucardFacing = sotnApi.AlucardApi.FacingLeft;
 				int offsetX = alucardFacing ? -20 : 20;
 				fireball.Xpos = (ushort) (sotnApi.AlucardApi.ScreenX + offsetX);
 				fireball.Ypos = (ushort) (sotnApi.AlucardApi.ScreenY - 10);
 				fireball.SpeedHorizontal = alucardFacing ? (ushort) 0xFFFF : (ushort) 0;
 
-				long address = sotnApi.ActorApi.SpawnActor(fireball, false);
-				LiveActor liveFireball = sotnApi.ActorApi.GetLiveActor(address);
+				long address = sotnApi.EntityApi.SpawnEntity(fireball, false);
+				LiveEntity liveFireball = sotnApi.EntityApi.GetLiveEntity(address);
 				hellfireCasted = true;
 				whiteTigerBallActive = true;
-				cheats.AddCheat(address + SotnApi.Constants.Values.Game.Actors.SpeedWholeOffset, alucardFacing ? (ushort) Constants.Khaos.WhiteTigerBallSpeedLeft : (ushort) Constants.Khaos.WhiteTigerBallSpeedRight, Constants.Khaos.WhiteTigerBallSpeedName, WatchSize.Word);
+				cheats.AddCheat(address + SotnApi.Constants.Values.Game.Entities.SpeedWholeOffset, alucardFacing ? (ushort) Constants.Khaos.WhiteTigerBallSpeedLeft : (ushort) Constants.Khaos.WhiteTigerBallSpeedRight, Constants.Khaos.WhiteTigerBallSpeedName, WatchSize.Word);
 				whiteTigerBallTimer.Start();
 			}
 
@@ -1997,7 +2014,7 @@ namespace SotnRandoTools.Khaos
 		}
 		private void KillAlucard(Object sender, EventArgs e)
 		{
-			Actor hitbox = new Actor();
+			Entity hitbox = new Entity();
 			uint offsetPosX = sotnApi.AlucardApi.ScreenX - 255;
 			uint offsetPosY = sotnApi.AlucardApi.ScreenY - 255;
 
@@ -2005,10 +2022,10 @@ namespace SotnRandoTools.Khaos
 			hitbox.Ypos = 0;
 			hitbox.HitboxHeight = 255;
 			hitbox.HitboxWidth = 255;
-			hitbox.DamageTypeA = (uint) Actors.Slam;
+			hitbox.DamageTypeA = (uint) Entities.Slam;
 			hitbox.AutoToggle = 1;
 			hitbox.Damage = 999;
-			sotnApi.ActorApi.SpawnActor(hitbox);
+			sotnApi.EntityApi.SpawnEntity(hitbox);
 			sotnApi.AlucardApi.InvincibilityTimer = 0;
 			bloodManaDeathTimer.Stop();
 		}
@@ -2083,7 +2100,7 @@ namespace SotnRandoTools.Khaos
 				hordeEnemies[enemyIndex].Xpos = (ushort) rng.Next(10, 245);
 				hordeEnemies[enemyIndex].Ypos = (ushort) rng.Next(10, 245);
 				hordeEnemies[enemyIndex].Palette += (ushort) rng.Next(1, 10);
-				sotnApi.ActorApi.SpawnActor(hordeEnemies[enemyIndex]);
+				sotnApi.EntityApi.SpawnEntity(hordeEnemies[enemyIndex]);
 			}
 		}
 		private bool FindHordeEnemy()
@@ -2096,13 +2113,13 @@ namespace SotnRandoTools.Khaos
 				return false;
 			}
 
-			long enemy = sotnApi.ActorApi.FindActorFrom(toolConfig.Khaos.RomhackMode ? Constants.Khaos.AcceptedRomhackHordeEnemies : Constants.Khaos.AcceptedHordeEnemies);
+			long enemy = sotnApi.EntityApi.FindEntityFrom(toolConfig.Khaos.RomhackMode ? Constants.Khaos.AcceptedRomhackHordeEnemies : Constants.Khaos.AcceptedHordeEnemies);
 
 			if (enemy > 0)
 			{
-				Actor? hordeEnemy = new(sotnApi.ActorApi.GetActor(enemy));
+				Entity? hordeEnemy = new(sotnApi.EntityApi.GetEntity(enemy));
 
-				if (hordeEnemy is not null && !hordeEnemies.Where(e => e.Sprite == hordeEnemy.Sprite).Any())
+				if (hordeEnemy is not null && !hordeEnemies.Where(e => e.AiId == hordeEnemy.AiId).Any())
 				{
 					if (superHorde)
 					{
@@ -2114,21 +2131,21 @@ namespace SotnRandoTools.Khaos
 						switch (damageTypeRoll)
 						{
 							case 1:
-								hordeEnemy.DamageTypeA = (uint) Actors.Poison;
+								hordeEnemy.DamageTypeA = (uint) Entities.Poison;
 								break;
 							case 2:
-								hordeEnemy.DamageTypeB = (uint) Actors.Curse;
+								hordeEnemy.DamageTypeB = (uint) Entities.Curse;
 								break;
 							case 3:
-								hordeEnemy.DamageTypeA = (uint) Actors.Stone;
-								hordeEnemy.DamageTypeB = (uint) Actors.Stone;
+								hordeEnemy.DamageTypeA = (uint) Entities.Stone;
+								hordeEnemy.DamageTypeB = (uint) Entities.Stone;
 								break;
 							default:
 								break;
 						}
 					}
 					hordeEnemies.Add(hordeEnemy);
-					Console.WriteLine($"Added horde enemy with hp: {hordeEnemy.Hp} sprite: {hordeEnemy.Sprite} damage: {hordeEnemy.Damage}");
+					Console.WriteLine($"Added horde enemy with hp: {hordeEnemy.Hp} sprite: {hordeEnemy.AiId} damage: {hordeEnemy.Damage}");
 					return true;
 				}
 			}
@@ -2171,15 +2188,15 @@ namespace SotnRandoTools.Khaos
 				return;
 			}
 
-			Actor? bossCopy = null;
+			Entity? bossCopy = null;
 
-			long enemy = sotnApi.ActorApi.FindActorFrom(toolConfig.Khaos.RomhackMode ? Constants.Khaos.EnduranceRomhackBosses : Constants.Khaos.EnduranceBosses);
+			long enemy = sotnApi.EntityApi.FindEntityFrom(toolConfig.Khaos.RomhackMode ? Constants.Khaos.EnduranceRomhackBosses : Constants.Khaos.EnduranceBosses);
 			if (enemy > 0)
 			{
-				LiveActor boss = sotnApi.ActorApi.GetLiveActor(enemy);
-				bossCopy = new Actor(sotnApi.ActorApi.GetActor(enemy));
-				string name = Constants.Khaos.EnduranceRomhackBosses.Where(e => e.Sprite == bossCopy.Sprite).FirstOrDefault().Name;
-				Console.WriteLine($"Endurance boss found namne: {name} hp: {bossCopy.Hp}, damage: {bossCopy.Damage}, sprite: {bossCopy.Sprite}");
+				LiveEntity boss = sotnApi.EntityApi.GetLiveEntity(enemy);
+				bossCopy = new Entity(sotnApi.EntityApi.GetEntity(enemy));
+				string name = Constants.Khaos.EnduranceRomhackBosses.Where(e => e.AiId == bossCopy.AiId).FirstOrDefault().Name;
+				Console.WriteLine($"Endurance boss found namne: {name} hp: {bossCopy.Hp}, damage: {bossCopy.Damage}, sprite: {bossCopy.AiId}");
 
 				bool right = rng.Next(0, 2) > 0;
 				bossCopy.Xpos = right ? (ushort) (bossCopy.Xpos + rng.Next(40, 80)) : (ushort) (bossCopy.Xpos + rng.Next(-80, -40));
@@ -2190,7 +2207,7 @@ namespace SotnRandoTools.Khaos
 					newhp = Int16.MaxValue - 200;
 				}
 				bossCopy.Hp = (ushort) newhp;
-				sotnApi.ActorApi.SpawnActor(bossCopy);
+				sotnApi.EntityApi.SpawnEntity(bossCopy);
 
 				boss.Hp = (ushort) newhp;
 
@@ -2200,7 +2217,7 @@ namespace SotnRandoTools.Khaos
 
 					bossCopy.Xpos = rng.Next(0, 2) == 1 ? (ushort) (bossCopy.Xpos + rng.Next(-80, -20)) : (ushort) (bossCopy.Xpos + rng.Next(20, 80));
 					bossCopy.Palette = (ushort) (bossCopy.Palette + rng.Next(1, 10));
-					sotnApi.ActorApi.SpawnActor(bossCopy);
+					sotnApi.EntityApi.SpawnEntity(bossCopy);
 					notificationService.AddMessage($"Super Endurance {name}");
 				}
 				else
@@ -2218,11 +2235,11 @@ namespace SotnRandoTools.Khaos
 			}
 			else
 			{
-				enemy = sotnApi.ActorApi.FindActorFrom(toolConfig.Khaos.RomhackMode ? Constants.Khaos.EnduranceAlternateRomhackBosses : Constants.Khaos.EnduranceAlternateBosses);
+				enemy = sotnApi.EntityApi.FindEntityFrom(toolConfig.Khaos.RomhackMode ? Constants.Khaos.EnduranceAlternateRomhackBosses : Constants.Khaos.EnduranceAlternateBosses);
 				if (enemy > 0)
 				{
-					LiveActor boss = sotnApi.ActorApi.GetLiveActor(enemy);
-					string name = Constants.Khaos.EnduranceAlternateBosses.Where(e => e.Sprite == boss.Sprite).FirstOrDefault().Name;
+					LiveEntity boss = sotnApi.EntityApi.GetLiveEntity(enemy);
+					string name = Constants.Khaos.EnduranceAlternateBosses.Where(e => e.AiId == boss.AiId).FirstOrDefault().Name;
 					Console.WriteLine($"Endurance alternate boss found namne: {name}");
 
 					boss.Palette = (ushort) (boss.Palette + rng.Next(1, 10));
@@ -2265,53 +2282,53 @@ namespace SotnRandoTools.Khaos
 		}
 		private void SpawnPoisonHitbox()
 		{
-			Actor hitbox = new Actor();
+			Entity hitbox = new Entity();
 			int roll = rng.Next(0, 2);
 			hitbox.Xpos = roll == 1 ? (ushort) (sotnApi.AlucardApi.ScreenX + 1) : (ushort) 0;
 			hitbox.HitboxHeight = 255;
 			hitbox.HitboxWidth = 255;
 			hitbox.AutoToggle = 1;
 			hitbox.Damage = 1;
-			hitbox.DamageTypeA = (uint) Actors.Poison;
-			sotnApi.ActorApi.SpawnActor(hitbox);
+			hitbox.DamageTypeA = (uint) Entities.Poison;
+			sotnApi.EntityApi.SpawnEntity(hitbox);
 		}
 		private void SpawnCurseHitbox()
 		{
-			Actor hitbox = new Actor();
+			Entity hitbox = new Entity();
 			int roll = rng.Next(0, 2);
 			hitbox.Xpos = roll == 1 ? (ushort) (sotnApi.AlucardApi.ScreenX + 1) : (ushort) 0;
 			hitbox.HitboxHeight = 255;
 			hitbox.HitboxWidth = 255;
 			hitbox.AutoToggle = 1;
 			hitbox.Damage = 1;
-			hitbox.DamageTypeB = (uint) Actors.Curse;
-			sotnApi.ActorApi.SpawnActor(hitbox);
+			hitbox.DamageTypeB = (uint) Entities.Curse;
+			sotnApi.EntityApi.SpawnEntity(hitbox);
 		}
 		private void SpawnStoneHitbox()
 		{
-			Actor hitbox = new Actor();
+			Entity hitbox = new Entity();
 			int roll = rng.Next(0, 2);
 			hitbox.Xpos = roll == 1 ? (ushort) (sotnApi.AlucardApi.ScreenX + 1) : (ushort) 0;
 			hitbox.HitboxHeight = 255;
 			hitbox.HitboxWidth = 255;
 			hitbox.AutoToggle = 1;
 			hitbox.Damage = 1;
-			hitbox.DamageTypeA = (uint) Actors.Stone;
-			hitbox.DamageTypeB = (uint) Actors.Stone;
-			sotnApi.ActorApi.SpawnActor(hitbox);
+			hitbox.DamageTypeA = (uint) Entities.Stone;
+			hitbox.DamageTypeB = (uint) Entities.Stone;
+			sotnApi.EntityApi.SpawnEntity(hitbox);
 		}
 		private void SpawnSlamHitbox()
 		{
 			//bool alucardIsPoisoned = sotnApi.AlucardApi.PoisonTimer > 0;
-			Actor hitbox = new Actor();
+			Entity hitbox = new Entity();
 			int roll = rng.Next(0, 2);
 			hitbox.Xpos = roll == 1 ? (ushort) (sotnApi.AlucardApi.ScreenX + 1) : (ushort) 0;
 			hitbox.HitboxHeight = 255;
 			hitbox.HitboxWidth = 255;
 			hitbox.AutoToggle = 1;
 			hitbox.Damage = (ushort) (sotnApi.AlucardApi.Def + 2);
-			hitbox.DamageTypeA = (uint) Actors.Slam;
-			sotnApi.ActorApi.SpawnActor(hitbox);
+			hitbox.DamageTypeA = (uint) Entities.Slam;
+			sotnApi.EntityApi.SpawnEntity(hitbox);
 		}
 		private void BankruptActivate()
 		{
@@ -2566,13 +2583,16 @@ namespace SotnRandoTools.Khaos
 			float superFactor = super ? 2F : 1F;
 			float superWingsmashFactor = super ? 1.5F : 1F;
 			float factor = toolConfig.Khaos.HasteFactor;
+
+			uint wolfDashTopLeft = DefaultSpeeds.WolfDashTopLeft;
+
 			sotnApi.AlucardApi.WingsmashHorizontalSpeed = (uint) (DefaultSpeeds.WingsmashHorizontal * ((factor * superWingsmashFactor) / 2.5));
 			sotnApi.AlucardApi.WolfDashTopRightSpeed = (sbyte) Math.Floor(DefaultSpeeds.WolfDashTopRight * ((factor * superFactor) / 2));
-			sotnApi.AlucardApi.WolfDashTopLeftSpeed = (sbyte) Math.Ceiling((sbyte) DefaultSpeeds.WolfDashTopLeft * ((factor * superFactor) / 2));
+			sotnApi.AlucardApi.WolfDashTopLeftSpeed = (sbyte) Math.Ceiling((sbyte) wolfDashTopLeft * ((factor * superFactor) / 2));
 			Console.WriteLine("Set speeds:");
 			Console.WriteLine($"Wingsmash: {(uint) (DefaultSpeeds.WingsmashHorizontal * ((factor * superWingsmashFactor) / 2.5))}");
 			Console.WriteLine($"Wolf dash right: {(sbyte) Math.Floor(DefaultSpeeds.WolfDashTopRight * ((factor * superFactor) / 2))}");
-			Console.WriteLine($"Wolf dash left: {(sbyte) Math.Ceiling((sbyte) DefaultSpeeds.WolfDashTopLeft * ((factor * superFactor) / 2))}");
+			Console.WriteLine($"Wolf dash left: {(sbyte) Math.Ceiling((sbyte) wolfDashTopLeft * ((factor * superFactor) / 2))}");
 		}
 		private void ToggleHasteDynamicSpeeds(float factor = 1)
 		{
@@ -2660,7 +2680,7 @@ namespace SotnRandoTools.Khaos
 				lordEnemies[enemyIndex].Xpos = (ushort) rng.Next(10, 245);
 				lordEnemies[enemyIndex].Ypos = (ushort) rng.Next(10, 245);
 				lordEnemies[enemyIndex].Palette += (ushort) rng.Next(1, 10);
-				sotnApi.ActorApi.SpawnActor(lordEnemies[enemyIndex], false);
+				sotnApi.EntityApi.SpawnEntity(lordEnemies[enemyIndex], false);
 			}
 		}
 		private bool FindLordEnemy()
@@ -2673,16 +2693,16 @@ namespace SotnRandoTools.Khaos
 				return false;
 			}
 
-			long enemy = sotnApi.ActorApi.FindActorFrom(toolConfig.Khaos.RomhackMode ? Constants.Khaos.AcceptedRomhackHordeEnemies : Constants.Khaos.AcceptedHordeEnemies);
+			long enemy = sotnApi.EntityApi.FindEntityFrom(toolConfig.Khaos.RomhackMode ? Constants.Khaos.AcceptedRomhackHordeEnemies : Constants.Khaos.AcceptedHordeEnemies);
 
 			if (enemy > 0)
 			{
-				Actor? lordEnemy = new Actor(sotnApi.ActorApi.GetActor(enemy));
+				Entity? lordEnemy = new Entity(sotnApi.EntityApi.GetEntity(enemy));
 
-				if (lordEnemy is not null && !lordEnemies.Where(e => e.Sprite == lordEnemy.Sprite).Any())
+				if (lordEnemy is not null && !lordEnemies.Where(e => e.AiId == lordEnemy.AiId).Any())
 				{
 					lordEnemies.Add(lordEnemy);
-					Console.WriteLine($"Added Lord enemy with hp: {lordEnemy.Hp} sprite: {lordEnemy.Sprite} damage: {lordEnemy.Damage}");
+					Console.WriteLine($"Added Lord enemy with hp: {lordEnemy.Hp} sprite: {lordEnemy.AiId} damage: {lordEnemy.Damage}");
 					return true;
 				}
 			}
@@ -2829,14 +2849,14 @@ namespace SotnRandoTools.Khaos
 		{
 			if (vermilionBirdActive && inputService.ButtonPressed(PlaystationInputKeys.Square, 10) && fireballCooldown == 0)
 			{
-				Actor fireball = new Actor(Constants.Khaos.FireballActorBytes);
+				Entity fireball = new Entity(Constants.Khaos.FireballEntityBytes);
 				bool alucardFacing = sotnApi.AlucardApi.FacingLeft;
 				int offsetX = alucardFacing ? -20 : 20;
 				fireball.Xpos = (ushort) (sotnApi.AlucardApi.ScreenX + offsetX);
 				fireball.Ypos = (ushort) (sotnApi.AlucardApi.ScreenY - 10);
 
-				long address = sotnApi.ActorApi.SpawnActor(fireball, false);
-				LiveActor liveFireball = sotnApi.ActorApi.GetLiveActor(address);
+				long address = sotnApi.EntityApi.SpawnEntity(fireball, false);
+				LiveEntity liveFireball = sotnApi.EntityApi.GetLiveEntity(address);
 				if (inputService.ButtonPressed(PlaystationInputKeys.Down, 10))
 				{
 					fireballsDown.Add(liveFireball);
@@ -3114,6 +3134,7 @@ namespace SotnRandoTools.Khaos
 
 			uint horizontalWhole = (uint) (DefaultSpeeds.WalkingWhole * factor);
 			uint horizontalFract = (uint) (DefaultSpeeds.WalkingFract * factor);
+			uint wolfDashTopLeft = DefaultSpeeds.WolfDashTopLeft;
 
 			sotnApi.AlucardApi.WingsmashHorizontalSpeed = (uint) (DefaultSpeeds.WingsmashHorizontal * factor);
 			sotnApi.AlucardApi.WalkingWholeSpeed = horizontalWhole;
@@ -3127,16 +3148,16 @@ namespace SotnRandoTools.Khaos
 			sotnApi.AlucardApi.FallingHorizontalWholeSpeed = horizontalWhole;
 			sotnApi.AlucardApi.FallingHorizontalFractSpeed = horizontalFract;
 			sotnApi.AlucardApi.WolfDashTopRightSpeed = (sbyte) Math.Floor(DefaultSpeeds.WolfDashTopRight * factor);
-			sotnApi.AlucardApi.WolfDashTopLeftSpeed = (sbyte) Math.Ceiling((sbyte) DefaultSpeeds.WolfDashTopLeft * factor);
+			sotnApi.AlucardApi.WolfDashTopLeftSpeed = (sbyte) Math.Ceiling((sbyte) wolfDashTopLeft * factor);
 			sotnApi.AlucardApi.BackdashDecel = slow == true ? DefaultSpeeds.BackdashDecelSlow : DefaultSpeeds.BackdashDecel;
 			Console.WriteLine($"Set all speeds with factor {factor}");
 		}
 		private void SetShaftHp()
 		{
-			long shaftAddress = sotnApi.ActorApi.FindActorFrom(new List<SearchableActor> { Constants.Khaos.ShaftOrbActor });
+			long shaftAddress = sotnApi.EntityApi.FindEntityFrom(new List<SearchableActor> { Constants.Khaos.ShaftOrbActor });
 			if (shaftAddress > 0)
 			{
-				LiveActor shaft = sotnApi.ActorApi.GetLiveActor(shaftAddress);
+				LiveEntity shaft = sotnApi.EntityApi.GetLiveEntity(shaftAddress);
 				shaft.Hp = (int) Constants.Khaos.ShaftKhaosHp;
 				shaftHpSet = true;
 				Console.WriteLine("Found Shaft actor and set HP to 25.");
@@ -3148,10 +3169,10 @@ namespace SotnRandoTools.Khaos
 		}
 		private void SetGalamothtStats()
 		{
-			long galamothTorsoAddress = sotnApi.ActorApi.FindActorFrom(new List<SearchableActor> { Constants.Khaos.GalamothTorsoActor });
+			long galamothTorsoAddress = sotnApi.EntityApi.FindEntityFrom(new List<SearchableActor> { Constants.Khaos.GalamothTorsoActor });
 			if (galamothTorsoAddress > 0)
 			{
-				LiveActor galamothTorso = sotnApi.ActorApi.GetLiveActor(galamothTorsoAddress);
+				LiveEntity galamothTorso = sotnApi.EntityApi.GetLiveEntity(galamothTorsoAddress);
 				galamothTorso.Hp = (int) Constants.Khaos.GalamothKhaosHp;
 				galamothTorso.Xpos -= Constants.Khaos.GalamothKhaosPositionOffset;
 				Console.WriteLine($"gala def: {galamothTorso.Def}");
@@ -3178,14 +3199,14 @@ namespace SotnRandoTools.Khaos
 					}
 				}
 
-				long galamothHeadAddress = sotnApi.ActorApi.FindActorFrom(new List<SearchableActor> { Constants.Khaos.GalamothHeadActor });
-				LiveActor galamothHead = sotnApi.ActorApi.GetLiveActor(galamothHeadAddress);
+				long galamothHeadAddress = sotnApi.EntityApi.FindEntityFrom(new List<SearchableActor> { Constants.Khaos.GalamothHeadActor });
+				LiveEntity galamothHead = sotnApi.EntityApi.GetLiveEntity(galamothHeadAddress);
 				galamothHead.Xpos -= Constants.Khaos.GalamothKhaosPositionOffset;
 
-				List<long> galamothParts = sotnApi.ActorApi.GetAllActors(new List<SearchableActor> { Constants.Khaos.GalamothPartsActors });
+				List<long> galamothParts = sotnApi.EntityApi.GetAllActors(new List<SearchableActor> { Constants.Khaos.GalamothPartsActors });
 				foreach (long actor in galamothParts)
 				{
-					LiveActor galamothAnchor = sotnApi.ActorApi.GetLiveActor(actor);
+					LiveEntity galamothAnchor = sotnApi.EntityApi.GetLiveEntity(actor);
 					galamothAnchor.Xpos -= Constants.Khaos.GalamothKhaosPositionOffset;
 					galamothAnchor.Def = 0;
 				}

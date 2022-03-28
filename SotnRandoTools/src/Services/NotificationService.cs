@@ -8,6 +8,7 @@ using BizHawk.Client.Common;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Constants;
 using SotnRandoTools.Khaos.Models;
+using SotnRandoTools.Services.Models;
 
 namespace SotnRandoTools.Services
 {
@@ -16,7 +17,9 @@ namespace SotnRandoTools.Services
 		private OverlaySocketServer overlaySocketServer;
 		private const int NotificationTime = 5 * 1000;
 		private const int NotificationTimeFast = 3 * 1000;
-		private const int MeterSize = 60;
+		private const int MapOffsetX = 16;
+		private const int MapOffsetY = 20;
+		private Color WallColor = Color.FromArgb(192,192,192);
 
 		private readonly IGuiApi guiApi;
 		private readonly IToolConfig toolConfig;
@@ -27,8 +30,14 @@ namespace SotnRandoTools.Services
 		private int scale;
 		private Image textbox;
 		private Image scaledTextbox;
+		private Dictionary<string, Image> relicImages = new();
+		private Dictionary<string, MapCoordinates> relicCoordinates = new();
+		private Dictionary<string, MapCoordinates> invertedRelicCoordinates = new();
 		private System.Windows.Media.MediaPlayer audioPlayer = new();
 		private List<string> messageQueue = new();
+		private bool relicImagesInitialized = false;
+		private bool mapOpen = false;
+		private bool invertedMapOpen = false;
 
 		public NotificationService(IToolConfig toolConfig, IGuiApi guiApi, IEmuClientApi clientAPI)
 		{
@@ -58,6 +67,38 @@ namespace SotnRandoTools.Services
 			set
 			{
 				audioPlayer.Volume = value;
+			}
+		}
+
+		public bool MapOpen
+		{
+			get
+			{
+				return mapOpen;
+			}
+			set
+			{
+				mapOpen = value;
+				if (!countdownTimer.Enabled)
+				{
+					countdownTimer.Start();
+				}
+			}
+		}
+
+		public bool InvertedMapOpen
+		{
+			get
+			{
+				return invertedMapOpen;
+			}
+			set
+			{
+				invertedMapOpen = value;
+				if (!countdownTimer.Enabled)
+				{
+					countdownTimer.Start();
+				}
 			}
 		}
 
@@ -138,6 +179,24 @@ namespace SotnRandoTools.Services
 			overlaySocketServer.UpdateTracker(relics, items);
 		}
 
+		public void SetRelicCoordinates(string relic, int mapCol, int mapRow)
+		{
+			if (relicCoordinates.ContainsKey(relic))
+			{
+				return;
+			}
+			relicCoordinates.Add(relic, new MapCoordinates { Xpos = (mapCol * 2) + MapOffsetX, Ypos = mapRow + MapOffsetY});
+		}
+
+		public void SetInvertedRelicCoordinates(string relic, int mapCol, int mapRow)
+		{
+			if (invertedRelicCoordinates.ContainsKey(relic))
+			{
+				return;
+			}
+			invertedRelicCoordinates.Add(relic, new MapCoordinates { Xpos = (mapCol * 2) + MapOffsetX, Ypos = mapRow + MapOffsetY});
+		}
+
 		private void DrawUI()
 		{
 			int newScale = GetScale();
@@ -154,6 +213,10 @@ namespace SotnRandoTools.Services
 			int screenHeight = clientAPI.ScreenHeight();
 			int xpos = (int) (screenWidth * 0.45);
 			int ypos = (int) (screenHeight * 0.1);
+			int scaledBufferWidth = (clientAPI.BufferWidth() * scale);
+			int scaledBufferHeight = (clientAPI.BufferHeight() * scale);
+			float pixelScaleX = (float) screenWidth / (float) scaledBufferWidth;
+			float pixelScaleY = (float) screenHeight / (float) scaledBufferHeight;
 
 			guiApi.WithSurface(DisplaySurfaceID.Client, () =>
 			{
@@ -165,6 +228,14 @@ namespace SotnRandoTools.Services
 						fontSize--;
 					}
 					DrawMessage(messageQueue[0], scale, scaledTextbox, xpos, ypos, fontSize);
+				}
+				if (MapOpen)
+				{
+					DrawRelics(pixelScaleX, pixelScaleY);
+				}
+				else if (InvertedMapOpen)
+				{
+					DrawInvertedRelics(pixelScaleX, pixelScaleY);
 				}
 			});
 		}
@@ -191,6 +262,43 @@ namespace SotnRandoTools.Services
 			guiApi.DrawString(xpos + (int) (scaledTextbox.Width / 2), ypos + (11 * scale), message, Color.White, null, fontSize, "Arial", "bold", "center", "center");
 		}
 
+		private void DrawRelics(float pixelScaleX, float pixelScaleY)
+		{
+			if (relicImagesInitialized == false)
+			{
+				InitializeRelicImageas();
+			}
+
+			foreach (var relic in relicCoordinates)
+			{
+				DrawRelic(relicImages[relic.Key], relic.Value.Xpos, relic.Value.Ypos, pixelScaleX, pixelScaleY);
+			}
+		}
+
+		private void DrawInvertedRelics(float pixelScaleX, float pixelScaleY)
+		{
+			if (relicImagesInitialized == false)
+			{
+				InitializeRelicImageas();
+			}
+
+			foreach (var relic in invertedRelicCoordinates)
+			{
+				DrawRelic(relicImages[relic.Key], relic.Value.Xpos, relic.Value.Ypos, pixelScaleX, pixelScaleY);
+			}
+		}
+
+		private void DrawRelic(Image relic, int xpos, int ypos, float pixelScaleX, float pixelScaleY)
+		{
+			int finalXpos = (int) Math.Round(xpos * scale * pixelScaleX);
+			int finalYpos = (int) Math.Round(ypos * scale * pixelScaleY);
+			int scaledPixelX = (int) Math.Round(1 * scale * pixelScaleX);
+			int scaledPixelY = (int) Math.Round(1 * scale * pixelScaleY);
+
+			guiApi.DrawBox(finalXpos - scaledPixelX, finalYpos - scaledPixelY, finalXpos + (4 * scaledPixelX), finalYpos + (4 * scaledPixelY), null, WallColor);
+			guiApi.DrawImage(relic, finalXpos, finalYpos, relic.Width, relic.Height, true);
+		}
+
 		private void DequeueMessage(Object sender, EventArgs e)
 		{
 			if (messageQueue.Count > 0)
@@ -202,7 +310,7 @@ namespace SotnRandoTools.Services
 		private void RefreshUI(Object sender, EventArgs e)
 		{
 			DrawUI();
-			if (messageQueue.Count == 0)
+			if (messageQueue.Count == 0 && !MapOpen)
 			{
 				countdownTimer.Stop();
 			}
@@ -233,6 +341,15 @@ namespace SotnRandoTools.Services
 		private void ResizeImages()
 		{
 			scaledTextbox = ResizeImage(textbox, textbox.Width * scale, textbox.Height * scale);
+		}
+
+		private void InitializeRelicImageas()
+		{
+			foreach (var relic in Constants.Paths.RelicImages)
+			{
+				relicImages.Add(relic.Key, Image.FromFile(relic.Value));
+			}
+			relicImagesInitialized = true;
 		}
 	}
 }
