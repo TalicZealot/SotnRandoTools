@@ -19,10 +19,10 @@ namespace SotnRandoTools.Constants
 		};
 		public static readonly List<Relic[]> FlightRelics = new()
 		{
-			new Relic[] {Relic.SoulOfBat},
-			new Relic[] {Relic.LeapStone, Relic.GravityBoots},
-			new Relic[] {Relic.FormOfMist, Relic.PowerOfMist},
-			new Relic[] {Relic.SoulOfWolf, Relic.GravityBoots},
+			new Relic[] { Relic.SoulOfBat },
+			new Relic[] { Relic.LeapStone, Relic.GravityBoots },
+			new Relic[] { Relic.FormOfMist, Relic.PowerOfMist },
+			new Relic[] { Relic.SoulOfWolf, Relic.GravityBoots },
 		};
 
 		public static readonly List<MapLocation> LoadingRooms = new List<MapLocation>
@@ -307,8 +307,8 @@ namespace SotnRandoTools.Constants
 			//new SearchableActor {Name = "Slogra", Hp = 200, Damage = 6, AiId = 18296},  //It always detects Slogra, experimenting with Gaibon clone instead
 			new SearchableActor {Name = "Gaibon", Hp = 200, Damage = 7, AiId = 22392},
 			new SearchableActor {Name = "Doppleganger 10", Hp = 120, Damage = 7, AiId = 14260},
-			new SearchableActor {Name = "Minotaur", Hp = 300, Damage = 20, AiId = 9884},
-			new SearchableActor {Name = "Werewolf", Hp = 260, Damage = 20, AiId = 14428},
+			//new SearchableActor {Name = "Minotaur", Hp = 300, Damage = 20, AiId = 9884},
+			//new SearchableActor {Name = "Werewolf", Hp = 260, Damage = 20, AiId = 14428},
 			new SearchableActor {Name = "Lesser Demon", Hp = 400, Damage = 20, AiId = 56036},
 			new SearchableActor {Name = "Karasuman", Hp = 500, Damage = 20, AiId = 43920},
 			//new SearchableActor {Name = "Hippogryph", Hp = 800, Damage = 18, AiId = 7188},  //Can trigger the door closing and locking the player on the wrong side.
@@ -321,16 +321,18 @@ namespace SotnRandoTools.Constants
 			//new SearchableActor {Name = "Creature", Hp = 1100, Damage = 30, AiId = 31032},//Hammer doesn't have hitbox and body only does 1 damage
 			new SearchableActor {Name = "Doppleganger 40", Hp = 777, Damage = 35, AiId = 11664},
 			//new SearchableActor {Name = "Death", Hp = 888, Damage = 35, AiId = 46380},
-			new SearchableActor {Name = "Medusa", Hp = 1100, Damage = 35, AiId = 6044},
+			//new SearchableActor {Name = "Medusa", Hp = 1100, Damage = 35, AiId = 6044},
 			new SearchableActor {Name = "Akmodan", Hp = 1200, Damage = 40, AiId = 16564},
 			new SearchableActor {Name = "Sypha", Hp = 1000, Damage = 9, AiId = 30724},
 			new SearchableActor {Name = "Shaft", Hp = 1300, Damage = 40, AiId = 43772}
 		};
 		public static readonly List<SearchableActor> EnduranceAlternateBosses = new List<SearchableActor>
 		{
+			new SearchableActor {Name = "Werewolf", Hp = 260, Damage = 20, AiId = 14428},
 			new SearchableActor {Name = "Hippogryph", Hp = 800, Damage = 18, AiId = 7188},
 			new SearchableActor {Name = "Scylla", Hp = 200, Damage = 16, AiId = 10988},
 			new SearchableActor {Name = "Granfaloon", Hp = 400, Damage = 30, AiId = 6264},
+			new SearchableActor {Name = "Medusa", Hp = 1100, Damage = 35, AiId = 6044},
 			new SearchableActor {Name = "Creature", Hp = 1100, Damage = 30, AiId = 31032},
 			new SearchableActor {Name = "Death", Hp = 888, Damage = 35, AiId = 46380},
 			new SearchableActor {Name = "Beelzebub", Hp = 2000, Damage = 60, AiId = 11356},
@@ -504,6 +506,8 @@ namespace SotnRandoTools.Constants
 			{ "richter", "blood relations" },
 		};
 
+		public const string KhaosName = "Khaos";
+
 		public const float SuperWeakenFactor = 0.5F;
 		public const float SuperCrippleFactor = 0.5F;
 		public const int SlowQueueIntervalEnd = 3;
@@ -526,5 +530,10 @@ namespace SotnRandoTools.Constants
 		public const int AutoKhaosDifficultyEasy = 70;
 		public const int AutoKhaosDifficultyNormal = 50;
 		public const int AutoKhaosDifficultyHard = 20;
+
+		public const uint MinimumHp = 70;
+		public const uint MinimumMp = 30;
+		public const uint MinimumHearts = 60;
+		public const uint MinimumStat = 6;
 	}
 }

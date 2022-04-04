@@ -44,10 +44,10 @@ namespace SotnRandoTools
 			}
 		}
 
-		public void SetTrackerVladRelicLocationDisplay(IVladRelicLocationDisplay vladRelicLocationDisplay)
+		public void SetTrackerVladRelicLocationDisplay(IRelicLocationDisplay vladRelicLocationDisplay)
 		{
 			if (vladRelicLocationDisplay is null) throw new ArgumentNullException(nameof(vladRelicLocationDisplay));
-			tracker.VladRelicLocationDisplay = vladRelicLocationDisplay;
+			tracker.RelicLocationDisplay = vladRelicLocationDisplay;
 		}
 
 		private void TrackerForm_Load(object sender, EventArgs e)

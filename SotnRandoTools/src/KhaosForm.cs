@@ -17,7 +17,7 @@ using SotnRandoTools.Services.Models;
 
 namespace SotnRandoTools
 {
-	public partial class KhaosForm : Form, IKhaosActionsInfoDisplay, INotifyPropertyChanged, IVladRelicLocationDisplay
+	public partial class KhaosForm : Form, IKhaosActionsInfoDisplay, INotifyPropertyChanged, IRelicLocationDisplay
 	{
 		private ICheatCollectionAdapter adaptedCheats;
 		private readonly IToolConfig toolConfig;
@@ -156,6 +156,16 @@ namespace SotnRandoTools
 				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(BatLocation)));
 			}
 		}
+		public string WolfLocation
+		{
+			get => batLocation;
+			set
+			{
+				batLocation = value;
+
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(WolfLocation)));
+			}
+		}
 		public string MistLocation
 		{
 			get => mistLocation;
@@ -164,6 +174,16 @@ namespace SotnRandoTools
 				mistLocation = value;
 
 				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(MistLocation)));
+			}
+		}
+		public string PowerOfMistLocation
+		{
+			get => mistLocation;
+			set
+			{
+				mistLocation = value;
+
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PowerOfMistLocation)));
 			}
 		}
 		public string JewelOfOpenLocation

@@ -19,7 +19,7 @@ namespace SotnRandoTools.Services
 		private const int NotificationTimeFast = 3 * 1000;
 		private const int MapOffsetX = 16;
 		private const int MapOffsetY = 20;
-		private Color WallColor = Color.FromArgb(192,192,192);
+		private Color WallColor = Color.FromArgb(192, 192, 192);
 
 		private readonly IGuiApi guiApi;
 		private readonly IToolConfig toolConfig;
@@ -185,7 +185,7 @@ namespace SotnRandoTools.Services
 			{
 				return;
 			}
-			relicCoordinates.Add(relic, new MapCoordinates { Xpos = (mapCol * 2) + MapOffsetX, Ypos = mapRow + MapOffsetY});
+			relicCoordinates.Add(relic, new MapCoordinates { Xpos = (mapCol * 2) + MapOffsetX, Ypos = mapRow + MapOffsetY });
 		}
 
 		public void SetInvertedRelicCoordinates(string relic, int mapCol, int mapRow)
@@ -194,7 +194,7 @@ namespace SotnRandoTools.Services
 			{
 				return;
 			}
-			invertedRelicCoordinates.Add(relic, new MapCoordinates { Xpos = (mapCol * 2) + MapOffsetX, Ypos = mapRow + MapOffsetY});
+			invertedRelicCoordinates.Add(relic, new MapCoordinates { Xpos = (mapCol * 2) + MapOffsetX, Ypos = mapRow + MapOffsetY });
 		}
 
 		private void DrawUI()

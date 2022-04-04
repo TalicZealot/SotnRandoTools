@@ -12,11 +12,13 @@ using SotnRandoTools.Khaos.Interfaces;
 using SotnRandoTools.Khaos.Models;
 using SotnRandoTools.Services;
 using SotnRandoTools.Services.Interfaces;
+using SotnRandoTools.Utils;
 using TwitchLib.Api;
 using TwitchLib.Api.Core.Exceptions;
 using TwitchLib.Api.Helix.Models.ChannelPoints.CreateCustomReward;
 using TwitchLib.Api.Helix.Models.ChannelPoints.UpdateCustomReward;
 using TwitchLib.Api.Helix.Models.ChannelPoints.UpdateCustomRewardRedemptionStatus;
+using TwitchLib.Api.Helix.Models.Subscriptions;
 using TwitchLib.PubSub;
 using TwitchLib.PubSub.Events;
 
@@ -27,7 +29,8 @@ namespace SotnRandoTools.Khaos
 		private const int RetryBaseMs = 12;
 		private const int RetryCount = 3;
 		private const int UpdateRetryCount = 4;
-		private const int FulfilRewardDelay = 60 * 1000;
+		private const int MaxSubscribers = 100;
+		private const int FulfilRewardDelay = 60;
 		private const int FulfilTimerInterval = 3 * 30 * 1000;
 		private const int RefreshTokenInterval = 3 * (60 * (60 * 1000)) + (30 * (60 * 1000)); // 3.5 hours
 		private readonly IToolConfig toolConfig;
@@ -125,31 +128,35 @@ namespace SotnRandoTools.Khaos
 		{
 			Console.WriteLine($"Fetching subscribers...");
 
-			for (int i = 0; i <= RetryCount; i++)
-			{
-				try
-				{
-					var subs = await api.Helix.Subscriptions.GetBroadcasterSubscriptions(
+			GetBroadcasterSubscriptionsResponse subs = await RetryRequest.Do(
+				async () => await api.Helix.Subscriptions.GetBroadcasterSubscriptions(
 					broadcasterId,
 					null,
-					150,
+					MaxSubscribers,
 					api.Settings.AccessToken
-					);
-					khaosController.OverwriteNames(subs.Data.Select(u => u.UserName).ToArray());
-					break;
-				}
-				catch (Exception e)
-				{
-					if (i == RetryCount)
-					{
-						Console.WriteLine("Could not fetch subscribers! " + e.Message);
-					}
-					else
-					{
-						await Task.Delay((int) Math.Pow(RetryBaseMs, i));
-					}
-				}
+					),
+				RetryBaseMs,
+				RetryCount
+				);
+			List<string> totalSubs = subs.Data.Select(u => u.UserName).ToList();
+
+			if (subs.Total > MaxSubscribers)
+			{
+				GetBroadcasterSubscriptionsResponse subsPageTwoData = await RetryRequest.Do(
+				async () => await api.Helix.Subscriptions.GetBroadcasterSubscriptions(
+					broadcasterId,
+					MaxSubscribers.ToString(),
+					MaxSubscribers,
+					api.Settings.AccessToken
+				),
+				RetryBaseMs,
+				RetryCount
+				);
+				totalSubs.Concat(subsPageTwoData.Data.Select(u => u.UserName).ToList());
 			}
+
+			khaosController.OverwriteNames(totalSubs.ToArray());
+
 		}
 
 		private async void CreateRewards()
@@ -191,32 +198,16 @@ namespace SotnRandoTools.Khaos
 
 					Console.WriteLine($"Request parameters: Title: {request.Title} Cost: {request.Cost} Cooldown: {request.GlobalCooldownSeconds}");
 
-
-					for (int i = 0; i <= RetryCount; i++)
-					{
-						try
-						{
-							CreateCustomRewardsResponse response = await api.Helix.ChannelPoints.CreateCustomRewards(
+					CreateCustomRewardsResponse response = await RetryRequest.Do(
+						async () => await api.Helix.ChannelPoints.CreateCustomRewards(
 							broadcasterId,
 							request,
 							api.Settings.AccessToken
-							);
-							customRewardIds.Add(response.Data[0].Id);
-							break;
-						}
-						catch (Exception e)
-						{
-							if (i == RetryCount)
-							{
-								throw new Exception("Server error while creating Rewards. Please click Continue, then Disconnect and Reconnect.", e);
-							}
-							else
-							{
-								await Task.Delay((int) Math.Pow(RetryBaseMs, i));
-							}
-						}
-					}
-
+							),
+						RetryBaseMs,
+						RetryCount
+						);
+					customRewardIds.Add(response.Data[0].Id);
 				}
 			}
 			notificationService.AddMessage("Channel Point rewards created");
@@ -241,34 +232,18 @@ namespace SotnRandoTools.Khaos
 				request.IsUserInputRequired = true;
 			}
 
-			for (int i = 0; i <= RetryCount; i++)
-			{
-				try
-				{
-					CreateCustomRewardsResponse response = await api.Helix.ChannelPoints.CreateCustomRewards(
-					broadcasterId,
-					request,
-					api.Settings.AccessToken
-					);
-					customRewardIds.Add(response.Data[0].Id);
-
-					Console.WriteLine($"Added new delayed reward {request.Title}.");
-					notificationService.AddMessage($"{request.Title} reward added.");
-
-					break;
-				}
-				catch (Exception e)
-				{
-					if (i == RetryCount)
-					{
-						throw new Exception("Server error while creating Rewards. Please click Continue, then Disconnect and Reconnect.", e);
-					}
-					else
-					{
-						await Task.Delay((int) Math.Pow(RetryBaseMs, i));
-					}
-				}
-			}
+			CreateCustomRewardsResponse response = await RetryRequest.Do(
+						async () => await api.Helix.ChannelPoints.CreateCustomRewards(
+							broadcasterId,
+							request,
+							api.Settings.AccessToken
+						),
+						RetryBaseMs,
+						RetryCount
+						);
+			customRewardIds.Add(response.Data[0].Id);
+			Console.WriteLine($"Added new delayed reward {request.Title}.");
+			notificationService.AddMessage($"{request.Title} reward added.");
 		}
 
 		private async void DeleteRewards()
@@ -278,29 +253,15 @@ namespace SotnRandoTools.Khaos
 			{
 				Console.WriteLine($"Deleting reward with id: {customRewardIds[i]}");
 
-				for (int j = 0; j <= RetryCount; j++)
-				{
-					try
-					{
-						await api.Helix.ChannelPoints.DeleteCustomReward(
+				await RetryRequest.Do(
+					async () => await api.Helix.ChannelPoints.DeleteCustomReward(
 						broadcasterId,
 						customRewardIds[i],
 						api.Settings.AccessToken
-						);
-						break;
-					}
-					catch (Exception e)
-					{
-						if (j == RetryCount)
-						{
-							throw new Exception("Server error while deleting Rewards. Please delete the remainint rewards from the  Dashboard.", e);
-						}
-						else
-						{
-							await Task.Delay((int) Math.Pow(RetryBaseMs, j));
-						}
-					}
-				}
+						),
+					RetryBaseMs,
+					RetryCount
+				);
 			}
 			notificationService.AddMessage("Channel Point rewards removed");
 		}
@@ -354,29 +315,15 @@ namespace SotnRandoTools.Khaos
 				}
 			}
 
-			for (int i = 0; i <= RetryCount; i++)
-			{
-				try
-				{
-					await api.Helix.ChannelPoints.UpdateCustomReward(
-						broadcasterId,
-						e.RewardRedeemed.Redemption.Reward.Id,
-						new UpdateCustomRewardRequest { Cost = NewCost, },
-						api.Settings.AccessToken);
-					break;
-				}
-				catch (Exception ex)
-				{
-					if (i == RetryCount)
-					{
-						throw new Exception("Server error while updating Reward. Click Continue.", ex);
-					}
-					else
-					{
-						await Task.Delay((int) Math.Pow(RetryBaseMs, i));
-					}
-				}
-			}
+			await RetryRequest.Do(
+				async () => await api.Helix.ChannelPoints.UpdateCustomReward(
+					broadcasterId,
+					e.RewardRedeemed.Redemption.Reward.Id,
+					new UpdateCustomRewardRequest { Cost = NewCost, },
+					api.Settings.AccessToken),
+				RetryBaseMs,
+				RetryCount
+			);
 
 			var actionEvent = new EventAddAction { UserName = e.RewardRedeemed.Redemption.User.DisplayName, ActionIndex = toolConfig.Khaos.Actions.IndexOf(action), Data = e.RewardRedeemed.Redemption.UserInput };
 
@@ -468,7 +415,7 @@ namespace SotnRandoTools.Khaos
 
 			for (int i = redemptions.Count - 1; i >= 0; i--)
 			{
-				if ((currentTime - redemptions[i].RedeemedAt).TotalSeconds > 60)
+				if ((currentTime - redemptions[i].RedeemedAt).TotalSeconds > FulfilRewardDelay)
 				{
 					FulfillRedemption(redemptions[i]);
 					redemptions.Remove(redemptions[i]);
