@@ -148,6 +148,10 @@ namespace SotnRandoTools
 
 			khaosSettingsPanel = new KhaosSettingsPanel(toolConfig);
 			khaosSettingsPanel.Location = new Point(0, PanelOffset);
+			if (notificationService is not null)
+			{
+				khaosSettingsPanel.NotificationService = notificationService;
+			}
 			this.Controls.Add(khaosSettingsPanel);
 
 			coopSettingsPanel = new CoopSettingsPanel(toolConfig);

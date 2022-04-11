@@ -170,6 +170,7 @@ namespace SotnRandoTools.Khaos
 		private int hnkToggled = 0;
 
 		private int bankruptLevel = 1;
+		private short mainMenuCounter = 0;
 
 		public KhaosController(IToolConfig toolConfig, ISotnApi sotnApi, ICheatCollectionAdapter cheats, INotificationService notificationService, IInputService inputService, IKhaosActionsInfoDisplay statusInfoDisplay)
 		{
@@ -2987,7 +2988,8 @@ namespace SotnRandoTools.Khaos
 				inMainMenu = sotnApi.GameApi.Status == SotnApi.Constants.Values.Game.Status.MainMenu;
 				if (inMainMenu)
 				{
-					GainKhaosMeter((short) toolConfig.Khaos.MeterOnReset);
+					GainKhaosMeter((short) (toolConfig.Khaos.MeterOnReset * mainMenuCounter));
+					mainMenuCounter++;
 					battleOrdersBonusHp = 0;
 					battleOrdersBonusMp = 0;
 				}

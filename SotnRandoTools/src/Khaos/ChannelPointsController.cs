@@ -145,7 +145,7 @@ namespace SotnRandoTools.Khaos
 				GetBroadcasterSubscriptionsResponse subsPageTwoData = await RetryRequest.Do(
 				async () => await api.Helix.Subscriptions.GetBroadcasterSubscriptions(
 					broadcasterId,
-					MaxSubscribers.ToString(),
+					subs.Pagination.Cursor,
 					MaxSubscribers,
 					api.Settings.AccessToken
 				),
