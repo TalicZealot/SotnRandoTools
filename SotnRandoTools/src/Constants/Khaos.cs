@@ -476,7 +476,7 @@ namespace SotnRandoTools.Constants
 			{ "pit", "abandoned pit" },
 			{ "mines", "abandoned pit" },
 			{ "mine", "abandoned pit" },
-			{ "catacombs", "rainbow cemetery" },
+			{ "catacombs", "rainbow cemetary" },
 			{ "rainbow cemetery", "rainbow cemetary" },
 			{ "lost paintings", "lost painting" },
 			{ "antichapel", "lost painting" },

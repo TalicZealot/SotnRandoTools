@@ -841,6 +841,7 @@ namespace SotnRandoTools.Khaos
 				}
 			}
 		}
+		//TODO: Detect save rooms and turn off temporarily
 		public void BattleOrders(string user = Constants.Khaos.KhaosName)
 		{
 			float currentHpPercentage = (float) sotnApi.AlucardApi.CurrentHp / (float) sotnApi.AlucardApi.MaxtHp;
@@ -908,6 +909,7 @@ namespace SotnRandoTools.Khaos
 
 			Alert(toolConfig.Khaos.Actions[(int) Enums.Action.Magician]);
 		}
+		//TODO: Review GG speed
 		public void MeltyBlood(string user = Constants.Khaos.KhaosName)
 		{
 			bool meterFull = KhaosMeterFull();
