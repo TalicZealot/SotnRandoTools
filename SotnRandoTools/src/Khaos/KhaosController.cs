@@ -2018,7 +2018,7 @@ namespace SotnRandoTools.Khaos
 		}
 		private void MeltyBloodOff()
 		{
-			cheatsController.Hitbox2Width.Disable();
+			cheatsController.HitboxWidth.Disable();
 			cheatsController.HitboxHeight.Disable();
 			cheatsController.Hitbox2Width.Disable();
 			cheatsController.Hitbox2Height.Disable();
@@ -2117,7 +2117,7 @@ namespace SotnRandoTools.Khaos
 		}
 		private void OverdriveOn()
 		{
-			cheatsController.VisualEffectPaletteCheat.PokeValue(33126);
+			cheatsController.VisualEffectPaletteCheat.PokeValue(Constants.Khaos.OverdriveColorPalette);
 			cheatsController.VisualEffectPaletteCheat.Enable();
 			cheatsController.VisualEffectTimerCheat.PokeValue(30);
 			cheatsController.VisualEffectTimerCheat.Enable();

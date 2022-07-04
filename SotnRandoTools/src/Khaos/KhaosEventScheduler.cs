@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Khaos.Interfaces;
 using SotnRandoTools.Khaos.Models;
@@ -518,10 +519,10 @@ namespace SotnRandoTools.Khaos
 
 			while (actions.Count > 0 && now >= actions[0].Elapses)
 			{
-				actions[0].Elapses = now.AddMilliseconds(actions[0].Interval);
-				actions.Add(actions[0]);
-				actions[0].Invoker.Invoke();
+				BizhawkSafeTimer refresh = new BizhawkSafeTimer { Invoker = actions[0].Invoker, Elapses = now.AddMilliseconds(actions[0].Interval), Interval = actions[0].Interval };
+				actions.Add(refresh);
 				actions.RemoveAt(0);
+				refresh.Invoker.Invoke();
 				if (actions.Count > 1)
 				{
 					actions.Sort((x, y) => x.Elapses.CompareTo(y.Elapses));
@@ -586,13 +587,10 @@ namespace SotnRandoTools.Khaos
 
 		private void RemoveTimer(BizhawkSafeTimer action)
 		{
-			if (actions.Contains(action))
+			actions.RemoveAll(a => a.Invoker == action.Invoker);
+			if (actions.Count > 1)
 			{
-				actions.Remove(action);
-				if (actions.Count > 1)
-				{
-					actions.Sort((x, y) => x.Elapses.CompareTo(y.Elapses));
-				}
+				actions.Sort((x, y) => x.Elapses.CompareTo(y.Elapses));
 			}
 		}
 	}
