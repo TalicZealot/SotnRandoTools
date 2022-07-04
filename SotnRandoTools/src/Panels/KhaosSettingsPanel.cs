@@ -22,17 +22,7 @@ namespace SotnRandoTools
 
 		private void KhaosSettingsPanel_Load(object sender, EventArgs e)
 		{
-			alertsCheckbox.Checked = toolConfig.Khaos.Alerts;
-			volumeTrackBar.Value = toolConfig.Khaos.Volume;
-			pandoraThresholdTextBox.Text = toolConfig.Khaos.PandoraTrigger.ToString();
-			hasteTextBox.Text = (toolConfig.Khaos.HasteFactor * 100) + "%";
-			weakenTextBox.Text = (toolConfig.Khaos.WeakenFactor * 100) + "%";
-			queueTextBox.Text = toolConfig.Khaos.QueueInterval.ToString();
-			dynamicIntervalCheckBox.Checked = toolConfig.Khaos.DynamicInterval;
-			keepVladRelicsCheckbox.Checked = toolConfig.Khaos.KeepVladRelics;
-			costDecayCheckBox.Checked = toolConfig.Khaos.CostDecay;
-			pandoraMinTextBox.Text = toolConfig.Khaos.PandoraMinItems.ToString();
-			pandoraMaxTextBox.Text = toolConfig.Khaos.PandoraMaxItems.ToString();
+			SetPalenValues();
 
 			foreach (var action in toolConfig.Khaos.Actions)
 			{
@@ -48,6 +38,21 @@ namespace SotnRandoTools
 			actionPricingGridView.AutoGenerateColumns = false;
 			actionPricingGridView.DataSource = actionSettingsSource;
 			actionPricingGridView.CellValidating += ActionPricingGridView_CellValidating;
+		}
+
+		private void SetPalenValues()
+		{
+			alertsCheckbox.Checked = toolConfig.Khaos.Alerts;
+			volumeTrackBar.Value = toolConfig.Khaos.Volume;
+			pandoraThresholdTextBox.Text = toolConfig.Khaos.PandoraTrigger.ToString();
+			hasteTextBox.Text = (toolConfig.Khaos.HasteFactor * 100) + "%";
+			weakenTextBox.Text = (toolConfig.Khaos.WeakenFactor * 100) + "%";
+			queueTextBox.Text = toolConfig.Khaos.QueueInterval.ToString();
+			dynamicIntervalCheckBox.Checked = toolConfig.Khaos.DynamicInterval;
+			keepVladRelicsCheckbox.Checked = toolConfig.Khaos.KeepVladRelics;
+			costDecayCheckBox.Checked = toolConfig.Khaos.CostDecay;
+			pandoraMinTextBox.Text = toolConfig.Khaos.PandoraMinItems.ToString();
+			pandoraMaxTextBox.Text = toolConfig.Khaos.PandoraMaxItems.ToString();
 			autoDifficultyComboBox.Text = toolConfig.Khaos.AutoKhaosDifficulty;
 		}
 
@@ -113,6 +118,12 @@ namespace SotnRandoTools
 		private void saveButton_Click(object sender, EventArgs e)
 		{
 			toolConfig.SaveConfig();
+		}
+
+		private void khaosDerfaultsButton_Click(object sender, EventArgs e)
+		{
+			toolConfig.Khaos.Default();
+			SetPalenValues();
 		}
 
 		private void volumeTrackBar_Scroll(object sender, EventArgs e)

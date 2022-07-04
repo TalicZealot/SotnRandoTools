@@ -7,6 +7,27 @@ namespace SotnRandoTools.Configuration
 	{
 		public TrackerConfig()
 		{
+			Default();
+		}
+		public bool ProgressionRelicsOnly { get; set; }
+		public bool GridLayout { get; set; }
+		public bool AlwaysOnTop { get; set; }
+		public bool Locations { get; set; }
+		public bool SaveReplays { get; set; }
+		public bool EnableAutosplitter { get; set; }
+		public bool UseOverlay { get; set; }
+		public string Username { get; set; }
+		public List<List<int>> OverlaySlots { get; set; }
+		public bool CustomLocationsGuarded { get; set; }
+		public bool CustomLocationsEquipment { get; set; }
+		public bool CustomLocationsClassic { get; set; }
+		public bool CustomLocationsSpread { get; set; }
+		public int Width { get; set; }
+		public int Height { get; set; }
+		public Point Location { get; set; }
+
+		public void Default()
+		{
 			ProgressionRelicsOnly = false;
 			GridLayout = true;
 			AlwaysOnTop = false;
@@ -17,6 +38,7 @@ namespace SotnRandoTools.Configuration
 			CustomLocationsGuarded = true;
 			CustomLocationsEquipment = false;
 			CustomLocationsClassic = false;
+			CustomLocationsSpread = false;
 			Width = 260;
 			Height = 490;
 			OverlaySlots = new List<List<int>>
@@ -41,20 +63,5 @@ namespace SotnRandoTools.Configuration
 				new() {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 			};
 		}
-		public bool ProgressionRelicsOnly { get; set; }
-		public bool GridLayout { get; set; }
-		public bool AlwaysOnTop { get; set; }
-		public bool Locations { get; set; }
-		public bool SaveReplays { get; set; }
-		public bool EnableAutosplitter { get; set; }
-		public bool UseOverlay { get; set; }
-		public string Username { get; set; }
-		public List<List<int>> OverlaySlots { get; set; }
-		public bool CustomLocationsGuarded { get; set; }
-		public bool CustomLocationsEquipment { get; set; }
-		public bool CustomLocationsClassic { get; set; }
-		public int Width { get; set; }
-		public int Height { get; set; }
-		public Point Location { get; set; }
 	}
 }

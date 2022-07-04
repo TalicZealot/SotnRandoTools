@@ -48,6 +48,7 @@ namespace SotnRandoTools
 			customLocationsGuardedRadio.Checked = toolConfig.Tracker.CustomLocationsGuarded;
 			customLocationsEquipmentRadio.Checked = toolConfig.Tracker.CustomLocationsEquipment;
 			customLocationsClassicRadio.Checked = toolConfig.Tracker.CustomLocationsClassic;
+			customLocationsSpreadRadio.Checked = toolConfig.Tracker.CustomLocationsSpread;
 
 			username.Text = toolConfig.Tracker.Username;
 		}
@@ -91,6 +92,11 @@ namespace SotnRandoTools
 			toolConfig.SaveConfig();
 		}
 
+		private void trackerDerfaultsButton_Click(object sender, EventArgs e)
+		{
+			toolConfig.Tracker.Default();
+		}
+
 		private void replaysCheckBox_CheckedChanged(object sender, EventArgs e)
 		{
 			toolConfig.Tracker.SaveReplays = replaysCheckBox.Checked;
@@ -109,6 +115,11 @@ namespace SotnRandoTools
 		private void customLocationsClassicRadio_CheckedChanged(object sender, EventArgs e)
 		{
 			toolConfig.Tracker.CustomLocationsClassic = customLocationsClassicRadio.Checked;
+		}
+
+		private void customLocationsSpreadRadio_CheckedChanged(object sender, EventArgs e)
+		{
+			toolConfig.Tracker.CustomLocationsSpread = customLocationsSpreadRadio.Checked;
 		}
 
 		private void username_TextChanged(object sender, EventArgs e)

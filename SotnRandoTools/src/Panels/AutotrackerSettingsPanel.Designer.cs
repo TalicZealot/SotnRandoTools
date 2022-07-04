@@ -41,16 +41,18 @@ namespace SotnRandoTools
             this.windowGroup = new System.Windows.Forms.GroupBox();
             this.alwaysOnTopCheckBox = new System.Windows.Forms.CheckBox();
             this.optionsGroup = new System.Windows.Forms.GroupBox();
+            this.autosplitterCheckBox = new System.Windows.Forms.CheckBox();
             this.overlayCheckBox = new System.Windows.Forms.CheckBox();
             this.replaysCheckBox = new System.Windows.Forms.CheckBox();
             this.locationsCheckbox = new System.Windows.Forms.CheckBox();
             this.customSeedGroup = new System.Windows.Forms.GroupBox();
+            this.customLocationsSpreadRadio = new System.Windows.Forms.RadioButton();
             this.customLocationsClassicRadio = new System.Windows.Forms.RadioButton();
             this.customLocationsEquipmentRadio = new System.Windows.Forms.RadioButton();
             this.customLocationsGuardedRadio = new System.Windows.Forms.RadioButton();
             this.username = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.autosplitterCheckBox = new System.Windows.Forms.CheckBox();
+            this.trackerDerfaultsButton = new System.Windows.Forms.Button();
             this.relicDisplayGroup.SuspendLayout();
             this.layoutGroup.SuspendLayout();
             this.windowGroup.SuspendLayout();
@@ -201,6 +203,17 @@ namespace SotnRandoTools
             this.optionsGroup.TabStop = false;
             this.optionsGroup.Text = "Options";
             // 
+            // autosplitterCheckBox
+            // 
+            this.autosplitterCheckBox.AutoSize = true;
+            this.autosplitterCheckBox.Location = new System.Drawing.Point(6, 65);
+            this.autosplitterCheckBox.Name = "autosplitterCheckBox";
+            this.autosplitterCheckBox.Size = new System.Drawing.Size(117, 17);
+            this.autosplitterCheckBox.TabIndex = 3;
+            this.autosplitterCheckBox.Text = "Enable Autosplitter";
+            this.autosplitterCheckBox.UseVisualStyleBackColor = true;
+            this.autosplitterCheckBox.CheckedChanged += new System.EventHandler(this.autosplitterCheckBox_CheckedChanged);
+            // 
             // overlayCheckBox
             // 
             this.overlayCheckBox.AutoSize = true;
@@ -236,6 +249,7 @@ namespace SotnRandoTools
             // 
             // customSeedGroup
             // 
+            this.customSeedGroup.Controls.Add(this.customLocationsSpreadRadio);
             this.customSeedGroup.Controls.Add(this.customLocationsClassicRadio);
             this.customSeedGroup.Controls.Add(this.customLocationsEquipmentRadio);
             this.customSeedGroup.Controls.Add(this.customLocationsGuardedRadio);
@@ -246,6 +260,18 @@ namespace SotnRandoTools
             this.customSeedGroup.TabIndex = 7;
             this.customSeedGroup.TabStop = false;
             this.customSeedGroup.Text = "Custom Seed Locations";
+            // 
+            // customLocationsSpreadRadio
+            // 
+            this.customLocationsSpreadRadio.AutoSize = true;
+            this.customLocationsSpreadRadio.Location = new System.Drawing.Point(98, 21);
+            this.customLocationsSpreadRadio.Name = "customLocationsSpreadRadio";
+            this.customLocationsSpreadRadio.Size = new System.Drawing.Size(59, 17);
+            this.customLocationsSpreadRadio.TabIndex = 4;
+            this.customLocationsSpreadRadio.TabStop = true;
+            this.customLocationsSpreadRadio.Text = "Spread";
+            this.customLocationsSpreadRadio.UseVisualStyleBackColor = true;
+            this.customLocationsSpreadRadio.CheckedChanged += new System.EventHandler(this.customLocationsSpreadRadio_CheckedChanged);
             // 
             // customLocationsClassicRadio
             // 
@@ -303,22 +329,28 @@ namespace SotnRandoTools
             this.groupBox1.Tag = "Username";
             this.groupBox1.Text = "Username";
             // 
-            // autosplitterCheckBox
+            // trackerDerfaultsButton
             // 
-            this.autosplitterCheckBox.AutoSize = true;
-            this.autosplitterCheckBox.Location = new System.Drawing.Point(6, 65);
-            this.autosplitterCheckBox.Name = "autosplitterCheckBox";
-            this.autosplitterCheckBox.Size = new System.Drawing.Size(117, 17);
-            this.autosplitterCheckBox.TabIndex = 3;
-            this.autosplitterCheckBox.Text = "Enable Autosplitter";
-            this.autosplitterCheckBox.UseVisualStyleBackColor = true;
-            this.autosplitterCheckBox.CheckedChanged += new System.EventHandler(this.autosplitterCheckBox_CheckedChanged);
+            this.trackerDerfaultsButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
+            this.trackerDerfaultsButton.FlatAppearance.BorderSize = 2;
+            this.trackerDerfaultsButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
+            this.trackerDerfaultsButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
+            this.trackerDerfaultsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.trackerDerfaultsButton.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.trackerDerfaultsButton.Location = new System.Drawing.Point(6, 340);
+            this.trackerDerfaultsButton.Name = "trackerDerfaultsButton";
+            this.trackerDerfaultsButton.Size = new System.Drawing.Size(118, 25);
+            this.trackerDerfaultsButton.TabIndex = 9;
+            this.trackerDerfaultsButton.Text = "Tracker Defaults";
+            this.trackerDerfaultsButton.UseVisualStyleBackColor = true;
+            this.trackerDerfaultsButton.Click += new System.EventHandler(this.trackerDerfaultsButton_Click);
             // 
             // AutotrackerSettingsPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
+            this.Controls.Add(this.trackerDerfaultsButton);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.customSeedGroup);
             this.Controls.Add(this.optionsGroup);
@@ -374,5 +406,7 @@ namespace SotnRandoTools
 		private System.Windows.Forms.GroupBox groupBox1;
 		private System.Windows.Forms.CheckBox overlayCheckBox;
 		private System.Windows.Forms.CheckBox autosplitterCheckBox;
+		private System.Windows.Forms.RadioButton customLocationsSpreadRadio;
+		private System.Windows.Forms.Button trackerDerfaultsButton;
 	}
 }

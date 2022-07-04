@@ -33,10 +33,13 @@ namespace SotnRandoTools.Khaos
 		private const int FulfilRewardDelay = 60;
 		private const int FulfilTimerInterval = 3 * 30 * 1000;
 		private const int RefreshTokenInterval = 3 * (60 * (60 * 1000)) + (30 * (60 * 1000)); // 3.5 hours
+
 		private readonly IToolConfig toolConfig;
 		private readonly ITwitchListener twitchListener;
-		private readonly IKhaosController khaosController;
+		private readonly IActionDispatcher actionDispatcher;
 		private readonly INotificationService notificationService;
+		private readonly IEnemyRenamer enemyRenamer;
+
 		private System.Windows.Forms.Timer refreshTokenTimer = new();
 		private List<string> scopes = new List<string> { "channel:read:subscriptions", "channel:read:redemptions", "channel:manage:redemptions" };
 		private TwitchAPI api = new TwitchAPI();
@@ -50,21 +53,24 @@ namespace SotnRandoTools.Khaos
 
 		private bool manualDisconnect = false;
 
-		public ChannelPointsController(IToolConfig toolConfig, ITwitchListener twitchListener, IKhaosController khaosController, INotificationService notificationService)
+		public ChannelPointsController(IToolConfig toolConfig, ITwitchListener twitchListener, IActionDispatcher actionDispatcher, INotificationService notificationService, IEnemyRenamer enemyRenamer)
 		{
 			if (toolConfig is null) throw new ArgumentNullException(nameof(toolConfig));
 			if (twitchListener is null) throw new ArgumentNullException(nameof(twitchListener));
-			if (khaosController is null) throw new ArgumentNullException(nameof(khaosController));
+			if (actionDispatcher is null) throw new ArgumentNullException(nameof(actionDispatcher));
 			if (notificationService is null) throw new ArgumentNullException(nameof(notificationService));
+			if (enemyRenamer is null) throw new ArgumentNullException(nameof(enemyRenamer));
 			this.toolConfig = toolConfig;
 			this.twitchListener = twitchListener;
-			this.khaosController = khaosController;
+			this.actionDispatcher = actionDispatcher;
 			this.notificationService = notificationService;
+			this.enemyRenamer = enemyRenamer;
 
 			refreshTokenTimer.Tick += RefreshToken;
 			refreshTokenTimer.Interval = RefreshTokenInterval;
 			redemptionFulfilTimer.Tick += FulfilOldRedemptions;
 			redemptionFulfilTimer.Interval = FulfilTimerInterval;
+			this.enemyRenamer = enemyRenamer;
 		}
 
 		public BindingList<Redemption> Redemptions
@@ -116,9 +122,9 @@ namespace SotnRandoTools.Khaos
 			manualDisconnect = true;
 			DeleteRewards();
 			client.Disconnect();
-			foreach (var delayedTimer in actionsStartingOnCooldown)
+			for (int i = 0; i < actionsStartingOnCooldown.Count; i++)
 			{
-				delayedTimer.Dispose();
+				actionsStartingOnCooldown[i].Dispose();
 			}
 			redemptions.Clear();
 			notificationService.AddMessage("Disconnected");
@@ -152,18 +158,19 @@ namespace SotnRandoTools.Khaos
 				RetryBaseMs,
 				RetryCount
 				);
-				totalSubs.Concat(subsPageTwoData.Data.Select(u => u.UserName).ToList());
+				totalSubs = totalSubs.Concat(subsPageTwoData.Data.Select(u => u.UserName).ToList()).ToList();
 			}
 
-			khaosController.OverwriteNames(totalSubs.ToArray());
+			enemyRenamer.OverwriteNames(totalSubs.ToArray());
 
 		}
 
 		private async void CreateRewards()
 		{
 			Console.WriteLine($"Creating rewards...");
-			foreach (var action in toolConfig.Khaos.Actions)
+			for (int i = 0; i < toolConfig.Khaos.Actions.Count; i++)
 			{
+				Configuration.Models.Action? action = toolConfig.Khaos.Actions[i];
 				if (action.IsUsable && action.ChannelPoints > 0)
 				{
 
@@ -327,7 +334,7 @@ namespace SotnRandoTools.Khaos
 
 			var actionEvent = new EventAddAction { UserName = e.RewardRedeemed.Redemption.User.DisplayName, ActionIndex = toolConfig.Khaos.Actions.IndexOf(action), Data = e.RewardRedeemed.Redemption.UserInput };
 
-			khaosController.EnqueueAction(actionEvent);
+			actionDispatcher.EnqueueAction(actionEvent);
 		}
 
 		public async void FulfillRedemption(Redemption redemption)

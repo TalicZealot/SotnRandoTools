@@ -112,11 +112,14 @@ namespace SotnRandoTools
 
 		private void InitializeConfig()
 		{
+			string currentVersion = typeof(AboutPanel).Assembly.GetName().Version.ToString().Substring(0, 5);
 			if (File.Exists(Paths.ConfigPath))
 			{
 				string configJson = File.ReadAllText(Paths.ConfigPath);
+
 				toolConfig = JsonConvert.DeserializeObject<ToolConfig>(configJson,
 					new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, MissingMemberHandling = MissingMemberHandling.Error }) ?? new ToolConfig();
+
 				if (toolConfig.Khaos.Actions.Count != Constants.Khaos.KhaosActionsCount)
 				{
 					toolConfig.Khaos.DefaultActions();
@@ -127,6 +130,11 @@ namespace SotnRandoTools
 				toolConfig = new ToolConfig();
 			}
 
+			if (toolConfig.Version != currentVersion)
+			{
+				toolConfig.Version = currentVersion;
+				toolConfig.Khaos.Default();
+			}
 		}
 
 		protected override string WindowTitle => _windowTitle;

@@ -12,44 +12,78 @@ namespace SotnRandoTools.Services
 	{
 		private readonly IJoypadApi joypadApi;
 		private readonly ISotnApi sotnApi;
-		private List<Dictionary<string, object>> inputHistory = new();
+		private List<IReadOnlyDictionary<string, object>> inputHistory = new();
+		private List<Dictionary<string, object>> diractionalHistory = new();
 		private List<Dictionary<string, bool>> moveHistory = new();
-		private Input dragonPunch = new Input
+		private Dictionary<string, Input> inputs = new()
 		{
-			MotionSequence = new List<Dictionary<string, object>>
 			{
-				new Dictionary<string, object> {[InputKeys.Forward] = true, [PlaystationInputKeys.Down] = false},
-				new Dictionary<string, object> {[InputKeys.Forward] = false, [PlaystationInputKeys.Down] = true},
-				new Dictionary<string, object> {[InputKeys.Forward] = true, [PlaystationInputKeys.Down] = true}
+				InputKeys.DragonPunch,
+				new Input
+				{
+					Enabled = false,
+					MotionSequence = new List<Dictionary<string, object>>
+					{
+						new Dictionary<string, object> {[InputKeys.Forward] = true, [PlaystationInputKeys.Down] = false},
+						new Dictionary<string, object> {[InputKeys.Forward] = false, [PlaystationInputKeys.Down] = true},
+						new Dictionary<string, object> {[InputKeys.Forward] = true, [PlaystationInputKeys.Down] = true}
+					},
+					Activator = new Dictionary<string, object> { [PlaystationInputKeys.L2] = true }
+				}
 			},
-			Activator = new Dictionary<string, object> { [PlaystationInputKeys.L2] = true }
-		};
-		private Input halfCircle = new Input
-		{
-			MotionSequence = new List<Dictionary<string, object>>
 			{
-				new Dictionary<string, object> {[InputKeys.Back] = true, [PlaystationInputKeys.Up] = false},
-				new Dictionary<string, object> {[InputKeys.Forward] = true, [PlaystationInputKeys.Up] = true},
-				new Dictionary<string, object> {[InputKeys.Forward] = false, [PlaystationInputKeys.Up] = true},
-				new Dictionary<string, object> {[InputKeys.Back] = true, [PlaystationInputKeys.Up] = true},
-				new Dictionary<string, object> {[InputKeys.Forward] = true, [PlaystationInputKeys.Up] = false}
+				InputKeys.HalfCircleForward,
+				new Input
+				{
+					Enabled = false,
+					MotionSequence = new List<Dictionary<string, object>>
+					{
+						new Dictionary<string, object> {[InputKeys.Back] = true, [PlaystationInputKeys.Up] = false},
+						new Dictionary<string, object> {[InputKeys.Forward] = true, [PlaystationInputKeys.Up] = true},
+						new Dictionary<string, object> {[InputKeys.Forward] = false, [PlaystationInputKeys.Up] = true},
+						new Dictionary<string, object> {[InputKeys.Back] = true, [PlaystationInputKeys.Up] = true},
+						new Dictionary<string, object> {[InputKeys.Forward] = true, [PlaystationInputKeys.Up] = false}
+					},
+					Activator = new Dictionary<string, object> { [PlaystationInputKeys.L2] = true }
+				}
 			},
-			Activator = new Dictionary<string, object> { [PlaystationInputKeys.L2] = true }
-		};
-		private Input dash = new Input
-		{
-			MotionSequence = new List<Dictionary<string, object>>
 			{
-				new Dictionary<string, object> {[InputKeys.Forward] = false},
-				new Dictionary<string, object> {[InputKeys.Forward] = true},
-				new Dictionary<string, object> {[InputKeys.Forward] = false},
-				new Dictionary<string, object> {[InputKeys.Forward] = true}
+				InputKeys.QuarterCircleForward,
+				new Input
+				{
+					Enabled = false,
+					MotionSequence = new List<Dictionary<string, object>>
+					{
+						new Dictionary<string, object> {[InputKeys.Forward] = false, [PlaystationInputKeys.Down] = true},
+						new Dictionary<string, object> {[InputKeys.Forward] = true, [PlaystationInputKeys.Down] = true},
+						new Dictionary<string, object> {[InputKeys.Forward] = true, [PlaystationInputKeys.Down] = false}
+					},
+					Activator = new Dictionary<string, object> { [PlaystationInputKeys.Square] = true }
+				}
 			},
-			Activator = null
+			{
+				InputKeys.Dash,
+				new Input
+				{
+					Enabled = false,
+					MotionSequence = new List<Dictionary<string, object>>
+					{
+						new Dictionary<string, object> {[InputKeys.Forward] = false},
+						new Dictionary<string, object> {[InputKeys.Forward] = true},
+						new Dictionary<string, object> {[InputKeys.Forward] = false},
+						new Dictionary<string, object> {[InputKeys.Forward] = true}
+					},
+					Activator = null
+				}
+			},
 		};
 		private bool numashockCore = true;
 		private string leftKey = PlaystationInputKeys.Left;
 		private string rightKey = PlaystationInputKeys.Right;
+		private string upKey = PlaystationInputKeys.Up;
+		private string downKey = PlaystationInputKeys.Down;
+
+		private bool cleared = true;
 
 		public InputService(IJoypadApi joypadApi, ISotnApi sotnApi)
 		{
@@ -64,8 +98,9 @@ namespace SotnRandoTools.Services
 				leftKey = OctoshockPlaystationInputKeys.Left;
 				rightKey = OctoshockPlaystationInputKeys.Right;
 
-				dragonPunch = new Input
+				inputs[InputKeys.DragonPunch] = new Input
 				{
+					Enabled = false,
 					MotionSequence = new List<Dictionary<string, object>>
 					{
 						new Dictionary<string, object> {[InputKeys.Forward] = true, [OctoshockPlaystationInputKeys.Down] = false},
@@ -74,8 +109,9 @@ namespace SotnRandoTools.Services
 				},
 					Activator = new Dictionary<string, object> { [OctoshockPlaystationInputKeys.L2] = true }
 				};
-				halfCircle = new Input
+				inputs[InputKeys.HalfCircleForward] = new Input
 				{
+					Enabled = false,
 					MotionSequence = new List<Dictionary<string, object>>
 					{
 						new Dictionary<string, object> {[InputKeys.Back] = true, [OctoshockPlaystationInputKeys.Up] = false},
@@ -89,58 +125,90 @@ namespace SotnRandoTools.Services
 			}
 		}
 
+		public bool ReadDash
+		{
+			set
+			{
+				inputs[InputKeys.Dash].Enabled = value;
+			}
+		}
+		public bool ReadDragonPunch
+		{
+			set
+			{
+				inputs[InputKeys.DragonPunch].Enabled = value;
+			}
+		}
+		public bool ReadQuarterCircle
+		{
+			set
+			{
+				inputs[InputKeys.QuarterCircleForward].Enabled = value;
+			}
+		}
+		public bool ReadHalfCircle
+		{
+			set
+			{
+				inputs[InputKeys.HalfCircleForward].Enabled = value;
+			}
+		}
+
+		public int Polling { get; set; }
+
 		public void UpdateInputs()
 		{
-			inputHistory.Add((Dictionary<string, object>) joypadApi.Get());
+			if (Polling < 1)
+			{
+				if (!cleared)
+				{
+					cleared = true;
+					inputHistory.Clear();
+					diractionalHistory.Clear();
+					moveHistory.Clear();
+				}
+				return;
+			}
+			else
+			{
+				cleared = false;
+			}
+
+			inputHistory.Add(joypadApi.Get());
+			diractionalHistory.Add(new Dictionary<string, object>());
+			moveHistory.Add(new Dictionary<string, bool>());
 
 			if (inputHistory.Count > 120)
 			{
 				inputHistory.RemoveAt(0);
+				diractionalHistory.RemoveAt(0);
+				moveHistory.RemoveAt(0);
 			}
 
 			if (sotnApi.AlucardApi.FacingLeft)
 			{
-				inputHistory[inputHistory.Count - 1].Add(InputKeys.Forward, Convert.ToBoolean(inputHistory[inputHistory.Count - 1][leftKey]));
-				inputHistory[inputHistory.Count - 1].Add(InputKeys.Back, Convert.ToBoolean(inputHistory[inputHistory.Count - 1][rightKey]));
+				diractionalHistory[diractionalHistory.Count - 1].Add(InputKeys.Forward, Convert.ToBoolean(inputHistory[inputHistory.Count - 1][leftKey]));
+				diractionalHistory[diractionalHistory.Count - 1].Add(InputKeys.Back, Convert.ToBoolean(inputHistory[inputHistory.Count - 1][rightKey]));
 			}
 			else
 			{
-				inputHistory[inputHistory.Count - 1].Add(InputKeys.Forward, Convert.ToBoolean(inputHistory[inputHistory.Count - 1][rightKey]));
-				inputHistory[inputHistory.Count - 1].Add(InputKeys.Back, Convert.ToBoolean(inputHistory[inputHistory.Count - 1][leftKey]));
+				diractionalHistory[diractionalHistory.Count - 1].Add(InputKeys.Forward, Convert.ToBoolean(inputHistory[inputHistory.Count - 1][rightKey]));
+				diractionalHistory[diractionalHistory.Count - 1].Add(InputKeys.Back, Convert.ToBoolean(inputHistory[inputHistory.Count - 1][leftKey]));
 			}
 
-			moveHistory.Add(new Dictionary<string, bool>());
+			diractionalHistory[diractionalHistory.Count - 1].Add(upKey, Convert.ToBoolean(inputHistory[inputHistory.Count - 1][upKey]));
+			diractionalHistory[diractionalHistory.Count - 1].Add(downKey, Convert.ToBoolean(inputHistory[inputHistory.Count - 1][downKey]));
 
-			if (ReadInput(dragonPunch, Globals.InputBufferSize))
+			foreach (var input in inputs)
 			{
-				moveHistory[moveHistory.Count - 1].Add(InputKeys.DragonPunch, true);
-			}
-			else
-			{
-				moveHistory[moveHistory.Count - 1].Add(InputKeys.DragonPunch, false);
-			}
-
-			if (ReadInput(halfCircle, Globals.InputBufferSize))
-			{
-				moveHistory[moveHistory.Count - 1].Add(InputKeys.HalfCircleForward, true);
-			}
-			else
-			{
-				moveHistory[moveHistory.Count - 1].Add(InputKeys.HalfCircleForward, false);
-			}
-
-			if (ReadInput(dash, Globals.InputBufferSizeDash))
-			{
-				moveHistory[moveHistory.Count - 1].Add(InputKeys.Dash, true);
-			}
-			else
-			{
-				moveHistory[moveHistory.Count - 1].Add(InputKeys.Dash, false);
-			}
-
-			if (moveHistory.Count > 120)
-			{
-				moveHistory.RemoveAt(0);
+				if (input.Value.Enabled && ReadInput(input.Value, Globals.InputBufferSize))
+				{
+					moveHistory[moveHistory.Count - 1].Add(input.Key, true);
+				}
+				else
+				{
+					moveHistory[moveHistory.Count - 1].Add(input.Key, false);
+				}
 			}
 		}
 
@@ -192,6 +260,19 @@ namespace SotnRandoTools.Services
 				return false;
 			}
 			if (Convert.ToBoolean(inputHistory[inputHistory.Count - 1][button]) == true)
+			{
+				return true;
+			}
+			return false;
+		}
+
+		public bool DirectionHeld(string button)
+		{
+			if (inputHistory.Count < 1)
+			{
+				return false;
+			}
+			if (Convert.ToBoolean(diractionalHistory[diractionalHistory.Count - 1][button]) == true)
 			{
 				return true;
 			}
@@ -262,7 +343,7 @@ namespace SotnRandoTools.Services
 				{
 					foreach (var pair in moveInput.MotionSequence[inputIndex])
 					{
-						if (Convert.ToBoolean(inputHistory[i][pair.Key]) != Convert.ToBoolean(pair.Value))
+						if (Convert.ToBoolean(diractionalHistory[i][pair.Key]) != Convert.ToBoolean(pair.Value))
 						{
 							pressed = false;
 							keyUp = true;

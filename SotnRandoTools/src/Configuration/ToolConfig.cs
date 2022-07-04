@@ -18,6 +18,7 @@ namespace SotnRandoTools.Configuration
 		public KhaosConfig? Khaos { get; set; }
 		public CoopConfig? Coop { get; set; }
 		public Point Location { get; set; }
+		public string Version { get; set; }
 		public void SaveConfig()
 		{
 			string output = JsonConvert.SerializeObject(this, Formatting.Indented);

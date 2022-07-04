@@ -225,7 +225,7 @@ namespace SotnRandoTools.Services
 				{
 					while (TextRenderer.MeasureText(messageQueue[0], new Font("Arial", fontSize)).Width > (scaledTextbox.Width - (20 * scale)))
 					{
-						fontSize--;
+						fontSize -= 2;
 					}
 					DrawMessage(messageQueue[0], scale, scaledTextbox, xpos, ypos, fontSize);
 				}

@@ -527,12 +527,12 @@ namespace SotnRandoTools.RandoTracker
 				}
 			}
 
-			if (toolConfig.Tracker.EnableAutosplitter && !autosplitterConnected && autosplitterReconnectCounter == 120)
+			if (toolConfig.Tracker.EnableAutosplitter && !autosplitterConnected && autosplitterReconnectCounter == 120 && !sotnApi.GameApi.InAlucardMode())
 			{
 				autosplitterConnected = autosplitter.AtemptConnect();
 				autosplitterReconnectCounter = 0;
 			}
-			if (toolConfig.Tracker.EnableAutosplitter && !autosplitterConnected && autosplitterReconnectCounter < 120)
+			if (toolConfig.Tracker.EnableAutosplitter && !autosplitterConnected && autosplitterReconnectCounter < 120 && !sotnApi.GameApi.InAlucardMode())
 			{
 				autosplitterReconnectCounter++;
 			}
@@ -598,6 +598,10 @@ namespace SotnRandoTools.RandoTracker
 			{
 				location.Visited = false;
 				location.AvailabilityColor = MapColor.Unavailable;
+			}
+			if (toolConfig.Tracker.Locations)
+			{
+				CheckReachability();
 			}
 		}
 
@@ -932,6 +936,7 @@ namespace SotnRandoTools.RandoTracker
 				case "custom":
 					guardedExtension = toolConfig.Tracker.CustomLocationsGuarded;
 					equipmentExtension = toolConfig.Tracker.CustomLocationsEquipment;
+					spreadExtension = toolConfig.Tracker.CustomLocationsSpread;
 					if (equipmentExtension)
 					{
 						SetEquipmentProgression();
@@ -989,10 +994,10 @@ namespace SotnRandoTools.RandoTracker
 			}
 		}
 
-		private void ClearMapLocation(int index)
+		private void ClearMapLocation(int locationIndex)
 		{
-			ColorMapRoom(index, (uint) MapColor.Clear, locations[index].SecondCastle);
-			foreach (var room in locations[index].Rooms)
+			ColorMapRoom(locationIndex, (uint) MapColor.Clear, locations[locationIndex].SecondCastle);
+			foreach (var room in locations[locationIndex].Rooms)
 			{
 				Watch roomWatch = watchlistService.SafeLocationWatches.Where(x => x.Notes.ToLower() == room.Name.ToLower()).FirstOrDefault();
 				if (roomWatch is null)
@@ -1003,10 +1008,10 @@ namespace SotnRandoTools.RandoTracker
 			}
 		}
 
-		private void ColorMapRoom(int i, uint color, bool secondCastle)
+		private void ColorMapRoom(int locationIndex, uint color, bool secondCastle)
 		{
-			uint row = (uint) locations[i].MapRow;
-			uint col = (uint) locations[i].MapCol;
+			uint row = (uint) locations[locationIndex].MapRow;
+			uint col = (uint) locations[locationIndex].MapCol;
 			if (secondCastle)
 			{
 				row = 199 - row;
@@ -1014,7 +1019,7 @@ namespace SotnRandoTools.RandoTracker
 			}
 			uint borderColor = color > 0 ? (uint) MapColor.Border : 0;
 
-			if (locations[i].EquipmentExtension && spreadExtension == false)
+			if (locations[locationIndex].EquipmentExtension && spreadExtension == false)
 			{
 				sotnApi.RenderingApi.ColorMapLocation(row, col, color);
 			}
@@ -1045,9 +1050,9 @@ namespace SotnRandoTools.RandoTracker
 
 		private void CheckRooms(WatchList watchlist)
 		{
-
-			foreach (var watch in watchlist)
+			for (int j = 0; j < watchlist.Count; j++)
 			{
+				Watch? watch = watchlist[j];
 				if (watch.ChangeCount > 0)
 				{
 					string locationName = watch.Notes.ToLower();
@@ -1099,8 +1104,9 @@ namespace SotnRandoTools.RandoTracker
 		{
 			int changes = 0;
 
-			foreach (var location in locations)
+			for (int j = 0; j < locations.Count; j++)
 			{
+				Location? location = locations[j];
 				location.AvailabilityColor = MapColor.Unavailable;
 				if (location.Locks.Count == 0)
 				{
@@ -1305,6 +1311,7 @@ namespace SotnRandoTools.RandoTracker
 			}
 		}
 
+		//TODO: Move to appropriate class
 		private void CheckStart()
 		{
 			if (!autosplitter.Started && sotnApi.GameApi.Hours == 0 && sotnApi.GameApi.Minutes == 0 && sotnApi.GameApi.Seconds == 3 && sotnApi.GameApi.Status == Status.InGame)

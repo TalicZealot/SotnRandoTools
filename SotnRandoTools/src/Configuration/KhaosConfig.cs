@@ -7,89 +7,11 @@ namespace SotnRandoTools.Configuration
 {
 	public class KhaosConfig
 	{
+		//TODO: add profiles
+		//TODO: add easy way to scale all prices
 		public KhaosConfig()
 		{
-			Alerts = true;
-			ControlPannelQueueActions = true;
-			Volume = 2;
-			WeakenFactor = 0.5F;
-			CrippleFactor = 0.8F;
-			HasteFactor = 3.2F;
-			ThirstDrainPerSecond = 1;
-			PandoraTrigger = 1000;
-			PandoraMinItems = 15;
-			PandoraMaxItems = 35;
-			MeterOnReset = 50;
-			QueueInterval = new System.TimeSpan(0, 0, 21);
-			DynamicInterval = true;
-			KeepVladRelics = false;
-			RomhackMode = false;
-			CostDecay = true;
-			DefaultActions();
-			LightHelpItemRewards = new string[]
-			{
-				"Leather shield",
-				"Shaman shield",
-				"Pot Roast",
-				"Holbein dagger",
-				"Heart Refresh",
-				"Str. potion",
-				"Attack potion",
-				"Wizard hat",
-				"Mirror cuirass",
-				"Brilliant mail",
-				"Aquamarine",
-				"Lapis lazuli",
-				"Mystic pendant",
-				"Gauntlet"
-			};
-			MediumHelpItemRewards = new string[]
-			{
-				"Fire shield",
-				"Iron shield",
-				"Medusa shield",
-				"Alucard shield",
-				"Shield rod",
-				"Buffalo star",
-				"Flame star",
-				"Obsidian sword",
-				"Marsil",
-				"Elixir",
-				"Holy sword",
-				"Mourneblade",
-				"Fury plate",
-				"Twilight cloak",
-				"Library card",
-				"Diamond",
-				"Onyx",
-				"Mystic pendant",
-				"Ring of Feanor",
-				"King's stone",
-				"Manna prism",
-				"Dark armor",
-				"Ring of Ares"
-			};
-			HeavyHelpItemRewards = new string[]
-			{
-				"Mablung Sword",
-				"Masamune",
-				"Fist of Tulkas",
-				"Gurthang",
-				"Alucard sword",
-				"Vorpal blade",
-				"Crissaegrim",
-				"Yasatsuna",
-				"Dragon helm",
-				"Holy glasses",
-				"Spike Breaker",
-				"Dracula tunic",
-				"Ring of Varda",
-				"Duplicator",
-				"Covenant stone",
-				"Gold Ring",
-				"Silver Ring"
-			};
-			AutoKhaosDifficulty = "Normal";
+			Default();
 		}
 		public Point Location { get; set; }
 		public bool Alerts { get; set; }
@@ -134,7 +56,7 @@ namespace SotnRandoTools.Configuration
 					Description = "Randomizes Alucard's equipped gear. If the player has a progression item it gets given back to them and put in the inventory.",
 					Meter = 7,
 					AlertPath = Paths.AlucardWhatSound,
-					Cooldown = new System.TimeSpan(0, 15, 0),
+					Cooldown = new System.TimeSpan(0, 18, 0),
 					Bits = 20,
 					ChannelPoints = 200,
 					MaximumChannelPoints = 2000,
@@ -157,7 +79,7 @@ namespace SotnRandoTools.Configuration
 					Description = "Randomizes Alucard's relics. It cannot give or take away Vlad relics.",
 					Meter = 12,
 					AlertPath = Paths.AlucardWhatSound,
-					Cooldown = new System.TimeSpan(0, 25, 0),
+					Cooldown = new System.TimeSpan(0, 28, 0),
 					StartsOnCooldown = true,
 					Bits = 50,
 					ChannelPoints = 500,
@@ -175,7 +97,7 @@ namespace SotnRandoTools.Configuration
 					Description = "Gambles away a percentage of Alucard's gold for a completely random item.",
 					Meter = 2,
 					AlertPath = Paths.LibrarianThankYouSound,
-					Cooldown = new System.TimeSpan(0, 5, 0),
+					Cooldown = new System.TimeSpan(0, 4, 0),
 					Bits = 10,
 					ChannelPoints = 100,
 					Scaling = 2.0
@@ -185,7 +107,7 @@ namespace SotnRandoTools.Configuration
 					Description = "Increases the Khaos Meter by 100 points, guaranteeing an enhanced action soon.",
 					Meter = 10,
 					AlertPath = Paths.AlucardWhatSound,
-					Cooldown = new System.TimeSpan(0, 20, 0),
+					Cooldown = new System.TimeSpan(0, 10, 0),
 					Bits = 20,
 					ChannelPoints = 200,
 					Scaling = 1.5
@@ -218,7 +140,7 @@ namespace SotnRandoTools.Configuration
 					Description = "Alucard's level, stats, hp and mana get halved. Experience is adjusted so that the player can regain their stats and levels.",
 					Meter = 8,
 					AlertPath = Paths.DieSound,
-					Cooldown = new System.TimeSpan(0, 24, 0),
+					Cooldown = new System.TimeSpan(0, 26, 0),
 					StartsOnCooldown = true,
 					Bits = 50,
 					ChannelPoints = 500,
@@ -327,9 +249,9 @@ namespace SotnRandoTools.Configuration
 					Meter = 2,
 					Duration = new System.TimeSpan(0, 1, 0),
 					Cooldown = new System.TimeSpan(0, 8, 0),
-					Bits = 10,
-					ChannelPoints = 150,
-					MaximumChannelPoints = 1500,
+					Bits = 30,
+					ChannelPoints = 2500,
+					MaximumChannelPoints = 4500,
 					Scaling = 1.5
 				},
 				new Action{
@@ -457,6 +379,91 @@ namespace SotnRandoTools.Configuration
 					Scaling = 2.0
 				}
 			};
+		}
+
+		public void Default()
+		{
+			Alerts = true;
+			ControlPannelQueueActions = true;
+			Volume = 2;
+			WeakenFactor = 0.5F;
+			CrippleFactor = 0.8F;
+			HasteFactor = 3.2F;
+			ThirstDrainPerSecond = 1;
+			PandoraTrigger = 1000;
+			PandoraMinItems = 15;
+			PandoraMaxItems = 35;
+			MeterOnReset = 50;
+			QueueInterval = new System.TimeSpan(0, 0, 21);
+			DynamicInterval = true;
+			KeepVladRelics = false;
+			RomhackMode = false;
+			CostDecay = true;
+			DefaultActions();
+			LightHelpItemRewards = new string[]
+			{
+				"Leather shield",
+				"Shaman shield",
+				"Pot Roast",
+				"Holbein dagger",
+				"Heart Refresh",
+				"Str. potion",
+				"Attack potion",
+				"Wizard hat",
+				"Mirror cuirass",
+				"Brilliant mail",
+				"Aquamarine",
+				"Lapis lazuli",
+				"Mystic pendant",
+				"Gauntlet"
+			};
+			MediumHelpItemRewards = new string[]
+			{
+				"Fire shield",
+				"Iron shield",
+				"Medusa shield",
+				"Alucard shield",
+				"Shield rod",
+				"Buffalo star",
+				"Flame star",
+				"Obsidian sword",
+				"Marsil",
+				"Elixir",
+				"Holy sword",
+				"Mourneblade",
+				"Fury plate",
+				"Twilight cloak",
+				"Library card",
+				"Diamond",
+				"Onyx",
+				"Mystic pendant",
+				"Ring of Feanor",
+				"King's stone",
+				"Manna prism",
+				"Dark armor",
+				"Ring of Ares"
+			};
+			HeavyHelpItemRewards = new string[]
+			{
+				"Mablung Sword",
+				"Masamune",
+				"Fist of Tulkas",
+				"Gurthang",
+				"Alucard sword",
+				"Vorpal blade",
+				"Crissaegrim",
+				"Yasatsuna",
+				"Dragon helm",
+				"Holy glasses",
+				"Spike Breaker",
+				"Dracula tunic",
+				"Ring of Varda",
+				"Duplicator",
+				"Covenant stone",
+				"Gold Ring",
+				"Silver Ring"
+			};
+			AutoKhaosDifficulty = "Normal";
 		}
 	}
 }
