@@ -8,6 +8,10 @@ namespace SotnRandoTools.Services
 		double Volume { set; }
 		bool MapOpen { get; set; }
 		bool InvertedMapOpen { get; set; }
+		int VermillionBirds { get; set; }
+		int AzureDragons { get; set; }
+		int BlackTortoises { get; set; }
+		int WhiteTigers { get; set; }
 		void AddMessage(string message);
 		void PlayAlert(string uri);
 		void StartOverlayServer();

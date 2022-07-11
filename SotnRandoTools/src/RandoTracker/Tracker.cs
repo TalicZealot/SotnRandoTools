@@ -914,6 +914,10 @@ namespace SotnRandoTools.RandoTracker
 					equipmentExtension = true;
 					SetEquipmentProgression();
 					break;
+				case "expedition":
+					equipmentExtension = true;
+					SetEquipmentProgression();
+					break;
 				case "glitch":
 					equipmentExtension = true;
 					relics[25].Progression = false;
@@ -939,6 +943,7 @@ namespace SotnRandoTools.RandoTracker
 					spreadExtension = toolConfig.Tracker.CustomLocationsSpread;
 					if (equipmentExtension)
 					{
+						guardedExtension = true;
 						SetEquipmentProgression();
 					}
 					break;

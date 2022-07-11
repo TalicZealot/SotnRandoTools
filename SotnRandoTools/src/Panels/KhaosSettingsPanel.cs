@@ -124,6 +124,13 @@ namespace SotnRandoTools
 		{
 			toolConfig.Khaos.Default();
 			SetPalenValues();
+			actionPricingGridView.Refresh();
+
+			actionSettingsSource.Clear();
+			foreach (var action in toolConfig.Khaos.Actions)
+			{
+				actionSettingsSource.Add(action);
+			}
 		}
 
 		private void volumeTrackBar_Scroll(object sender, EventArgs e)
@@ -331,6 +338,18 @@ namespace SotnRandoTools
 		private void autoDifficultyComboBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			toolConfig.Khaos.AutoKhaosDifficulty = autoDifficultyComboBox.SelectedItem.ToString();
+		}
+
+		private void halfChannelPointPricesButton_Click(object sender, EventArgs e)
+		{
+			toolConfig.Khaos.ReduceAllChannelPointPrices();
+			actionPricingGridView.Refresh();
+		}
+
+		private void doubleChannelPointPricesButton_Click(object sender, EventArgs e)
+		{
+			toolConfig.Khaos.IncreaseAllChannelPointPrices();
+			actionPricingGridView.Refresh();
 		}
 	}
 }

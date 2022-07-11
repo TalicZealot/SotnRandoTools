@@ -74,10 +74,6 @@ namespace SotnRandoTools.Khaos
 		private bool slowActive = false;
 		private bool slowPaused = false;
 
-		private int azureDragonStocks = 0;
-		private int vermilionBirdStocks = 0;
-		private int whiteTigerStocks = 0;
-		private int blackTortoiseStocks = 0;
 		private bool vermilionBirdPollong = false;
 
 		private bool azureSpiritActive = false;
@@ -2256,7 +2252,7 @@ namespace SotnRandoTools.Khaos
 		private void AzureDragon(string user)
 		{
 			azureDragonUsed = true;
-			azureDragonStocks += 1;
+			notificationService.AzureDragons += 1;
 
 			notificationService.AddMessage(user + " gave you 1 Azure Dragon Spirit");
 			Alert(toolConfig.Khaos.Actions[(int) Enums.Action.FourBeasts]);
@@ -2264,7 +2260,7 @@ namespace SotnRandoTools.Khaos
 		private void VermilionBird(string user)
 		{
 			vermilionBirdUsed = true;
-			vermilionBirdStocks += 5;
+			notificationService.VermillionBirds += 5;
 
 			notificationService.AddMessage(user + " gave you 5 Vermilion Bird Fireballs");
 			Alert(toolConfig.Khaos.Actions[(int) Enums.Action.FourBeasts]);
@@ -2272,7 +2268,7 @@ namespace SotnRandoTools.Khaos
 		private void WhiteTiger(string user)
 		{
 			whiteTigerUsed = true;
-			whiteTigerStocks += 2;
+			notificationService.WhiteTigers += 2;
 
 			notificationService.AddMessage(user + " gave you 2 White Tiger Hellfires");
 			Alert(toolConfig.Khaos.Actions[(int) Enums.Action.FourBeasts]);
@@ -2280,7 +2276,7 @@ namespace SotnRandoTools.Khaos
 		private void BlackTortoise(string user)
 		{
 			blackTortoiseUsed = true;
-			blackTortoiseStocks += 2;
+			notificationService.BlackTortoises += 2;
 
 			notificationService.AddMessage(user + " gave you 2 Black Tortoise Dark Metamorphasis");
 			Alert(toolConfig.Khaos.Actions[(int) Enums.Action.FourBeasts]);
@@ -2302,10 +2298,10 @@ namespace SotnRandoTools.Khaos
 			vermilionBirdUsed = false;
 			blackTortoiseUsed = false;
 
-			azureDragonStocks += 2;
-			vermilionBirdStocks += 10;
-			whiteTigerStocks += 3;
-			blackTortoiseStocks += 3;
+			notificationService.AzureDragons += 2;
+			notificationService.VermillionBirds += 10;
+			notificationService.WhiteTigers += 3;
+			notificationService.BlackTortoises += 3;
 
 			notificationService.AddMessage(user + " used Four Beasts");
 
@@ -2320,22 +2316,22 @@ namespace SotnRandoTools.Khaos
 		}
 		private void CheckVermillionBirdFireballs()
 		{
-			if (vermilionBirdStocks > 0 && !vermilionBirdPollong)
+			if (notificationService.VermillionBirds > 0 && !vermilionBirdPollong)
 			{
 				vermilionBirdPollong = true;
 				inputService.ReadQuarterCircle = true;
 				inputService.Polling++;
 			}
-			else if (vermilionBirdPollong && vermilionBirdStocks < 1)
+			else if (vermilionBirdPollong && notificationService.VermillionBirds < 1)
 			{
 				vermilionBirdPollong = false;
 				inputService.ReadQuarterCircle = false;
 				inputService.Polling--;
 			}
 
-			if (vermilionBirdStocks > 0 && fireballCooldown == 0 && inputService.RegisteredMove(InputKeys.QuarterCircleForward, Globals.UpdateCooldownFrames))
+			if (notificationService.VermillionBirds > 0 && fireballCooldown == 0 && inputService.RegisteredMove(InputKeys.QuarterCircleForward, Globals.UpdateCooldownFrames))
 			{
-				vermilionBirdStocks--;
+				notificationService.VermillionBirds--;
 				Entity fireball = new Entity(Constants.Khaos.FireballEntityBytes);
 				bool alucardFacing = sotnApi.AlucardApi.FacingLeft;
 				int offsetX = alucardFacing ? -20 : 20;
@@ -2633,7 +2629,7 @@ namespace SotnRandoTools.Khaos
 		}
 		private void CheckAzureDragon()
 		{
-			if (azureDragonStocks > 0 && !azureSpiritActive)
+			if (notificationService.AzureDragons > 0 && !azureSpiritActive)
 			{
 				var spiritAddress = sotnApi.EntityApi.FindEntityFrom(new List<SearchableActor> { Constants.Khaos.SpiritActor }, false);
 				if (spiritAddress > 0)
@@ -2641,7 +2637,7 @@ namespace SotnRandoTools.Khaos
 					LiveEntity liveSpirit = sotnApi.EntityApi.GetLiveEntity(spiritAddress);
 					if (liveSpirit.LockOn == Entities.LockedOn)
 					{
-						azureDragonStocks--;
+						notificationService.AzureDragons--;
 						liveSpirit.Palette = Constants.Khaos.SpiritPalette;
 						liveSpirit.InvincibilityFrames = 4;
 						azureSpiritActive = true;
@@ -2653,23 +2649,23 @@ namespace SotnRandoTools.Khaos
 		}
 		private void CheckBlackTortoise()
 		{
-			if (blackTortoiseStocks > 0 && !darkMetamorphosisCasted && sotnApi.AlucardApi.State == SotnApi.Constants.Values.Alucard.States.DarkMetamorphosis)
+			if (notificationService.BlackTortoises > 0 && !darkMetamorphosisCasted && sotnApi.AlucardApi.State == SotnApi.Constants.Values.Alucard.States.DarkMetamorphosis)
 			{
-				blackTortoiseStocks--;
+				notificationService.BlackTortoises--;
 				sotnApi.AlucardApi.ActivatePotion(Potion.HighPotion);
 				darkMetamorphosisCasted = true;
 			}
 
-			if (blackTortoiseStocks > 0 && darkMetamorphosisCasted && sotnApi.AlucardApi.State != SotnApi.Constants.Values.Alucard.States.DarkMetamorphosis)
+			if (notificationService.BlackTortoises > 0 && darkMetamorphosisCasted && sotnApi.AlucardApi.State != SotnApi.Constants.Values.Alucard.States.DarkMetamorphosis)
 			{
 				darkMetamorphosisCasted = false;
 			}
 		}
 		private void CheckWhiteDragon()
 		{
-			if (whiteTigerStocks > 0 && !whiteTigerBallActive && !hellfireCasted && sotnApi.AlucardApi.State == SotnApi.Constants.Values.Alucard.States.Hellfire)
+			if (notificationService.WhiteTigers > 0 && !whiteTigerBallActive && !hellfireCasted && sotnApi.AlucardApi.State == SotnApi.Constants.Values.Alucard.States.Hellfire)
 			{
-				whiteTigerStocks--;
+				notificationService.WhiteTigers--;
 				Entity fireball = new Entity(Constants.Khaos.DarkFireballEntityBytes);
 				bool alucardFacing = sotnApi.AlucardApi.FacingLeft;
 				int offsetX = alucardFacing ? -20 : 20;
@@ -2685,7 +2681,7 @@ namespace SotnRandoTools.Khaos
 				eventScheduler.WhiteTigerBallTimer = true;
 			}
 
-			if (whiteTigerStocks > 0 && hellfireCasted && sotnApi.AlucardApi.State != SotnApi.Constants.Values.Alucard.States.Hellfire)
+			if (notificationService.WhiteTigers > 0 && hellfireCasted && sotnApi.AlucardApi.State != SotnApi.Constants.Values.Alucard.States.Hellfire)
 			{
 				hellfireCasted = false;
 			}

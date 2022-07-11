@@ -45,9 +45,10 @@ namespace SotnRandoTools.Constants
 
 		public const string ImagesPath = "./ExternalTools/SotnRandoTools/Images/";
 		public const string TextboxImage = "./ExternalTools/SotnRandoTools/Images/SotnTextBox.png";
-		public const string IconSkull = "./ExternalTools/SotnRandoTools/Images/IconSkull.png";
-		public const string IconFairy = "./ExternalTools/SotnRandoTools/Images/IconFairy.png";
-		public const string IconEye = "./ExternalTools/SotnRandoTools/Images/IconEye.png";
+		public const string IconVermillionBird = "./ExternalTools/SotnRandoTools/Images/VermillionBird.png";
+		public const string IconWhiteTiger = "./ExternalTools/SotnRandoTools/Images/WhiteTiger.png";
+		public const string IconAzureDragon = "./ExternalTools/SotnRandoTools/Images/AzureDragon.png";
+		public const string IconBlackTortoise = "./ExternalTools/SotnRandoTools/Images/BlackTortoise.png";
 		public static readonly Dictionary<string, string> RelicImages = new Dictionary<string, string>
 		{
 			{"SoulOfBat", "./ExternalTools/SotnRandoTools/Images/SoulOfBat.png"},

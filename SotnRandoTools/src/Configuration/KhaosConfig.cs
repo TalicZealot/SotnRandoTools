@@ -8,7 +8,6 @@ namespace SotnRandoTools.Configuration
 	public class KhaosConfig
 	{
 		//TODO: add profiles
-		//TODO: add easy way to scale all prices
 		public KhaosConfig()
 		{
 			Default();
@@ -19,7 +18,6 @@ namespace SotnRandoTools.Configuration
 		public int Volume { get; set; }
 		public List<Action> Actions { get; set; }
 		public float WeakenFactor { get; set; }
-		public float CrippleFactor { get; set; }
 		public float HasteFactor { get; set; }
 		public uint ThirstDrainPerSecond { get; set; }
 		public int PandoraTrigger { get; set; }
@@ -56,7 +54,7 @@ namespace SotnRandoTools.Configuration
 					Description = "Randomizes Alucard's equipped gear. If the player has a progression item it gets given back to them and put in the inventory.",
 					Meter = 7,
 					AlertPath = Paths.AlucardWhatSound,
-					Cooldown = new System.TimeSpan(0, 18, 0),
+					Cooldown = new System.TimeSpan(0, 35, 0),
 					Bits = 20,
 					ChannelPoints = 200,
 					MaximumChannelPoints = 2000,
@@ -67,7 +65,7 @@ namespace SotnRandoTools.Configuration
 					Description = "Randomizes Alucard's stats, HP and Mana. Sums up current stats for stat pool, hp and mana for points pool, then randomly distributes. Can also give or take points.",
 					Meter = 8,
 					AlertPath = Paths.AlucardWhatSound,
-					Cooldown = new System.TimeSpan(0, 15, 0),
+					Cooldown = new System.TimeSpan(0, 30, 0),
 					StartsOnCooldown = true,
 					Bits = 20,
 					ChannelPoints = 200,
@@ -79,7 +77,7 @@ namespace SotnRandoTools.Configuration
 					Description = "Randomizes Alucard's relics. It cannot give or take away Vlad relics.",
 					Meter = 12,
 					AlertPath = Paths.AlucardWhatSound,
-					Cooldown = new System.TimeSpan(0, 28, 0),
+					Cooldown = new System.TimeSpan(0, 35, 0),
 					StartsOnCooldown = true,
 					Bits = 50,
 					ChannelPoints = 500,
@@ -97,7 +95,7 @@ namespace SotnRandoTools.Configuration
 					Description = "Gambles away a percentage of Alucard's gold for a completely random item.",
 					Meter = 2,
 					AlertPath = Paths.LibrarianThankYouSound,
-					Cooldown = new System.TimeSpan(0, 4, 0),
+					Cooldown = new System.TimeSpan(0, 5, 0),
 					Bits = 10,
 					ChannelPoints = 100,
 					Scaling = 2.0
@@ -129,7 +127,7 @@ namespace SotnRandoTools.Configuration
 					Description = "Alucard loses all inventory. Loses some gold and equipment depending on Bankrupt level. Player can't lose progression items. Respawns all items on the map.",
 					Meter = 12,
 					AlertPath = Paths.DeathLaughSound,
-					Cooldown = new System.TimeSpan(0, 30, 0),
+					Cooldown = new System.TimeSpan(0, 35, 0),
 					StartsOnCooldown = true,
 					Bits = 50,
 					ChannelPoints = 500,
@@ -140,7 +138,7 @@ namespace SotnRandoTools.Configuration
 					Description = "Alucard's level, stats, hp and mana get halved. Experience is adjusted so that the player can regain their stats and levels.",
 					Meter = 8,
 					AlertPath = Paths.DieSound,
-					Cooldown = new System.TimeSpan(0, 26, 0),
+					Cooldown = new System.TimeSpan(0, 35, 0),
 					StartsOnCooldown = true,
 					Bits = 50,
 					ChannelPoints = 500,
@@ -385,12 +383,11 @@ namespace SotnRandoTools.Configuration
 		{
 			Alerts = true;
 			ControlPannelQueueActions = true;
-			Volume = 2;
-			WeakenFactor = 0.5F;
-			CrippleFactor = 0.8F;
+			Volume = 3;
+			WeakenFactor = 0.7F;
 			HasteFactor = 3.2F;
 			ThirstDrainPerSecond = 1;
-			PandoraTrigger = 1000;
+			PandoraTrigger = 1200;
 			PandoraMinItems = 15;
 			PandoraMaxItems = 35;
 			MeterOnReset = 50;
@@ -399,7 +396,6 @@ namespace SotnRandoTools.Configuration
 			KeepVladRelics = false;
 			RomhackMode = false;
 			CostDecay = true;
-			DefaultActions();
 			LightHelpItemRewards = new string[]
 			{
 				"Leather shield",
@@ -464,6 +460,40 @@ namespace SotnRandoTools.Configuration
 				"Silver Ring"
 			};
 			AutoKhaosDifficulty = "Normal";
+			DefaultActions();
+		}
+
+		public void ReduceAllChannelPointPrices()
+		{
+			for (int i = 0; i < Actions.Count; i++)
+			{
+				if ((Actions[i].ChannelPoints * 0.5) > 50)
+				{
+					Actions[i].ChannelPoints = (uint) (Actions[i].ChannelPoints * 0.5);
+				}
+				else
+				{
+					Actions[i].ChannelPoints = 50;
+				}
+
+				if ((Actions[i].MaximumChannelPoints * 0.5) > 50)
+				{
+					Actions[i].MaximumChannelPoints = (uint) (Actions[i].MaximumChannelPoints * 0.5);
+				}
+				else
+				{
+					Actions[i].MaximumChannelPoints = 50;
+				}
+			}
+		}
+
+		public void IncreaseAllChannelPointPrices()
+		{
+			for (int i = 0; i < Actions.Count; i++)
+			{
+				Actions[i].ChannelPoints = (uint) (Actions[i].ChannelPoints * 2);
+				Actions[i].MaximumChannelPoints = (uint) (Actions[i].MaximumChannelPoints * 2);
+			}
 		}
 	}
 }

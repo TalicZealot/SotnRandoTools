@@ -510,7 +510,7 @@ namespace SotnRandoTools.Constants
 
 		public const string KhaosName = "Khaos";
 
-		public const float SuperWeakenFactor = 0.5F;
+		public const float SuperWeakenFactor = 0.7F;
 		public const float SuperCrippleFactor = 0.5F;
 		public const int SlowQueueIntervalEnd = 3;
 		public const int FastQueueIntervalStart = 8;

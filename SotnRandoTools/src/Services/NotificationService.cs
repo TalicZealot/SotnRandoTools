@@ -29,12 +29,16 @@ namespace SotnRandoTools.Services
 		private System.Timers.Timer countdownTimer;
 		private int scale;
 		private Image textbox;
-		private Image scaledTextbox;
+		private Image vermillionBirdIcon;
+		private Image azureDragonIcon;
+		private Image whiteTigerIcon;
+		private Image blackTortoiseIcon;
 		private Dictionary<string, Image> relicImages = new();
 		private Dictionary<string, MapCoordinates> relicCoordinates = new();
 		private Dictionary<string, MapCoordinates> invertedRelicCoordinates = new();
 		private System.Windows.Media.MediaPlayer audioPlayer = new();
 		private List<string> messageQueue = new();
+		private bool fourBeastsIconsInitialized = false;
 		private bool relicImagesInitialized = false;
 		private bool mapOpen = false;
 		private bool invertedMapOpen = false;
@@ -56,10 +60,13 @@ namespace SotnRandoTools.Services
 			countdownTimer = new();
 			countdownTimer.Interval = 1000;
 			countdownTimer.Elapsed += RefreshUI;
-			textbox = Image.FromFile(Paths.TextboxImage);
 			scale = GetScale();
 			ResizeImages();
 			audioPlayer.Volume = (double) toolConfig.Khaos.Volume / 10F;
+			VermillionBirds = 0;
+			AzureDragons = 0;
+			BlackTortoises = 0;
+			WhiteTigers = 0;
 		}
 
 		public double Volume
@@ -101,6 +108,11 @@ namespace SotnRandoTools.Services
 				}
 			}
 		}
+
+		public int VermillionBirds { get; set; }
+		public int AzureDragons { get; set; }
+		public int BlackTortoises { get; set; }
+		public int WhiteTigers { get; set; }
 
 		public void PlayAlert(string url)
 		{
@@ -211,8 +223,6 @@ namespace SotnRandoTools.Services
 
 			int screenWidth = clientAPI.ScreenWidth();
 			int screenHeight = clientAPI.ScreenHeight();
-			int xpos = (int) (screenWidth * 0.45);
-			int ypos = (int) (screenHeight * 0.1);
 			int scaledBufferWidth = (clientAPI.BufferWidth() * scale);
 			int scaledBufferHeight = (clientAPI.BufferHeight() * scale);
 			float pixelScaleX = (float) screenWidth / (float) scaledBufferWidth;
@@ -223,19 +233,17 @@ namespace SotnRandoTools.Services
 				guiApi.ClearGraphics();
 				if (messageQueue.Count > 0)
 				{
-					while (TextRenderer.MeasureText(messageQueue[0], new Font("Arial", fontSize)).Width > (scaledTextbox.Width - (20 * scale)))
-					{
-						fontSize -= 2;
-					}
-					DrawMessage(messageQueue[0], scale, scaledTextbox, xpos, ypos, fontSize);
+					DrawMessage(messageQueue[0], scale, (int) (screenWidth * 0.45), (int) (screenHeight * 0.1), fontSize);
 				}
 				if (MapOpen)
 				{
 					DrawRelics(pixelScaleX, pixelScaleY);
+					DrawFourBeastsUI((int) (screenWidth * 0.05), (int) (screenHeight * 0.86));
 				}
 				else if (InvertedMapOpen)
 				{
 					DrawInvertedRelics(pixelScaleX, pixelScaleY);
+					DrawFourBeastsUI((int) (screenWidth * 0.05), (int) (screenHeight * 0.86));
 				}
 			});
 		}
@@ -256,10 +264,15 @@ namespace SotnRandoTools.Services
 			return bufferWidth == 800;
 		}
 
-		private void DrawMessage(string message, int scale, Image scaledTextbox, int xpos, int ypos, int fontSize)
+		private void DrawMessage(string message, int scale, int xpos, int ypos, int fontSize)
 		{
-			guiApi.DrawImage(scaledTextbox, xpos, ypos, scaledTextbox.Width, scaledTextbox.Height, true);
-			guiApi.DrawString(xpos + (int) (scaledTextbox.Width / 2), ypos + (11 * scale), message, Color.White, null, fontSize, "Arial", "bold", "center", "center");
+			int messageFontSize = fontSize;
+			while (TextRenderer.MeasureText(messageQueue[0], new Font("Arial", messageFontSize)).Width > (textbox.Width - (20 * scale)))
+			{
+				messageFontSize -= 2;
+			}
+			guiApi.DrawImage(textbox, xpos, ypos, textbox.Width, textbox.Height, true);
+			guiApi.DrawString(xpos + (int) (textbox.Width / 2), ypos + (11 * scale), message, Color.White, null, messageFontSize, "Arial", "bold", "center", "center");
 		}
 
 		private void DrawRelics(float pixelScaleX, float pixelScaleY)
@@ -273,6 +286,34 @@ namespace SotnRandoTools.Services
 			{
 				DrawRelic(relicImages[relic.Key], relic.Value.Xpos, relic.Value.Ypos, pixelScaleX, pixelScaleY);
 			}
+		}
+
+		private void DrawFourBeastsUI(int xpos, int ypos)
+		{
+			if (fourBeastsIconsInitialized == false)
+			{
+				InitializeFourBeastsIcons();
+			}
+
+			guiApi.DrawImage(textbox, xpos, ypos, textbox.Width, textbox.Height, true);
+
+			int iconWidth = vermillionBirdIcon.Width;
+
+			xpos = xpos + (3 * scale);
+			guiApi.DrawImage(vermillionBirdIcon, xpos, ypos + (1 * scale), vermillionBirdIcon.Width, vermillionBirdIcon.Height, true);
+			guiApi.DrawString(iconWidth + xpos + (2 * scale), ypos + (11 * scale), VermillionBirds.ToString(), Color.White, null, 34, "Arial", "bold", "center", "center");
+
+			xpos = xpos + (11 * scale) + iconWidth;
+			guiApi.DrawImage(azureDragonIcon, xpos, ypos + (1 * scale), azureDragonIcon.Width, azureDragonIcon.Height, true);
+			guiApi.DrawString(iconWidth + xpos + (2 * scale), ypos + (11 * scale), AzureDragons.ToString(), Color.White, null, 34, "Arial", "bold", "center", "center");
+
+			xpos = xpos + (11 * scale) + iconWidth;
+			guiApi.DrawImage(blackTortoiseIcon, xpos, ypos + (1 * scale), blackTortoiseIcon.Width, blackTortoiseIcon.Height, true);
+			guiApi.DrawString(iconWidth + xpos + (2 * scale), ypos + (11 * scale), BlackTortoises.ToString(), Color.White, null, 34, "Arial", "bold", "center", "center");
+
+			xpos = xpos + (11 * scale) + iconWidth;
+			guiApi.DrawImage(whiteTigerIcon, xpos, ypos + (1 * scale), whiteTigerIcon.Width, whiteTigerIcon.Height, true);
+			guiApi.DrawString(iconWidth + xpos + (2 * scale), ypos + (11 * scale), WhiteTigers.ToString(), Color.White, null, 34, "Arial", "bold", "center", "center");
 		}
 
 		private void DrawInvertedRelics(float pixelScaleX, float pixelScaleY)
@@ -310,7 +351,7 @@ namespace SotnRandoTools.Services
 		private void RefreshUI(Object sender, EventArgs e)
 		{
 			DrawUI();
-			if (messageQueue.Count == 0 && !MapOpen)
+			if (messageQueue.Count == 0 && !MapOpen && !InvertedMapOpen)
 			{
 				countdownTimer.Stop();
 			}
@@ -340,7 +381,22 @@ namespace SotnRandoTools.Services
 
 		private void ResizeImages()
 		{
-			scaledTextbox = ResizeImage(textbox, textbox.Width * scale, textbox.Height * scale);
+			Image unscaledTextbox = Image.FromFile(Paths.TextboxImage);
+
+			textbox = ResizeImage(unscaledTextbox, unscaledTextbox.Width * scale, unscaledTextbox.Height * scale);
+
+			if (fourBeastsIconsInitialized)
+			{
+				Image unscaledVermillionBirdIcon = Image.FromFile(Paths.IconVermillionBird);
+				Image unscaledWhiteTigerIcon = Image.FromFile(Paths.IconWhiteTiger);
+				Image unscaledAzureDragonIcon = Image.FromFile(Paths.IconAzureDragon);
+				Image unscaledBlackTortoiseIcon = Image.FromFile(Paths.IconBlackTortoise);
+
+				vermillionBirdIcon = ResizeImage(unscaledVermillionBirdIcon, unscaledVermillionBirdIcon.Width * scale, unscaledVermillionBirdIcon.Height * scale);
+				whiteTigerIcon = ResizeImage(unscaledWhiteTigerIcon, unscaledWhiteTigerIcon.Width * scale, unscaledWhiteTigerIcon.Height * scale);
+				azureDragonIcon = ResizeImage(unscaledAzureDragonIcon, unscaledAzureDragonIcon.Width * scale, unscaledAzureDragonIcon.Height * scale);
+				blackTortoiseIcon = ResizeImage(unscaledBlackTortoiseIcon, unscaledBlackTortoiseIcon.Width * scale, unscaledBlackTortoiseIcon.Height * scale);
+			}
 		}
 
 		private void InitializeRelicImageas()
@@ -350,6 +406,21 @@ namespace SotnRandoTools.Services
 				relicImages.Add(relic.Key, Image.FromFile(relic.Value));
 			}
 			relicImagesInitialized = true;
+		}
+
+		private void InitializeFourBeastsIcons()
+		{
+			Image unscaledVermillionBirdIcon = Image.FromFile(Paths.IconVermillionBird);
+			Image unscaledWhiteTigerIcon = Image.FromFile(Paths.IconWhiteTiger);
+			Image unscaledAzureDragonIcon = Image.FromFile(Paths.IconAzureDragon);
+			Image unscaledBlackTortoiseIcon = Image.FromFile(Paths.IconBlackTortoise);
+
+			vermillionBirdIcon = ResizeImage(unscaledVermillionBirdIcon, unscaledVermillionBirdIcon.Width * scale, unscaledVermillionBirdIcon.Height * scale);
+			whiteTigerIcon = ResizeImage(unscaledWhiteTigerIcon, unscaledWhiteTigerIcon.Width * scale, unscaledWhiteTigerIcon.Height * scale);
+			azureDragonIcon = ResizeImage(unscaledAzureDragonIcon, unscaledAzureDragonIcon.Width * scale, unscaledAzureDragonIcon.Height * scale);
+			blackTortoiseIcon = ResizeImage(unscaledBlackTortoiseIcon, unscaledBlackTortoiseIcon.Width * scale, unscaledBlackTortoiseIcon.Height * scale);
+
+			fourBeastsIconsInitialized = true;
 		}
 	}
 }
