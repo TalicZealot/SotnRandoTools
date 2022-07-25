@@ -1099,7 +1099,7 @@ namespace SotnRandoTools.Khaos
 			CheckWhiteDragon();
 
 			CheckManaUsage();
-			FixSlowEntranceSlow();
+			FixEntranceSlow();
 			FixSlowWarps();
 			CheckSubweaponsOnlyEquipment();
 
@@ -1528,7 +1528,7 @@ namespace SotnRandoTools.Khaos
 		private void ThirstDrain()
 		{
 			uint superDrain = superThirst ? Constants.Khaos.SuperThirstExtraDrain : 0u;
-			if (sotnApi.AlucardApi.CurrentHp > toolConfig.Khaos.ThirstDrainPerSecond + 1 + +superDrain)
+			if (sotnApi.AlucardApi.CurrentHp > toolConfig.Khaos.ThirstDrainPerSecond + 1 + superDrain)
 			{
 				sotnApi.AlucardApi.CurrentHp -= (toolConfig.Khaos.ThirstDrainPerSecond + superDrain);
 			}
@@ -1593,7 +1593,7 @@ namespace SotnRandoTools.Khaos
 
 				if (superHorde)
 				{
-					int damageTypeRoll = rng.Next(0, 4);
+					int damageTypeRoll = rng.Next(0, 5);
 
 					switch (damageTypeRoll)
 					{
@@ -1606,6 +1606,9 @@ namespace SotnRandoTools.Khaos
 						case 3:
 							hordeEnemies[enemyIndex].DamageTypeA = (uint) Entities.Stone;
 							hordeEnemies[enemyIndex].DamageTypeB = (uint) Entities.Stone;
+							break;
+						case 4:
+							hordeEnemies[enemyIndex].DamageTypeA = (uint) Entities.Slam;
 							break;
 						default:
 							break;
@@ -2329,7 +2332,8 @@ namespace SotnRandoTools.Khaos
 				inputService.Polling--;
 			}
 
-			if (notificationService.VermillionBirds > 0 && fireballCooldown == 0 && inputService.RegisteredMove(InputKeys.QuarterCircleForward, Globals.UpdateCooldownFrames))
+			if (notificationService.VermillionBirds > 0 && fireballCooldown == 0
+				&& inputService.RegisteredMove(InputKeys.QuarterCircleForward, Globals.UpdateCooldownFrames))
 			{
 				notificationService.VermillionBirds--;
 				Entity fireball = new Entity(Constants.Khaos.FireballEntityBytes);
@@ -2686,7 +2690,7 @@ namespace SotnRandoTools.Khaos
 				hellfireCasted = false;
 			}
 		}
-		private void FixSlowEntranceSlow()
+		private void FixEntranceSlow()
 		{
 			if (slowActive && !slowPaused && IsInRoomList(Constants.Khaos.EntranceCutsceneRooms))
 			{

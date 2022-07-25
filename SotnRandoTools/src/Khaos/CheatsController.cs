@@ -70,10 +70,10 @@ namespace SotnRandoTools.Khaos
 		{
 			FaerieScroll.Enable();
 			Cheat batCardXp = cheats.GetCheatByName("BatCardXp");
-			batCardXp.PokeValue(10000);
+			batCardXp.PokeValue(7000);
 			batCardXp.Enable();
 			Cheat ghostCardXp = cheats.GetCheatByName("GhostCardXp");
-			ghostCardXp.PokeValue(10000);
+			ghostCardXp.PokeValue(7000);
 			ghostCardXp.Enable();
 			Cheat faerieCardXp = cheats.GetCheatByName("FaerieCardXp");
 			faerieCardXp.Enable();

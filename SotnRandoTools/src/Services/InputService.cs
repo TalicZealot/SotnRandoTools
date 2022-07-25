@@ -63,6 +63,34 @@ namespace SotnRandoTools.Services
 				}
 			},
 			{
+				InputKeys.QuarterCircleRight,
+				new Input
+				{
+					Enabled = false,
+					MotionSequence = new List<Dictionary<string, object>>
+					{
+						new Dictionary<string, object> {[PlaystationInputKeys.Right] = false, [PlaystationInputKeys.Down] = true},
+						new Dictionary<string, object> {[PlaystationInputKeys.Right] = true, [PlaystationInputKeys.Down] = true},
+						new Dictionary<string, object> {[PlaystationInputKeys.Right] = true, [PlaystationInputKeys.Down] = false}
+					},
+					Activator = new Dictionary<string, object> { [PlaystationInputKeys.Square] = true }
+				}
+			},
+			{
+				InputKeys.QuarterCircleLeft,
+				new Input
+				{
+					Enabled = false,
+					MotionSequence = new List<Dictionary<string, object>>
+					{
+						new Dictionary<string, object> {[PlaystationInputKeys.Left] = false, [PlaystationInputKeys.Down] = true},
+						new Dictionary<string, object> {[PlaystationInputKeys.Left] = true, [PlaystationInputKeys.Down] = true},
+						new Dictionary<string, object> {[PlaystationInputKeys.Left] = true, [PlaystationInputKeys.Down] = false}
+					},
+					Activator = new Dictionary<string, object> { [PlaystationInputKeys.Square] = true }
+				}
+			},
+			{
 				InputKeys.Dash,
 				new Input
 				{
@@ -186,19 +214,25 @@ namespace SotnRandoTools.Services
 				moveHistory.RemoveAt(0);
 			}
 
+			bool leftPressed = Convert.ToBoolean(inputHistory[inputHistory.Count - 1][leftKey]);
+			bool rightPressed = Convert.ToBoolean(inputHistory[inputHistory.Count - 1][rightKey]);
+
+
 			if (sotnApi.AlucardApi.FacingLeft)
 			{
-				diractionalHistory[diractionalHistory.Count - 1].Add(InputKeys.Forward, Convert.ToBoolean(inputHistory[inputHistory.Count - 1][leftKey]));
-				diractionalHistory[diractionalHistory.Count - 1].Add(InputKeys.Back, Convert.ToBoolean(inputHistory[inputHistory.Count - 1][rightKey]));
+				diractionalHistory[diractionalHistory.Count - 1].Add(InputKeys.Forward, leftPressed);
+				diractionalHistory[diractionalHistory.Count - 1].Add(InputKeys.Back, rightPressed);
 			}
 			else
 			{
-				diractionalHistory[diractionalHistory.Count - 1].Add(InputKeys.Forward, Convert.ToBoolean(inputHistory[inputHistory.Count - 1][rightKey]));
-				diractionalHistory[diractionalHistory.Count - 1].Add(InputKeys.Back, Convert.ToBoolean(inputHistory[inputHistory.Count - 1][leftKey]));
+				diractionalHistory[diractionalHistory.Count - 1].Add(InputKeys.Forward, rightPressed);
+				diractionalHistory[diractionalHistory.Count - 1].Add(InputKeys.Back, leftPressed);
 			}
 
 			diractionalHistory[diractionalHistory.Count - 1].Add(upKey, Convert.ToBoolean(inputHistory[inputHistory.Count - 1][upKey]));
 			diractionalHistory[diractionalHistory.Count - 1].Add(downKey, Convert.ToBoolean(inputHistory[inputHistory.Count - 1][downKey]));
+			diractionalHistory[diractionalHistory.Count - 1].Add(leftKey, leftPressed);
+			diractionalHistory[diractionalHistory.Count - 1].Add(rightKey, rightPressed);
 
 			foreach (var input in inputs)
 			{
