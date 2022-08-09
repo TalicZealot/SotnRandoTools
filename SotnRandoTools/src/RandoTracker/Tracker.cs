@@ -599,6 +599,7 @@ namespace SotnRandoTools.RandoTracker
 				location.Visited = false;
 				location.AvailabilityColor = MapColor.Unavailable;
 			}
+			PrepareMapLocations();
 			if (toolConfig.Tracker.Locations)
 			{
 				CheckReachability();
@@ -950,6 +951,7 @@ namespace SotnRandoTools.RandoTracker
 				default:
 					break;
 			}
+			PrepareMapLocations();
 		}
 
 		private void SetEquipmentProgression()
@@ -968,33 +970,45 @@ namespace SotnRandoTools.RandoTracker
 			{
 				if (!locations[i].Visited && locations[i].SecondCastle == secondCastle)
 				{
-					if (locations[i].SpreadExtension && !locations[i].GuardedExtension && !locations[i].EquipmentExtension && !spreadExtension)
+					ColorMapRoom(i, (uint) locations[i].AvailabilityColor, locations[i].SecondCastle);
+				}
+			}
+		}
+
+		private void PrepareMapLocations()
+		{
+			for (int i = 0; i < locations.Count; i++)
+			{
+				if (locations[i].SpreadExtension && !locations[i].GuardedExtension && !locations[i].EquipmentExtension && !spreadExtension)
+				{
+					locations[i].Visited = true;
+					continue;
+				}
+				if (locations[i].EquipmentExtension && !equipmentExtension)
+				{
+					if (locations[i].SpreadExtension && !spreadExtension)
 					{
+						locations[i].Visited = true;
 						continue;
 					}
-					if (locations[i].EquipmentExtension && !equipmentExtension)
+					else if (!locations[i].SpreadExtension)
 					{
-						if (locations[i].SpreadExtension && !spreadExtension)
-						{
-							continue;
-						}
-						else if (!locations[i].SpreadExtension)
-						{
-							continue;
-						}
+						locations[i].Visited = true;
+						continue;
 					}
-					if (locations[i].GuardedExtension && !guardedExtension)
+				}
+				if (locations[i].GuardedExtension && !guardedExtension)
+				{
+					if (locations[i].SpreadExtension && !spreadExtension)
 					{
-						if (locations[i].SpreadExtension && !spreadExtension)
-						{
-							continue;
-						}
-						else if (!locations[i].SpreadExtension)
-						{
-							continue;
-						}
+						locations[i].Visited = true;
+						continue;
 					}
-					ColorMapRoom(i, (uint) locations[i].AvailabilityColor, locations[i].SecondCastle);
+					else if (!locations[i].SpreadExtension)
+					{
+						locations[i].Visited = true;
+						continue;
+					}
 				}
 			}
 		}
@@ -1036,9 +1050,7 @@ namespace SotnRandoTools.RandoTracker
 
 		private bool LocationsDrawn()
 		{
-			Location uncheckedLocation = locations.Where(l => (!l.Visited && l.SecondCastle == secondCastle &&
-			(l.EquipmentExtension == false || l.EquipmentExtension == equipmentExtension) &&
-			(l.GuardedExtension == false || l.GuardedExtension == guardedExtension))).FirstOrDefault();
+			Location uncheckedLocation = locations.Where(l => (!l.Visited && l.SecondCastle == secondCastle)).FirstOrDefault();
 			if (uncheckedLocation != null)
 			{
 				uint row = (uint) uncheckedLocation.MapRow;
@@ -1316,7 +1328,6 @@ namespace SotnRandoTools.RandoTracker
 			}
 		}
 
-		//TODO: Move to appropriate class
 		private void CheckStart()
 		{
 			if (!autosplitter.Started && sotnApi.GameApi.Hours == 0 && sotnApi.GameApi.Minutes == 0 && sotnApi.GameApi.Seconds == 3 && sotnApi.GameApi.Status == Status.InGame)

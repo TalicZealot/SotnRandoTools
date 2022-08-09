@@ -563,6 +563,7 @@ namespace SotnRandoTools.Khaos
 			statusInfoDisplay.AddTimer(timer);
 			Alert(toolConfig.Khaos.Actions[(int) Enums.Action.BloodMana]);
 		}
+		//TODO: Rework. Replace timer with update with counter.
 		public void Thirst(string user = Constants.Khaos.KhaosName)
 		{
 			bool meterFull = KhaosMeterFull();
@@ -626,6 +627,7 @@ namespace SotnRandoTools.Khaos
 			notificationService.AddMessage(message);
 			Alert(toolConfig.Khaos.Actions[(int) Enums.Action.Endurance]);
 		}
+		//TODO: Forward dash
 		public void HnK(string user = Constants.Khaos.KhaosName)
 		{
 			hnkOn = true;
@@ -647,6 +649,8 @@ namespace SotnRandoTools.Khaos
 		}
 		#endregion
 		#region Buffs
+		//TODO: Add Quad Damage, str buff on successful kill streak
+		//TODO: Remove
 		public void Vampire(string user = Constants.Khaos.KhaosName)
 		{
 			cheatsController.DarkMetamorphasisCheat.PokeValue(1);
@@ -1091,6 +1095,8 @@ namespace SotnRandoTools.Khaos
 				notificationService.InvertedMapOpen = false;
 			}
 
+			//TODO: disable / adjust actions in the end game
+			//TODO: randomize final cutscene voice lines
 			CheckDashInput();
 			CheckVampireKill();
 			CheckVermillionBirdFireballs();

@@ -65,7 +65,7 @@ namespace SotnRandoTools.Khaos
 			ContactDamage = cheats.GetCheatByName("ContactDamage");
 			Music = cheats.GetCheatByName("Music");
 		}
-
+		//TODO: manually initialize cheats instead of loading from file
 		public void StartCheats()
 		{
 			FaerieScroll.Enable();
