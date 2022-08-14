@@ -100,8 +100,8 @@ namespace SotnRandoTools.Khaos
 			broadcasterId = user.Id;
 			Console.WriteLine($"Authorization success!\r\nUser: {user.DisplayName}\r\nId: {user.Id} \r\nToken expires in : {resp.ExpiresIn}");
 
-			GetSubscribers();
-			CreateRewards();
+			await GetSubscribers();
+			await CreateRewards();
 
 			client.OnPubSubServiceConnected += onPubSubServiceConnected;
 			client.OnListenResponse += onListenResponse;
@@ -115,12 +115,12 @@ namespace SotnRandoTools.Khaos
 			return true;
 		}
 
-		public void Disconnect()
+		public async Task Disconnect()
 		{
 			refreshTokenTimer.Stop();
 			redemptionFulfilTimer.Stop();
 			manualDisconnect = true;
-			DeleteRewards();
+			await DeleteRewards();
 			client.Disconnect();
 			for (int i = 0; i < actionsStartingOnCooldown.Count; i++)
 			{
@@ -130,7 +130,7 @@ namespace SotnRandoTools.Khaos
 			notificationService.AddMessage("Disconnected");
 		}
 
-		private async void GetSubscribers()
+		private async Task GetSubscribers()
 		{
 			Console.WriteLine($"Fetching subscribers...");
 
@@ -165,7 +165,7 @@ namespace SotnRandoTools.Khaos
 
 		}
 
-		private async void CreateRewards()
+		private async Task CreateRewards()
 		{
 			Console.WriteLine($"Creating rewards...");
 			for (int i = 0; i < toolConfig.Khaos.Actions.Count; i++)
@@ -253,7 +253,7 @@ namespace SotnRandoTools.Khaos
 			notificationService.AddMessage($"{request.Title} reward added.");
 		}
 
-		private async void DeleteRewards()
+		private async Task DeleteRewards()
 		{
 			Console.WriteLine($"Deleting rewards...");
 			for (int i = 0; i < customRewardIds.Count; i++)
@@ -337,7 +337,7 @@ namespace SotnRandoTools.Khaos
 			actionDispatcher.EnqueueAction(actionEvent);
 		}
 
-		public async void FulfillRedemption(Redemption redemption)
+		public async Task FulfillRedemption(Redemption redemption)
 		{
 			for (int i = 0; i <= UpdateRetryCount; i++)
 			{
@@ -372,7 +372,7 @@ namespace SotnRandoTools.Khaos
 			}
 		}
 
-		public async void CancelRedemption(Redemption redemption)
+		public async Task CancelRedemption(Redemption redemption)
 		{
 			for (int i = 0; i <= UpdateRetryCount; i++)
 			{
@@ -424,7 +424,7 @@ namespace SotnRandoTools.Khaos
 			{
 				if ((currentTime - redemptions[i].RedeemedAt).TotalSeconds > FulfilRewardDelay)
 				{
-					FulfillRedemption(redemptions[i]);
+					await FulfillRedemption(redemptions[i]);
 					redemptions.Remove(redemptions[i]);
 					await Task.Delay(requestDelay);
 				}

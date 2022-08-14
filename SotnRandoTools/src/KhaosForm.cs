@@ -269,10 +269,10 @@ namespace SotnRandoTools
 		{
 		}
 
-		private void RefundRedemption(object sender, DataGridViewCellEventArgs e)
+		private async void RefundRedemption(object sender, DataGridViewCellEventArgs e)
 		{
 			if (e.RowIndex < 0 || e.ColumnIndex != redemptionsGridView.Columns["Refund"].Index) return;
-			channelPointsController.CancelRedemption(channelPointsController.Redemptions[e.RowIndex]);
+			await channelPointsController.CancelRedemption(channelPointsController.Redemptions[e.RowIndex]);
 		}
 		private void DecrementTimers(Object sender, EventArgs e)
 		{
@@ -343,7 +343,7 @@ namespace SotnRandoTools
 				toolConfig.Khaos.ControlPannelQueueActions = false;
 			}
 		}
-		private void startButton_Click(object sender, EventArgs e)
+		private async void startButton_Click(object sender, EventArgs e)
 		{
 			if (started)
 			{
@@ -357,7 +357,7 @@ namespace SotnRandoTools
 				connectButton.Text = "Connect to Twitch";
 				if (connected)
 				{
-					channelPointsController.Disconnect();
+					await channelPointsController.Disconnect();
 					connected = false;
 				}
 				autoKhaosButton.Enabled = false;
@@ -400,7 +400,7 @@ namespace SotnRandoTools
 			if (connected)
 			{
 				connectButton.Text = "Connect to Twitch";
-				channelPointsController.Disconnect();
+				await channelPointsController.Disconnect();
 				connected = false;
 				connectButton.BackColor = System.Drawing.Color.FromArgb(17, 0, 17);
 				connectButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(48, 20, 48);
@@ -758,7 +758,7 @@ namespace SotnRandoTools
 		}
 		#endregion
 
-		private void KhaosForm_FormClosing(object sender, FormClosingEventArgs e)
+		private async void KhaosForm_FormClosing(object sender, FormClosingEventArgs e)
 		{
 			if (started)
 			{
@@ -772,7 +772,7 @@ namespace SotnRandoTools
 			connectButton.Text = "Connect to Twitch";
 			if (connected)
 			{
-				channelPointsController.Disconnect();
+				await channelPointsController.Disconnect();
 				connected = false;
 			};
 			autoKhaosButton.Enabled = false;

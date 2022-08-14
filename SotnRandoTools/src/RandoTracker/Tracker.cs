@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using BizHawk.Client.Common;
 using Newtonsoft.Json.Linq;
 using SotnApi.Constants.Values.Game;
@@ -21,9 +22,8 @@ namespace SotnRandoTools.RandoTracker
 		const string DefaultSeedInfo = "seed(preset)";
 		const long DraculaActorAddress = 0x076e98;
 
-		private readonly IGraphics? formGraphics;
+		private readonly ITrackerGraphicsEngine trackerGraphicsEngine;
 		private readonly IToolConfig toolConfig;
-		private readonly TrackerGraphicsEngine trackerGraphicsEngine;
 		private readonly IWatchlistService watchlistService;
 		private readonly ISotnApi sotnApi;
 		private readonly INotificationService notificationService;
@@ -425,14 +425,14 @@ namespace SotnRandoTools.RandoTracker
 		private int autosplitterReconnectCounter = 0;
 		private bool draculaSpawned = false;
 
-		public Tracker(IGraphics? formGraphics, IToolConfig toolConfig, IWatchlistService watchlistService, ISotnApi sotnApi, INotificationService notificationService)
+		public Tracker(ITrackerGraphicsEngine trackerGraphicsEngine, IToolConfig toolConfig, IWatchlistService watchlistService, ISotnApi sotnApi, INotificationService notificationService)
 		{
-			if (formGraphics is null) throw new ArgumentNullException(nameof(formGraphics));
+			if (trackerGraphicsEngine is null) throw new ArgumentNullException(nameof(trackerGraphicsEngine));
 			if (toolConfig is null) throw new ArgumentNullException(nameof(toolConfig));
 			if (watchlistService is null) throw new ArgumentNullException(nameof(watchlistService));
 			if (sotnApi is null) throw new ArgumentNullException(nameof(sotnApi));
 			if (notificationService is null) throw new ArgumentNullException(nameof(notificationService));
-			this.formGraphics = formGraphics;
+			this.trackerGraphicsEngine = trackerGraphicsEngine;
 			this.toolConfig = toolConfig;
 			this.watchlistService = watchlistService;
 			this.sotnApi = sotnApi;
@@ -452,17 +452,14 @@ namespace SotnRandoTools.RandoTracker
 				autosplitter = new();
 			}
 
-			trackerGraphicsEngine = new TrackerGraphicsEngine(formGraphics, relics, progressionItems, thrustSwords, toolConfig);
+			trackerGraphicsEngine.InitializeItems(relics, progressionItems, thrustSwords);
 			trackerGraphicsEngine.CalculateGrid(toolConfig.Tracker.Width, toolConfig.Tracker.Height);
-			this.GraphicsEngine = trackerGraphicsEngine;
 			this.SeedInfo = DefaultSeedInfo;
 		}
 
 		public string SeedInfo { get; set; }
 
 		public IRelicLocationDisplay RelicLocationDisplay { get; set; }
-
-		public TrackerGraphicsEngine GraphicsEngine { get; }
 
 		public void DrawRelicsAndItems()
 		{
@@ -959,9 +956,9 @@ namespace SotnRandoTools.RandoTracker
 			relics.Where(x => x.Name == "CubeOfZoe").FirstOrDefault().Progression = true;
 			relics.Where(x => x.Name == "DemonCard").FirstOrDefault().Progression = true;
 			relics.Where(x => x.Name == "NoseDevilCard").FirstOrDefault().Progression = true;
-			GraphicsEngine.SetProgression();
-			GraphicsEngine.CalculateGrid(toolConfig.Tracker.Width, toolConfig.Tracker.Height);
-			GraphicsEngine.Render();
+			trackerGraphicsEngine.SetProgression();
+			trackerGraphicsEngine.CalculateGrid(toolConfig.Tracker.Width, toolConfig.Tracker.Height);
+			trackerGraphicsEngine.Render();
 		}
 
 		private void SetMapLocations()

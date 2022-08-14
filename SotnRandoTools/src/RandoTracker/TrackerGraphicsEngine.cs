@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Constants;
 using SotnRandoTools.RandoTracker.Interfaces;
@@ -25,9 +27,9 @@ namespace SotnRandoTools.RandoTracker
 		private IGraphics formGraphics;
 		private readonly IToolConfig toolConfig;
 
-		private readonly List<Relic> relics;
-		private List<Item> progressionItems;
-		private List<Item> thrustSwords;
+		private List<Relic>? relics;
+		private List<Item>? progressionItems;
+		private List<Item>? thrustSwords;
 
 		private List<Bitmap> relicImages = new List<Bitmap>();
 		private List<Bitmap> progressionItemImages = new List<Bitmap>();
@@ -37,6 +39,7 @@ namespace SotnRandoTools.RandoTracker
 		private List<Rectangle> vladRelicSlots = new List<Rectangle>();
 		private List<Rectangle> progressionItemSlots = new List<Rectangle>();
 
+		private bool initialized = false;
 		private float scale = 1;
 		private int progressionRelics = 0;
 		private bool vladProgression = true;
@@ -50,18 +53,24 @@ namespace SotnRandoTools.RandoTracker
 				new float[] {0, 0, 0, 0, 1}
 			});
 
-		public TrackerGraphicsEngine(IGraphics formGraphics, List<Relic> relics, List<Item> progressionItems, List<Item> thrustSwords, IToolConfig toolConfig)
+		public TrackerGraphicsEngine(IGraphics formGraphics, IToolConfig toolConfig)
 		{
 			if (formGraphics is null) throw new ArgumentNullException(nameof(formGraphics));
+			if (toolConfig is null) throw new ArgumentNullException(nameof(toolConfig));
+			this.formGraphics = formGraphics;
+			this.toolConfig = toolConfig;
+		}
+
+		public bool Refreshed { get; set; }
+
+		public void InitializeItems(List<Relic> relics, List<Item> progressionItems, List<Item> thrustSwords)
+		{
 			if (relics is null) throw new ArgumentNullException(nameof(relics));
 			if (progressionItems is null) throw new ArgumentNullException(nameof(progressionItems));
 			if (thrustSwords is null) throw new ArgumentNullException(nameof(thrustSwords));
-			if (toolConfig is null) throw new ArgumentNullException(nameof(toolConfig));
-			this.formGraphics = formGraphics;
 			this.relics = relics;
 			this.progressionItems = progressionItems;
 			this.thrustSwords = thrustSwords;
-			this.toolConfig = toolConfig;
 
 			foreach (var relic in relics)
 			{
@@ -74,6 +83,8 @@ namespace SotnRandoTools.RandoTracker
 			vladProgression = relics[25].Progression;
 
 			LoadImages();
+
+			initialized = true;
 		}
 
 		public void SetProgression()
@@ -178,6 +189,11 @@ namespace SotnRandoTools.RandoTracker
 
 		public void Render()
 		{
+			if (!initialized)
+			{
+				return;
+			}
+
 			if (toolConfig.Tracker.GridLayout)
 			{
 				GridRender();
@@ -186,6 +202,8 @@ namespace SotnRandoTools.RandoTracker
 			{
 				CollectedRender();
 			}
+
+			Refreshed = true;
 		}
 
 		private void GridRender()

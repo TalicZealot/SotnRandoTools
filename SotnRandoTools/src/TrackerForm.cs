@@ -18,8 +18,9 @@ namespace SotnRandoTools
 		private readonly INotificationService notificationService;
 
 		private GraphicsAdapter? formGraphics;
-		private Graphics? internalGraphics;
 		private Tracker? tracker;
+		private TrackerGraphicsEngine? trackerGraphicsEngine;
+		private Bitmap drawingSurface;
 
 		public TrackerForm(IToolConfig toolConfig, IWatchlistService watchlistService, ISotnApi sotnApi, INotificationService notificationService)
 		{
@@ -42,6 +43,12 @@ namespace SotnRandoTools
 			{
 				this.tracker.Update();
 			}
+
+			if (trackerGraphicsEngine.Refreshed)
+			{
+				trackerGraphicsEngine.Refreshed = false;
+				this.Invalidate();
+			}
 		}
 
 		public void SetTrackerVladRelicLocationDisplay(IRelicLocationDisplay vladRelicLocationDisplay)
@@ -55,16 +62,19 @@ namespace SotnRandoTools
 			this.TopMost = toolConfig.Tracker.AlwaysOnTop;
 			this.Size = new Size(toolConfig.Tracker.Width, toolConfig.Tracker.Height);
 			this.Location = toolConfig.Tracker.Location;
-			this.internalGraphics = this.CreateGraphics();
+
+			drawingSurface = new Bitmap(this.Width, this.Height);
+			Graphics internalGraphics = Graphics.FromImage(drawingSurface);
 			this.formGraphics = new GraphicsAdapter(internalGraphics);
-			this.tracker = new Tracker(formGraphics, toolConfig, watchlistService, sotnApi, notificationService);
+			this.trackerGraphicsEngine = new TrackerGraphicsEngine(formGraphics, toolConfig);
+			this.tracker = new Tracker(trackerGraphicsEngine, toolConfig, watchlistService, sotnApi, notificationService);
 		}
 
 		private void TrackerForm_Paint(object sender, PaintEventArgs e)
 		{
 			if (tracker != null)
 			{
-				tracker.DrawRelicsAndItems();
+				e.Graphics.DrawImage(drawingSurface, 0, 0);
 			}
 		}
 
@@ -77,7 +87,8 @@ namespace SotnRandoTools
 
 			if (this.Width > toolConfig.Tracker.Width || this.Height > toolConfig.Tracker.Height)
 			{
-				internalGraphics = this.CreateGraphics();
+				drawingSurface = new Bitmap(this.Width, this.Height);
+				Graphics internalGraphics = Graphics.FromImage(drawingSurface);
 				this.formGraphics = new GraphicsAdapter(internalGraphics);
 			}
 
@@ -86,8 +97,8 @@ namespace SotnRandoTools
 
 			if (tracker is not null && formGraphics is not null)
 			{
-				tracker.GraphicsEngine.ChangeGraphics(formGraphics);
-				tracker.GraphicsEngine.CalculateGrid(this.Width, this.Height);
+				trackerGraphicsEngine.ChangeGraphics(formGraphics);
+				trackerGraphicsEngine.CalculateGrid(this.Width, this.Height);
 				tracker.DrawRelicsAndItems();
 			}
 		}
@@ -110,5 +121,6 @@ namespace SotnRandoTools
 			tracker.CloseAutosplitter();
 			tracker = null;
 		}
+
 	}
 }
