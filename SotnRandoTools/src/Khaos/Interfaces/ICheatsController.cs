@@ -22,7 +22,7 @@ namespace SotnRandoTools.Khaos.Interfaces
 		Cheat Music { get; set; }
 		Cheat SavePalette { get; set; }
 		Cheat ShineCheat { get; set; }
-		Cheat StopwatchTimer { get; set; }
+		Cheat SubweaponTimer { get; set; }
 		Cheat UnderwaterPhysics { get; set; }
 		Cheat VisualEffectPaletteCheat { get; set; }
 		Cheat VisualEffectTimerCheat { get; set; }

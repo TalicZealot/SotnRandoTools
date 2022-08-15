@@ -1001,8 +1001,8 @@ namespace SotnRandoTools.Khaos
 			if (sotnApi.AlucardApi.SubweaponTimer == 0)
 			{
 				sotnApi.AlucardApi.ActivateStopwatch();
-				cheatsController.StopwatchTimer.Enable();
-				cheatsController.StopwatchTimer.PokeValue(1);
+				cheatsController.SubweaponTimer.Enable();
+				cheatsController.SubweaponTimer.PokeValue(1);
 				zaWarudoZone = sotnApi.GameApi.Zone2;
 				zaWarudoActive = true;
 			}
@@ -2050,7 +2050,7 @@ namespace SotnRandoTools.Khaos
 		}
 		private void ZawarudoOff()
 		{
-			cheatsController.StopwatchTimer.Disable();
+			cheatsController.SubweaponTimer.Disable();
 			eventScheduler.ZawarudoTimer = false;
 			eventScheduler.ZawarudoCheckTimer = false;
 			zaWarudoActive = false;
@@ -2064,8 +2064,8 @@ namespace SotnRandoTools.Khaos
 				if (!zaWarudoActive && sotnApi.AlucardApi.SubweaponTimer == 0)
 				{
 					sotnApi.AlucardApi.ActivateStopwatch();
-					cheatsController.StopwatchTimer.Enable();
-					cheatsController.StopwatchTimer.PokeValue(1);
+					cheatsController.SubweaponTimer.Enable();
+					cheatsController.SubweaponTimer.PokeValue(1);
 					zaWarudoZone = sotnApi.GameApi.Zone2;
 					zaWarudoActive = true;
 					return;

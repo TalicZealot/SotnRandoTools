@@ -169,22 +169,7 @@ namespace SotnRandoTools
 
 		private void LoadCheats()
 		{
-			if (!File.Exists(Paths.CheatsPath))
-			{
-				File.Copy(Paths.CheatsBackupPath, Paths.CheatsPath);
-			}
-
-			this.MainForm.CheatList.Load(_memoryDomains, Paths.CheatsPath, false);
 			this.MainForm.CheatList.DisableAll();
-
-			var checkCheat = this.MainForm.CheatList.Where(x => x.Name == "AlucardAttackHitbox2Width").FirstOrDefault();
-
-			if (checkCheat is null)
-			{
-				File.Copy(Paths.CheatsBackupPath, Paths.CheatsPath);
-				this.MainForm.CheatList.Load(_memoryDomains, Paths.CheatsPath, false);
-				this.MainForm.CheatList.DisableAll();
-			}
 
 			if (khaosForm is not null && !khaosForm.IsDisposed)
 			{
@@ -303,6 +288,8 @@ namespace SotnRandoTools
 			sotnApi = null;
 			watchlistService = null;
 			inputService = null;
+
+			this.MainForm.CheatList.DisableAll();
 		}
 
 		private void autotrackerLaunch_Click(object sender, EventArgs e)

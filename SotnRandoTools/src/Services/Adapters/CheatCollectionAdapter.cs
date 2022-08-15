@@ -40,13 +40,23 @@ namespace SotnRandoTools.Services.Adapters
 			return cheats.Where(x => x.Name == name).FirstOrDefault();
 		}
 
-		public void AddCheat(long address, int value, string name, WatchSize size)
+		public Cheat AddCheat(long address, int value, string name, WatchSize size)
 		{
 			if (String.IsNullOrEmpty(name)) throw new ArgumentException(nameof(name));
+
+			Cheat cheatNameExists = cheats.Where(x => x.Name == name).FirstOrDefault();
+
+			if (cheatNameExists is not null)
+			{
+				return cheatNameExists;
+			}
 
 			var watch = Watch.GenerateWatch(domains.MainMemory, address, size, WatchDisplayType.Hex, true, name);
 			var cheat = new BizHawk.Client.Common.Cheat(watch, value);
 			cheats.Add(cheat);
+
+			cheatNameExists = cheats.Where(x => x.Name == name).FirstOrDefault();
+			return cheatNameExists;
 		}
 
 		public void RemoveCheat(Cheat cheat)

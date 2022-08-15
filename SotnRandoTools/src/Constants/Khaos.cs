@@ -537,5 +537,7 @@ namespace SotnRandoTools.Constants
 		public const uint MinimumMp = 30;
 		public const uint MinimumHearts = 60;
 		public const uint MinimumStat = 6;
+
+		public const int SaveKhaosPalette = 0xBCAA;
 	}
 }
