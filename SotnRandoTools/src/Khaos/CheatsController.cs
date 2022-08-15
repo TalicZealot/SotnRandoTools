@@ -32,13 +32,13 @@ namespace SotnRandoTools.Khaos
 		}
 
 		public Cheat FaerieScroll { get; set; }
-		public Cheat DarkMetamorphasisCheat { get; set; }
+		public Cheat DarkMetamorphasis { get; set; }
 		public Cheat UnderwaterPhysics { get; set; }
 		public Cheat Hearts { get; set; }
 		public Cheat Curse { get; set; }
-		public Cheat ManaCheat { get; set; }
-		public Cheat AttackPotionCheat { get; set; }
-		public Cheat DefencePotionCheat { get; set; }
+		public Cheat Mana { get; set; }
+		public Cheat AttackPotion { get; set; }
+		public Cheat DefencePotion { get; set; }
 		public Cheat SubweaponTimer { get; set; }
 		public Cheat HitboxWidth { get; set; }
 		public Cheat HitboxHeight { get; set; }
@@ -46,8 +46,8 @@ namespace SotnRandoTools.Khaos
 		public Cheat Hitbox2Height { get; set; }
 		public Cheat InvincibilityCheat { get; set; }
 		public Cheat ShineCheat { get; set; }
-		public Cheat VisualEffectPaletteCheat { get; set; }
-		public Cheat VisualEffectTimerCheat { get; set; }
+		public Cheat VisualEffectPalette { get; set; }
+		public Cheat VisualEffectTimer { get; set; }
 		public Cheat SavePalette { get; set; }
 		public Cheat ContactDamage { get; set; }
 		public Cheat Music { get; set; }
@@ -55,13 +55,13 @@ namespace SotnRandoTools.Khaos
 		public void GetCheats()
 		{
 			FaerieScroll = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Relics.FaerieScroll, 0x3, "FaerieScroll", WatchSize.Byte);
-			DarkMetamorphasisCheat = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Timers.DarkMetamorphasis, 0x1, "DarkMetamorphasis", WatchSize.Byte);
+			DarkMetamorphasis = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Timers.DarkMetamorphasis, 0x1, "DarkMetamorphasis", WatchSize.Byte);
 			UnderwaterPhysics = Cheats.AddCheat(SotnApi.Constants.Addresses.Game.UnderwaterPhysics, SotnApi.Constants.Values.Game.Various.UnderwaterPhysicsOn, "UnderwaterPhysics", WatchSize.Word);
 			Hearts = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Stats.CurrentHearts, 0x6E, "Hearts", WatchSize.Byte);
 			Curse = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Timers.Curse, 0x1, "CurseTimer", WatchSize.Byte);
-			ManaCheat = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Stats.CurrentMana, 0x0F, "Mana", WatchSize.Byte);
-			AttackPotionCheat = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Timers.AttackPotion, 0x1, "AttackPotion", WatchSize.Byte);
-			DefencePotionCheat = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Timers.DefencePotion, 0x1, "DefencePotion", WatchSize.Byte);
+			Mana = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Stats.CurrentMana, 0x0F, "Mana", WatchSize.Byte);
+			AttackPotion = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Timers.AttackPotion, 0x1, "AttackPotion", WatchSize.Byte);
+			DefencePotion = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Timers.DefencePotion, 0x1, "DefencePotion", WatchSize.Byte);
 			SubweaponTimer = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Timers.SubweaponTimer, 0x1, "SubweaponTimer", WatchSize.Byte);
 			HitboxWidth = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Entity.AttackHitboxWidth_1, 0x40, "AlucardAttackHitboxWidth", WatchSize.Byte);
 			HitboxHeight = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Entity.AttackHitboxHeight_1, 0x40, "AlucardAttackHitboxHeight", WatchSize.Byte);
@@ -69,19 +69,19 @@ namespace SotnRandoTools.Khaos
 			Hitbox2Height = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Entity.AttackHitboxHeight_2, 0x40, "AlucardAttackHitbox2Height", WatchSize.Byte);
 			InvincibilityCheat = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Timers.Invincibility, 0x0, "Invincibility", WatchSize.Word);
 			ShineCheat = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Timers.Shine, 0x01, "Shine", WatchSize.Byte);
-			VisualEffectPaletteCheat = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Effects.VisualEffectPalette, (int)SotnApi.Constants.Values.Alucard.Effects.RedGlowValue, "VisualEffectPalette", WatchSize.Word);
-			VisualEffectTimerCheat = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Timers.VisualEffectTimer, 0x01, "VisualEffectTimer", WatchSize.Byte);
+			VisualEffectPalette = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Effects.VisualEffectPalette, Constants.Khaos.OverdriveColorPalette, "VisualEffectPalette", WatchSize.Word);
+			VisualEffectTimer = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Timers.VisualEffectTimer, 0x01, "VisualEffectTimer", WatchSize.Byte);
 			SavePalette = Cheats.AddCheat(SotnApi.Constants.Addresses.Game.SavePalette, Constants.Khaos.SaveKhaosPalette, "SavePalette", WatchSize.Byte);
 			ContactDamage = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Stats.ContactDamage, 0x0001, "ContactDamage", WatchSize.Word);
 			Music = Cheats.AddCheat(SotnApi.Constants.Addresses.Game.Music, 0x00, "Music", WatchSize.Byte);
 
 			batCardXp = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Relics.BatCardXp, 0x00002710, "BatCardXp", WatchSize.DWord);
-			ghostCardXp = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Relics.BatCardXp, 0x00002710, "GhostCardXp", WatchSize.DWord);
-			faerieCardXp = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Relics.BatCardXp, 0x00001710, "FaerieCardXp", WatchSize.DWord);
-			demonCardXp = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Relics.BatCardXp, 0x00001710, "DemonCardXp", WatchSize.DWord);
-			swordCardXp = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Relics.BatCardXp, 0x00002710, "SwordCardXp", WatchSize.DWord);
-			spriteCardXp = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Relics.BatCardXp, 0x00001710, "SpriteCardXp", WatchSize.DWord);
-			noseDevilCardXp = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Relics.BatCardXp, 0x00001710, "NoseDevilCardXp", WatchSize.DWord);
+			ghostCardXp = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Relics.GhostCardXp, 0x00002710, "GhostCardXp", WatchSize.DWord);
+			faerieCardXp = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Relics.FaerieCardXp, 0x00001710, "FaerieCardXp", WatchSize.DWord);
+			demonCardXp = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Relics.DemonCardXp, 0x00001710, "DemonCardXp", WatchSize.DWord);
+			swordCardXp = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Relics.SwordCardXp, 0x00002710, "SwordCardXp", WatchSize.DWord);
+			spriteCardXp = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Relics.SpriteCardXp, 0x00001710, "SpriteCardXp", WatchSize.DWord);
+			noseDevilCardXp = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Relics.NoseDevilCardXp, 0x00001710, "NoseDevilCardXp", WatchSize.DWord);
 
 			Cheats.DisableAll();
 		}

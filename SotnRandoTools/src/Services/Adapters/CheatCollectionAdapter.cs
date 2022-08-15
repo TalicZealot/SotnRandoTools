@@ -51,7 +51,7 @@ namespace SotnRandoTools.Services.Adapters
 				return cheatNameExists;
 			}
 
-			var watch = Watch.GenerateWatch(domains.MainMemory, address, size, WatchDisplayType.Hex, true, name);
+			var watch = Watch.GenerateWatch(domains.MainMemory, address, size, WatchDisplayType.Hex, false, name);
 			var cheat = new BizHawk.Client.Common.Cheat(watch, value);
 			cheats.Add(cheat);
 

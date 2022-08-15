@@ -6,11 +6,11 @@ namespace SotnRandoTools.Khaos.Interfaces
 	public interface ICheatsController
 	{
 		ICheatCollectionAdapter Cheats { get; }
-		Cheat AttackPotionCheat { get; set; }
+		Cheat AttackPotion { get; set; }
 		Cheat ContactDamage { get; set; }
 		Cheat Curse { get; set; }
-		Cheat DarkMetamorphasisCheat { get; set; }
-		Cheat DefencePotionCheat { get; set; }
+		Cheat DarkMetamorphasis { get; set; }
+		Cheat DefencePotion { get; set; }
 		Cheat FaerieScroll { get; set; }
 		Cheat Hearts { get; set; }
 		Cheat Hitbox2Height { get; set; }
@@ -18,14 +18,14 @@ namespace SotnRandoTools.Khaos.Interfaces
 		Cheat HitboxHeight { get; set; }
 		Cheat HitboxWidth { get; set; }
 		Cheat InvincibilityCheat { get; set; }
-		Cheat ManaCheat { get; set; }
+		Cheat Mana { get; set; }
 		Cheat Music { get; set; }
 		Cheat SavePalette { get; set; }
 		Cheat ShineCheat { get; set; }
 		Cheat SubweaponTimer { get; set; }
 		Cheat UnderwaterPhysics { get; set; }
-		Cheat VisualEffectPaletteCheat { get; set; }
-		Cheat VisualEffectTimerCheat { get; set; }
+		Cheat VisualEffectPalette { get; set; }
+		Cheat VisualEffectTimer { get; set; }
 
 		void GetCheats();
 		void StartCheats();

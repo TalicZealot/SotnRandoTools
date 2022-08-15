@@ -39,6 +39,8 @@ namespace SotnRandoTools.Khaos
 		private uint currentKills = 0;
 		private uint vampureSwordLevel = 0;
 
+		private float thirstLevel = 0;
+
 		private uint hordeZone = 0;
 		private uint hordeTriggerRoomX = 0;
 		private uint hordeTriggerRoomY = 0;
@@ -71,6 +73,7 @@ namespace SotnRandoTools.Khaos
 		private bool overdriveOn = false;
 		private bool subweaponsOnlyActive = false;
 		private bool gasCloudTaken = false;
+		private bool thirstActive = false;
 		private bool slowActive = false;
 		private bool slowPaused = false;
 
@@ -510,8 +513,8 @@ namespace SotnRandoTools.Khaos
 			}
 			cheatsController.Hearts.Enable();
 			cheatsController.Curse.Enable();
-			cheatsController.ManaCheat.PokeValue(7);
-			cheatsController.ManaCheat.Enable();
+			cheatsController.Mana.PokeValue(7);
+			cheatsController.Mana.Enable();
 			ManaLocked = true;
 			subweaponsOnlyActive = true;
 			eventScheduler.SubweaponsOnlyTimer = true;
@@ -573,8 +576,8 @@ namespace SotnRandoTools.Khaos
 				SpendKhaosMeter();
 			}
 
-			cheatsController.DarkMetamorphasisCheat.PokeValue(1);
-			cheatsController.DarkMetamorphasisCheat.Enable();
+			cheatsController.DarkMetamorphasis.PokeValue(1);
+			cheatsController.DarkMetamorphasis.Enable();
 
 			eventScheduler.ThirstTimer = true;
 			eventScheduler.ThirstTickTimer = true;
@@ -590,6 +593,7 @@ namespace SotnRandoTools.Khaos
 			string message = meterFull ? $"{user} used Super Thirst" : $"{user} used Thirst";
 			notificationService.AddMessage(message);
 			Alert(toolConfig.Khaos.Actions[(int) Enums.Action.Thirst]);
+			thirstActive = true;
 		}
 		public void Horde(string user = Constants.Khaos.KhaosName)
 		{
@@ -631,8 +635,8 @@ namespace SotnRandoTools.Khaos
 		public void HnK(string user = Constants.Khaos.KhaosName)
 		{
 			hnkOn = true;
-			cheatsController.DefencePotionCheat.PokeValue(1);
-			cheatsController.DefencePotionCheat.Enable();
+			cheatsController.DefencePotion.PokeValue(1);
+			cheatsController.DefencePotion.Enable();
 			InvincibilityLocked = true;
 			eventScheduler.HnkTimer = true;
 
@@ -653,8 +657,8 @@ namespace SotnRandoTools.Khaos
 		//TODO: Remove
 		public void Vampire(string user = Constants.Khaos.KhaosName)
 		{
-			cheatsController.DarkMetamorphasisCheat.PokeValue(1);
-			cheatsController.DarkMetamorphasisCheat.Enable();
+			cheatsController.DarkMetamorphasis.PokeValue(1);
+			cheatsController.DarkMetamorphasis.Enable();
 			eventScheduler.VampireTimer = true;
 			notificationService.AddMessage(user + " used Vampire");
 			sotnApi.GameApi.OverwriteString(SotnApi.Constants.Addresses.Strings.WeaponNameAddresses["Gurthang"], "CravenEdge", false);
@@ -891,8 +895,8 @@ namespace SotnRandoTools.Khaos
 
 			sotnApi.AlucardApi.GrantItemByName("Wizard hat");
 			sotnApi.AlucardApi.ActivatePotion(Potion.SmartPotion);
-			cheatsController.ManaCheat.PokeValue((int) sotnApi.AlucardApi.MaxtMp);
-			cheatsController.ManaCheat.Enable();
+			cheatsController.Mana.PokeValue((int) sotnApi.AlucardApi.MaxtMp);
+			cheatsController.Mana.Enable();
 			ManaLocked = true;
 			eventScheduler.MagicianTimer = true;
 
@@ -1098,6 +1102,7 @@ namespace SotnRandoTools.Khaos
 			//TODO: disable / adjust actions in the end game
 			//TODO: randomize final cutscene voice lines
 			CheckDashInput();
+			CheckThirstKill();
 			CheckVampireKill();
 			CheckVermillionBirdFireballs();
 			CheckAzureDragon();
@@ -1531,12 +1536,48 @@ namespace SotnRandoTools.Khaos
 			bloodManaActive = false;
 			eventScheduler.BloodManaTimer = false;
 		}
+		private void CheckThirstKill()
+		{
+			if (!thirstActive)
+			{
+				return;
+			}
+
+			uint updatedCurrentKills = sotnApi.AlucardApi.Kills;
+
+			if (updatedCurrentKills > currentKills)
+			{
+				currentKills = updatedCurrentKills;
+				thirstLevel = 0;
+				cheatsController.VisualEffectPalette.Disable();
+				cheatsController.VisualEffectTimer.Disable();
+			}
+			else if (thirstLevel < 3)
+			{
+				thirstLevel += 0.005F;
+				if (thirstLevel > 2.8F)
+				{
+					cheatsController.VisualEffectPalette.PokeValue(Constants.Khaos.BloodthirstColorPalette);
+					cheatsController.VisualEffectPalette.Enable();
+					cheatsController.VisualEffectTimer.PokeValue(30);
+					cheatsController.VisualEffectTimer.Enable();
+				}
+			}
+		}
 		private void ThirstDrain()
 		{
-			uint superDrain = superThirst ? Constants.Khaos.SuperThirstExtraDrain : 0u;
-			if (sotnApi.AlucardApi.CurrentHp > toolConfig.Khaos.ThirstDrainPerSecond + 1 + superDrain)
+			if (thirstLevel < 1)
 			{
-				sotnApi.AlucardApi.CurrentHp -= (toolConfig.Khaos.ThirstDrainPerSecond + superDrain);
+				return;
+			}
+
+			uint superDrain = superThirst ? Constants.Khaos.SuperThirstExtraDrain : 0u;
+
+			uint drainAmount = (uint) Math.Round((toolConfig.Khaos.ThirstDrainPerSecond + superDrain) * thirstLevel);
+
+			if (sotnApi.AlucardApi.CurrentHp > drainAmount + 1)
+			{
+				sotnApi.AlucardApi.CurrentHp -= drainAmount;
 			}
 			else
 			{
@@ -1545,10 +1586,13 @@ namespace SotnRandoTools.Khaos
 		}
 		private void ThirstOff()
 		{
-			cheatsController.DarkMetamorphasisCheat.Disable();
+			cheatsController.VisualEffectPalette.Disable();
+			cheatsController.VisualEffectTimer.Disable();
+			cheatsController.DarkMetamorphasis.Disable();
 			eventScheduler.ThirstTimer = false;
 			eventScheduler.ThirstTickTimer = false;
 			superThirst = false;
+			thirstActive = false;
 		}
 		private void HordeOff()
 		{
@@ -1659,7 +1703,7 @@ namespace SotnRandoTools.Khaos
 		{
 			cheatsController.Curse.Disable();
 			ManaLocked = false;
-			cheatsController.ManaCheat.Disable();
+			cheatsController.Mana.Disable();
 			cheatsController.Hearts.Disable();
 			if (gasCloudTaken)
 			{
@@ -1994,7 +2038,7 @@ namespace SotnRandoTools.Khaos
 		private void HnkOff()
 		{
 			hnkOn = false;
-			cheatsController.DefencePotionCheat.Disable();
+			cheatsController.DefencePotion.Disable();
 			eventScheduler.HnkTimer = false;
 			InvincibilityLocked = false;
 		}
@@ -2003,14 +2047,14 @@ namespace SotnRandoTools.Khaos
 		private void VampireOff()
 		{
 			vampireActive = false;
-			cheatsController.DarkMetamorphasisCheat.PokeValue(1);
-			cheatsController.DarkMetamorphasisCheat.Disable();
+			cheatsController.DarkMetamorphasis.PokeValue(1);
+			cheatsController.DarkMetamorphasis.Disable();
 
 			eventScheduler.VampireTimer = false;
 		}
 		private void MagicianOff()
 		{
-			cheatsController.ManaCheat.Disable();
+			cheatsController.Mana.Disable();
 			ManaLocked = false;
 			eventScheduler.MagicianTimer = false;
 		}
@@ -2042,7 +2086,7 @@ namespace SotnRandoTools.Khaos
 		{
 			cheatsController.InvincibilityCheat.Disable();
 			InvincibilityLocked = false;
-			cheatsController.AttackPotionCheat.Disable();
+			cheatsController.AttackPotion.Disable();
 			cheatsController.ShineCheat.Disable();
 			cheatsController.ContactDamage.Disable();
 			sotnApi.AlucardApi.ContactDamage = 0;
@@ -2124,18 +2168,18 @@ namespace SotnRandoTools.Khaos
 		}
 		private void OverdriveOn()
 		{
-			cheatsController.VisualEffectPaletteCheat.PokeValue(Constants.Khaos.OverdriveColorPalette);
-			cheatsController.VisualEffectPaletteCheat.Enable();
-			cheatsController.VisualEffectTimerCheat.PokeValue(30);
-			cheatsController.VisualEffectTimerCheat.Enable();
+			cheatsController.VisualEffectPalette.PokeValue(Constants.Khaos.OverdriveColorPalette);
+			cheatsController.VisualEffectPalette.Enable();
+			cheatsController.VisualEffectTimer.PokeValue(30);
+			cheatsController.VisualEffectTimer.Enable();
 			sotnApi.AlucardApi.WingsmashHorizontalSpeed = (uint) (DefaultSpeeds.WingsmashHorizontal * (toolConfig.Khaos.HasteFactor / 1.8));
 			overdriveOn = true;
 			eventScheduler.HasteOverdriveTimer = false;
 		}
 		private void OverdriveOff()
 		{
-			cheatsController.VisualEffectPaletteCheat.Disable();
-			cheatsController.VisualEffectTimerCheat.Disable();
+			cheatsController.VisualEffectPalette.Disable();
+			cheatsController.VisualEffectTimer.Disable();
 			if (hasteActive)
 			{
 				SetHasteStaticSpeeds(superHaste);
@@ -2295,8 +2339,8 @@ namespace SotnRandoTools.Khaos
 			cheatsController.InvincibilityCheat.PokeValue(1);
 			cheatsController.InvincibilityCheat.Enable();
 			InvincibilityLocked = true;
-			cheatsController.AttackPotionCheat.PokeValue(1);
-			cheatsController.AttackPotionCheat.Enable();
+			cheatsController.AttackPotion.PokeValue(1);
+			cheatsController.AttackPotion.Enable();
 			cheatsController.ShineCheat.PokeValue(1);
 			cheatsController.ShineCheat.Enable();
 			eventScheduler.FourBeastsTimer = true;
