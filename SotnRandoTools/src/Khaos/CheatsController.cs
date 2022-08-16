@@ -71,7 +71,7 @@ namespace SotnRandoTools.Khaos
 			ShineCheat = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Timers.Shine, 0x01, "Shine", WatchSize.Byte);
 			VisualEffectPalette = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Effects.VisualEffectPalette, Constants.Khaos.OverdriveColorPalette, "VisualEffectPalette", WatchSize.Word);
 			VisualEffectTimer = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Timers.VisualEffectTimer, 0x01, "VisualEffectTimer", WatchSize.Byte);
-			SavePalette = Cheats.AddCheat(SotnApi.Constants.Addresses.Game.SavePalette, Constants.Khaos.SaveKhaosPalette, "SavePalette", WatchSize.Byte);
+			SavePalette = Cheats.AddCheat(SotnApi.Constants.Addresses.Game.SavePalette, Constants.Khaos.SaveIcosahedronFirstCastle, "SavePalette", WatchSize.Word);
 			ContactDamage = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Stats.ContactDamage, 0x0001, "ContactDamage", WatchSize.Word);
 			Music = Cheats.AddCheat(SotnApi.Constants.Addresses.Game.Music, 0x00, "Music", WatchSize.Byte);
 

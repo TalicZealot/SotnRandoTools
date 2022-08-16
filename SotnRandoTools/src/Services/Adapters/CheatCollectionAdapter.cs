@@ -48,7 +48,7 @@ namespace SotnRandoTools.Services.Adapters
 
 			if (cheatNameExists is not null)
 			{
-				return cheatNameExists;
+				cheats.Remove(cheatNameExists);
 			}
 
 			var watch = Watch.GenerateWatch(domains.MainMemory, address, size, WatchDisplayType.Hex, false, name);

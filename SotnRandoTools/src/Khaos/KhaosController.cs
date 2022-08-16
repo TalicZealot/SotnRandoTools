@@ -2489,13 +2489,14 @@ namespace SotnRandoTools.Khaos
 
 		private void SetSaveColorPalette()
 		{
+			int offset = rng.Next(0, 15);
 			if (alucardSecondCastle)
 			{
-				cheatsController.SavePalette.PokeValue(Constants.Khaos.SaveIcosahedronSecondCastle);
+				cheatsController.SavePalette.PokeValue(Constants.Khaos.SaveIcosahedronSecondCastle + offset);
 			}
 			else
 			{
-				cheatsController.SavePalette.PokeValue(Constants.Khaos.SaveIcosahedronFirstCastle);
+				cheatsController.SavePalette.PokeValue(Constants.Khaos.SaveIcosahedronFirstCastle + offset);
 			}
 		}
 		private void SetRelicLocationDisplay(Relic relic, bool take)

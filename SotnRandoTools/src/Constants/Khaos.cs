@@ -526,8 +526,8 @@ namespace SotnRandoTools.Constants
 		public const uint GalamothKhaosHp = 2000;
 		public const uint GalamothKhaosPositionOffset = 100;
 		public const float HasteDashFactor = 1.8F;
-		public const int SaveIcosahedronFirstCastle = 0xBCAA;
-		public const int SaveIcosahedronSecondCastle = 0x1150;
+		public const int SaveIcosahedronFirstCastle = 0xBC9E;
+		public const int SaveIcosahedronSecondCastle = 0x1144;
 		public const int KhaosActionsCount = 30;
 
 		public const int AutoKhaosDifficultyEasy = 70;
@@ -538,7 +538,5 @@ namespace SotnRandoTools.Constants
 		public const uint MinimumMp = 30;
 		public const uint MinimumHearts = 60;
 		public const uint MinimumStat = 6;
-
-		public const int SaveKhaosPalette = 0xBCAA;
 	}
 }
