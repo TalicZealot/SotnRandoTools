@@ -332,7 +332,11 @@ namespace SotnRandoTools.Khaos
 
 		private bool ActionViable()
 		{
-			if (sotnApi.GameApi.InAlucardMode() && sotnApi.GameApi.CanMenu() && sotnApi.AlucardApi.CurrentHp > 0 && !sotnApi.GameApi.CanSave() && !khaosController.IsInRoomList(Constants.Khaos.RichterRooms) && !khaosController.IsInRoomList(Constants.Khaos.LoadingRooms))
+			if (sotnApi.GameApi.InAlucardMode() && sotnApi.GameApi.CanMenu() 
+				&& sotnApi.AlucardApi.CurrentHp > 0 && !sotnApi.GameApi.CanSave()
+				&& !khaosController.IsInRoomList(Constants.Khaos.RichterRooms)
+				&& !khaosController.IsInRoomList(Constants.Khaos.LoadingRooms)
+				&& !khaosController.IsInRoomList(Constants.Khaos.LibraryRoom))
 			{
 				return true;
 			}
@@ -344,9 +348,12 @@ namespace SotnRandoTools.Khaos
 
 		private bool FastActionViable()
 		{
-			if (sotnApi.GameApi.InAlucardMode() && sotnApi.GameApi.CanMenu() && sotnApi.AlucardApi.CurrentHp > 0 && !sotnApi.GameApi.CanSave()
+			if (sotnApi.GameApi.InAlucardMode() && sotnApi.GameApi.CanMenu() 
+				&& sotnApi.AlucardApi.CurrentHp > 0 && !sotnApi.GameApi.CanSave()
 				&& !sotnApi.GameApi.InTransition && !sotnApi.GameApi.IsLoading
-				&& sotnApi.AlucardApi.HasControl() && sotnApi.AlucardApi.HasHitbox() && !sotnApi.AlucardApi.IsInvincible() && khaosController.AlucardMapX < 99)
+				&& sotnApi.AlucardApi.HasControl() && sotnApi.AlucardApi.HasHitbox()
+				&& !khaosController.IsInRoomList(Constants.Khaos.LibraryRoom)
+				&& !sotnApi.AlucardApi.IsInvincible() && khaosController.AlucardMapX < 99)
 			{
 				return true;
 			}

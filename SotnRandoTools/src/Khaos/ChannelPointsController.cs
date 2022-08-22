@@ -252,7 +252,7 @@ namespace SotnRandoTools.Khaos
 			Console.WriteLine($"Added new delayed reward {request.Title}.");
 			notificationService.AddMessage($"{request.Title} reward added.");
 		}
-
+		//TODO: Add a way to remove rewards on the fly
 		private async Task DeleteRewards()
 		{
 			Console.WriteLine($"Deleting rewards...");

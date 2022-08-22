@@ -130,6 +130,26 @@ namespace SotnRandoTools.Constants
 			new MapLocation{X = 48, Y = 19, SecondCastle = 0},
 			new MapLocation{X = 47, Y = 19, SecondCastle = 0}
 		};
+		public static readonly List<MapLocation> LibraryRoom = new List<MapLocation>
+		{
+			new MapLocation{X = 49, Y = 20, SecondCastle = 0}
+		};
+		public static readonly List<MapLocation> DraculaRoom = new List<MapLocation>
+		{
+			new MapLocation{X = 31, Y = 30, SecondCastle = 1}
+		};
+		public static readonly List<MapLocation> ShaftRooms = new List<MapLocation>
+		{
+			new MapLocation{X = 30, Y = 31, SecondCastle = 1},
+			new MapLocation{X = 31, Y = 31, SecondCastle = 1},
+			new MapLocation{X = 32, Y = 31, SecondCastle = 1},
+			new MapLocation{X = 30, Y = 32, SecondCastle = 1},
+			new MapLocation{X = 31, Y = 32, SecondCastle = 1},
+			new MapLocation{X = 32, Y = 32, SecondCastle = 1},
+			new MapLocation{X = 30, Y = 33, SecondCastle = 1},
+			new MapLocation{X = 31, Y = 33, SecondCastle = 1},
+			new MapLocation{X = 32, Y = 33, SecondCastle = 1}
+		};
 
 		public static readonly List<SearchableActor> AcceptedHordeEnemies = new List<SearchableActor>
 		{

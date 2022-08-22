@@ -104,7 +104,7 @@ namespace SotnRandoTools.Services
 					},
 					Activator = null
 				}
-			},
+			}
 		};
 		private bool numashockCore = true;
 		private string leftKey = PlaystationInputKeys.Left;
@@ -266,6 +266,11 @@ namespace SotnRandoTools.Services
 
 		public bool ButtonPressed(string button, int frames)
 		{
+			if (inputHistory.Count < 10)
+			{
+				return false;
+			}
+
 			string buttonKey = button;
 
 			if (!numashockCore)
@@ -275,14 +280,12 @@ namespace SotnRandoTools.Services
 
 			for (int i = 0; i < frames; i++)
 			{
-				if (inputHistory.Count < 10)
-				{
-					return false;
-				}
-
 				if (Convert.ToBoolean(inputHistory[inputHistory.Count - 1 - i][buttonKey]) == true)
 				{
-					return true;
+					if (Convert.ToBoolean(inputHistory[inputHistory.Count - 2 - i][buttonKey]) == false)
+					{
+						return true;
+					}
 				}
 			}
 			return false;

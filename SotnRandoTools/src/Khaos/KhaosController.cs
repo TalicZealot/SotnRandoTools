@@ -8,6 +8,7 @@ using SotnApi.Constants.Values.Alucard;
 using SotnApi.Constants.Values.Alucard.Enums;
 using SotnApi.Constants.Values.Game;
 using SotnApi.Interfaces;
+using SotnApi.Main;
 using SotnApi.Models;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Constants;
@@ -38,6 +39,8 @@ namespace SotnRandoTools.Khaos
 		private uint currentVampireKills = 0;
 		private uint currentKills = 0;
 		private uint vampureSwordLevel = 0;
+
+		private uint dracMusicCounter = 0;
 
 		private float thirstLevel = 0;
 
@@ -566,7 +569,6 @@ namespace SotnRandoTools.Khaos
 			statusInfoDisplay.AddTimer(timer);
 			Alert(toolConfig.Khaos.Actions[(int) Enums.Action.BloodMana]);
 		}
-		//TODO: Rework. Replace timer with update with counter.
 		public void Thirst(string user = Constants.Khaos.KhaosName)
 		{
 			bool meterFull = KhaosMeterFull();
@@ -631,7 +633,6 @@ namespace SotnRandoTools.Khaos
 			notificationService.AddMessage(message);
 			Alert(toolConfig.Khaos.Actions[(int) Enums.Action.Endurance]);
 		}
-		//TODO: Forward dash
 		public void HnK(string user = Constants.Khaos.KhaosName)
 		{
 			hnkOn = true;
@@ -639,6 +640,7 @@ namespace SotnRandoTools.Khaos
 			cheatsController.DefencePotion.Enable();
 			InvincibilityLocked = true;
 			eventScheduler.HnkTimer = true;
+			FlipBackdash();
 
 			ActionTimer timer = new()
 			{
@@ -654,7 +656,6 @@ namespace SotnRandoTools.Khaos
 		#endregion
 		#region Buffs
 		//TODO: Add Quad Damage, str buff on successful kill streak
-		//TODO: Remove
 		public void Vampire(string user = Constants.Khaos.KhaosName)
 		{
 			cheatsController.DarkMetamorphasis.PokeValue(1);
@@ -913,7 +914,6 @@ namespace SotnRandoTools.Khaos
 
 			Alert(toolConfig.Khaos.Actions[(int) Enums.Action.Magician]);
 		}
-		//TODO: Review GG speed
 		public void MeltyBlood(string user = Constants.Khaos.KhaosName)
 		{
 			bool meterFull = KhaosMeterFull();
@@ -921,7 +921,6 @@ namespace SotnRandoTools.Khaos
 			{
 				superMelty = true;
 				SetHasteStaticSpeeds(true);
-				ToggleHasteDynamicSpeeds(2);
 				sotnApi.AlucardApi.CurrentHp = sotnApi.AlucardApi.MaxtHp;
 				sotnApi.AlucardApi.CurrentMp = sotnApi.AlucardApi.MaxtMp;
 				sotnApi.AlucardApi.ActivatePotion(Potion.StrPotion);
@@ -936,6 +935,7 @@ namespace SotnRandoTools.Khaos
 			cheatsController.HitboxHeight.Enable();
 			cheatsController.Hitbox2Width.Enable();
 			cheatsController.Hitbox2Height.Enable();
+			FlipBackdash();
 			SetRelicLocationDisplay(Relic.LeapStone, false);
 			sotnApi.AlucardApi.GrantRelic(Relic.LeapStone, true);
 			eventScheduler.MeltyTimer = true;
@@ -1100,7 +1100,7 @@ namespace SotnRandoTools.Khaos
 			}
 
 			//TODO: disable / adjust actions in the end game
-			//TODO: randomize final cutscene voice lines
+			CheckDracularoomMusic();
 			CheckDashInput();
 			CheckThirstKill();
 			CheckVampireKill();
@@ -2038,9 +2038,11 @@ namespace SotnRandoTools.Khaos
 		private void HnkOff()
 		{
 			hnkOn = false;
+			SetSpeed();
 			cheatsController.DefencePotion.Disable();
 			eventScheduler.HnkTimer = false;
 			InvincibilityLocked = false;
+			inputService.Polling--;
 		}
 		#endregion
 		#region Buff events
@@ -2073,11 +2075,11 @@ namespace SotnRandoTools.Khaos
 			cheatsController.HitboxHeight.Disable();
 			cheatsController.Hitbox2Width.Disable();
 			cheatsController.Hitbox2Height.Disable();
+			SetSpeed();
 
 			if (superMelty)
 			{
 				superMelty = false;
-				SetSpeed();
 			}
 
 			eventScheduler.MeltyTimer = false;
@@ -2145,10 +2147,7 @@ namespace SotnRandoTools.Khaos
 			sotnApi.AlucardApi.WingsmashHorizontalSpeed = (uint) (DefaultSpeeds.WingsmashHorizontal * ((factor * superWingsmashFactor) / 2.5));
 			sotnApi.AlucardApi.WolfDashTopRightSpeed = (sbyte) Math.Floor(DefaultSpeeds.WolfDashTopRight * ((factor * superFactor) / 2));
 			sotnApi.AlucardApi.WolfDashTopLeftSpeed = (sbyte) Math.Ceiling((sbyte) wolfDashTopLeft * ((factor * superFactor) / 2));
-			Console.WriteLine("Set speeds:");
-			Console.WriteLine($"Wingsmash: {(uint) (DefaultSpeeds.WingsmashHorizontal * ((factor * superWingsmashFactor) / 2.5))}");
-			Console.WriteLine($"Wolf dash right: {(sbyte) Math.Floor(DefaultSpeeds.WolfDashTopRight * ((factor * superFactor) / 2))}");
-			Console.WriteLine($"Wolf dash left: {(sbyte) Math.Ceiling((sbyte) wolfDashTopLeft * ((factor * superFactor) / 2))}");
+			sotnApi.AlucardApi.BackdashWholeSpeed = (int) (DefaultSpeeds.BackdashWhole * 1.5);
 		}
 		private void ToggleHasteDynamicSpeeds(float factor = 1)
 		{
@@ -2487,6 +2486,10 @@ namespace SotnRandoTools.Khaos
 		}
 		#endregion
 
+		private void FlipBackdash()
+		{
+			sotnApi.AlucardApi.BackdashWholeSpeed = (int) (DefaultSpeeds.BackdashWhole * -1);
+		}
 		private void SetSaveColorPalette()
 		{
 			int offset = rng.Next(0, 15);
@@ -2657,6 +2660,7 @@ namespace SotnRandoTools.Khaos
 			sotnApi.AlucardApi.FallingHorizontalFractSpeed = horizontalFract;
 			sotnApi.AlucardApi.WolfDashTopRightSpeed = (sbyte) Math.Floor(DefaultSpeeds.WolfDashTopRight * factor);
 			sotnApi.AlucardApi.WolfDashTopLeftSpeed = (sbyte) Math.Ceiling((sbyte) wolfDashTopLeft * factor);
+			sotnApi.AlucardApi.BackdashWholeSpeed = (int) (DefaultSpeeds.BackdashWhole * factor);
 			sotnApi.AlucardApi.BackdashDecel = slow == true ? DefaultSpeeds.BackdashDecelSlow : DefaultSpeeds.BackdashDecel;
 			Console.WriteLine($"Set all speeds with factor {factor}");
 		}
@@ -2801,6 +2805,22 @@ namespace SotnRandoTools.Khaos
 
 			storedMana = currentMana;
 			BloodManaUpdate();
+		}
+		private void CheckDracularoomMusic()
+		{
+			if (IsInRoomList(Constants.Khaos.DraculaRoom))
+			{
+				if (dracMusicCounter == 0)
+				{
+					cheatsController.Music.PokeValue(rng.Next(0, 256));
+					cheatsController.Music.Enable();
+					dracMusicCounter = 30;
+				}
+				else
+				{
+					dracMusicCounter--;
+				}
+			}
 		}
 		private void CheckDashInput()
 		{
