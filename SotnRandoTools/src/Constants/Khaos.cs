@@ -535,7 +535,8 @@ namespace SotnRandoTools.Constants
 		public const float SuperCrippleFactor = 0.5F;
 		public const int SlowQueueIntervalEnd = 3;
 		public const int FastQueueIntervalStart = 8;
-		public const uint SuperThirstExtraDrain = 2u;
+		public const uint SuperThirstExtraDrain = 1u;
+		public const float ThirstLevelIncreaseRate = 0.005F;
 		public const int HelpItemRetryCount = 15;
 		public const float BattleOrdersHpMultiplier = 2F;
 		public const uint GuiltyGearInvincibility = 3;

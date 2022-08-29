@@ -455,6 +455,7 @@ namespace SotnRandoTools.RandoTracker
 			trackerGraphicsEngine.InitializeItems(relics, progressionItems, thrustSwords);
 			trackerGraphicsEngine.CalculateGrid(toolConfig.Tracker.Width, toolConfig.Tracker.Height);
 			this.SeedInfo = DefaultSeedInfo;
+			DrawRelicsAndItems();
 		}
 
 		public string SeedInfo { get; set; }

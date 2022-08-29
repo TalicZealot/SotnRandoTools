@@ -79,6 +79,7 @@ namespace SotnRandoTools.Khaos
 		private bool thirstActive = false;
 		private bool slowActive = false;
 		private bool slowPaused = false;
+		private bool forwardDashActive = false;
 
 		private bool vermilionBirdPollong = false;
 
@@ -258,6 +259,10 @@ namespace SotnRandoTools.Khaos
 					mainMenuCounter++;
 					battleOrdersBonusHp = 0;
 					battleOrdersBonusMp = 0;
+
+					thirstLevel = 0;
+					cheatsController.VisualEffectPalette.Disable();
+					cheatsController.VisualEffectTimer.Disable();
 				}
 			}
 		}
@@ -590,6 +595,10 @@ namespace SotnRandoTools.Khaos
 				Duration = toolConfig.Khaos.Actions[(int) Enums.Action.Thirst].Duration
 			};
 			notificationService.AddOverlayTimer(timer.Name, (int) timer.Duration.TotalMilliseconds);
+			if (meterFull)
+			{
+				timer.Name = "Super " + timer.Name;
+			}
 			statusInfoDisplay.AddTimer(timer);
 
 			string message = meterFull ? $"{user} used Super Thirst" : $"{user} used Thirst";
@@ -640,6 +649,7 @@ namespace SotnRandoTools.Khaos
 			cheatsController.DefencePotion.Enable();
 			InvincibilityLocked = true;
 			eventScheduler.HnkTimer = true;
+			forwardDashActive = true;
 			FlipBackdash();
 
 			ActionTimer timer = new()
@@ -906,6 +916,10 @@ namespace SotnRandoTools.Khaos
 				Name = toolConfig.Khaos.Actions[(int) Enums.Action.Magician].Name,
 				Duration = toolConfig.Khaos.Actions[(int) Enums.Action.Magician].Duration
 			};
+			if (meterFull)
+			{
+				timer.Name = "Shapeshifter";
+			}
 			statusInfoDisplay.AddTimer(timer);
 			notificationService.AddOverlayTimer(timer.Name, (int) timer.Duration.TotalMilliseconds);
 
@@ -936,6 +950,7 @@ namespace SotnRandoTools.Khaos
 			cheatsController.Hitbox2Width.Enable();
 			cheatsController.Hitbox2Height.Enable();
 			FlipBackdash();
+			forwardDashActive = true;
 			SetRelicLocationDisplay(Relic.LeapStone, false);
 			sotnApi.AlucardApi.GrantRelic(Relic.LeapStone, true);
 			eventScheduler.MeltyTimer = true;
@@ -1039,13 +1054,12 @@ namespace SotnRandoTools.Khaos
 				SpendKhaosMeter();
 				superHaste = true;
 			}
-
+			hasteActive = true;
+			SpeedLocked = true;
 			SetHasteStaticSpeeds(meterFull);
 			inputService.Polling++;
 			inputService.ReadDash = true;
 			eventScheduler.HasteTimer = true;
-			hasteActive = true;
-			SpeedLocked = true;
 			Console.WriteLine(user + " used " + toolConfig.Khaos.Actions[(int) Enums.Action.Haste].Name);
 
 			ActionTimer timer = new()
@@ -1054,6 +1068,10 @@ namespace SotnRandoTools.Khaos
 				Duration = toolConfig.Khaos.Actions[(int) Enums.Action.Haste].Duration
 			};
 			notificationService.AddOverlayTimer(timer.Name, (int) timer.Duration.TotalMilliseconds);
+			if (meterFull)
+			{
+				timer.Name = "Super " + timer.Name;
+			}
 			statusInfoDisplay.AddTimer(timer);
 			string message = meterFull ? $"{user} activated Super Haste" : $"{user} activated Haste";
 			notificationService.AddMessage(message);
@@ -1077,7 +1095,7 @@ namespace SotnRandoTools.Khaos
 		public void Update()
 		{
 			if (!sotnApi.GameApi.InAlucardMode() || !sotnApi.AlucardApi.HasHitbox() || sotnApi.AlucardApi.CurrentHp < 1
-				|| sotnApi.GameApi.InTransition || sotnApi.GameApi.IsLoading)
+				|| sotnApi.GameApi.InTransition || sotnApi.GameApi.IsLoading || inMainMenu)
 			{
 				return;
 			}
@@ -1421,6 +1439,7 @@ namespace SotnRandoTools.Khaos
 				sotnApi.AlucardApi.GrantRelic(Relic.JewelOfOpen, true);
 			}
 		}
+		//TODO: Try clearing entities for forced eqip
 		private void RandomizeEquipmentSlots()
 		{
 			bool equippedHolyGlasses = Equipment.Items[(int) (sotnApi.AlucardApi.Helm + Equipment.HandCount + 1)] == "Holy glasses";
@@ -1545,17 +1564,22 @@ namespace SotnRandoTools.Khaos
 
 			uint updatedCurrentKills = sotnApi.AlucardApi.Kills;
 
-			if (updatedCurrentKills > currentKills)
+			if (updatedCurrentKills < currentKills)
+			{
+				currentKills = updatedCurrentKills;
+			}
+
+			if (updatedCurrentKills > currentKills || sotnApi.GameApi.CanSave())
 			{
 				currentKills = updatedCurrentKills;
 				thirstLevel = 0;
 				cheatsController.VisualEffectPalette.Disable();
 				cheatsController.VisualEffectTimer.Disable();
 			}
-			else if (thirstLevel < 3)
+			else if (thirstLevel < 2.8)
 			{
-				thirstLevel += 0.005F;
-				if (thirstLevel > 2.8F)
+				thirstLevel += Constants.Khaos.ThirstLevelIncreaseRate;
+				if (thirstLevel > 2.3F)
 				{
 					cheatsController.VisualEffectPalette.PokeValue(Constants.Khaos.BloodthirstColorPalette);
 					cheatsController.VisualEffectPalette.Enable();
@@ -1633,8 +1657,12 @@ namespace SotnRandoTools.Khaos
 						Name = toolConfig.Khaos.Actions[(int) Enums.Action.KhaosHorde].Name,
 						Duration = toolConfig.Khaos.Actions[(int) Enums.Action.KhaosHorde].Duration
 					};
-					statusInfoDisplay.AddTimer(timer);
 					notificationService.AddOverlayTimer(timer.Name, (int) timer.Duration.TotalMilliseconds);
+					if (superHorde)
+					{
+						timer.Name = "Super " + timer.Name;
+					}
+					statusInfoDisplay.AddTimer(timer);
 					eventScheduler.HordeTimer = true;
 				}
 				hordeEnemies[enemyIndex].Xpos = (ushort) rng.Next(10, 245);
@@ -2038,11 +2066,11 @@ namespace SotnRandoTools.Khaos
 		private void HnkOff()
 		{
 			hnkOn = false;
-			SetSpeed();
+			forwardDashActive = false;
+			ResetBackdash();
 			cheatsController.DefencePotion.Disable();
 			eventScheduler.HnkTimer = false;
 			InvincibilityLocked = false;
-			inputService.Polling--;
 		}
 		#endregion
 		#region Buff events
@@ -2075,7 +2103,7 @@ namespace SotnRandoTools.Khaos
 			cheatsController.HitboxHeight.Disable();
 			cheatsController.Hitbox2Width.Disable();
 			cheatsController.Hitbox2Height.Disable();
-			SetSpeed();
+			ResetBackdash();
 
 			if (superMelty)
 			{
@@ -2083,6 +2111,7 @@ namespace SotnRandoTools.Khaos
 			}
 
 			eventScheduler.MeltyTimer = false;
+			forwardDashActive = false;
 		}
 		private void FourBeastsOff()
 		{
@@ -2135,6 +2164,10 @@ namespace SotnRandoTools.Khaos
 			hasteActive = false;
 			SpeedLocked = false;
 			eventScheduler.HasteOverdriveOffTimer = true;
+			if (forwardDashActive)
+			{
+				FlipBackdash();
+			}
 		}
 		private void SetHasteStaticSpeeds(bool super = false)
 		{
@@ -2147,7 +2180,14 @@ namespace SotnRandoTools.Khaos
 			sotnApi.AlucardApi.WingsmashHorizontalSpeed = (uint) (DefaultSpeeds.WingsmashHorizontal * ((factor * superWingsmashFactor) / 2.5));
 			sotnApi.AlucardApi.WolfDashTopRightSpeed = (sbyte) Math.Floor(DefaultSpeeds.WolfDashTopRight * ((factor * superFactor) / 2));
 			sotnApi.AlucardApi.WolfDashTopLeftSpeed = (sbyte) Math.Ceiling((sbyte) wolfDashTopLeft * ((factor * superFactor) / 2));
-			sotnApi.AlucardApi.BackdashWholeSpeed = (int) (DefaultSpeeds.BackdashWhole - 2);
+			if (forwardDashActive)
+			{
+				FlipBackdash();
+			}
+			else
+			{
+				sotnApi.AlucardApi.BackdashWholeSpeed = (int) (DefaultSpeeds.BackdashWhole - 1);
+			}
 		}
 		private void ToggleHasteDynamicSpeeds(float factor = 1)
 		{
@@ -2488,7 +2528,19 @@ namespace SotnRandoTools.Khaos
 
 		private void FlipBackdash()
 		{
-			sotnApi.AlucardApi.BackdashWholeSpeed = (int) (DefaultSpeeds.BackdashWhole * -1);
+			sotnApi.AlucardApi.BackdashWholeSpeed = (int) ((DefaultSpeeds.BackdashWhole * -1) - 1);
+			if (hasteActive)
+			{
+				sotnApi.AlucardApi.BackdashWholeSpeed = (int) ((DefaultSpeeds.BackdashWhole * -1));
+			}
+		}
+		private void ResetBackdash()
+		{
+			sotnApi.AlucardApi.BackdashWholeSpeed = DefaultSpeeds.BackdashWhole;
+			if (hasteActive)
+			{
+				sotnApi.AlucardApi.BackdashWholeSpeed = (int) (DefaultSpeeds.BackdashWhole - 1);
+			}
 		}
 		private void SetSaveColorPalette()
 		{

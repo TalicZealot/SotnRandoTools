@@ -392,7 +392,7 @@ namespace SotnRandoTools.Configuration
 			WeakenFactor = 0.7F;
 			HasteFactor = 3.2F;
 			ThirstDrainPerSecond = 1;
-			PandoraTrigger = 1200;
+			PandoraTrigger = 1700;
 			PandoraMinItems = 15;
 			PandoraMaxItems = 35;
 			MeterOnReset = 50;

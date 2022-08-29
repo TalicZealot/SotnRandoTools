@@ -17,7 +17,7 @@ namespace SotnRandoTools.Khaos
 			if (sotnApi is null) throw new ArgumentNullException(nameof(sotnApi));
 			this.sotnApi = sotnApi;
 		}
-
+		//TODO: rename familiars?
 		public void OverwriteNames(string[] subscribers)
 		{
 			subscribers = subscribers.OrderBy(x => rng.Next()).ToArray();
