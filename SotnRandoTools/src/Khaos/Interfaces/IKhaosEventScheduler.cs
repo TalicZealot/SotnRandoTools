@@ -14,6 +14,10 @@ namespace SotnRandoTools.Khaos.Interfaces
 		BizhawkSafeTimer BloodManaDeath { get; set; }
 		bool BloodManaDeathTimer { set; }
 		bool BloodManaTimer { set; }
+		bool DizzyTimer { set; }
+		BizhawkSafeTimer Dizzy { get; set; }
+		bool GuardianSpiritsTimer { set; }
+		BizhawkSafeTimer GuardianSpirits { get; set; }
 		BizhawkSafeTimer EnduranceSpawn { get; set; }
 		bool EnduranceSpawnTimer { set; }
 		BizhawkSafeTimer FastAction { get; set; }

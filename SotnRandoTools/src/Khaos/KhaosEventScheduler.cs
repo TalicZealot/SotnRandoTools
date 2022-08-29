@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Khaos.Interfaces;
 using SotnRandoTools.Khaos.Models;
@@ -23,464 +24,209 @@ namespace SotnRandoTools.Khaos
 		{
 			set
 			{
-				if (value)
-				{
-					DateTime now = DateTime.Now;
-
-					FastAction.Elapses = now.AddMilliseconds(FastAction.Interval);
-					AddTimer(FastAction);
-				}
-				else
-				{
-					RemoveTimer(FastAction);
-				}
+				SetTimer(value, FastAction);
 			}
 		}
 		public bool ActionTimer
 		{
 			set
 			{
-				if (value)
-				{
-					DateTime now = DateTime.Now;
-
-					Action.Elapses = now.AddMilliseconds(Action.Interval);
-					AddTimer(Action);
-				}
-				else
-				{
-					RemoveTimer(Action);
-				}
+				SetTimer(value, Action);
+			}
+		}
+		public bool DizzyTimer
+		{
+			set
+			{
+				SetTimer(value, Dizzy);
 			}
 		}
 		public bool BloodManaDeathTimer
 		{
 			set
 			{
-				if (value)
-				{
-					DateTime now = DateTime.Now;
-
-					BloodManaDeath.Elapses = now.AddMilliseconds(BloodManaDeath.Interval);
-					AddTimer(BloodManaDeath);
-				}
-				else
-				{
-					RemoveTimer(BloodManaDeath);
-				}
+				SetTimer(value, BloodManaDeath);
 			}
 		}
 		public bool KhaosTrackTimer
 		{
 			set
 			{
-				if (value)
-				{
-					DateTime now = DateTime.Now;
-
-					KhaosTrack.Elapses = now.AddMilliseconds(KhaosTrack.Interval);
-					AddTimer(KhaosTrack);
-				}
-				else
-				{
-					RemoveTimer(KhaosTrack);
-				}
+				SetTimer(value, KhaosTrack);
 			}
 		}
 		public bool SubweaponsOnlyTimer
 		{
 			set
 			{
-				if (value)
-				{
-					DateTime now = DateTime.Now;
-
-					SubweaponsOnly.Elapses = now.AddMilliseconds(SubweaponsOnly.Interval);
-					AddTimer(SubweaponsOnly);
-				}
-				else
-				{
-					RemoveTimer(SubweaponsOnly);
-				}
+				SetTimer(value, SubweaponsOnly);
 			}
 		}
 		public bool SlowTimer
 		{
 			set
 			{
-				if (value)
-				{
-					DateTime now = DateTime.Now;
-
-					Slow.Elapses = now.AddMilliseconds(Slow.Interval);
-					AddTimer(Slow);
-				}
-				else
-				{
-					RemoveTimer(Slow);
-				}
+				SetTimer(value, Slow);
 			}
 		}
 		public bool BloodManaTimer
 		{
 			set
 			{
-				if (value)
-				{
-					DateTime now = DateTime.Now;
-
-					BloodMana.Elapses = now.AddMilliseconds(BloodMana.Interval);
-					AddTimer(BloodMana);
-				}
-				else
-				{
-					RemoveTimer(BloodMana);
-				}
+				SetTimer(value, BloodMana);
 			}
 		}
 		public bool ThirstTimer
 		{
 			set
 			{
-				if (value)
-				{
-					DateTime now = DateTime.Now;
-
-					Thirst.Elapses = now.AddMilliseconds(Thirst.Interval);
-					AddTimer(Thirst);
-				}
-				else
-				{
-					RemoveTimer(Thirst);
-				}
+				SetTimer(value, Thirst);
 			}
 		}
 		public bool ThirstTickTimer
 		{
 			set
 			{
-				if (value)
-				{
-					DateTime now = DateTime.Now;
-
-					ThirstTick.Elapses = now.AddMilliseconds(ThirstTick.Interval);
-					AddTimer(ThirstTick);
-				}
-				else
-				{
-					RemoveTimer(ThirstTick);
-				}
+				SetTimer(value, ThirstTick);
 			}
 		}
 		public bool HordeTimer
 		{
 			set
 			{
-				if (value)
-				{
-					DateTime now = DateTime.Now;
-
-					Horde.Elapses = now.AddMilliseconds(Horde.Interval);
-					AddTimer(Horde);
-				}
-				else
-				{
-					RemoveTimer(Horde);
-				}
+				SetTimer(value, Horde);
 			}
 		}
 		public bool HordeSpawnTimer
 		{
 			set
 			{
-				if (value)
-				{
-					DateTime now = DateTime.Now;
-
-					HordeSpawn.Elapses = now.AddMilliseconds(HordeSpawn.Interval);
-					AddTimer(HordeSpawn);
-				}
-				else
-				{
-					RemoveTimer(HordeSpawn);
-				}
+				SetTimer(value, HordeSpawn);
 			}
 		}
 		public bool EnduranceSpawnTimer
 		{
 			set
 			{
-				if (value)
-				{
-					DateTime now = DateTime.Now;
-
-					EnduranceSpawn.Elapses = now.AddMilliseconds(EnduranceSpawn.Interval);
-					AddTimer(EnduranceSpawn);
-				}
-				else
-				{
-					RemoveTimer(EnduranceSpawn);
-				}
+				SetTimer(value, EnduranceSpawn);
 			}
 		}
 		public bool HnkTimer
 		{
 			set
 			{
-				if (value)
-				{
-					DateTime now = DateTime.Now;
-
-					Hnk.Elapses = now.AddMilliseconds(Hnk.Interval);
-					AddTimer(Hnk);
-				}
-				else
-				{
-					RemoveTimer(Hnk);
-				}
+				SetTimer(value, Hnk);
 			}
 		}
 		public bool VampireTimer
 		{
 			set
 			{
-				if (value)
-				{
-					DateTime now = DateTime.Now;
-
-					Vampire.Elapses = now.AddMilliseconds(Vampire.Interval);
-					AddTimer(Vampire);
-				}
-				else
-				{
-					RemoveTimer(Vampire);
-				}
+				SetTimer(value, Vampire);
 			}
 		}
 		public bool MagicianTimer
 		{
 			set
 			{
-				if (value)
-				{
-					DateTime now = DateTime.Now;
-
-					Magician.Elapses = now.AddMilliseconds(Magician.Interval);
-					AddTimer(Magician);
-				}
-				else
-				{
-					RemoveTimer(Magician);
-				}
+				SetTimer(value, Magician);
 			}
 		}
 		public bool BattleOrdersTimer
 		{
 			set
 			{
-				if (value)
-				{
-					DateTime now = DateTime.Now;
-
-					BattleOrders.Elapses = now.AddMilliseconds(BattleOrders.Interval);
-					AddTimer(BattleOrders);
-				}
-				else
-				{
-					RemoveTimer(BattleOrders);
-				}
+				SetTimer(value, BattleOrders);
 			}
 		}
 		public bool MeltyTimer
 		{
 			set
 			{
-				if (value)
-				{
-					DateTime now = DateTime.Now;
-
-					Melty.Elapses = now.AddMilliseconds(Melty.Interval);
-					AddTimer(Melty);
-				}
-				else
-				{
-					RemoveTimer(Melty);
-				}
+				SetTimer(value, Melty);
 			}
 		}
 		public bool FourBeastsTimer
 		{
 			set
 			{
-				if (value)
-				{
-					DateTime now = DateTime.Now;
-
-					FourBeasts.Elapses = now.AddMilliseconds(FourBeasts.Interval);
-					AddTimer(FourBeasts);
-				}
-				else
-				{
-					RemoveTimer(FourBeasts);
-				}
+				SetTimer(value, FourBeasts);
 			}
 		}
 		public bool AzureDragonTimer
 		{
 			set
 			{
-				if (value)
-				{
-					DateTime now = DateTime.Now;
-
-					AzureDragon.Elapses = now.AddMilliseconds(AzureDragon.Interval);
-					AddTimer(AzureDragon);
-				}
-				else
-				{
-					RemoveTimer(AzureDragon);
-				}
+				SetTimer(value, AzureDragon);
 			}
 		}
 		public bool WhiteTigerBallTimer
 		{
 			set
 			{
-				if (value)
-				{
-					DateTime now = DateTime.Now;
-
-					WhiteTigerBall.Elapses = now.AddMilliseconds(WhiteTigerBall.Interval);
-					AddTimer(WhiteTigerBall);
-				}
-				else
-				{
-					RemoveTimer(WhiteTigerBall);
-				}
+				SetTimer(value, WhiteTigerBall);
 			}
 		}
 		public bool ZawarudoTimer
 		{
 			set
 			{
-				if (value)
-				{
-					DateTime now = DateTime.Now;
-
-					Zawarudo.Elapses = now.AddMilliseconds(Zawarudo.Interval);
-					AddTimer(Zawarudo);
-				}
-				else
-				{
-					RemoveTimer(Zawarudo);
-				}
+				SetTimer(value, Zawarudo);
 			}
 		}
 		public bool ZawarudoCheckTimer
 		{
 			set
 			{
-				if (value)
-				{
-					DateTime now = DateTime.Now;
-
-					ZawarudoCheck.Elapses = now.AddMilliseconds(ZawarudoCheck.Interval);
-					AddTimer(ZawarudoCheck);
-				}
-				else
-				{
-					RemoveTimer(ZawarudoCheck);
-				}
+				SetTimer(value, ZawarudoCheck);
 			}
 		}
 		public bool HasteTimer
 		{
 			set
 			{
-				if (value)
-				{
-					DateTime now = DateTime.Now;
-
-					Haste.Elapses = now.AddMilliseconds(Haste.Interval);
-					AddTimer(Haste);
-				}
-				else
-				{
-					RemoveTimer(Haste);
-				}
+				SetTimer(value, Haste);
 			}
 		}
 		public bool HasteOverdriveTimer
 		{
 			set
 			{
-				if (value)
-				{
-					DateTime now = DateTime.Now;
-
-					HasteOverdrive.Elapses = now.AddMilliseconds(HasteOverdrive.Interval);
-					AddTimer(HasteOverdrive);
-				}
-				else
-				{
-					RemoveTimer(HasteOverdrive);
-				}
+				SetTimer(value, HasteOverdrive);
 			}
 		}
 		public bool HasteOverdriveOffTimer
 		{
 			set
 			{
-				if (value)
-				{
-					DateTime now = DateTime.Now;
-
-					HasteOverdriveOff.Elapses = now.AddMilliseconds(HasteOverdriveOff.Interval);
-					AddTimer(HasteOverdriveOff);
-				}
-				else
-				{
-					RemoveTimer(HasteOverdriveOff);
-				}
+				SetTimer(value, HasteOverdriveOff);
 			}
 		}
 		public bool LordTimer
 		{
 			set
 			{
-				if (value)
-				{
-					DateTime now = DateTime.Now;
-
-					Lord.Elapses = now.AddMilliseconds(Lord.Interval);
-					AddTimer(Lord);
-				}
-				else
-				{
-					RemoveTimer(Lord);
-				}
+				SetTimer(value, Lord);
 			}
 		}
 		public bool LordSpawnTimer
 		{
 			set
 			{
-				if (value)
-				{
-					DateTime now = DateTime.Now;
-
-					LordSpawn.Elapses = now.AddMilliseconds(LordSpawn.Interval);
-					AddTimer(LordSpawn);
-				}
-				else
-				{
-					RemoveTimer(LordSpawn);
-				}
+				SetTimer(value, LordSpawn);
+			}
+		}
+		public bool GuardianSpiritsTimer
+		{
+			set
+			{
+				SetTimer(value, GuardianSpirits);
 			}
 		}
 
 		public BizhawkSafeTimer FastAction { get; set; }
 		public BizhawkSafeTimer Action { get; set; }
+		public BizhawkSafeTimer Dizzy { get; set; }
 		public BizhawkSafeTimer BloodManaDeath { get; set; }
 		public BizhawkSafeTimer KhaosTrack { get; set; }
 		public BizhawkSafeTimer SubweaponsOnly { get; set; }
@@ -506,6 +252,7 @@ namespace SotnRandoTools.Khaos
 		public BizhawkSafeTimer HasteOverdriveOff { get; set; }
 		public BizhawkSafeTimer Lord { get; set; }
 		public BizhawkSafeTimer LordSpawn { get; set; }
+		public BizhawkSafeTimer GuardianSpirits { get; set; }
 
 		public void CheckSchedule()
 		{
@@ -543,6 +290,7 @@ namespace SotnRandoTools.Khaos
 		{
 			FastAction = new BizhawkSafeTimer { Interval = 2 * (1 * 1000) };
 			Action = new BizhawkSafeTimer { Interval = 2 * (1 * 1000) };
+			Dizzy = new BizhawkSafeTimer { Interval = 20 * (1 * 1000) };
 			BloodManaDeath = new BizhawkSafeTimer { Interval = 1 * (1 * 1500) };
 			KhaosTrack = new BizhawkSafeTimer { Interval = (int) toolConfig.Khaos.Actions[(int) Enums.Action.KhaosTrack].Duration.TotalMilliseconds };
 			SubweaponsOnly = new BizhawkSafeTimer { Interval = (int) toolConfig.Khaos.Actions[(int) Enums.Action.SubweaponsOnly].Duration.TotalMilliseconds };
@@ -568,6 +316,7 @@ namespace SotnRandoTools.Khaos
 			HasteOverdriveOff = new BizhawkSafeTimer { Interval = (2 * 1000) };
 			Lord = new BizhawkSafeTimer { Interval = 5 * (60 * 1000) };
 			LordSpawn = new BizhawkSafeTimer { Interval = (int) toolConfig.Khaos.Actions[(int) Enums.Action.Lord].Interval.TotalMilliseconds };
+			GuardianSpirits = new BizhawkSafeTimer { Interval = 20 * (1 * 1000) };
 		}
 
 		private void AddTimer(BizhawkSafeTimer action)
@@ -590,6 +339,21 @@ namespace SotnRandoTools.Khaos
 			if (actions.Count > 1)
 			{
 				actions.Sort((x, y) => x.Elapses.CompareTo(y.Elapses));
+			}
+		}
+
+		private void SetTimer(bool value, BizhawkSafeTimer timer)
+		{
+			if (value)
+			{
+				DateTime now = DateTime.Now;
+
+				timer.Elapses = now.AddMilliseconds(timer.Interval);
+				AddTimer(timer);
+			}
+			else
+			{
+				RemoveTimer(timer);
 			}
 		}
 	}

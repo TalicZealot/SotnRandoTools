@@ -26,7 +26,7 @@ namespace SotnRandoTools.Khaos.Interfaces
 		Cheat UnderwaterPhysics { get; set; }
 		Cheat VisualEffectPalette { get; set; }
 		Cheat VisualEffectTimer { get; set; }
-
+		Cheat Activator { get; set; }
 		void GetCheats();
 		void StartCheats();
 	}

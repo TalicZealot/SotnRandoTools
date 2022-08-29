@@ -51,6 +51,7 @@ namespace SotnRandoTools.Khaos
 		public Cheat SavePalette { get; set; }
 		public Cheat ContactDamage { get; set; }
 		public Cheat Music { get; set; }
+		public Cheat Activator { get; set; }
 
 		public void GetCheats()
 		{
@@ -74,6 +75,7 @@ namespace SotnRandoTools.Khaos
 			SavePalette = Cheats.AddCheat(SotnApi.Constants.Addresses.Game.SavePalette, Constants.Khaos.SaveIcosahedronFirstCastle, "SavePalette", WatchSize.Word);
 			ContactDamage = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Stats.ContactDamage, 0x0001, "ContactDamage", WatchSize.Word);
 			Music = Cheats.AddCheat(SotnApi.Constants.Addresses.Game.Music, 0x00, "Music", WatchSize.Byte);
+			Activator = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Effects.Activator, 0x00, "Activator", WatchSize.Byte);
 
 			batCardXp = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Relics.BatCardXp, 0x00002710, "BatCardXp", WatchSize.DWord);
 			ghostCardXp = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Relics.GhostCardXp, 0x00002710, "GhostCardXp", WatchSize.DWord);

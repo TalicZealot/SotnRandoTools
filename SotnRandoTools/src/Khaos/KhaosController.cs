@@ -296,6 +296,8 @@ namespace SotnRandoTools.Khaos
 				result = RollStatus(entranceCutscene, succubusRoom, alucardIsImmuneToCurse, alucardIsImmuneToStone, alucardIsImmuneToPoison, highHp);
 			}
 
+
+
 			switch (result)
 			{
 				case 1:
@@ -315,24 +317,32 @@ namespace SotnRandoTools.Khaos
 					notificationService.AddMessage($"{user} slammed you");
 					break;
 				case 5:
+					ActivateDizzy();
+					notificationService.AddMessage($"{user} confused you");
+					break;
+				case 6:
+					sotnApi.AlucardApi.CurrentMp -= 15;
+					notificationService.AddMessage($"{user} used Mana Burn");
+					break;
+				case 7:
 					sotnApi.AlucardApi.ActivatePotion(Potion.Antivenom);
 					notificationService.AddMessage($"{user} used an antivenom");
 					break;
-				case 6:
+				case 8:
 					sotnApi.AlucardApi.ActivatePotion(Potion.StrPotion);
 					notificationService.AddMessage($"{user} gave you strength");
 					break;
-				case 7:
+				case 9:
 					sotnApi.AlucardApi.Heal(15);
 					notificationService.AddMessage($"{user} used a minor heal");
 					break;
-				case 8:
+				case 10:
 					sotnApi.AlucardApi.ActivatePotion(Potion.ShieldPotion);
 					notificationService.AddMessage($"{user} gave you defence");
 					break;
-				case 9:
-					sotnApi.AlucardApi.CurrentMp -= 15;
-					notificationService.AddMessage($"{user} used Mana Burn");
+				case 11:
+					ActivateGuardianSpirits();
+					notificationService.AddMessage($"{user} used Guardian Spirits");
 					break;
 				default:
 					break;
@@ -1136,6 +1146,8 @@ namespace SotnRandoTools.Khaos
 		}
 		private void InitializeTimers()
 		{
+			eventScheduler.Dizzy.Invoker = new MethodInvoker(() => DizzyOff());
+
 			eventScheduler.BloodManaDeath.Invoker = new MethodInvoker(() => KillAlucard());
 			eventScheduler.KhaosTrack.Invoker = new MethodInvoker(() => KhaosTrackOff());
 			eventScheduler.SubweaponsOnly.Invoker = new MethodInvoker(() => SubweaponsOnlyOff());
@@ -1162,6 +1174,7 @@ namespace SotnRandoTools.Khaos
 			eventScheduler.HasteOverdriveOff.Invoker = new MethodInvoker(() => OverdriveOff());
 			eventScheduler.Lord.Invoker = new MethodInvoker(() => LordOff());
 			eventScheduler.LordSpawn.Invoker = new MethodInvoker(() => LordSpawn());
+			eventScheduler.GuardianSpirits.Invoker = new MethodInvoker(() => GuardianSpiritsOff());
 		}
 		private void StopTimers()
 		{
@@ -1172,7 +1185,7 @@ namespace SotnRandoTools.Khaos
 		private int RollStatus(bool entranceCutscene, bool succubusRoom, bool alucardIsImmuneToCurse, bool alucardIsImmuneToStone, bool alucardIsImmuneToPoison, bool highHp)
 		{
 			int min = 1;
-			int max = 10;
+			int max = 12;
 			int result = rng.Next(min, max);
 
 			switch (result)
@@ -1201,20 +1214,14 @@ namespace SotnRandoTools.Khaos
 						return 0;
 					}
 					break;
-				case 5:
-					if (zaWarudoActive)
-					{
-						return 0;
-					}
-					break;
 				case 6:
-					if (zaWarudoActive)
+					if (sotnApi.AlucardApi.CurrentMp < 15 || ManaLocked)
 					{
 						return 0;
 					}
 					break;
 				case 7:
-					if (highHp)
+					if (zaWarudoActive)
 					{
 						return 0;
 					}
@@ -1226,7 +1233,19 @@ namespace SotnRandoTools.Khaos
 					}
 					break;
 				case 9:
-					if (sotnApi.AlucardApi.CurrentMp < 15 || ManaLocked)
+					if (highHp)
+					{
+						return 0;
+					}
+					break;
+				case 10:
+					if (zaWarudoActive)
+					{
+						return 0;
+					}
+					break;
+				case 11:
+					if (zaWarudoActive || sotnApi.AlucardApi.SubweaponTimer > 0)
 					{
 						return 0;
 					}
@@ -1904,6 +1923,16 @@ namespace SotnRandoTools.Khaos
 			hitbox.DamageTypeA = (uint) Entities.Slam;
 			sotnApi.EntityApi.SpawnEntity(hitbox);
 		}
+		private void ActivateDizzy()
+		{
+			sotnApi.GameApi.SetMovementSpeedDirection(true);
+			eventScheduler.DizzyTimer = true;
+		}
+		private void DizzyOff()
+		{
+			sotnApi.GameApi.SetMovementSpeedDirection(false);
+			eventScheduler.DizzyTimer = false;
+		}
 		private void BankruptActivate()
 		{
 			bool clearRightHand = false;
@@ -2523,6 +2552,17 @@ namespace SotnRandoTools.Khaos
 			cheatsController.Cheats.RemoveCheat(whiteTigerBallCheat);
 			whiteTigerBallActive = false;
 			eventScheduler.WhiteTigerBallTimer = false;
+		}
+		private void ActivateGuardianSpirits()
+		{
+			cheatsController.Activator.PokeValue((int)SotnApi.Constants.Values.Alucard.Effects.AutoSummonSpirit);
+			cheatsController.Activator.Enable();
+			eventScheduler.GuardianSpiritsTimer = true;
+		}
+		private void GuardianSpiritsOff()
+		{
+			cheatsController.Activator.Disable();
+			eventScheduler.GuardianSpiritsTimer = false;
 		}
 		#endregion
 
