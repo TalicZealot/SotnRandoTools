@@ -158,6 +158,7 @@ namespace SotnRandoTools.Khaos
 
 			notificationService.StartOverlayServer();
 			notificationService.AddMessage($"Khaos started");
+			sotnApi.GameApi.OverwriteString(SotnApi.Constants.Addresses.Strings.ItemNameAddresses["Library card"], "Khaotic card", true);
 			Console.WriteLine("Khaos started");
 		}
 		public void StopKhaos()
@@ -296,7 +297,9 @@ namespace SotnRandoTools.Khaos
 				result = RollStatus(entranceCutscene, succubusRoom, alucardIsImmuneToCurse, alucardIsImmuneToStone, alucardIsImmuneToPoison, highHp);
 			}
 
-
+			int index = rng.Next(0, SotnApi.Constants.Values.Game.Various.SafeLibraryCardZones.Count);
+			TeleportZone zone = SotnApi.Constants.Values.Game.Various.SafeLibraryCardZones[index];
+			sotnApi.GameApi.SetLibraryCardDestination(zone.Zone, zone.Xpos, zone.Ypos, zone.Room);
 
 			switch (result)
 			{
@@ -682,7 +685,7 @@ namespace SotnRandoTools.Khaos
 			cheatsController.DarkMetamorphasis.Enable();
 			eventScheduler.VampireTimer = true;
 			notificationService.AddMessage(user + " used Vampire");
-			sotnApi.GameApi.OverwriteString(SotnApi.Constants.Addresses.Strings.WeaponNameAddresses["Gurthang"], "CravenEdge", false);
+			sotnApi.GameApi.OverwriteString(SotnApi.Constants.Addresses.Strings.ItemNameAddresses["Gurthang"], "CravenEdge", false);
 			sotnApi.AlucardApi.GrantItemByName("Gurthang");
 			vampireActive = true;
 
