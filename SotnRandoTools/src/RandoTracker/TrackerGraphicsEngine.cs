@@ -12,7 +12,7 @@ using SotnRandoTools.RandoTracker.Models;
 
 namespace SotnRandoTools.RandoTracker
 {
-	public class TrackerGraphicsEngine : ITrackerGraphicsEngine
+	internal sealed class TrackerGraphicsEngine : ITrackerGraphicsEngine
 	{
 		private const int TextPadding = 5;
 		private const int LabelOffset = 50;

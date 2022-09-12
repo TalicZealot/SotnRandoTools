@@ -11,7 +11,7 @@ using SotnRandoTools.Services;
 
 namespace SotnRandoTools
 {
-	public partial class CoopForm : Form
+	internal sealed partial class CoopForm : Form
 	{
 		private readonly IInputService inputService;
 		private readonly IToolConfig toolConfig;

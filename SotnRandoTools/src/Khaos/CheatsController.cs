@@ -7,7 +7,7 @@ using SotnRandoTools.Services.Adapters;
 
 namespace SotnRandoTools.Khaos
 {
-	public class CheatsController : ICheatsController
+	internal sealed class CheatsController : ICheatsController
 	{
 		private ICheatCollectionAdapter cheats;
 

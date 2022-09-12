@@ -10,7 +10,7 @@ using SotnRandoTools.Services;
 
 namespace SotnRandoTools
 {
-	public partial class TrackerForm : Form
+	internal sealed partial class TrackerForm : Form
 	{
 		private readonly IToolConfig toolConfig;
 		private readonly IWatchlistService watchlistService;

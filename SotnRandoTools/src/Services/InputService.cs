@@ -8,7 +8,7 @@ using SotnRandoTools.Services.Models;
 
 namespace SotnRandoTools.Services
 {
-	public class InputService : IInputService
+	internal sealed class InputService : IInputService
 	{
 		private readonly IJoypadApi joypadApi;
 		private readonly ISotnApi sotnApi;

@@ -19,7 +19,7 @@ using MapLocation = SotnRandoTools.RandoTracker.Models.MapLocation;
 
 namespace SotnRandoTools.Khaos
 {
-	public class KhaosController : IKhaosController
+	internal sealed class KhaosController : IKhaosController
 	{
 		private readonly IToolConfig toolConfig;
 		private readonly ISotnApi sotnApi;
@@ -278,6 +278,7 @@ namespace SotnRandoTools.Khaos
 
 		#region Khaotic Effects
 		//TODO: random action
+		//TODO: Banish force khaotic card
 		public void KhaosStatus(string user = Constants.Khaos.KhaosName)
 		{
 			bool entranceCutscene = IsInRoomList(Constants.Khaos.EntranceCutsceneRooms);
@@ -929,12 +930,12 @@ namespace SotnRandoTools.Khaos
 				Name = toolConfig.Khaos.Actions[(int) Enums.Action.Magician].Name,
 				Duration = toolConfig.Khaos.Actions[(int) Enums.Action.Magician].Duration
 			};
+			notificationService.AddOverlayTimer(timer.Name, (int) timer.Duration.TotalMilliseconds);
 			if (meterFull)
 			{
 				timer.Name = "Shapeshifter";
 			}
 			statusInfoDisplay.AddTimer(timer);
-			notificationService.AddOverlayTimer(timer.Name, (int) timer.Duration.TotalMilliseconds);
 
 			string message = meterFull ? $"{user} activated Shapeshifter" : $"{user} activated Magician";
 			notificationService.AddMessage(message);

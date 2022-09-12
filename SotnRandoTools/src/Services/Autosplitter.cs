@@ -4,7 +4,7 @@ using System.IO.Pipes;
 
 namespace SotnRandoTools.Services
 {
-	public class Autosplitter
+	internal sealed class Autosplitter
 	{
 		NamedPipeClientStream pipeClient;
 		StreamWriter pipeWriter;

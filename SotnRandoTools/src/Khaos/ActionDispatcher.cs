@@ -9,7 +9,7 @@ using SotnRandoTools.Services;
 
 namespace SotnRandoTools.Khaos
 {
-	public class ActionDispatcher : IActionDispatcher
+	internal sealed class ActionDispatcher : IActionDispatcher
 	{
 		private readonly IToolConfig toolConfig;
 		private readonly IKhaosController khaosController;

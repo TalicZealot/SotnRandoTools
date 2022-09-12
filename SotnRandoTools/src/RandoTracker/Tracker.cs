@@ -17,7 +17,7 @@ using SotnRandoTools.Services;
 
 namespace SotnRandoTools.RandoTracker
 {
-	public class Tracker : ITracker
+	internal sealed class Tracker : ITracker
 	{
 		const string DefaultSeedInfo = "seed(preset)";
 		const long DraculaActorAddress = 0x076e98;

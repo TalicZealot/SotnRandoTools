@@ -12,7 +12,7 @@ using WatsonWebsocket;
 
 namespace SotnRandoTools.Services
 {
-	public class OverlaySocketServer : IOverlaySocketServer
+	internal sealed class OverlaySocketServer : IOverlaySocketServer
 	{
 		private readonly IToolConfig toolConfig;
 		private WatsonWsServer socketServer;

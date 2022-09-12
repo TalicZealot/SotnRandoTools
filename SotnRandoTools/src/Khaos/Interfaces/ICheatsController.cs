@@ -3,7 +3,7 @@ using SotnRandoTools.Services.Adapters;
 
 namespace SotnRandoTools.Khaos.Interfaces
 {
-	public interface ICheatsController
+	internal interface ICheatsController
 	{
 		ICheatCollectionAdapter Cheats { get; }
 		Cheat AttackPotion { get; set; }

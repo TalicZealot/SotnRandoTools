@@ -9,7 +9,7 @@ using SotnRandoTools.Utils;
 
 namespace SotnRandoTools.Coop
 {
-	public class CoopMessanger : ICoopMessanger
+	internal sealed class CoopMessanger : ICoopMessanger
 	{
 		private readonly IToolConfig toolConfig;
 		private readonly ICoopReceiver coopReceiver;

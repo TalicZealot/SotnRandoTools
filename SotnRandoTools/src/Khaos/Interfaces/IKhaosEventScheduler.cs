@@ -2,7 +2,7 @@
 
 namespace SotnRandoTools.Khaos.Interfaces
 {
-	public interface IKhaosEventScheduler
+	internal interface IKhaosEventScheduler
 	{
 		BizhawkSafeTimer Action { get; set; }
 		bool ActionTimer { set; }

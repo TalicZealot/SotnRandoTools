@@ -1,6 +1,6 @@
 ﻿namespace SotnRandoTools.Services.Interfaces
 {
-	public interface IDataService
+	internal interface IDataService
 	{
 		void Connect();
 		int GetPoints(string username);

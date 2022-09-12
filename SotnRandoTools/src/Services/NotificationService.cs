@@ -12,7 +12,7 @@ using SotnRandoTools.Services.Models;
 
 namespace SotnRandoTools.Services
 {
-	public class NotificationService : INotificationService
+	internal sealed class NotificationService : INotificationService
 	{
 		private OverlaySocketServer overlaySocketServer;
 		private const int NotificationTime = 5 * 1000;

@@ -2,7 +2,7 @@
 
 namespace SotnRandoTools.Coop.Interfaces
 {
-	public interface ICoopMessanger
+	internal interface ICoopMessanger
 	{
 		void Connect(string hostIp, int port);
 		void Disconnect();

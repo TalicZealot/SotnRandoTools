@@ -5,7 +5,7 @@ using SotnRandoTools.Constants;
 
 namespace SotnRandoTools.Services
 {
-	public class WatchlistService : IWatchlistService
+	internal sealed class WatchlistService : IWatchlistService
 	{
 		private readonly string systemId;
 		private readonly IMemoryDomains memoryDomains;

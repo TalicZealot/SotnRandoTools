@@ -7,7 +7,7 @@ using SotnRandoTools.Services.Interfaces;
 namespace SotnRandoTools.Services
 {
 	//Try IDisposable to wrap in a using block
-	public class TwitchListener : ITwitchListener
+	internal sealed class TwitchListener : ITwitchListener
 	{
 		private HttpListener listener;
 

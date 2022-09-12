@@ -2,7 +2,7 @@
 
 namespace SotnRandoTools.Services
 {
-	public interface IWatchlistService
+	internal interface IWatchlistService
 	{
 		WatchList EquipmentLocationWatches { get; }
 		WatchList ProgressionItemWatches { get; }

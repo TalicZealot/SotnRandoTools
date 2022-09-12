@@ -1,6 +1,6 @@
 ﻿namespace SotnRandoTools.Services
 {
-	public interface IInputService
+	internal interface IInputService
 	{
 		bool ReadDash { set; }
 		bool ReadDragonPunch { set; }

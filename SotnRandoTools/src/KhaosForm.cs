@@ -17,7 +17,7 @@ using SotnRandoTools.Services.Models;
 
 namespace SotnRandoTools
 {
-	public partial class KhaosForm : Form, IKhaosActionsInfoDisplay, INotifyPropertyChanged, IRelicLocationDisplay
+	internal sealed partial class KhaosForm : Form, IKhaosActionsInfoDisplay, INotifyPropertyChanged, IRelicLocationDisplay
 	{
 		private ICheatCollectionAdapter adaptedCheats;
 		private readonly IToolConfig toolConfig;

@@ -2,7 +2,7 @@
 
 namespace SotnRandoTools.RandoTracker
 {
-	public interface ITracker
+	internal interface ITracker
 	{
 		IRelicLocationDisplay RelicLocationDisplay { get; set; }
 		void DrawRelicsAndItems();

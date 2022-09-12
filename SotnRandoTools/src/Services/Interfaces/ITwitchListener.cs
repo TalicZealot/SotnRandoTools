@@ -2,7 +2,7 @@
 
 namespace SotnRandoTools.Services.Interfaces
 {
-	public interface ITwitchListener
+	internal interface ITwitchListener
 	{
 		Task<Models.Authorization> Listen();
 		void Stop();

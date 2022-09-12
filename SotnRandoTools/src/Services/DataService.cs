@@ -7,7 +7,7 @@ using SotnRandoTools.Services.Interfaces;
 
 namespace SotnRandoTools.Services
 {
-	public class DataService : IDataService
+	internal sealed class DataService : IDataService
 	{
 		private readonly ISQLiteApi sQLiteApi;
 

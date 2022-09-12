@@ -24,7 +24,7 @@ using TwitchLib.PubSub.Events;
 
 namespace SotnRandoTools.Khaos
 {
-	public class ChannelPointsController
+	internal sealed class ChannelPointsController
 	{
 		private const int RetryBaseMs = 12;
 		private const int RetryCount = 3;

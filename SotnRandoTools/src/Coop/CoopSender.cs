@@ -14,7 +14,7 @@ using MethodInvoker = System.Windows.Forms.MethodInvoker;
 
 namespace SotnRandoTools.Coop
 {
-	public class CoopSender
+	internal sealed class CoopSender
 	{
 		private readonly IToolConfig toolConfig;
 		private readonly ISotnApi sotnApi;

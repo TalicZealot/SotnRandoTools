@@ -1,6 +1,6 @@
 ﻿namespace SotnRandoTools.Khaos.Interfaces
 {
-	public interface IEnemyRenamer
+	internal interface IEnemyRenamer
 	{
 		void OverwriteNames(string[] subscribers);
 	}

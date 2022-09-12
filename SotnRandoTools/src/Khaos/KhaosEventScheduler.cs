@@ -7,7 +7,7 @@ using SotnRandoTools.Khaos.Models;
 
 namespace SotnRandoTools.Khaos
 {
-	public class KhaosEventScheduler : IKhaosEventScheduler
+	internal sealed class KhaosEventScheduler : IKhaosEventScheduler
 	{
 		private readonly IToolConfig toolConfig;
 		private List<BizhawkSafeTimer> actions = new();

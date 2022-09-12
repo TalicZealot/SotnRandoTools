@@ -3,7 +3,7 @@ using SotnRandoTools.Khaos.Models;
 
 namespace SotnRandoTools.Services.Interfaces
 {
-	public interface IOverlaySocketServer
+	internal interface IOverlaySocketServer
 	{
 		void StartServer();
 		void StopServer();

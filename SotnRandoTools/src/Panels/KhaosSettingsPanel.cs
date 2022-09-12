@@ -6,7 +6,7 @@ using SotnRandoTools.Services;
 
 namespace SotnRandoTools
 {
-	public partial class KhaosSettingsPanel : UserControl
+	internal sealed partial class KhaosSettingsPanel : UserControl
 	{
 		private readonly IToolConfig? toolConfig;
 		private BindingSource actionSettingsSource = new();

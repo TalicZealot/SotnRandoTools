@@ -4,7 +4,7 @@ using SotnRandoTools.RandoTracker.Models;
 
 namespace SotnRandoTools.RandoTracker
 {
-	public interface ITrackerGraphicsEngine
+	internal interface ITrackerGraphicsEngine
 	{
 		bool Refreshed { get; set; }
 		void SetProgression();

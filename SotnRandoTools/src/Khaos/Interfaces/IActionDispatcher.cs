@@ -2,7 +2,7 @@
 
 namespace SotnRandoTools.Khaos.Interfaces
 {
-	public interface IActionDispatcher
+	internal interface IActionDispatcher
 	{
 		bool AutoKhaosOn { get; set; }
 

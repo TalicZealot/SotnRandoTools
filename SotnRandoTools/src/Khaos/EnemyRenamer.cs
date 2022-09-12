@@ -7,7 +7,7 @@ using SotnRandoTools.Khaos.Interfaces;
 
 namespace SotnRandoTools.Khaos
 {
-	public class EnemyRenamer : IEnemyRenamer
+	internal sealed class EnemyRenamer : IEnemyRenamer
 	{
 		private readonly Random rng = new();
 		private readonly ISotnApi sotnApi;

@@ -3,7 +3,7 @@ using SotnRandoTools.Khaos.Models;
 
 namespace SotnRandoTools.Services
 {
-	public interface INotificationService
+	internal interface INotificationService
 	{
 		double Volume { set; }
 		bool MapOpen { get; set; }

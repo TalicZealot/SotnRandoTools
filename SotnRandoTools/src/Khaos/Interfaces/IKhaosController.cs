@@ -3,7 +3,7 @@ using SotnRandoTools.RandoTracker.Models;
 
 namespace SotnRandoTools.Khaos.Interfaces
 {
-	public interface IKhaosController
+	internal interface IKhaosController
 	{
 		//public void EnqueueAction(EventAddAction eventData);
 		bool AutoKhaosOn { get; set; }

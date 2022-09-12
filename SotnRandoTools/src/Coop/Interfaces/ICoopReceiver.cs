@@ -1,6 +1,6 @@
 ﻿namespace SotnRandoTools.Coop.Interfaces
 {
-	public interface ICoopReceiver
+	internal interface ICoopReceiver
 	{
 		void EnqueMessage(byte[] data);
 	}
