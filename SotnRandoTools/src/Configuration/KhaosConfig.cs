@@ -40,7 +40,7 @@ namespace SotnRandoTools.Configuration
 			{
 				new Action{
 					Name = "Khaos Status",
-					Description = "Inflicts a random status effect between Poison, Curse, Stone, Slam, Resist an Element, Shield Potion.",
+					Description = "Inflicts a random status effect.",
 					Meter = 2,
 					AlertPath = Paths.AlucardWhatSound,
 					Cooldown = new System.TimeSpan(0, 0, 20),
@@ -101,6 +101,18 @@ namespace SotnRandoTools.Configuration
 					Bits = 10,
 					ChannelPoints = 100,
 					Scaling = 2.0
+				},
+				new Action{
+					Name = "Banish",
+					Description = "Banishes the player to a random zone.",
+					Meter = 7,
+					AlertPath = Paths.AlucardWhatSound,
+					Cooldown = new System.TimeSpan(0, 35, 0),
+					StartsOnCooldown = true,
+					Bits = 20,
+					ChannelPoints = 200,
+					MaximumChannelPoints = 2000,
+					Scaling = 1.5
 				},
 				new Action{
 					Name = "Khaotic Burst",
@@ -246,15 +258,15 @@ namespace SotnRandoTools.Configuration
 					Scaling = 1.5
 				},
 				new Action{
-					Name = "Vampire",
-					IsUsable = false,
-					Description = "Alucard gets Dark Metamorphasis and an attack bonus for an extended period.",
-					Meter = 2,
-					Duration = new System.TimeSpan(0, 1, 0),
-					Cooldown = new System.TimeSpan(0, 8, 0),
+					Name = "Quad",
+					Description = "Massive damage boost for the duration. Str buff on kill streak.",
+					Meter = 5,
+					AlertPath = Paths.QuadSound,
+					Duration = new System.TimeSpan(0, 0, 35),
+					Cooldown = new System.TimeSpan(0, 15, 0),
 					Bits = 30,
-					ChannelPoints = 2500,
-					MaximumChannelPoints = 4500,
+					ChannelPoints = 400,
+					MaximumChannelPoints = 4000,
 					Scaling = 1.5
 				},
 				new Action{

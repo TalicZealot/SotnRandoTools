@@ -490,6 +490,18 @@ namespace SotnRandoTools
 				khaosController.Gamble();
 			}
 		}
+		private void banishButton_Click(object sender, EventArgs e)
+		{
+			if (toolConfig.Khaos.ControlPannelQueueActions)
+			{
+				actionDispatcher.EnqueueAction(new EventAddAction { ActionIndex = (int) Khaos.Enums.Action.Banish, UserName = "Khaos" });
+			}
+			else
+			{
+
+				khaosController.Banish();
+			}
+		}
 		private void burstButton_Click(object sender, EventArgs e)
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
@@ -633,12 +645,12 @@ namespace SotnRandoTools
 		{
 			if (toolConfig.Khaos.ControlPannelQueueActions)
 			{
-				actionDispatcher.EnqueueAction(new EventAddAction { ActionIndex = (int) Khaos.Enums.Action.Vampire, UserName = "Khaos" });
+				actionDispatcher.EnqueueAction(new EventAddAction { ActionIndex = (int) Khaos.Enums.Action.Quad, UserName = "Khaos" });
 			}
 			else
 			{
 
-				khaosController.Vampire();
+				khaosController.Quad();
 			}
 		}
 		private void lightHelpButton_Click(object sender, EventArgs e)

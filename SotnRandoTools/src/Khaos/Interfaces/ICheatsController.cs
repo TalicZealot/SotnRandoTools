@@ -7,6 +7,7 @@ namespace SotnRandoTools.Khaos.Interfaces
 	{
 		ICheatCollectionAdapter Cheats { get; }
 		Cheat AttackPotion { get; set; }
+		Cheat StrengthPotion { get; set; }
 		Cheat ContactDamage { get; set; }
 		Cheat Curse { get; set; }
 		Cheat DarkMetamorphasis { get; set; }

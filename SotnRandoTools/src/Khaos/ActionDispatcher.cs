@@ -151,6 +151,13 @@ namespace SotnRandoTools.Khaos
 						queuedFastActions.Enqueue(new MethodInvoker(() => khaosController.Gamble(user)));
 					}
 					break;
+				case (int) Enums.Action.Banish:
+					commandAction = toolConfig.Khaos.Actions[(int) Enums.Action.Banish];
+					if (commandAction.Enabled)
+					{
+						queuedFastActions.Enqueue(new MethodInvoker(() => khaosController.Banish(user)));
+					}
+					break;
 				case (int) Enums.Action.KhaoticBurst:
 					commandAction = toolConfig.Khaos.Actions[(int) Enums.Action.KhaoticBurst];
 					if (commandAction.Enabled)
@@ -239,11 +246,11 @@ namespace SotnRandoTools.Khaos
 					break;
 				#endregion
 				#region Buffs
-				case (int) Enums.Action.Vampire:
-					commandAction = toolConfig.Khaos.Actions[(int) Enums.Action.Vampire];
+				case (int) Enums.Action.Quad:
+					commandAction = toolConfig.Khaos.Actions[(int) Enums.Action.Quad];
 					if (commandAction.Enabled)
 					{
-						queuedFastActions.Enqueue(new MethodInvoker(() => khaosController.Vampire(user)));
+						queuedFastActions.Enqueue(new MethodInvoker(() => khaosController.Quad(user)));
 					}
 					break;
 				case (int) Enums.Action.LightHelp:

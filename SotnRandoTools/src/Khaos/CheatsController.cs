@@ -38,6 +38,7 @@ namespace SotnRandoTools.Khaos
 		public Cheat Curse { get; set; }
 		public Cheat Mana { get; set; }
 		public Cheat AttackPotion { get; set; }
+		public Cheat StrengthPotion { get; set; }
 		public Cheat DefencePotion { get; set; }
 		public Cheat SubweaponTimer { get; set; }
 		public Cheat HitboxWidth { get; set; }
@@ -62,6 +63,7 @@ namespace SotnRandoTools.Khaos
 			Curse = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Timers.Curse, 0x1, "CurseTimer", WatchSize.Byte);
 			Mana = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Stats.CurrentMana, 0x0F, "Mana", WatchSize.Byte);
 			AttackPotion = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Timers.AttackPotion, 0x1, "AttackPotion", WatchSize.Byte);
+			StrengthPotion = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Timers.StrengthPotion, 0x1, "StrengthPotion", WatchSize.Byte);
 			DefencePotion = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Timers.DefencePotion, 0x1, "DefencePotion", WatchSize.Byte);
 			SubweaponTimer = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Timers.SubweaponTimer, 0x1, "SubweaponTimer", WatchSize.Byte);
 			HitboxWidth = Cheats.AddCheat(SotnApi.Constants.Addresses.Alucard.Entity.AttackHitboxWidth_1, 0x40, "AlucardAttackHitboxWidth", WatchSize.Byte);

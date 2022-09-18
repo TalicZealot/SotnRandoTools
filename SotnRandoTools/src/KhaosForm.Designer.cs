@@ -106,6 +106,7 @@ namespace SotnRandoTools
             this.Refund = new System.Windows.Forms.DataGridViewButtonColumn();
             this.autoKhaosButton = new System.Windows.Forms.Button();
             this.connectButton = new System.Windows.Forms.Button();
+            this.banishButton = new System.Windows.Forms.Button();
             this.modePanel.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.statusPanel.SuspendLayout();
@@ -421,7 +422,7 @@ namespace SotnRandoTools
             this.vampireButton.Name = "vampireButton";
             this.vampireButton.Size = new System.Drawing.Size(134, 26);
             this.vampireButton.TabIndex = 8;
-            this.vampireButton.Text = "Vampire";
+            this.vampireButton.Text = "Quad";
             this.vampireButton.UseVisualStyleBackColor = true;
             this.vampireButton.Click += new System.EventHandler(this.vampireButton_Click);
             // 
@@ -894,6 +895,7 @@ namespace SotnRandoTools
             // controlPanel
             // 
             this.controlPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
+            this.controlPanel.Controls.Add(this.banishButton);
             this.controlPanel.Controls.Add(this.khaosTrackButton);
             this.controlPanel.Controls.Add(this.lordButton);
             this.controlPanel.Controls.Add(this.hnkButton);
@@ -939,7 +941,7 @@ namespace SotnRandoTools
             this.khaosTrackButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.khaosTrackButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.khaosTrackButton.ForeColor = System.Drawing.Color.White;
-            this.khaosTrackButton.Location = new System.Drawing.Point(9, 307);
+            this.khaosTrackButton.Location = new System.Drawing.Point(9, 339);
             this.khaosTrackButton.Name = "khaosTrackButton";
             this.khaosTrackButton.Size = new System.Drawing.Size(134, 26);
             this.khaosTrackButton.TabIndex = 30;
@@ -987,7 +989,7 @@ namespace SotnRandoTools
             this.burstButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.burstButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.burstButton.ForeColor = System.Drawing.Color.White;
-            this.burstButton.Location = new System.Drawing.Point(6, 275);
+            this.burstButton.Location = new System.Drawing.Point(6, 307);
             this.burstButton.Name = "burstButton";
             this.burstButton.Size = new System.Drawing.Size(134, 26);
             this.burstButton.TabIndex = 27;
@@ -1121,6 +1123,22 @@ namespace SotnRandoTools
             this.connectButton.UseVisualStyleBackColor = false;
             this.connectButton.Click += new System.EventHandler(this.connectButton_Click);
             // 
+            // banishButton
+            // 
+            this.banishButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
+            this.banishButton.FlatAppearance.BorderSize = 2;
+            this.banishButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
+            this.banishButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
+            this.banishButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.banishButton.ForeColor = System.Drawing.Color.White;
+            this.banishButton.Location = new System.Drawing.Point(6, 275);
+            this.banishButton.Name = "banishButton";
+            this.banishButton.Size = new System.Drawing.Size(134, 26);
+            this.banishButton.TabIndex = 31;
+            this.banishButton.Text = "Banish";
+            this.banishButton.UseVisualStyleBackColor = true;
+            this.banishButton.Click += new System.EventHandler(this.banishButton_Click);
+            // 
             // KhaosForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -1233,6 +1251,7 @@ namespace SotnRandoTools
 		private System.Windows.Forms.DataGridViewTextBoxColumn ActionName;
 		private System.Windows.Forms.DataGridViewTextBoxColumn Username;
 		private System.Windows.Forms.DataGridViewButtonColumn Refund;
-	}
+        private System.Windows.Forms.Button banishButton;
+    }
 }
 

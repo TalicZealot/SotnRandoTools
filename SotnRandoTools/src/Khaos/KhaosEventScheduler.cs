@@ -118,11 +118,11 @@ namespace SotnRandoTools.Khaos
 				SetTimer(value, Hnk);
 			}
 		}
-		public bool VampireTimer
+		public bool QuadTimer
 		{
 			set
 			{
-				SetTimer(value, Vampire);
+				SetTimer(value, Quad);
 			}
 		}
 		public bool MagicianTimer
@@ -238,7 +238,7 @@ namespace SotnRandoTools.Khaos
 		public BizhawkSafeTimer HordeSpawn { get; set; }
 		public BizhawkSafeTimer EnduranceSpawn { get; set; }
 		public BizhawkSafeTimer Hnk { get; set; }
-		public BizhawkSafeTimer Vampire { get; set; }
+		public BizhawkSafeTimer Quad { get; set; }
 		public BizhawkSafeTimer Magician { get; set; }
 		public BizhawkSafeTimer BattleOrders { get; set; }
 		public BizhawkSafeTimer Melty { get; set; }
@@ -302,7 +302,7 @@ namespace SotnRandoTools.Khaos
 			HordeSpawn = new BizhawkSafeTimer { Interval = (int) toolConfig.Khaos.Actions[(int) Enums.Action.KhaosHorde].Interval.TotalMilliseconds };
 			EnduranceSpawn = new BizhawkSafeTimer { Interval = 2 * (1000) };
 			Hnk = new BizhawkSafeTimer { Interval = (int) toolConfig.Khaos.Actions[(int) Enums.Action.HnK].Duration.TotalMilliseconds };
-			Vampire = new BizhawkSafeTimer { Interval = (int) toolConfig.Khaos.Actions[(int) Enums.Action.Vampire].Duration.TotalMilliseconds };
+			Quad = new BizhawkSafeTimer { Interval = (int) toolConfig.Khaos.Actions[(int) Enums.Action.Quad].Duration.TotalMilliseconds };
 			Magician = new BizhawkSafeTimer { Interval = (int) toolConfig.Khaos.Actions[(int) Enums.Action.Magician].Duration.TotalMilliseconds };
 			BattleOrders = new BizhawkSafeTimer { Interval = (int) toolConfig.Khaos.Actions[(int) Enums.Action.BattleOrders].Duration.TotalMilliseconds };
 			Melty = new BizhawkSafeTimer { Interval = (int) toolConfig.Khaos.Actions[(int) Enums.Action.MeltyBlood].Duration.TotalMilliseconds };

@@ -25,6 +25,7 @@ namespace SotnRandoTools.Khaos.Interfaces
 		void Endurance(string user = "Khaos");
 		void FourBeasts(string user = "Khaos");
 		void Gamble(string user = "Khaos");
+		void Banish(string user = "Khaos");
 		void Haste(string user = "Khaos");
 		void HeavytHelp(string user = "Khaos");
 		void HnK(string user = "Khaos");
@@ -48,7 +49,7 @@ namespace SotnRandoTools.Khaos.Interfaces
 		void SubweaponsOnly(string user = "Khaos");
 		void Thirst(string user = "Khaos");
 		void Update();
-		void Vampire(string user = "Khaos");
+		void Quad(string user = "Khaos");
 		void Weaken(string user = "Khaos");
 		void ZaWarudo(string user = "Khaos");
 		void SetShaftHp();

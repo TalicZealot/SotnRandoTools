@@ -35,10 +35,10 @@ namespace SotnRandoTools.Khaos
 		private bool alucardSecondCastle = false;
 		private bool inMainMenu = false;
 
-		private uint goalVampireKills = 0;
-		private uint currentVampireKills = 0;
+		private uint goalQuadKills = 0;
+		private uint currentQuadKills = 0;
 		private uint currentKills = 0;
-		private uint vampureSwordLevel = 0;
+		private uint quadLevel = 0;
 
 		private uint dracMusicCounter = 0;
 
@@ -70,7 +70,9 @@ namespace SotnRandoTools.Khaos
 		private List<LiveEntity> fireballs = new();
 
 		private bool bloodManaActive = false;
-		private bool vampireActive = false;
+		private bool banishActive = false;
+		private string banishUser = "";
+		private bool quadActive = false;
 		private bool hasteActive = false;
 		private bool hasteSpeedOn = false;
 		private bool overdriveOn = false;
@@ -80,6 +82,9 @@ namespace SotnRandoTools.Khaos
 		private bool slowActive = false;
 		private bool slowPaused = false;
 		private bool forwardDashActive = false;
+
+		private bool thirstGlow = false;
+		private bool overdriveGlow = false;
 
 		private bool vermilionBirdPollong = false;
 
@@ -278,7 +283,6 @@ namespace SotnRandoTools.Khaos
 
 		#region Khaotic Effects
 		//TODO: random action
-		//TODO: Banish force khaotic card
 		public void KhaosStatus(string user = Constants.Khaos.KhaosName)
 		{
 			bool entranceCutscene = IsInRoomList(Constants.Khaos.EntranceCutsceneRooms);
@@ -298,9 +302,7 @@ namespace SotnRandoTools.Khaos
 				result = RollStatus(entranceCutscene, succubusRoom, alucardIsImmuneToCurse, alucardIsImmuneToStone, alucardIsImmuneToPoison, highHp);
 			}
 
-			int index = rng.Next(0, SotnApi.Constants.Values.Game.Various.SafeLibraryCardZones.Count);
-			TeleportZone zone = SotnApi.Constants.Values.Game.Various.SafeLibraryCardZones[index];
-			sotnApi.GameApi.SetLibraryCardDestination(zone.Zone, zone.Xpos, zone.Ypos, zone.Room);
+			RandomizeLibraryCardDestination();
 
 			switch (result)
 			{
@@ -403,6 +405,11 @@ namespace SotnRandoTools.Khaos
 
 			notificationService.AddMessage($"{user} gambled {goldSpent} gold for {item}");
 			Alert(toolConfig.Khaos.Actions[(int) Enums.Action.Gamble]);
+		}
+		public void Banish(string user = Constants.Khaos.KhaosName)
+		{
+			banishActive = true;
+			banishUser = user;
 		}
 		public void KhaoticBurst(string user = Constants.Khaos.KhaosName)
 		{
@@ -679,30 +686,34 @@ namespace SotnRandoTools.Khaos
 		}
 		#endregion
 		#region Buffs
-		//TODO: Add Quad Damage, str buff on successful kill streak
-		public void Vampire(string user = Constants.Khaos.KhaosName)
+		public void Quad(string user = Constants.Khaos.KhaosName)
 		{
-			cheatsController.DarkMetamorphasis.PokeValue(1);
-			cheatsController.DarkMetamorphasis.Enable();
-			eventScheduler.VampireTimer = true;
-			notificationService.AddMessage(user + " used Vampire");
-			sotnApi.GameApi.OverwriteString(SotnApi.Constants.Addresses.Strings.ItemNameAddresses["Gurthang"], "CravenEdge", false);
-			sotnApi.AlucardApi.GrantItemByName("Gurthang");
-			vampireActive = true;
+			cheatsController.AttackPotion.PokeValue(1);
+			cheatsController.AttackPotion.Enable();
+			cheatsController.StrengthPotion.PokeValue(1);
+			cheatsController.StrengthPotion.Enable();
+			cheatsController.VisualEffectPalette.PokeValue(Constants.Khaos.QuadColorPalette);
+			cheatsController.VisualEffectPalette.Enable();
+			cheatsController.VisualEffectTimer.PokeValue(30);
+			cheatsController.VisualEffectTimer.Enable();
 
-			if (goalVampireKills == 0)
+			eventScheduler.QuadTimer = true;
+			notificationService.AddMessage(user + " used Quad");
+			quadActive = true;
+
+			if (goalQuadKills == 0)
 			{
-				goalVampireKills = 10 + (vampureSwordLevel * vampureSwordLevel);
+				goalQuadKills = 10 + (quadLevel * quadLevel);
 			}
 
 			ActionTimer timer = new()
 			{
-				Name = toolConfig.Khaos.Actions[(int) Enums.Action.Vampire].Name,
-				Duration = toolConfig.Khaos.Actions[(int) Enums.Action.Vampire].Duration
+				Name = toolConfig.Khaos.Actions[(int) Enums.Action.Quad].Name,
+				Duration = toolConfig.Khaos.Actions[(int) Enums.Action.Quad].Duration
 			};
 			notificationService.AddOverlayTimer(timer.Name, (int) timer.Duration.TotalMilliseconds);
 			statusInfoDisplay.AddTimer(timer);
-			Alert(toolConfig.Khaos.Actions[(int) Enums.Action.Vampire]);
+			Alert(toolConfig.Khaos.Actions[(int) Enums.Action.Quad]);
 		}
 		public void LightHelp(string user = Constants.Khaos.KhaosName)
 		{
@@ -1031,7 +1042,7 @@ namespace SotnRandoTools.Khaos
 		}
 		public void ZaWarudo(string user = Constants.Khaos.KhaosName)
 		{
-			if (sotnApi.AlucardApi.SubweaponTimer == 0)
+			if (sotnApi.AlucardApi.SubweaponTimer == 0 && !sotnApi.AlucardApi.EffectActive())
 			{
 				sotnApi.AlucardApi.ActivateStopwatch();
 				cheatsController.SubweaponTimer.Enable();
@@ -1132,6 +1143,7 @@ namespace SotnRandoTools.Khaos
 			}
 
 			//TODO: disable / adjust actions in the end game
+			CheckBanishViable();
 			CheckDracularoomMusic();
 			CheckDashInput();
 			CheckThirstKill();
@@ -1164,7 +1176,7 @@ namespace SotnRandoTools.Khaos
 			eventScheduler.EnduranceSpawn.Invoker = new MethodInvoker(() => EnduranceSpawn());
 			eventScheduler.Hnk.Invoker = new MethodInvoker(() => HnkOff());
 
-			eventScheduler.Vampire.Invoker = new MethodInvoker(() => VampireOff());
+			eventScheduler.Quad.Invoker = new MethodInvoker(() => QuadOff());
 			eventScheduler.Magician.Invoker = new MethodInvoker(() => MagicianOff());
 			eventScheduler.BattleOrders.Invoker = new MethodInvoker(() => BattleOrdersOff());
 			eventScheduler.Melty.Invoker = new MethodInvoker(() => MeltyBloodOff());
@@ -1596,18 +1608,16 @@ namespace SotnRandoTools.Khaos
 			{
 				currentKills = updatedCurrentKills;
 				thirstLevel = 0;
-				cheatsController.VisualEffectPalette.Disable();
-				cheatsController.VisualEffectTimer.Disable();
+				thirstGlow = false;
+				SetGlow();
 			}
 			else if (thirstLevel < 2.8)
 			{
 				thirstLevel += Constants.Khaos.ThirstLevelIncreaseRate;
 				if (thirstLevel > 2.3F)
 				{
-					cheatsController.VisualEffectPalette.PokeValue(Constants.Khaos.BloodthirstColorPalette);
-					cheatsController.VisualEffectPalette.Enable();
-					cheatsController.VisualEffectTimer.PokeValue(30);
-					cheatsController.VisualEffectTimer.Enable();
+					thirstGlow = true;
+					SetGlow();
 				}
 			}
 		}
@@ -2107,13 +2117,14 @@ namespace SotnRandoTools.Khaos
 		}
 		#endregion
 		#region Buff events
-		private void VampireOff()
+		private void QuadOff()
 		{
-			vampireActive = false;
-			cheatsController.DarkMetamorphasis.PokeValue(1);
-			cheatsController.DarkMetamorphasis.Disable();
+			quadActive = false;
+			cheatsController.AttackPotion.Disable();
+			cheatsController.StrengthPotion.Disable();
+			SetGlow();
 
-			eventScheduler.VampireTimer = false;
+			eventScheduler.QuadTimer = false;
 		}
 		private void MagicianOff()
 		{
@@ -2240,18 +2251,16 @@ namespace SotnRandoTools.Khaos
 		}
 		private void OverdriveOn()
 		{
-			cheatsController.VisualEffectPalette.PokeValue(Constants.Khaos.OverdriveColorPalette);
-			cheatsController.VisualEffectPalette.Enable();
-			cheatsController.VisualEffectTimer.PokeValue(30);
-			cheatsController.VisualEffectTimer.Enable();
+			overdriveGlow = true;
+			SetGlow();
 			sotnApi.AlucardApi.WingsmashHorizontalSpeed = (uint) (DefaultSpeeds.WingsmashHorizontal * (toolConfig.Khaos.HasteFactor / 1.8));
 			overdriveOn = true;
 			eventScheduler.HasteOverdriveTimer = false;
 		}
 		private void OverdriveOff()
 		{
-			cheatsController.VisualEffectPalette.Disable();
-			cheatsController.VisualEffectTimer.Disable();
+			overdriveGlow = false;
+			SetGlow();
 			if (hasteActive)
 			{
 				SetHasteStaticSpeeds(superHaste);
@@ -2510,7 +2519,7 @@ namespace SotnRandoTools.Khaos
 		}
 		private void CheckVampireKill()
 		{
-			if (!vampireActive)
+			if (!quadActive)
 			{
 				return;
 			}
@@ -2529,15 +2538,16 @@ namespace SotnRandoTools.Khaos
 			if (updatedCurrentKills > currentKills)
 			{
 				currentKills = updatedCurrentKills;
-				currentVampireKills++;
+				currentQuadKills++;
 			}
 
-			if (currentVampireKills >= goalVampireKills)
+			if (currentQuadKills >= goalQuadKills)
 			{
-				currentVampireKills = 0;
+				currentQuadKills = 0;
 				sotnApi.AlucardApi.Str += 2;
-				vampureSwordLevel++;
-				goalVampireKills = 10 + (vampureSwordLevel * vampureSwordLevel);
+				quadLevel++;
+				goalQuadKills = 10 + (quadLevel * quadLevel);
+				notificationService.PlayAlert(Paths.ExcellentSound);
 				return;
 			}
 		}
@@ -2570,6 +2580,12 @@ namespace SotnRandoTools.Khaos
 		}
 		#endregion
 
+		private void RandomizeLibraryCardDestination()
+		{
+			int index = rng.Next(0, SotnApi.Constants.Values.Game.Various.SafeLibraryCardZones.Count);
+			TeleportZone zone = SotnApi.Constants.Values.Game.Various.SafeLibraryCardZones[index];
+			sotnApi.GameApi.SetLibraryCardDestination(zone.Zone, zone.Xpos, zone.Ypos, zone.Room);
+		}
 		private void FlipBackdash()
 		{
 			sotnApi.AlucardApi.BackdashWholeSpeed = (int) ((DefaultSpeeds.BackdashWhole * -1) - 1);
@@ -2584,6 +2600,35 @@ namespace SotnRandoTools.Khaos
 			if (hasteActive)
 			{
 				sotnApi.AlucardApi.BackdashWholeSpeed = (int) (DefaultSpeeds.BackdashWhole - 1);
+			}
+		}
+		private void SetGlow()
+		{
+			if (thirstGlow)
+			{
+				cheatsController.VisualEffectPalette.PokeValue(Constants.Khaos.BloodthirstColorPalette);
+				cheatsController.VisualEffectPalette.Enable();
+				cheatsController.VisualEffectTimer.PokeValue(30);
+				cheatsController.VisualEffectTimer.Enable();
+			}
+			else if (overdriveGlow)
+			{
+				cheatsController.VisualEffectPalette.PokeValue(Constants.Khaos.OverdriveColorPalette);
+				cheatsController.VisualEffectPalette.Enable();
+				cheatsController.VisualEffectTimer.PokeValue(30);
+				cheatsController.VisualEffectTimer.Enable();
+			}
+			else if (quadActive)
+			{
+				cheatsController.VisualEffectPalette.PokeValue(Constants.Khaos.QuadColorPalette);
+				cheatsController.VisualEffectPalette.Enable();
+				cheatsController.VisualEffectTimer.PokeValue(30);
+				cheatsController.VisualEffectTimer.Enable();
+			}
+			else
+			{
+				cheatsController.VisualEffectPalette.Disable();
+				cheatsController.VisualEffectTimer.Disable();
 			}
 		}
 		private void SetSaveColorPalette()
@@ -2882,6 +2927,25 @@ namespace SotnRandoTools.Khaos
 			else if (hnkOn && hnkToggled < 1)
 			{
 				hnkToggled++;
+			}
+		}
+		private void CheckBanishViable()
+		{
+			if (!banishActive)
+			{
+				return;
+			}
+			if (sotnApi.AlucardApi.SubweaponTimer == 0 && !sotnApi.AlucardApi.EffectActive())
+			{
+				RandomizeLibraryCardDestination();
+				sotnApi.AlucardApi.ForceLibraryCard();
+				sotnApi.AlucardApi.HorizontalVelocityWhole = 0;
+				sotnApi.AlucardApi.HorizontalVelocityFractional = 0;
+				sotnApi.AlucardApi.HorizontalVelocityFractional = 0;
+				sotnApi.AlucardApi.StunTimer = 0xFF;
+				banishActive = false;
+				notificationService.AddMessage($"{banishUser} used Banish");
+				Alert(toolConfig.Khaos.Actions[(int) Enums.Action.Banish]);
 			}
 		}
 		private void CheckManaUsage()

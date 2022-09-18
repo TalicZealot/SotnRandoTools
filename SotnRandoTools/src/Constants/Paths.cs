@@ -21,6 +21,8 @@ namespace SotnRandoTools.Constants
 		public const string SwordBroSound = "./ExternalTools/SotnRandoTools/Sounds/SwordBro.mp3";
 		public const string AlreadyDeadSound = "./ExternalTools/SotnRandoTools/Sounds/AlreadyDead.mp3";
 		public const string BattleOrdersSound = "./ExternalTools/SotnRandoTools/Sounds/BattleOrders.mp3";
+		public const string QuadSound = "./ExternalTools/SotnRandoTools/Sounds/Quad.mp3";
+		public const string ExcellentSound = "./ExternalTools/SotnRandoTools/Sounds/Excellent.mp3";
 
 		public const string NamesFilePath = "./ExternalTools/SotnRandoTools/Khaos/names.txt";
 

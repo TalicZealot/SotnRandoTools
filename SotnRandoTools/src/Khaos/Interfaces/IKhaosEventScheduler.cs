@@ -54,8 +54,8 @@ namespace SotnRandoTools.Khaos.Interfaces
 		BizhawkSafeTimer ThirstTick { get; set; }
 		bool ThirstTickTimer { set; }
 		bool ThirstTimer { set; }
-		BizhawkSafeTimer Vampire { get; set; }
-		bool VampireTimer { set; }
+		BizhawkSafeTimer Quad { get; set; }
+		bool QuadTimer { set; }
 		BizhawkSafeTimer WhiteTigerBall { get; set; }
 		bool WhiteTigerBallTimer { set; }
 		BizhawkSafeTimer Zawarudo { get; set; }
