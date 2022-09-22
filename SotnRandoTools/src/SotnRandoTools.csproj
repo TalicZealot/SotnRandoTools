@@ -11,7 +11,7 @@
     <OutputType>Library</OutputType>
     <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
     <AnalysisLevel>5.0</AnalysisLevel>
-    <Version>1.4.2</Version>
+    <Version>1.4.3</Version>
     <Description>A collection of tools to enhance the experience of playign the SotN randomizer.</Description>
     <Copyright />
     <PackageProjectUrl>https://taliczealot.github.io/</PackageProjectUrl>
@@ -78,9 +78,6 @@
     <Compile Update="Panels\CoopSettingsPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Panels\KhaosSettingsPanel.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Update="CoopForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -97,9 +94,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Update="KhaosForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Update="Properties\Resources.resx">
@@ -112,6 +106,10 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Configuration\Models\" />
+    <Folder Include="Services\Adapters\" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Copy SourceFiles="$(OutputPath)$(MSBuildProjectName).dll" DestinationFolder="$(ProjectDir)../BizHawk/ExternalTools" />

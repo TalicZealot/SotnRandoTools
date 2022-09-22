@@ -6,7 +6,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Constants;
-using SotnRandoTools.Khaos.Models;
 using SotnRandoTools.Services.Interfaces;
 using WatsonWebsocket;
 
@@ -40,50 +39,6 @@ namespace SotnRandoTools.Services
 			if (socketServer.IsListening)
 			{
 				socketServer.Stop();
-			}
-		}
-
-		public void UpdateMeter(int meter)
-		{
-			JObject data = JObject.FromObject(new
-			{
-				meter = meter,
-				type = "meter"
-			});
-
-			foreach (var client in socketServer.ListClients())
-			{
-				socketServer.SendAsync(client, data.ToString());
-			}
-		}
-		public void AddTimer(string name, int duration)
-		{
-			JObject data = JObject.FromObject(new
-			{
-				name = name.ToLower().Replace(" ", String.Empty),
-				duration = duration, //in milliseconds
-				type = "timer"
-			});
-
-			foreach (var client in socketServer.ListClients())
-			{
-				socketServer.SendAsync(client, data.ToString());
-			}
-		}
-
-		public void UpdateQueue(List<QueuedAction> actionQueue)
-		{
-			string[] actions = actionQueue.Select(action => action.Name.ToLower().Replace(" ", String.Empty).Replace("'", String.Empty)).ToArray();
-
-			JObject data = JObject.FromObject(new
-			{
-				actions = actions,
-				type = "actions"
-			});
-
-			foreach (var client in socketServer.ListClients())
-			{
-				socketServer.SendAsync(client, data.ToString());
 			}
 		}
 

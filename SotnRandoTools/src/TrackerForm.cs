@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Windows.Forms;
 using SotnApi.Interfaces;
 using SotnRandoTools.Configuration.Interfaces;
-using SotnRandoTools.Khaos.Interfaces;
 using SotnRandoTools.RandoTracker;
 using SotnRandoTools.RandoTracker.Adapters;
 using SotnRandoTools.Services;
@@ -49,12 +48,6 @@ namespace SotnRandoTools
 				trackerGraphicsEngine.Refreshed = false;
 				this.Invalidate();
 			}
-		}
-
-		public void SetTrackerVladRelicLocationDisplay(IRelicLocationDisplay vladRelicLocationDisplay)
-		{
-			if (vladRelicLocationDisplay is null) throw new ArgumentNullException(nameof(vladRelicLocationDisplay));
-			tracker.RelicLocationDisplay = vladRelicLocationDisplay;
 		}
 
 		private void TrackerForm_Load(object sender, EventArgs e)

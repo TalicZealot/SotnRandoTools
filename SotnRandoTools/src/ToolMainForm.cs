@@ -12,7 +12,6 @@ using Newtonsoft.Json;
 using SotnRandoTools.Configuration;
 using SotnRandoTools.Constants;
 using SotnRandoTools.Services;
-using SotnRandoTools.Services.Adapters;
 
 namespace SotnRandoTools
 {
@@ -22,20 +21,7 @@ namespace SotnRandoTools
 		{
 			"SotnRandoTools/SotnApi.dll",
 			"SotnRandoTools/SimpleTCP.dll",
-			"SotnRandoTools/WatsonWebsocket.dll",
-			"SotnRandoTools/Microsoft.Extensions.Logging.Abstractions.dll",
-			"SotnRandoTools/System.Net.Http.dll",
-			"SotnRandoTools/TwitchLib.Api.Core.Enums.dll",
-			"SotnRandoTools/TwitchLib.Api.Core.Interfaces.dll",
-			"SotnRandoTools/TwitchLib.Api.Helix.Models.dll",
-			"SotnRandoTools/TwitchLib.Api.Core.Models.dll",
-			"SotnRandoTools/TwitchLib.Api.Core.dll",
-			"SotnRandoTools/TwitchLib.Api.Helix.dll",
-			"SotnRandoTools/TwitchLib.Api.V5.Models.dll",
-			"SotnRandoTools/TwitchLib.Api.V5.dll",
-			"SotnRandoTools/TwitchLib.Communication.dll",
-			"SotnRandoTools/TwitchLib.Api.dll",
-			"SotnRandoTools/TwitchLib.PubSub.dll"
+			"SotnRandoTools/WatsonWebsocket.dll"
 		})]
 	[ExternalToolEmbeddedIcon("SotnRandoTools.Resources.BizAlucard.png")]
 	[ExternalToolApplicability.SingleRom(CoreSystem.Playstation, "0DDCBC3D")]
@@ -92,10 +78,8 @@ namespace SotnRandoTools
 		private NotificationService? notificationService;
 		private InputService? inputService;
 		private TrackerForm? trackerForm;
-		private KhaosForm? khaosForm;
 		private CoopForm? coopForm;
 		private AutotrackerSettingsPanel? autotrackerSettingsPanel;
-		private KhaosSettingsPanel? khaosSettingsPanel;
 		private CoopSettingsPanel? coopSettingsPanel;
 		private AboutPanel? aboutPanel;
 		private string _windowTitle = "Symphony of the Night Randomizer Tools";
@@ -120,21 +104,13 @@ namespace SotnRandoTools
 				toolConfig = JsonConvert.DeserializeObject<ToolConfig>(configJson,
 					new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, MissingMemberHandling = MissingMemberHandling.Ignore }) ?? new ToolConfig();
 
-				if (toolConfig.Khaos.Actions.Count != Constants.Khaos.KhaosActionsCount)
-				{
-					toolConfig.Khaos.DefaultActions();
-				}
 			}
 			else
 			{
 				toolConfig = new ToolConfig();
 			}
 
-			if (toolConfig.Version != currentVersion)
-			{
-				toolConfig.Version = currentVersion;
-				toolConfig.Khaos.Default();
-			}
+			toolConfig.Version = currentVersion;
 		}
 
 		protected override string WindowTitle => _windowTitle;
@@ -154,26 +130,13 @@ namespace SotnRandoTools
 			autotrackerSettingsPanel.Location = new Point(0, PanelOffset);
 			this.Controls.Add(autotrackerSettingsPanel);
 
-			khaosSettingsPanel = new KhaosSettingsPanel(toolConfig);
-			khaosSettingsPanel.Location = new Point(0, PanelOffset);
-			if (notificationService is not null)
-			{
-				khaosSettingsPanel.NotificationService = notificationService;
-			}
-			this.Controls.Add(khaosSettingsPanel);
-
 			coopSettingsPanel = new CoopSettingsPanel(toolConfig);
 			coopSettingsPanel.Location = new Point(0, PanelOffset);
 			this.Controls.Add(coopSettingsPanel);
-		}
 
-		private void LoadCheats()
-		{
-			this.MainForm.CheatList.DisableAll();
-
-			if (khaosForm is not null && !khaosForm.IsDisposed)
+			if (notificationService is not null)
 			{
-				khaosForm.AdaptedCheats = new CheatCollectionAdapter(this.MainForm.CheatList, _memoryDomains);
+				coopSettingsPanel.NotificationService = notificationService;
 			}
 		}
 
@@ -186,20 +149,10 @@ namespace SotnRandoTools
 				trackerForm.Close();
 				trackerForm.Dispose();
 			}
-			if (khaosForm is not null && !khaosForm.IsDisposed)
-			{
-				khaosForm.Close();
-				khaosForm.Dispose();
-			}
 			if (coopForm is not null && !coopForm.IsDisposed)
 			{
 				coopForm.Close();
 				coopForm.Dispose();
-			}
-
-			if (notificationService is not null)
-			{
-				notificationService.StopOverlayServer();
 			}
 
 			if (_memoryDomains is null)
@@ -217,21 +170,19 @@ namespace SotnRandoTools
 				}
 			}
 
-			LoadCheats();
-
 			sotnApi = new SotnApi.Main.SotnApi(_maybeMemAPI);
 			watchlistService = new WatchlistService(_memoryDomains, _emu?.SystemId, GlobalConfig);
 			inputService = new InputService(_maybeJoypadApi, sotnApi);
 			notificationService = new NotificationService(toolConfig, _maybeGuiAPI, _maybeClientAPI);
-			if (khaosSettingsPanel is not null)
+			if (coopSettingsPanel is not null)
 			{
-				khaosSettingsPanel.NotificationService = notificationService;
+				coopSettingsPanel.NotificationService = notificationService;
 			}
 		}
 
 		public override void UpdateValues(ToolFormUpdateType type)
 		{
-			if (coopForm is not null || khaosForm is not null)
+			if (coopForm is not null)
 			{
 				inputService.UpdateInputs();
 			}
@@ -243,17 +194,9 @@ namespace SotnRandoTools
 				{
 					trackerForm.UpdateTracker();
 				}
-				if (khaosForm is not null)
-				{
-					khaosForm.UpdateKhaosValues();
-				}
 				if (coopForm is not null)
 				{
 					coopForm.UpdateCoop();
-				}
-				if (this.MainForm.CheatList.Count == 0)
-				{
-					LoadCheats();
 				}
 			}
 		}
@@ -265,12 +208,6 @@ namespace SotnRandoTools
 			{
 				trackerForm.Close();
 				trackerForm.Dispose();
-			}
-
-			if (khaosForm != null)
-			{
-				khaosForm.Close();
-				khaosForm.Dispose();
 			}
 
 			if (coopForm != null)
@@ -288,8 +225,6 @@ namespace SotnRandoTools
 			sotnApi = null;
 			watchlistService = null;
 			inputService = null;
-
-			this.MainForm.CheatList.DisableAll();
 		}
 
 		private void autotrackerLaunch_Click(object sender, EventArgs e)
@@ -303,28 +238,6 @@ namespace SotnRandoTools
 				}
 				trackerForm = new TrackerForm(toolConfig, watchlistService, sotnApi, notificationService);
 				trackerForm.Show();
-				if (khaosForm is not null && !khaosForm.IsDisposed)
-				{
-					trackerForm.SetTrackerVladRelicLocationDisplay(khaosForm);
-				}
-			}
-		}
-
-		private void khaosChatLaunch_Click(object sender, EventArgs e)
-		{
-			if (sotnApi is not null)
-			{
-				if (khaosForm is not null)
-				{
-					khaosForm.Close();
-					khaosForm.Dispose();
-				}
-				khaosForm = new KhaosForm(toolConfig, this.MainForm.CheatList, sotnApi, notificationService, inputService, _memoryDomains);
-				khaosForm.Show();
-				if (trackerForm is not null && !trackerForm.IsDisposed)
-				{
-					trackerForm.SetTrackerVladRelicLocationDisplay(khaosForm);
-				}
 			}
 		}
 
@@ -349,32 +262,6 @@ namespace SotnRandoTools
 			autotrackerLaunch.Visible = true;
 			autotrackerLaunch.Enabled = true;
 
-			khaosSettingsPanel.Visible = false;
-			khaosSettingsPanel.Enabled = false;
-			khaosChatLaunch.Visible = false;
-			khaosChatLaunch.Enabled = false;
-
-			coopSettingsPanel.Visible = false;
-			coopSettingsPanel.Enabled = false;
-			multiplayerLaunch.Visible = false;
-			multiplayerLaunch.Enabled = false;
-
-			aboutPanel.Visible = false;
-			aboutPanel.Enabled = false;
-		}
-
-		private void khaosChatSelect_Click(object sender, EventArgs e)
-		{
-			khaosSettingsPanel.Visible = true;
-			khaosSettingsPanel.Enabled = true;
-			khaosChatLaunch.Visible = true;
-			khaosChatLaunch.Enabled = true;
-
-			autotrackerSettingsPanel.Visible = false;
-			autotrackerSettingsPanel.Enabled = false;
-			autotrackerLaunch.Visible = false;
-			autotrackerLaunch.Enabled = false;
-
 			coopSettingsPanel.Visible = false;
 			coopSettingsPanel.Enabled = false;
 			multiplayerLaunch.Visible = false;
@@ -396,11 +283,6 @@ namespace SotnRandoTools
 			autotrackerLaunch.Visible = false;
 			autotrackerLaunch.Enabled = false;
 
-			khaosSettingsPanel.Visible = false;
-			khaosSettingsPanel.Enabled = false;
-			khaosChatLaunch.Visible = false;
-			khaosChatLaunch.Enabled = false;
-
 			aboutPanel.Visible = false;
 			aboutPanel.Enabled = false;
 		}
@@ -414,11 +296,6 @@ namespace SotnRandoTools
 			autotrackerSettingsPanel.Enabled = false;
 			autotrackerLaunch.Visible = false;
 			autotrackerLaunch.Enabled = false;
-
-			khaosSettingsPanel.Visible = false;
-			khaosSettingsPanel.Enabled = false;
-			khaosChatLaunch.Visible = false;
-			khaosChatLaunch.Enabled = false;
 
 			coopSettingsPanel.Visible = false;
 			coopSettingsPanel.Enabled = false;

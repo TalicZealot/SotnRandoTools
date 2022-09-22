@@ -5,26 +5,6 @@ namespace SotnRandoTools.Constants
 	public static class Paths
 	{
 		public const string ItemPickupSound = "./ExternalTools/SotnRandoTools/Sounds/Item.mp3";
-		public const string AlucardWhatSound = "./ExternalTools/SotnRandoTools/Sounds/AlucardWhat.mp3";
-		public const string LibrarianThankYouSound = "./ExternalTools/SotnRandoTools/Sounds/LibrarianThankYou.mp3";
-		public const string DeathLaughSound = "./ExternalTools/SotnRandoTools/Sounds/DeathLaugh.mp3";
-		public const string RichterLaughSound = "./ExternalTools/SotnRandoTools/Sounds/RichterLaugh.mp3";
-		public const string FairyPotionSound = "./ExternalTools/SotnRandoTools/Sounds/FairyPotion.mp3";
-		public const string MeltySound = "./ExternalTools/SotnRandoTools/Sounds/Melty.mp3";
-		public const string DragonInstallSound = "./ExternalTools/SotnRandoTools/Sounds/DragonInstall.mp3";
-		public const string ZaWarudoSound = "./ExternalTools/SotnRandoTools/Sounds/ZaWarudo.mp3";
-		public const string DeathLaughAlternateSound = "./ExternalTools/SotnRandoTools/Sounds/DeathLaughAlternate.mp3";
-		public const string DieSound = "./ExternalTools/SotnRandoTools/Sounds/Die.mp3";
-		public const string DracLaughSound = "./ExternalTools/SotnRandoTools/Sounds/DracLaugh.mp3";
-		public const string HohoSound = "./ExternalTools/SotnRandoTools/Sounds/Hoho.mp3";
-		public const string SlowWhatSound = "./ExternalTools/SotnRandoTools/Sounds/SlowWhat.mp3";
-		public const string SwordBroSound = "./ExternalTools/SotnRandoTools/Sounds/SwordBro.mp3";
-		public const string AlreadyDeadSound = "./ExternalTools/SotnRandoTools/Sounds/AlreadyDead.mp3";
-		public const string BattleOrdersSound = "./ExternalTools/SotnRandoTools/Sounds/BattleOrders.mp3";
-		public const string QuadSound = "./ExternalTools/SotnRandoTools/Sounds/Quad.mp3";
-		public const string ExcellentSound = "./ExternalTools/SotnRandoTools/Sounds/Excellent.mp3";
-
-		public const string NamesFilePath = "./ExternalTools/SotnRandoTools/Khaos/names.txt";
 
 		public const string SourceLink = "https://github.com/TalicZealot/SotnRandoTools/";
 		public const string ReadmeLink = "https://github.com/TalicZealot/SotnRandoTools/blob/main/README.md";
@@ -47,10 +27,6 @@ namespace SotnRandoTools.Constants
 
 		public const string ImagesPath = "./ExternalTools/SotnRandoTools/Images/";
 		public const string TextboxImage = "./ExternalTools/SotnRandoTools/Images/SotnTextBox.png";
-		public const string IconVermillionBird = "./ExternalTools/SotnRandoTools/Images/VermillionBird.png";
-		public const string IconWhiteTiger = "./ExternalTools/SotnRandoTools/Images/WhiteTiger.png";
-		public const string IconAzureDragon = "./ExternalTools/SotnRandoTools/Images/AzureDragon.png";
-		public const string IconBlackTortoise = "./ExternalTools/SotnRandoTools/Images/BlackTortoise.png";
 		public static readonly Dictionary<string, string> RelicImages = new Dictionary<string, string>
 		{
 			{"SoulOfBat", "./ExternalTools/SotnRandoTools/Images/SoulOfBat.png"},
@@ -96,10 +72,5 @@ namespace SotnRandoTools.Constants
 
 		public const string ConfigPath = "./ExternalTools/SotnRandoTools/ToolConfig.ini";
 		public const string SeedInfoPath = "./ExternalTools/SotnRandoTools/TrackerOverlay/SeedInfo.txt";
-		public const string CheatsPath = "./ExternalTools/SotnRandoTools/Cheats/Cheats.cht";
-		public const string CheatsBackupPath = "./ExternalTools/SotnRandoTools/Cheats/Cheats.cht.bkp";
-
-		public const string KhaosDatabase = "./ExternalTools/SotnRandoTools/Khaos/Khaos.db";
-		public const string TwitchRedirectUri = "http://localhost:8080/redirect/";
 	}
 }

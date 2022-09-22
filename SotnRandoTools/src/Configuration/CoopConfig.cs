@@ -14,6 +14,7 @@ namespace SotnRandoTools.Configuration
 			StoreLastServer = true;
 			DefaultServer = "";
 			DefaultPort = 46318;
+			Volume = 5;
 		}
 
 		public Point Location { get; set; }
@@ -30,6 +31,7 @@ namespace SotnRandoTools.Configuration
 		public bool ConnectionSendItems { get; set; }
 		public bool ConnectionSendAssists { get; set; }
 		public bool ConnectionShareLocations { get; set; }
+		public int Volume { get; set; }
 
 		public void InitiateServerSettings()
 		{

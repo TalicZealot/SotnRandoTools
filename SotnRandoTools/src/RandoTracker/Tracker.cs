@@ -10,7 +10,6 @@ using SotnApi.Interfaces;
 using SotnApi.Models;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Constants;
-using SotnRandoTools.Khaos.Interfaces;
 using SotnRandoTools.RandoTracker.Interfaces;
 using SotnRandoTools.RandoTracker.Models;
 using SotnRandoTools.Services;
@@ -460,8 +459,6 @@ namespace SotnRandoTools.RandoTracker
 
 		public string SeedInfo { get; set; }
 
-		public IRelicLocationDisplay RelicLocationDisplay { get; set; }
-
 		public void DrawRelicsAndItems()
 		{
 			trackerGraphicsEngine.Render();
@@ -643,16 +640,6 @@ namespace SotnRandoTools.RandoTracker
 						relics[i].Collected = true;
 						relicOrItemCollected = true;
 						Console.WriteLine($"Found relic " + relics[i].Name);
-
-						if (RelicLocationDisplay is not null)
-						{
-							float adjustedX = sotnApi.AlucardApi.MapX * 2;
-							float adjustedY = (secondCastle ? (sotnApi.AlucardApi.MapY - 8.75f) : (sotnApi.AlucardApi.MapY - 4.5f)) * 4;
-							Console.WriteLine($"relic location: x:{adjustedX}, y:{adjustedY}");
-							Location location = locations.Where(l => (l.MapRow >= adjustedY - 3 && l.MapRow <= adjustedY + 3) && (l.MapCol >= adjustedX - 3 && l.MapCol <= adjustedX + 3)).FirstOrDefault();
-							SetLocationDisplay(location, relics[i].Name);
-						}
-
 					}
 					else
 					{
@@ -666,166 +653,6 @@ namespace SotnRandoTools.RandoTracker
 				}
 			}
 			watchlistService.RelicWatches.ClearChangeCounts();
-		}
-
-		private void SetLocationDisplay(Location? location, string relicName)
-		{
-			string locationName = String.Empty;
-
-			if (location is not null)
-			{
-				locationName = location.Name;
-			}
-
-			switch (relicName)
-			{
-				case "HeartOfVlad":
-					if (RelicLocationDisplay.HeartOfVladLocation == String.Empty)
-					{
-						RelicLocationDisplay.HeartOfVladLocation = locationName;
-					}
-					else if (RelicLocationDisplay.HeartOfVladLocation == Constants.Khaos.KhaosName)
-					{
-						RelicLocationDisplay.HeartOfVladLocation = String.Empty;
-					}
-					break;
-				case "ToothOfVlad":
-					if (RelicLocationDisplay.ToothOfVladLocation == String.Empty)
-					{
-						RelicLocationDisplay.ToothOfVladLocation = locationName;
-					}
-					else if (RelicLocationDisplay.ToothOfVladLocation == Constants.Khaos.KhaosName)
-					{
-						RelicLocationDisplay.ToothOfVladLocation = String.Empty;
-					}
-					break;
-				case "RibOfVlad":
-					if (RelicLocationDisplay.RibOfVladLocation == String.Empty)
-					{
-						RelicLocationDisplay.RibOfVladLocation = locationName;
-					}
-					else if (RelicLocationDisplay.RibOfVladLocation == Constants.Khaos.KhaosName)
-					{
-						RelicLocationDisplay.RibOfVladLocation = String.Empty;
-					}
-					break;
-				case "RingOfVlad":
-					if (RelicLocationDisplay.RingOfVladLocation == String.Empty)
-					{
-						RelicLocationDisplay.RingOfVladLocation = locationName;
-					}
-					else if (RelicLocationDisplay.RingOfVladLocation == Constants.Khaos.KhaosName)
-					{
-						RelicLocationDisplay.RingOfVladLocation = String.Empty;
-					}
-					break;
-				case "EyeOfVlad":
-					if (RelicLocationDisplay.EyeOfVladLocation == String.Empty)
-					{
-						RelicLocationDisplay.EyeOfVladLocation = locationName;
-					}
-					else if (RelicLocationDisplay.EyeOfVladLocation == Constants.Khaos.KhaosName)
-					{
-						RelicLocationDisplay.EyeOfVladLocation = String.Empty;
-					}
-					break;
-				case "SoulOfBat":
-					if (RelicLocationDisplay.BatLocation == String.Empty)
-					{
-						RelicLocationDisplay.BatLocation = locationName;
-					}
-					else if (RelicLocationDisplay.BatLocation == Constants.Khaos.KhaosName)
-					{
-						RelicLocationDisplay.BatLocation = String.Empty;
-					}
-					break;
-				case "SoulOfWolf":
-					if (RelicLocationDisplay.WolfLocation == String.Empty)
-					{
-						RelicLocationDisplay.WolfLocation = locationName;
-					}
-					else if (RelicLocationDisplay.WolfLocation == Constants.Khaos.KhaosName)
-					{
-						RelicLocationDisplay.WolfLocation = String.Empty;
-					}
-					break;
-				case "FormOfMist":
-					if (RelicLocationDisplay.MistLocation == String.Empty)
-					{
-						RelicLocationDisplay.MistLocation = locationName;
-					}
-					else if (RelicLocationDisplay.MistLocation == Constants.Khaos.KhaosName)
-					{
-						RelicLocationDisplay.MistLocation = String.Empty;
-					}
-					break;
-				case "PowerOfMist":
-					if (RelicLocationDisplay.PowerOfMistLocation == String.Empty)
-					{
-						RelicLocationDisplay.PowerOfMistLocation = locationName;
-					}
-					else if (RelicLocationDisplay.PowerOfMistLocation == Constants.Khaos.KhaosName)
-					{
-						RelicLocationDisplay.PowerOfMistLocation = String.Empty;
-					}
-					break;
-				case "JewelOfOpen":
-					if (RelicLocationDisplay.JewelOfOpenLocation == String.Empty)
-					{
-						RelicLocationDisplay.JewelOfOpenLocation = locationName;
-					}
-					else if (RelicLocationDisplay.JewelOfOpenLocation == Constants.Khaos.KhaosName)
-					{
-						RelicLocationDisplay.JewelOfOpenLocation = String.Empty;
-					}
-					break;
-				case "GravityBoots":
-					if (RelicLocationDisplay.GravityBootsLocation == String.Empty)
-					{
-						RelicLocationDisplay.GravityBootsLocation = locationName;
-					}
-					else if (RelicLocationDisplay.GravityBootsLocation == Constants.Khaos.KhaosName)
-					{
-						RelicLocationDisplay.GravityBootsLocation = String.Empty;
-					}
-					break;
-				case "LeapStone":
-					if (RelicLocationDisplay.LepastoneLocation == String.Empty)
-					{
-						RelicLocationDisplay.LepastoneLocation = locationName;
-					}
-					else if (RelicLocationDisplay.LepastoneLocation == Constants.Khaos.KhaosName)
-					{
-						RelicLocationDisplay.LepastoneLocation = String.Empty;
-					}
-					break;
-				case "MermanStatue":
-					if (RelicLocationDisplay.MermanLocation == String.Empty)
-					{
-						RelicLocationDisplay.MermanLocation = locationName;
-					}
-					else if (RelicLocationDisplay.MermanLocation == Constants.Khaos.KhaosName)
-					{
-						RelicLocationDisplay.MermanLocation = String.Empty;
-					}
-					break;
-				default:
-					return;
-			}
-
-			if (location is null)
-			{
-				return;
-			}
-
-			if (location.SecondCastle)
-			{
-				notificationService.SetInvertedRelicCoordinates(relicName, location.MapCol, location.MapRow);
-			}
-			else
-			{
-				notificationService.SetRelicCoordinates(relicName, location.MapCol, location.MapRow);
-			}
 		}
 
 		private void UpdateProgressionItems()

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using SotnRandoTools.Configuration.Interfaces;
+using SotnRandoTools.Services;
 
 namespace SotnRandoTools
 {
@@ -16,6 +17,8 @@ namespace SotnRandoTools
 			InitializeComponent();
 		}
 
+		internal INotificationService NotificationService { get; set; }
+
 		private void MultiplayerSettingsPanel_Load(object sender, EventArgs e)
 		{
 			sendItemsCheckbox.Checked = toolConfig.Coop.SendItems;
@@ -28,6 +31,8 @@ namespace SotnRandoTools
 			serverTextBox.Text = toolConfig.Coop.DefaultServer;
 
 			sendRelicsCheckbox.Checked = toolConfig.Coop.ShareRelics;
+
+			volumeBar.Value = toolConfig.Coop.Volume;
 		}
 
 		private void saveButton_Click(object sender, EventArgs e)
@@ -77,6 +82,15 @@ namespace SotnRandoTools
 		private void sendRelicsCheckbox_CheckedChanged(object sender, EventArgs e)
 		{
 			toolConfig.Coop.ShareRelics = sendRelicsCheckbox.Checked;
+		}
+
+		private void volumeBar_Scroll(object sender, EventArgs e)
+		{
+			toolConfig.Coop.Volume = volumeBar.Value;
+			if (NotificationService is not null)
+			{
+				NotificationService.Volume = (double) volumeBar.Value / 10F;
+			}
 		}
 	}
 }

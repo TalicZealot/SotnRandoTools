@@ -44,8 +44,12 @@ namespace SotnRandoTools
             this.serverTextBox = new System.Windows.Forms.TextBox();
             this.portLabel = new System.Windows.Forms.Label();
             this.portTextBox = new System.Windows.Forms.TextBox();
+            this.volumeBox = new System.Windows.Forms.GroupBox();
+            this.volumeBar = new System.Windows.Forms.TrackBar();
             this.optionsBox.SuspendLayout();
             this.connectionGroup.SuspendLayout();
+            this.volumeBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.volumeBar)).BeginInit();
             this.SuspendLayout();
             // 
             // multiplayerPanelTitle
@@ -213,11 +217,31 @@ namespace SotnRandoTools
             this.portTextBox.TabIndex = 0;
             this.portTextBox.TextChanged += new System.EventHandler(this.portTextBox_TextChanged);
             // 
+            // volumeBox
+            // 
+            this.volumeBox.Controls.Add(this.volumeBar);
+            this.volumeBox.ForeColor = System.Drawing.Color.White;
+            this.volumeBox.Location = new System.Drawing.Point(10, 212);
+            this.volumeBox.Name = "volumeBox";
+            this.volumeBox.Size = new System.Drawing.Size(378, 72);
+            this.volumeBox.TabIndex = 6;
+            this.volumeBox.TabStop = false;
+            this.volumeBox.Text = "Notification Volume";
+            // 
+            // volumeBar
+            // 
+            this.volumeBar.Location = new System.Drawing.Point(1, 20);
+            this.volumeBar.Name = "volumeBar";
+            this.volumeBar.Size = new System.Drawing.Size(371, 45);
+            this.volumeBar.TabIndex = 0;
+            this.volumeBar.Scroll += new System.EventHandler(this.volumeBar_Scroll);
+            // 
             // CoopSettingsPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
+            this.Controls.Add(this.volumeBox);
             this.Controls.Add(this.connectionGroup);
             this.Controls.Add(this.optionsBox);
             this.Controls.Add(this.saveButton);
@@ -232,6 +256,9 @@ namespace SotnRandoTools
             this.optionsBox.PerformLayout();
             this.connectionGroup.ResumeLayout(false);
             this.connectionGroup.PerformLayout();
+            this.volumeBox.ResumeLayout(false);
+            this.volumeBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.volumeBar)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -254,5 +281,7 @@ namespace SotnRandoTools
 		private System.Windows.Forms.CheckBox shareLocationsCheckbox;
 		private System.Windows.Forms.CheckBox sendAssistsCheckbox;
 		private System.Windows.Forms.CheckBox sendRelicsCheckbox;
-	}
+        private System.Windows.Forms.GroupBox volumeBox;
+        private System.Windows.Forms.TrackBar volumeBar;
+    }
 }

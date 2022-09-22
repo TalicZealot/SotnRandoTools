@@ -11,11 +11,9 @@ namespace SotnRandoTools.Configuration
 		public ToolConfig()
 		{
 			Tracker = new TrackerConfig();
-			Khaos = new KhaosConfig();
 			Coop = new CoopConfig();
 		}
 		public TrackerConfig? Tracker { get; set; }
-		public KhaosConfig? Khaos { get; set; }
 		public CoopConfig? Coop { get; set; }
 		public Point Location { get; set; }
 		public string Version { get; set; }
