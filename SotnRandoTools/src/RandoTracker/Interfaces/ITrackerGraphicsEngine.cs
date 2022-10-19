@@ -12,6 +12,6 @@ namespace SotnRandoTools.RandoTracker
 		void DrawSeedInfo(string seedInfo);
 		void Render();
 		void ChangeGraphics(IGraphics formGraphics);
-		void InitializeItems(List<Models.Relic> relics, List<Item> progressionItems, List<Item> thrustSwords);
+		void InitializeItems(List<Models.TrackerRelic> relics, List<Item> progressionItems, List<Item> thrustSwords);
 	}
 }

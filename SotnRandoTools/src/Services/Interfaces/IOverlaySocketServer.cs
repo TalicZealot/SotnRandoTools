@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace SotnRandoTools.Services.Interfaces
+﻿namespace SotnRandoTools.Services.Interfaces
 {
 	internal interface IOverlaySocketServer
 	{

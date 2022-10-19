@@ -15,7 +15,6 @@ namespace SotnRandoTools.Services
 		private List<IReadOnlyDictionary<string, object>> inputHistory = new();
 		private List<Dictionary<string, object>> diractionalHistory = new();
 		private List<Dictionary<string, bool>> moveHistory = new();
-		//TODO: lock facing direction
 		private Dictionary<string, Input> inputs = new()
 		{
 			{

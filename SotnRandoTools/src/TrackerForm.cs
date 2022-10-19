@@ -111,6 +111,8 @@ namespace SotnRandoTools
 				tracker.SaveReplay();
 			}
 
+			notificationService.StopOverlayServer();
+
 			tracker.CloseAutosplitter();
 			tracker = null;
 		}

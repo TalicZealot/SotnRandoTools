@@ -11,7 +11,7 @@
     <OutputType>Library</OutputType>
     <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
     <AnalysisLevel>5.0</AnalysisLevel>
-    <Version>1.4.3</Version>
+    <Version>1.4.4</Version>
     <Description>A collection of tools to enhance the experience of playign the SotN randomizer.</Description>
     <Copyright />
     <PackageProjectUrl>https://taliczealot.github.io/</PackageProjectUrl>
@@ -19,9 +19,11 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <Optimize>True</Optimize>
+    <DebugType>portable</DebugType>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <Optimize>True</Optimize>
+    <DebugType>portable</DebugType>
   </PropertyGroup>
   <ItemGroup>
     <None Remove=".stylecop.json" />

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using BizHawk.Client.Common;
 using Newtonsoft.Json.Linq;
 using SotnApi.Constants.Values.Game;
@@ -10,7 +9,6 @@ using SotnApi.Interfaces;
 using SotnApi.Models;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Constants;
-using SotnRandoTools.RandoTracker.Interfaces;
 using SotnRandoTools.RandoTracker.Models;
 using SotnRandoTools.Services;
 
@@ -18,48 +16,17 @@ namespace SotnRandoTools.RandoTracker
 {
 	internal sealed class Tracker : ITracker
 	{
+		const byte ReplayCooldown = 6;
 		const string DefaultSeedInfo = "seed(preset)";
 		const long DraculaActorAddress = 0x076e98;
-
+		private const int AutosplitterReconnectCooldown = 120;
+		private const int AutosplitterReconnectMaxAttempts = 10;
 		private readonly ITrackerGraphicsEngine trackerGraphicsEngine;
 		private readonly IToolConfig toolConfig;
 		private readonly IWatchlistService watchlistService;
 		private readonly ISotnApi sotnApi;
 		private readonly INotificationService notificationService;
 
-		private List<Relic> relics = new List<Relic>
-		{
-				new Relic { Name = "SoulOfBat", Progression = true},
-				new Relic { Name = "FireOfBat", Progression = false},
-				new Relic { Name = "EchoOfBat", Progression = true},
-				new Relic { Name = "ForceOfEcho", Progression = false},
-				new Relic { Name = "SoulOfWolf", Progression = true},
-				new Relic { Name = "PowerOfWolf", Progression = true},
-				new Relic { Name = "SkillOfWolf", Progression = true},
-				new Relic { Name = "FormOfMist", Progression = true},
-				new Relic { Name = "PowerOfMist", Progression = true},
-				new Relic { Name = "GasCloud", Progression = false},
-				new Relic { Name = "CubeOfZoe", Progression = false},
-				new Relic { Name = "SpiritOrb", Progression = false},
-				new Relic { Name = "GravityBoots", Progression = true},
-				new Relic { Name = "LeapStone", Progression = true},
-				new Relic { Name = "HolySymbol", Progression = false},
-				new Relic { Name = "FaerieScroll", Progression = false},
-				new Relic { Name = "JewelOfOpen", Progression = true},
-				new Relic { Name = "MermanStatue", Progression = true},
-				new Relic { Name = "BatCard", Progression = false},
-				new Relic { Name = "GhostCard", Progression = false},
-				new Relic { Name = "FaerieCard", Progression = false},
-				new Relic { Name = "DemonCard", Progression = false},
-				new Relic { Name = "SwordCard", Progression = false},
-				new Relic { Name = "SpriteCard" , Progression = false},
-				new Relic { Name = "NoseDevilCard", Progression = false},
-				new Relic { Name = "HeartOfVlad", Progression = true},
-				new Relic { Name = "ToothOfVlad", Progression = true},
-				new Relic { Name = "RibOfVlad", Progression = true},
-				new Relic { Name = "RingOfVlad", Progression = true},
-				new Relic { Name = "EyeOfVlad", Progression = true}
-		};
 		private List<Location> locations = new List<Location>
 		{
 			new Location { Name = "SoulOfBat", MapRow = 66, MapCol = 96, Rooms = new List<Room>{
@@ -392,6 +359,39 @@ namespace SotnRandoTools.RandoTracker
 					new Room { Name = "Beryl circlet", Values = new int[] { 0x10 }},
 			}},
 		};
+		private List<TrackerRelic> relics = new List<TrackerRelic>
+		{
+				new TrackerRelic { Name = "SoulOfBat", Progression = true},
+				new TrackerRelic { Name = "FireOfBat", Progression = false},
+				new TrackerRelic { Name = "EchoOfBat", Progression = true},
+				new TrackerRelic { Name = "ForceOfEcho", Progression = false},
+				new TrackerRelic { Name = "SoulOfWolf", Progression = true},
+				new TrackerRelic { Name = "PowerOfWolf", Progression = true},
+				new TrackerRelic { Name = "SkillOfWolf", Progression = true},
+				new TrackerRelic { Name = "FormOfMist", Progression = true},
+				new TrackerRelic { Name = "PowerOfMist", Progression = true},
+				new TrackerRelic { Name = "GasCloud", Progression = false},
+				new TrackerRelic { Name = "CubeOfZoe", Progression = false},
+				new TrackerRelic { Name = "SpiritOrb", Progression = false},
+				new TrackerRelic { Name = "GravityBoots", Progression = true},
+				new TrackerRelic { Name = "LeapStone", Progression = true},
+				new TrackerRelic { Name = "HolySymbol", Progression = false},
+				new TrackerRelic { Name = "FaerieScroll", Progression = false},
+				new TrackerRelic { Name = "JewelOfOpen", Progression = true},
+				new TrackerRelic { Name = "MermanStatue", Progression = true},
+				new TrackerRelic { Name = "BatCard", Progression = false},
+				new TrackerRelic { Name = "GhostCard", Progression = false},
+				new TrackerRelic { Name = "FaerieCard", Progression = false},
+				new TrackerRelic { Name = "DemonCard", Progression = false},
+				new TrackerRelic { Name = "SwordCard", Progression = false},
+				new TrackerRelic { Name = "SpriteCard" , Progression = false},
+				new TrackerRelic { Name = "NoseDevilCard", Progression = false},
+				new TrackerRelic { Name = "HeartOfVlad", Progression = true},
+				new TrackerRelic { Name = "ToothOfVlad", Progression = true},
+				new TrackerRelic { Name = "RibOfVlad", Progression = true},
+				new TrackerRelic { Name = "RingOfVlad", Progression = true},
+				new TrackerRelic { Name = "EyeOfVlad", Progression = true}
+		};
 		private List<Item> progressionItems = new List<Item>
 		{
 			new Item { Name = "GoldRing", Value = 72 },
@@ -410,19 +410,29 @@ namespace SotnRandoTools.RandoTracker
 
 		private string preset = "";
 		private uint roomCount = 2;
+		private bool inGame = false;
 		private bool guardedExtension = true;
 		private bool equipmentExtension = false;
 		private bool spreadExtension = false;
 		private bool gameReset = true;
 		private bool secondCastle = false;
 		private bool restarted = false;
+		private bool thrustSwordCollected = false;
 		private bool relicOrItemCollected = false;
-		private List<MapLocation> replay = new();
-		private int prologueTime = 0;
+		private List<ReplayState> replay = new();
+		private ushort prologueTime = 0;
 		private Autosplitter autosplitter;
 		private bool autosplitterConnected = false;
-		private int autosplitterReconnectCounter = 0;
+		private ushort autosplitterReconnectCounter = 0;
+		private ushort autosplitterReconnectAttempts = 0;
 		private bool draculaSpawned = false;
+		private byte currentMapX = (byte) 0;
+		private byte currentMapY = (byte) 0;
+		private byte currentReplayCooldown = 0;
+		private bool started = false;
+		private bool finished = false;
+		private DateTime startedAt;
+		private TimeSpan finalTime;
 
 		public Tracker(ITrackerGraphicsEngine trackerGraphicsEngine, IToolConfig toolConfig, IWatchlistService watchlistService, ISotnApi sotnApi, INotificationService notificationService)
 		{
@@ -469,9 +479,18 @@ namespace SotnRandoTools.RandoTracker
 		{
 			UpdateSeedLabel();
 
-			bool inGame = sotnApi.GameApi.Status == Status.InGame;
+			inGame = sotnApi.GameApi.Status == Status.InGame;
 			bool updatedSecondCastle = sotnApi.GameApi.SecondCastle;
 			relicOrItemCollected = false;
+			currentReplayCooldown++;
+			currentMapX = (byte) sotnApi.AlucardApi.MapX;
+			currentMapY = (byte) sotnApi.AlucardApi.MapY;
+
+			if (started && !finished && currentReplayCooldown > ReplayCooldown)
+			{
+				SaveReplayLine();
+				currentReplayCooldown = 0;
+			}
 
 			if (sotnApi.GameApi.InAlucardMode() && sotnApi.AlucardApi.HasHitbox())
 			{
@@ -489,8 +508,10 @@ namespace SotnRandoTools.RandoTracker
 
 				UpdateRelics();
 				UpdateProgressionItems();
-				UpdateThrustSwords();
-				SaveReplayLine();
+				if (!thrustSwordCollected)
+				{
+					UpdateThrustSwords();
+				}
 				UpdateOverlay();
 
 				if (toolConfig.Tracker.Locations)
@@ -522,10 +543,11 @@ namespace SotnRandoTools.RandoTracker
 				}
 			}
 
-			if (toolConfig.Tracker.EnableAutosplitter && !autosplitterConnected && autosplitterReconnectCounter == 120 && !sotnApi.GameApi.InAlucardMode())
+			if (toolConfig.Tracker.EnableAutosplitter && !autosplitterConnected && autosplitterReconnectCounter == AutosplitterReconnectCooldown && !sotnApi.GameApi.InAlucardMode() && autosplitterReconnectAttempts < AutosplitterReconnectMaxAttempts)
 			{
 				autosplitterConnected = autosplitter.AtemptConnect();
 				autosplitterReconnectCounter = 0;
+				autosplitterReconnectAttempts++;
 			}
 			if (toolConfig.Tracker.EnableAutosplitter && !autosplitterConnected && autosplitterReconnectCounter < 120 && !sotnApi.GameApi.InAlucardMode())
 			{
@@ -533,10 +555,10 @@ namespace SotnRandoTools.RandoTracker
 			}
 			if (toolConfig.Tracker.EnableAutosplitter && autosplitterConnected)
 			{
-				CheckStart();
 				CheckReset();
-				CheckSplit();
 			}
+			CheckStart();
+			CheckSplit();
 		}
 
 		private void InitializeAllLocks()
@@ -638,8 +660,14 @@ namespace SotnRandoTools.RandoTracker
 					if (watchlistService.RelicWatches[i].Value > 0)
 					{
 						relics[i].Collected = true;
+						relics[i].X = currentMapX;
+						if (secondCastle)
+						{
+							relics[i].X += 100;
+						}
+						relics[i].Y = currentMapY;
+						relics[i].CollectedAt = (ushort) replay.Count;
 						relicOrItemCollected = true;
-						Console.WriteLine($"Found relic " + relics[i].Name);
 					}
 					else
 					{
@@ -665,6 +693,13 @@ namespace SotnRandoTools.RandoTracker
 					if (watchlistService.ProgressionItemWatches[i].Value > 0)
 					{
 						progressionItems[i].Status = true;
+						progressionItems[i].X = currentMapX;
+						if (secondCastle)
+						{
+							progressionItems[i].X += 100;
+						}
+						progressionItems[i].Y = currentMapY;
+						progressionItems[i].CollectedAt = (ushort) replay.Count;
 						relicOrItemCollected = true;
 					}
 					else
@@ -706,7 +741,16 @@ namespace SotnRandoTools.RandoTracker
 					if (watchlistService.ThrustSwordWatches[i].Value > 0)
 					{
 						thrustSwords[i].Status = true;
+						thrustSwords[i].X = currentMapX;
+						if (secondCastle)
+						{
+							progressionItems[i].X += 100;
+						}
+						thrustSwords[i].Y = currentMapY;
+						thrustSwords[i].CollectedAt = (ushort) replay.Count;
+						thrustSwordCollected = true;
 						relicOrItemCollected = true;
+
 					}
 					else
 					{
@@ -875,18 +919,23 @@ namespace SotnRandoTools.RandoTracker
 
 		private bool LocationsDrawn()
 		{
-			Location uncheckedLocation = locations.Where(l => (!l.Visited && l.SecondCastle == secondCastle)).FirstOrDefault();
-			if (uncheckedLocation != null)
+			Location[] uncheckedLocation = locations.Where(l => (!l.Visited && l.SecondCastle == secondCastle)).Take(4).ToArray();
+
+			for (int i = 0; i < uncheckedLocation.Length; i++)
 			{
-				uint row = (uint) uncheckedLocation.MapRow;
-				uint col = (uint) uncheckedLocation.MapCol;
+				uint row = (uint) uncheckedLocation[i].MapRow;
+				uint col = (uint) uncheckedLocation[i].MapCol;
 				if (secondCastle)
 				{
 					row = 199 - row;
 					col = 126 - col;
 				}
-				return sotnApi.RenderingApi.RoomIsRendered(row, col);
+				if (!sotnApi.RenderingApi.RoomIsRendered(row, col))
+				{
+					return false;
+				}
 			}
+
 			return true;
 		}
 
@@ -1009,7 +1058,7 @@ namespace SotnRandoTools.RandoTracker
 		{
 			if (name is null) { throw new ArgumentNullException("name"); }
 
-			Relic relic = relics.Where(relic => relic.Name.ToLower() == name).FirstOrDefault();
+			TrackerRelic relic = relics.Where(relic => relic.Name.ToLower() == name).FirstOrDefault();
 			if (relic != null)
 			{
 				return relic.Collected;
@@ -1036,37 +1085,6 @@ namespace SotnRandoTools.RandoTracker
 				{
 					notificationService.UpdateTrackerOverlay(EncodeRelics(), EncodeItems());
 				}
-			}
-		}
-
-		private void SaveReplayLine()
-		{
-			int currentMapX = (int) sotnApi.AlucardApi.MapX;
-			int currentMapY = (int) sotnApi.AlucardApi.MapY;
-
-			if ((currentMapY == 44 && currentMapX < 19) || (currentMapX < 2 && currentMapY < 3) || currentMapX > 200 || currentMapY > 200)
-			{
-				return;
-			}
-
-			if (replay.Count == 0 || (replay[replay.Count - 1].X != currentMapX || replay[replay.Count - 1].Y != currentMapY))
-			{
-				if (replay.Count == 0)
-				{
-					replay.Add(new MapLocation { X = currentMapX, Y = currentMapY, Time = prologueTime, Relics = 0, ProgressionItems = 0 });
-				}
-				else
-				{
-					replay.Add(new MapLocation { X = currentMapX, Y = currentMapY, SecondCastle = secondCastle ? 1 : 0, Relics = replay[replay.Count - 1].Relics, ProgressionItems = replay[replay.Count - 1].ProgressionItems });
-				}
-			}
-
-			var room = replay[replay.Count - 1];
-			room.Time++;
-			if (relicOrItemCollected)
-			{
-				room.Relics = EncodeRelics();
-				room.ProgressionItems = EncodeItems();
 			}
 		}
 
@@ -1108,34 +1126,149 @@ namespace SotnRandoTools.RandoTracker
 			return relicsNumber;
 		}
 
+		private void SaveReplayLine()
+		{
+			byte replayX = currentMapX;
+			byte replayY = currentMapY;
+
+			if (currentMapX < 5 && currentMapY < 4)
+			{
+				if (sotnApi.GameApi.Zone2 == (uint) SotnApi.Constants.Values.Game.Enums.Zone.Prologue)
+				{
+					replayX += 2;
+					replayY += 34;
+				}
+				else if (sotnApi.GameApi.Zone2 == (uint) SotnApi.Constants.Values.Game.Enums.Zone.Nightmare)
+				{
+					replayX += 46;
+					replayY += 33;
+				}
+			}
+
+			if ((inGame && (replayX > 1 && replayY > 0) && (replayX < 200 && replayY < 200) && !(replayY == 44 && replayX < 19)) && (replay.Count == 0 || (replay[replay.Count - 1].X != replayX || replay[replay.Count - 1].Y != replayY)))
+			{
+				if (replay.Count == 0)
+				{
+					replay.Add(new ReplayState { X = replayX, Y = replayY });
+				}
+				else
+				{
+					replay.Add(new ReplayState { X = (byte) (replayX + (secondCastle ? 100 : 0)), Y = replayY });
+				}
+			}
+
+			var state = replay[replay.Count - 1];
+			state.Time++;
+		}
+
 		public void SaveReplay()
 		{
-			if (replay.Count < 10)
+			if (replay.Count < 20)
 			{
 				return;
 			}
 
-			string replayPath = Paths.ReplaysPath + SeedInfo + "-" + toolConfig.Tracker.Username + ".sotnr";
-			int version = 2;
-			while (File.Exists(replayPath))
+			string username = toolConfig.Tracker.Username;
+
+			if (username.Length > 18)
 			{
-				replayPath = Paths.ReplaysPath + SeedInfo + "(" + version + ")" + "-" + toolConfig.Tracker.Username + ".sotnr";
-				version++;
+				username = username.Substring(0, 18);
 			}
 
-			using (StreamWriter w = File.AppendText(replayPath))
+			byte version = 2;
+			string baseReplayPath = SeedInfo + username;
+			string replayPath = baseReplayPath;
+			while (File.Exists(Paths.ReplaysPath + replayPath + ".sotnr"))
 			{
-				foreach (var room in replay)
+				replayPath = version + baseReplayPath;
+				version++;
+				if (version > 10)
 				{
-					int time = (int) Math.Ceiling((double) (room.Time / 10));
-					if (time < 1)
-					{
-						time = 1;
-					}
-					string line = $"{room.X}:{room.Y}:{time}:{room.SecondCastle}:{room.Relics}:{room.ProgressionItems}";
-					w.WriteLine(line);
+					return;
 				}
 			}
+			replayPath = Paths.ReplaysPath + replayPath + ".sotnr";
+
+			byte[] replayBytes = new byte[2 + (replay.Count * 4) + ((relics.Count + progressionItems.Count + 1) * 4)];
+
+			int replayIndex = 0;
+			byte[] finalTimeSecondsBytes = BitConverter.GetBytes((ushort) finalTime.TotalSeconds);
+			replayBytes[replayIndex] = finalTimeSecondsBytes[0];
+			replayIndex++;
+			replayBytes[replayIndex] = finalTimeSecondsBytes[1];
+			replayIndex++;
+
+			foreach (var relic in relics)
+			{
+				replayBytes[replayIndex] = relic.X;
+				replayIndex++;
+				replayBytes[replayIndex] = relic.Y;
+				replayIndex++;
+
+				byte[] colletedBytes = BitConverter.GetBytes(relic.CollectedAt);
+				replayBytes[replayIndex] = colletedBytes[0];
+				replayIndex++;
+				replayBytes[replayIndex] = colletedBytes[1];
+				replayIndex++;
+			}
+
+			foreach (var progressionItem in progressionItems)
+			{
+				replayBytes[replayIndex] = progressionItem.X;
+				replayIndex++;
+				replayBytes[replayIndex] = progressionItem.Y;
+				replayIndex++;
+
+				byte[] colletedBytes = BitConverter.GetBytes(progressionItem.CollectedAt);
+				replayBytes[replayIndex] = colletedBytes[0];
+				replayIndex++;
+				replayBytes[replayIndex] = colletedBytes[1];
+				replayIndex++;
+			}
+
+			Item foundSword = thrustSwords.Where(s => s.CollectedAt > 0).FirstOrDefault();
+
+			if (foundSword != null)
+			{
+				replayBytes[replayIndex] = foundSword.X;
+				replayIndex++;
+				replayBytes[replayIndex] = foundSword.Y;
+				replayIndex++;
+
+				byte[] colletedBytes = BitConverter.GetBytes(foundSword.CollectedAt);
+				replayBytes[replayIndex] = colletedBytes[0];
+				replayIndex++;
+				replayBytes[replayIndex] = colletedBytes[1];
+				replayIndex++;
+			}
+			else
+			{
+				replayBytes[replayIndex] = 0;
+				replayIndex++;
+				replayBytes[replayIndex] = 0;
+				replayIndex++;
+
+				replayBytes[replayIndex] = 0;
+				replayIndex++;
+				replayBytes[replayIndex] = 0;
+				replayIndex++;
+			}
+
+			foreach (var state in replay)
+			{
+				replayBytes[replayIndex] = state.X;
+				replayIndex++;
+				replayBytes[replayIndex] = state.Y;
+				replayIndex++;
+
+				byte[] timeBytes = BitConverter.GetBytes(state.Time);
+				replayBytes[replayIndex] = timeBytes[0];
+				replayIndex++;
+				replayBytes[replayIndex] = timeBytes[1];
+				replayIndex++;
+			}
+
+			File.WriteAllBytes(replayPath, replayBytes);
 		}
 
 		private void SaveSeedInfo(string info)
@@ -1155,10 +1288,17 @@ namespace SotnRandoTools.RandoTracker
 
 		private void CheckStart()
 		{
-			if (!autosplitter.Started && sotnApi.GameApi.Hours == 0 && sotnApi.GameApi.Minutes == 0 && sotnApi.GameApi.Seconds == 3 && sotnApi.GameApi.Status == Status.InGame)
+			if (!autosplitter.Started && sotnApi.GameApi.Hours == 0 && sotnApi.GameApi.Minutes == 0 && sotnApi.GameApi.Seconds == 3 && inGame)
 			{
-				autosplitter.StartTImer();
-				Console.WriteLine("StartTimer");
+				if (toolConfig.Tracker.EnableAutosplitter && !autosplitter.Started)
+				{
+					autosplitter.StartTImer();
+				}
+				if (!started)
+				{
+					startedAt = DateTime.Now;
+					started = true;
+				}
 			}
 		}
 
@@ -1167,13 +1307,12 @@ namespace SotnRandoTools.RandoTracker
 			if (autosplitter.Started && sotnApi.GameApi.Hours == 0 && sotnApi.GameApi.Minutes == 0 && sotnApi.GameApi.Seconds == 0 && sotnApi.GameApi.Frames < 20 && sotnApi.GameApi.Status == Status.InGame)
 			{
 				autosplitter.Restart();
-				Console.WriteLine("Restart");
 			}
 		}
 
 		private void CheckSplit()
 		{
-			if (autosplitter.Started && sotnApi.AlucardApi.MapX == 31 && sotnApi.AlucardApi.MapY == 30 && sotnApi.GameApi.Status == Status.InGame)
+			if (sotnApi.AlucardApi.MapX == 31 && sotnApi.AlucardApi.MapY == 30 && sotnApi.GameApi.Status == Status.InGame)
 			{
 				LiveEntity boss = sotnApi.EntityApi.GetLiveEntity(DraculaActorAddress);
 				if (boss.Hp > 13 && boss.Hp < 10000 && boss.AiId != 0)
@@ -1182,8 +1321,12 @@ namespace SotnRandoTools.RandoTracker
 				}
 				else if (draculaSpawned && boss.Hp < 1 && boss.AiId != 0)
 				{
-					autosplitter.Split();
-					Console.WriteLine("Split");
+					if (toolConfig.Tracker.EnableAutosplitter)
+					{
+						autosplitter.Split();
+					}
+					finalTime = DateTime.Now.Subtract(startedAt);
+					finished = true;
 				}
 			}
 			else

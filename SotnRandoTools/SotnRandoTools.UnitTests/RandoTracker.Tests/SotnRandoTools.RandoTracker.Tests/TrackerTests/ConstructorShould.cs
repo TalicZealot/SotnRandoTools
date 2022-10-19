@@ -2,7 +2,6 @@
 using NSubstitute;
 using SotnApi.Interfaces;
 using SotnRandoTools.Configuration.Interfaces;
-using SotnRandoTools.RandoTracker.Interfaces;
 using SotnRandoTools.Services;
 using System;
 using Xunit;

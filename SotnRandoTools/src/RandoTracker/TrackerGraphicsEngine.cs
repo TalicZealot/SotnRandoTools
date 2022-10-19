@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Constants;
 using SotnRandoTools.RandoTracker.Interfaces;
@@ -27,7 +25,7 @@ namespace SotnRandoTools.RandoTracker
 		private IGraphics formGraphics;
 		private readonly IToolConfig toolConfig;
 
-		private List<Relic>? relics;
+		private List<TrackerRelic>? relics;
 		private List<Item>? progressionItems;
 		private List<Item>? thrustSwords;
 
@@ -63,7 +61,7 @@ namespace SotnRandoTools.RandoTracker
 
 		public bool Refreshed { get; set; }
 
-		public void InitializeItems(List<Relic> relics, List<Item> progressionItems, List<Item> thrustSwords)
+		public void InitializeItems(List<TrackerRelic> relics, List<Item> progressionItems, List<Item> thrustSwords)
 		{
 			if (relics is null) throw new ArgumentNullException(nameof(relics));
 			if (progressionItems is null) throw new ArgumentNullException(nameof(progressionItems));
