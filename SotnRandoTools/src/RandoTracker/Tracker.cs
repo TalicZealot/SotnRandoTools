@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using BizHawk.Client.Common;
@@ -431,8 +432,8 @@ namespace SotnRandoTools.RandoTracker
 		private byte currentReplayCooldown = 0;
 		private bool started = false;
 		private bool finished = false;
-		private DateTime startedAt;
 		private TimeSpan finalTime;
+		private Stopwatch stopWatch = new Stopwatch();
 
 		public Tracker(ITrackerGraphicsEngine trackerGraphicsEngine, IToolConfig toolConfig, IWatchlistService watchlistService, ISotnApi sotnApi, INotificationService notificationService)
 		{
@@ -659,14 +660,17 @@ namespace SotnRandoTools.RandoTracker
 				{
 					if (watchlistService.RelicWatches[i].Value > 0)
 					{
-						relics[i].Collected = true;
-						relics[i].X = currentMapX;
-						if (secondCastle)
+						if (!relics[i].Collected)
 						{
-							relics[i].X += 100;
+							relics[i].X = currentMapX;
+							if (secondCastle)
+							{
+								relics[i].X += 100;
+							}
+							relics[i].Y = currentMapY;
+							relics[i].CollectedAt = (ushort) replay.Count;
 						}
-						relics[i].Y = currentMapY;
-						relics[i].CollectedAt = (ushort) replay.Count;
+						relics[i].Collected = true;
 						relicOrItemCollected = true;
 					}
 					else
@@ -692,14 +696,17 @@ namespace SotnRandoTools.RandoTracker
 				{
 					if (watchlistService.ProgressionItemWatches[i].Value > 0)
 					{
-						progressionItems[i].Status = true;
-						progressionItems[i].X = currentMapX;
-						if (secondCastle)
+						if (!progressionItems[i].Status)
 						{
-							progressionItems[i].X += 100;
+							progressionItems[i].X = currentMapX;
+							if (secondCastle)
+							{
+								progressionItems[i].X += 100;
+							}
+							progressionItems[i].Y = currentMapY;
+							progressionItems[i].CollectedAt = (ushort) replay.Count;
 						}
-						progressionItems[i].Y = currentMapY;
-						progressionItems[i].CollectedAt = (ushort) replay.Count;
+						progressionItems[i].Status = true;
 						relicOrItemCollected = true;
 					}
 					else
@@ -740,14 +747,17 @@ namespace SotnRandoTools.RandoTracker
 				{
 					if (watchlistService.ThrustSwordWatches[i].Value > 0)
 					{
-						thrustSwords[i].Status = true;
-						thrustSwords[i].X = currentMapX;
-						if (secondCastle)
+						if (!thrustSwords[i].Status)
 						{
-							progressionItems[i].X += 100;
+							thrustSwords[i].X = currentMapX;
+							if (secondCastle)
+							{
+								progressionItems[i].X += 100;
+							}
+							thrustSwords[i].Y = currentMapY;
+							thrustSwords[i].CollectedAt = (ushort) replay.Count;
 						}
-						thrustSwords[i].Y = currentMapY;
-						thrustSwords[i].CollectedAt = (ushort) replay.Count;
+						thrustSwords[i].Status = true;
 						thrustSwordCollected = true;
 						relicOrItemCollected = true;
 
@@ -1145,7 +1155,7 @@ namespace SotnRandoTools.RandoTracker
 				}
 			}
 
-			if ((inGame && (replayX > 1 && replayY > 0) && (replayX < 200 && replayY < 200) && !(replayY == 44 && replayX < 19)) && (replay.Count == 0 || (replay[replay.Count - 1].X != replayX || replay[replay.Count - 1].Y != replayY)))
+			if ((inGame && (replayX > 1 && replayY > 0) && (replayX < 200 && replayY < 200) && !(replayY == 44 && replayX < 19 && !secondCastle)) && (replay.Count == 0 || (replay[replay.Count - 1].X != replayX || replay[replay.Count - 1].Y != replayY)))
 			{
 				if (replay.Count == 0)
 				{
@@ -1163,7 +1173,7 @@ namespace SotnRandoTools.RandoTracker
 
 		public void SaveReplay()
 		{
-			if (replay.Count < 20)
+			if (replay.Count < 30)
 			{
 				return;
 			}
@@ -1176,7 +1186,7 @@ namespace SotnRandoTools.RandoTracker
 			}
 
 			byte version = 2;
-			string baseReplayPath = SeedInfo + username;
+			string baseReplayPath = SeedInfo + "-" + username;
 			string replayPath = baseReplayPath;
 			while (File.Exists(Paths.ReplaysPath + replayPath + ".sotnr"))
 			{
@@ -1296,8 +1306,8 @@ namespace SotnRandoTools.RandoTracker
 				}
 				if (!started)
 				{
-					startedAt = DateTime.Now;
 					started = true;
+					stopWatch.Start();
 				}
 			}
 		}
@@ -1325,8 +1335,9 @@ namespace SotnRandoTools.RandoTracker
 					{
 						autosplitter.Split();
 					}
-					finalTime = DateTime.Now.Subtract(startedAt);
+					stopWatch.Stop();
 					finished = true;
+					finalTime = stopWatch.Elapsed;
 				}
 			}
 			else

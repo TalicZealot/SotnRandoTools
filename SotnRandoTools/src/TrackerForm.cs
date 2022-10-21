@@ -94,6 +94,8 @@ namespace SotnRandoTools
 				trackerGraphicsEngine.CalculateGrid(this.Width, this.Height);
 				tracker.DrawRelicsAndItems();
 			}
+
+			this.Invalidate();
 		}
 
 		private void TrackerForm_Move(object sender, EventArgs e)
