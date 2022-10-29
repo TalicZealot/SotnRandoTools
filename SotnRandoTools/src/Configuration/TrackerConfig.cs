@@ -41,6 +41,7 @@ namespace SotnRandoTools.Configuration
 			CustomLocationsSpread = false;
 			Width = 260;
 			Height = 490;
+			Username = "";
 			OverlaySlots = new List<List<int>>
 			{
 				new() {1, 6, 11, 16, 21, 35, 26, 31, 0, 0, 0, 0, 0, 0},

@@ -167,7 +167,7 @@ namespace SotnRandoTools.RandoTracker
 					new Room { Name = "Knuckle duster", Values = new int[] { 0x40 }},
 			}},
 			new Location { Name = "Caverns Onyx",  EquipmentExtension = true, MapRow = 146, MapCol = 92, Rooms = new List<Room>{
-					new Room { Name = "Caverns Onyx", Values = new int[] { 0x10 }},
+					new Room { Name = "Caverns Onyx", Values = new int[] { 0x10, 0x40 }},
 			}},
 			new Location { Name = "Bandanna",  EquipmentExtension = true, MapRow = 90, MapCol = 70, Rooms = new List<Room>{
 					new Room { Name = "Bandanna", Values = new int[] { 0x01 }},
@@ -410,6 +410,7 @@ namespace SotnRandoTools.RandoTracker
 		};
 
 		private string preset = "";
+		private string seedName = "";
 		private uint roomCount = 2;
 		private bool inGame = false;
 		private bool guardedExtension = true;
@@ -418,7 +419,6 @@ namespace SotnRandoTools.RandoTracker
 		private bool gameReset = true;
 		private bool secondCastle = false;
 		private bool restarted = false;
-		private bool thrustSwordCollected = false;
 		private bool relicOrItemCollected = false;
 		private List<ReplayState> replay = new();
 		private ushort prologueTime = 0;
@@ -509,10 +509,7 @@ namespace SotnRandoTools.RandoTracker
 
 				UpdateRelics();
 				UpdateProgressionItems();
-				if (!thrustSwordCollected)
-				{
-					UpdateThrustSwords();
-				}
+				UpdateThrustSwords();
 				UpdateOverlay();
 
 				if (toolConfig.Tracker.Locations)
@@ -654,6 +651,7 @@ namespace SotnRandoTools.RandoTracker
 		private void UpdateRelics()
 		{
 			watchlistService.UpdateWatchlist(watchlistService.RelicWatches);
+			
 			for (int i = 0; i < watchlistService.RelicWatches.Count; i++)
 			{
 				if (watchlistService.RelicWatches[i].ChangeCount > 0)
@@ -758,7 +756,6 @@ namespace SotnRandoTools.RandoTracker
 							thrustSwords[i].CollectedAt = (ushort) replay.Count;
 						}
 						thrustSwords[i].Status = true;
-						thrustSwordCollected = true;
 						relicOrItemCollected = true;
 
 					}
@@ -777,9 +774,8 @@ namespace SotnRandoTools.RandoTracker
 		}
 
 		private void getSeedData()
-
 		{
-			string seedName = sotnApi.GameApi.ReadSeedName();
+			seedName = sotnApi.GameApi.ReadSeedName();
 			preset = sotnApi.GameApi.ReadPresetName();
 			if (preset == "tournament" || preset == "")
 			{
@@ -1146,7 +1142,7 @@ namespace SotnRandoTools.RandoTracker
 				if (sotnApi.GameApi.Zone2 == (uint) SotnApi.Constants.Values.Game.Enums.Zone.Prologue)
 				{
 					replayX += 2;
-					replayY += 34;
+					replayY += 32;
 				}
 				else if (sotnApi.GameApi.Zone2 == (uint) SotnApi.Constants.Values.Game.Enums.Zone.Nightmare)
 				{
@@ -1180,13 +1176,13 @@ namespace SotnRandoTools.RandoTracker
 
 			string username = toolConfig.Tracker.Username;
 
-			if (username.Length > 18)
+			if (username is not null && username.Length > 18)
 			{
 				username = username.Substring(0, 18);
 			}
 
 			byte version = 2;
-			string baseReplayPath = SeedInfo + "-" + username;
+			string baseReplayPath = seedName + preset.ToUpper() + "-" + username;
 			string replayPath = baseReplayPath;
 			while (File.Exists(Paths.ReplaysPath + replayPath + ".sotnr"))
 			{
