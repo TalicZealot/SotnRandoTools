@@ -750,7 +750,7 @@ namespace SotnRandoTools.RandoTracker
 							thrustSwords[i].X = currentMapX;
 							if (secondCastle)
 							{
-								progressionItems[i].X += 100;
+								thrustSwords[i].X += 100;
 							}
 							thrustSwords[i].Y = currentMapY;
 							thrustSwords[i].CollectedAt = (ushort) replay.Count;
@@ -1172,6 +1172,13 @@ namespace SotnRandoTools.RandoTracker
 			if (replay.Count < 30)
 			{
 				return;
+			}
+
+			if (!finished)
+			{
+				stopWatch.Stop();
+				finished = true;
+				finalTime = stopWatch.Elapsed;
 			}
 
 			string username = toolConfig.Tracker.Username;
