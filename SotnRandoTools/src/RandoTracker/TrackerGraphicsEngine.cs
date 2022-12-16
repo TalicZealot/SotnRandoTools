@@ -107,6 +107,9 @@ namespace SotnRandoTools.RandoTracker
 
 		public void CalculateGrid(int width, int height)
 		{
+			if (width < 100 || width > 800) throw new ArgumentOutOfRangeException(nameof(width));
+			if (height < 100 || height > 800) throw new ArgumentOutOfRangeException(nameof(height));
+
 			int adjustedColumns = (int) (Columns * (((float) width / (float) height)));
 			if (adjustedColumns < 5)
 			{

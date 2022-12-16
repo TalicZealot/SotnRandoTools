@@ -11,8 +11,7 @@ namespace SotnRandoTools.Utils
 
 		private static bool WaitForFile(string fullPath, uint retries)
 		{
-			if (fullPath is null) throw new ArgumentNullException(nameof(fullPath));
-			if (fullPath == "") throw new ArgumentException($"Parameter {nameof(fullPath)} is empty!");
+			if (String.IsNullOrEmpty(fullPath)) throw new ArgumentNullException(nameof(fullPath));
 			if (retries == 0 && retries < 100) throw new ArgumentOutOfRangeException(nameof(fullPath));
 
 			Thread.Sleep(50);
@@ -34,8 +33,7 @@ namespace SotnRandoTools.Utils
 
 		public static string GetLastLine(string fullPath)
 		{
-			if (fullPath is null) throw new ArgumentNullException(nameof(fullPath));
-			if (fullPath == "") throw new ArgumentException($"Parameter {nameof(fullPath)} is empty!");
+			if (String.IsNullOrEmpty(fullPath)) throw new ArgumentNullException(nameof(fullPath));
 
 			string lastLine = "";
 			if (!File.Exists(fullPath))
@@ -51,8 +49,7 @@ namespace SotnRandoTools.Utils
 
 		public static string GetText(string fullPath)
 		{
-			if (fullPath is null) throw new ArgumentNullException(nameof(fullPath));
-			if (fullPath == "") throw new ArgumentException($"Parameter {nameof(fullPath)} is empty!");
+			if (String.IsNullOrEmpty(fullPath)) throw new ArgumentNullException(nameof(fullPath));
 
 			string text = "";
 			if (!File.Exists(fullPath))
@@ -68,8 +65,7 @@ namespace SotnRandoTools.Utils
 
 		public static string[]? GetLines(string fullPath)
 		{
-			if (fullPath is null) throw new ArgumentNullException(nameof(fullPath));
-			if (fullPath == "") throw new ArgumentException($"Parameter {nameof(fullPath)} is empty!");
+			if (String.IsNullOrEmpty(fullPath)) throw new ArgumentNullException(nameof(fullPath));
 
 			if (!File.Exists(fullPath))
 			{

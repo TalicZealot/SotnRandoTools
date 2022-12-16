@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Windows.Forms;
 using BizHawk.Client.Common;
 using SotnRandoTools.Configuration.Interfaces;
@@ -66,7 +67,7 @@ namespace SotnRandoTools.Services
 
 		public void PlayAlert(string url)
 		{
-			if (String.IsNullOrEmpty(url)) throw new ArgumentException(nameof(url));
+			if (String.IsNullOrEmpty(url)) throw new ArgumentNullException(nameof(url));
 
 			if (url == String.Empty)
 			{
@@ -91,6 +92,8 @@ namespace SotnRandoTools.Services
 
 		public void AddMessage(string message)
 		{
+			if (String.IsNullOrEmpty(message)) throw new ArgumentNullException(nameof(message));
+
 			messageQueue.Add(message);
 			if (messageQueue.Count == 1)
 			{
@@ -128,6 +131,10 @@ namespace SotnRandoTools.Services
 
 		public void SetRelicCoordinates(string relic, int mapCol, int mapRow)
 		{
+			if (String.IsNullOrEmpty(relic)) throw new ArgumentNullException(nameof(relic));
+			if (mapCol < 0 || mapCol > Globals.MaximumMapCols) throw new ArgumentOutOfRangeException(nameof(mapCol));
+			if (mapRow < 0 || mapRow > Globals.MaximumMapRows) throw new ArgumentOutOfRangeException(nameof(mapRow));
+
 			if (relicCoordinates.ContainsKey(relic))
 			{
 				return;
@@ -137,6 +144,10 @@ namespace SotnRandoTools.Services
 
 		public void SetInvertedRelicCoordinates(string relic, int mapCol, int mapRow)
 		{
+			if (String.IsNullOrEmpty(relic)) throw new ArgumentNullException(nameof(relic));
+			if (mapCol < 0 || mapCol > Globals.MaximumMapCols) throw new ArgumentOutOfRangeException(nameof(mapCol));
+			if (mapRow < 0 || mapRow > Globals.MaximumMapRows) throw new ArgumentOutOfRangeException(nameof(mapRow));
+
 			if (invertedRelicCoordinates.ContainsKey(relic))
 			{
 				return;
@@ -241,6 +252,8 @@ namespace SotnRandoTools.Services
 
 		private void ResizeImages()
 		{
+			if (!File.Exists(Paths.TextboxImage)) return;
+
 			Image unscaledTextbox = Image.FromFile(Paths.TextboxImage);
 
 			textbox = ResizeImage(unscaledTextbox, unscaledTextbox.Width * scale, unscaledTextbox.Height * scale);

@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+	  <TargetFramework>net48</TargetFramework>
 
-    <IsPackable>false</IsPackable>
+	  <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,17 +20,17 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\src\SotnRandoTools.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\src\SotnRandoTools.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="BizHawk.Client.Common">
-      <HintPath>..\..\..\BizHawk\dll\BizHawk.Client.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="SotnApi">
-      <HintPath>..\..\..\BizHawk\ExternalTools\SotnRandoTools\SotnApi.dll</HintPath>
-    </Reference>
-  </ItemGroup>
+	<ItemGroup>
+		<Reference Include="BizHawk.Client.Common">
+			<HintPath>..\..\..\BizHawk\dll\BizHawk.Client.Common.dll</HintPath>
+		</Reference>
+		<Reference Include="SotnApi">
+			<HintPath>..\..\..\BizHawk\ExternalTools\SotnRandoTools\SotnApi.dll</HintPath>
+		</Reference>
+	</ItemGroup>
 
 </Project>

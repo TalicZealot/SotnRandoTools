@@ -170,7 +170,7 @@ namespace SotnRandoTools
 			}
 
 			sotnApi = new SotnApi.Main.SotnApi(_maybeMemAPI);
-			watchlistService = new WatchlistService(_memoryDomains, _emu?.SystemId, GlobalConfig);
+			watchlistService = new WatchlistService(_memoryDomains);
 			inputService = new InputService(_maybeJoypadApi, sotnApi);
 			notificationService = new NotificationService(toolConfig, _maybeGuiAPI, _maybeClientAPI);
 			if (coopSettingsPanel is not null)

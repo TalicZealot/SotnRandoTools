@@ -651,7 +651,7 @@ namespace SotnRandoTools.RandoTracker
 		private void UpdateRelics()
 		{
 			watchlistService.UpdateWatchlist(watchlistService.RelicWatches);
-			
+
 			for (int i = 0; i < watchlistService.RelicWatches.Count; i++)
 			{
 				if (watchlistService.RelicWatches[i].ChangeCount > 0)
@@ -988,7 +988,7 @@ namespace SotnRandoTools.RandoTracker
 										watchlistService.CoopLocationValues[watchIndex] = value;
 										Console.WriteLine($"Added {coopWatch.Notes} at index {watchIndex} value {watchlistService.CoopLocationValues[watchIndex]} to coopValues.");
 									}
-									ClearMapLocation(locations.IndexOf(location));
+									//ClearMapLocation(locations.IndexOf(location));
 								}
 							}
 						}
@@ -1301,7 +1301,7 @@ namespace SotnRandoTools.RandoTracker
 
 		private void CheckStart()
 		{
-			if (!autosplitter.Started && sotnApi.GameApi.Hours == 0 && sotnApi.GameApi.Minutes == 0 && sotnApi.GameApi.Seconds == 3 && inGame)
+			if (sotnApi.GameApi.Hours == 0 && sotnApi.GameApi.Minutes == 0 && sotnApi.GameApi.Seconds == 3 && inGame)
 			{
 				if (toolConfig.Tracker.EnableAutosplitter && !autosplitter.Started)
 				{

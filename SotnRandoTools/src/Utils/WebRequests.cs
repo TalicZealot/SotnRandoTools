@@ -43,6 +43,8 @@ namespace SotnRandoTools.Utils
 
 		public static async Task<bool> NewReleaseAvaiable(string currentVersion)
 		{
+			if (String.IsNullOrEmpty(currentVersion)) throw new ArgumentException(nameof(currentVersion));
+
 			using (var handler = new HttpClientHandler())
 			{
 				handler.UseDefaultCredentials = true;

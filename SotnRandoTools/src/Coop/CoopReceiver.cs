@@ -36,6 +36,9 @@ namespace SotnRandoTools.Coop
 
 		public void EnqueMessage(byte[] data)
 		{
+			if (data is null) throw new ArgumentNullException(nameof(data));
+			if (data.Length < 2) throw new ArgumentException("Array length for data should be at least 2.");
+
 			queuedMessages.Enqueue(new MethodInvoker(() => ProcessMessage(data)));
 		}
 

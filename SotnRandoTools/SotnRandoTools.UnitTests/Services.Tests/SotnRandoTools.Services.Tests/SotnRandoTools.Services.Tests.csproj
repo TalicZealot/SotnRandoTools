@@ -1,10 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+	<PropertyGroup>
+		<TargetFramework>net48</TargetFramework>
 
-    <IsPackable>false</IsPackable>
-  </PropertyGroup>
+		<IsPackable>false</IsPackable>
+	</PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.0" />
@@ -20,17 +20,20 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\src\SotnRandoTools.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\src\SotnRandoTools.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="BizHawk.Client.Common">
-      <HintPath>..\..\..\BizHawk\dll\BizHawk.Client.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="SotnApi">
-      <HintPath>..\..\..\BizHawk\ExternalTools\SotnRandoTools\SotnApi.dll</HintPath>
-    </Reference>
-  </ItemGroup>
+	<ItemGroup>
+		<Reference Include="BizHawk.Client.Common">
+			<HintPath>..\..\..\BizHawk\dll\BizHawk.Client.Common.dll</HintPath>
+		</Reference>
+		<Reference Include="BizHawk.Emulation.Common">
+		  <HintPath>..\..\..\BizHawk\dll\BizHawk.Emulation.Common.dll</HintPath>
+		</Reference>
+		<Reference Include="SotnApi">
+			<HintPath>..\..\..\BizHawk\ExternalTools\SotnRandoTools\SotnApi.dll</HintPath>
+		</Reference>
+	</ItemGroup>
 
 </Project>

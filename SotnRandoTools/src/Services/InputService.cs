@@ -248,6 +248,9 @@ namespace SotnRandoTools.Services
 
 		public bool RegisteredMove(string moveName, int frames)
 		{
+			if (frames < 1 || frames > Constants.Globals.MaximumCooldownFrames) throw new ArgumentOutOfRangeException(nameof(frames), $"Frames must be between 1 and {Constants.Globals.MaximumCooldownFrames}");
+			if (string.IsNullOrEmpty(moveName)) throw new ArgumentNullException(nameof(moveName));
+
 			for (int i = 0; i < frames; i++)
 			{
 				if (moveHistory.Count < 10)
@@ -265,6 +268,9 @@ namespace SotnRandoTools.Services
 
 		public bool ButtonPressed(string button, int frames)
 		{
+			if (frames < 1 || frames > Constants.Globals.MaximumCooldownFrames) throw new ArgumentOutOfRangeException(nameof(frames), $"Frames must be between 1 and {Constants.Globals.MaximumCooldownFrames}");
+			if (string.IsNullOrEmpty(button)) throw new ArgumentNullException(nameof(button));
+
 			if (inputHistory.Count < 10)
 			{
 				return false;
@@ -292,6 +298,8 @@ namespace SotnRandoTools.Services
 
 		public bool ButtonHeld(string button)
 		{
+			if (string.IsNullOrEmpty(button)) throw new ArgumentNullException(nameof(button));
+
 			if (inputHistory.Count < 1)
 			{
 				return false;
@@ -305,6 +313,8 @@ namespace SotnRandoTools.Services
 
 		public bool DirectionHeld(string button)
 		{
+			if (string.IsNullOrEmpty(button)) throw new ArgumentNullException(nameof(button));
+
 			if (inputHistory.Count < 1)
 			{
 				return false;

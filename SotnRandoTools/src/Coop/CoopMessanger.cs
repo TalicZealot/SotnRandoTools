@@ -2,6 +2,7 @@
 using System.Net;
 using SimpleTcp;
 using SotnRandoTools.Configuration.Interfaces;
+using SotnRandoTools.Constants;
 using SotnRandoTools.Coop.Enums;
 using SotnRandoTools.Coop.Interfaces;
 using SotnRandoTools.Coop.Models;
@@ -32,6 +33,10 @@ namespace SotnRandoTools.Coop
 
 		public void Connect(string hostIp, int port)
 		{
+			if (port < Globals.PortMinimum || port > Globals.PortMaximum) throw new ArgumentOutOfRangeException($"Port must be between {Globals.PortMinimum} and {Globals.PortMaximum}");
+			if (string.IsNullOrEmpty(hostIp)) throw new ArgumentNullException(nameof(hostIp));
+			if (!IPAddress.TryParse(hostIp, out var ip)) throw new ArgumentException("Invalid Ip string.");
+
 			if (client is null)
 			{
 				client = new SimpleTcpClient(hostIp, port);
@@ -68,6 +73,7 @@ namespace SotnRandoTools.Coop
 
 		public void StartServer(int port)
 		{
+			if (port < Globals.PortMinimum || port > Globals.PortMaximum) throw new ArgumentOutOfRangeException($"Port must be between {Globals.PortMinimum} and {Globals.PortMaximum}");
 			string hostName = Dns.GetHostName();
 
 			if (server is null)
@@ -129,6 +135,9 @@ namespace SotnRandoTools.Coop
 
 		public void SendData(MessageType type, byte[] data)
 		{
+			if (data is null) throw new ArgumentNullException(nameof(data));
+			if (data.Length < 2) throw new ArgumentException("Array length for data should be at least 2.");
+
 			if (server is not null && connectedClientAddress != "")
 			{
 				server.Send(connectedClientAddress, new byte[] { (byte) type, data[0], data[1] });

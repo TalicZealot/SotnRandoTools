@@ -7,9 +7,7 @@ namespace SotnRandoTools.Services
 {
 	internal sealed class WatchlistService : IWatchlistService
 	{
-		private readonly string systemId;
 		private readonly IMemoryDomains memoryDomains;
-		private readonly Config GlobalConfig;
 
 		private WatchList relicWatches;
 		private WatchList coopRelicWatches;
@@ -21,32 +19,28 @@ namespace SotnRandoTools.Services
 		private WatchList warpsAndShortcutsWatches;
 		private int[] coopLocationValues;
 
-		public WatchlistService(IMemoryDomains? memoryDomains, string? systemId, Config GlobalConfig)
+		public WatchlistService(IMemoryDomains? memoryDomains)
 		{
 			if (memoryDomains is null) throw new ArgumentNullException(nameof(memoryDomains));
-			if (systemId is null) throw new ArgumentNullException("SystemID");
-			if (systemId == "") throw new ArgumentException($"Parameter {nameof(systemId)} is empty!");
-			this.systemId = systemId;
 			this.memoryDomains = memoryDomains;
-			this.GlobalConfig = GlobalConfig;
 
-			relicWatches = new WatchList(this.memoryDomains, this.systemId);
+			relicWatches = new WatchList(this.memoryDomains, Globals.SystemId);
 			relicWatches.Load(Paths.RelicWatchesPath, false);
 			RelicWatches = relicWatches;
 
-			coopRelicWatches = new WatchList(this.memoryDomains, this.systemId);
+			coopRelicWatches = new WatchList(this.memoryDomains, Globals.SystemId);
 			coopRelicWatches.Load(Paths.RelicWatchesPath, false);
 			CoopRelicWatches = coopRelicWatches;
 
-			safeLocationWatches = new WatchList(this.memoryDomains, this.systemId);
+			safeLocationWatches = new WatchList(this.memoryDomains, Globals.SystemId);
 			safeLocationWatches.Load(Paths.SafeLocationWatchesPath, false);
 			SafeLocationWatches = safeLocationWatches;
 
-			equipmentLocationWatches = new WatchList(this.memoryDomains, this.systemId);
+			equipmentLocationWatches = new WatchList(this.memoryDomains, Globals.SystemId);
 			equipmentLocationWatches.Load(Paths.EquipmentLocationWatchesPath, false);
 			EquipmentLocationWatches = equipmentLocationWatches;
 
-			coopLocationWatches = new WatchList(this.memoryDomains, this.systemId);
+			coopLocationWatches = new WatchList(this.memoryDomains, Globals.SystemId);
 			coopLocationWatches.Load(Paths.SafeLocationWatchesPath, false);
 			coopLocationWatches.Load(Paths.EquipmentLocationWatchesPath, true);
 			CoopLocationWatches = coopLocationWatches;
@@ -58,15 +52,15 @@ namespace SotnRandoTools.Services
 			}
 			CoopLocationValues = coopLocationValues;
 
-			progressionItemWatches = new WatchList(this.memoryDomains, this.systemId);
+			progressionItemWatches = new WatchList(this.memoryDomains, Globals.SystemId);
 			progressionItemWatches.Load(Paths.ProgressionItemWatchesPath, false);
 			ProgressionItemWatches = progressionItemWatches;
 
-			thrustSwordWatches = new WatchList(this.memoryDomains, this.systemId);
+			thrustSwordWatches = new WatchList(this.memoryDomains, Globals.SystemId);
 			thrustSwordWatches.Load(Paths.ThrustSwordWatchesPath, false);
 			ThrustSwordWatches = thrustSwordWatches;
 
-			warpsAndShortcutsWatches = new WatchList(this.memoryDomains, this.systemId);
+			warpsAndShortcutsWatches = new WatchList(this.memoryDomains, Globals.SystemId);
 			warpsAndShortcutsWatches.Load(Paths.WarpsAndShortcutsWatchPath, false);
 			WarpsAndShortcutsWatches = warpsAndShortcutsWatches;
 		}
@@ -83,7 +77,7 @@ namespace SotnRandoTools.Services
 
 		public void UpdateWatchlist(WatchList watches)
 		{
-			watches.UpdateValues(GlobalConfig.RamWatchDefinePrevious);
+			watches.UpdateValues(PreviousType.LastChange);
 		}
 
 		public void ClearAll()
