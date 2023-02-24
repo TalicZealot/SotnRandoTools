@@ -11,7 +11,6 @@ namespace SotnRandoTools.Constants
 		public const string ApiLink = "https://github.com/TalicZealot/SotnApi";
 		public const string UpdaterLink = "https://github.com/TalicZealot/SimpleLatestReleaseUpdater";
 		public const string RandoSourceLink = "https://github.com/3snowp7im/SotN-Randomizer";
-		public const string DonateLink = "https://www.paypal.com/donate?hosted_button_id=5F8565K23F2F8";
 
 		public const string LatestReleaseApi = "https://api.github.com/repos/taliczealot/sotnrandotools/releases";
 		public const string LatestReleaseUrl = "https://github.com/TalicZealot/SotnRandoTools/releases/latest";
@@ -66,9 +65,10 @@ namespace SotnRandoTools.Constants
 		public const string ChangeLogPath = @"\ExternalTools\SotnRandoTools\ChangeLog.txt";
 
 		public const string CasualPresetPath = "./ExternalTools/SotnRandoTools/Presets/casual.json";
-		public const string SafePresetPath = "./ExternalTools/SotnRandoTools/Presets/safe.json";
 		public const string SpeedrunPresetPath = "./ExternalTools/SotnRandoTools/Presets/speedrun.json";
 		public const string BatMasterPresetPath = "./ExternalTools/SotnRandoTools/Presets/bat-master.json";
+		public const string OpenCasualPresetPath = "./ExternalTools/SotnRandoTools/Presets/open-casual.json";
+		public const string OpenSpeedrunPresetPath = "./ExternalTools/SotnRandoTools/Presets/open-speedrun.json";
 
 		public const string ConfigPath = "./ExternalTools/SotnRandoTools/ToolConfig.ini";
 		public const string SeedInfoPath = "./ExternalTools/SotnRandoTools/TrackerOverlay/SeedInfo.txt";

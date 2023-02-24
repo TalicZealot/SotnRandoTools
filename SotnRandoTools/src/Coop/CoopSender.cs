@@ -137,37 +137,6 @@ namespace SotnRandoTools.Coop
 			else if (!inputService.ButtonPressed(PlaystationInputKeys.Circle, Globals.UpdateCooldownFrames))
 			{
 				circlePressed = false;
-
-				if (!sotnApi.GameApi.IsInMenu() && inputService.RegisteredMove(InputKeys.DragonPunch, Globals.UpdateCooldownFrames))
-				{
-					string item = "Manna prism";
-					if (!sotnApi.AlucardApi.HasItemInInventory(item))
-					{
-						Console.WriteLine($"Player doesn't have any {item}!");
-						return;
-					}
-					sotnApi.AlucardApi.TakeOneItemByName(item);
-					ushort indexData = (ushort) Equipment.Items.IndexOf(item);
-					coopMessanger.SendData(MessageType.Effect, BitConverter.GetBytes(indexData));
-					sotnApi.AlucardApi.ActivatePotion(Potion.Mannaprism);
-					Console.WriteLine($"Sending assist: {item}");
-
-				}
-				else if (!sotnApi.GameApi.IsInMenu() && inputService.RegisteredMove(InputKeys.HalfCircleForward, Globals.UpdateCooldownFrames))
-				{
-					string item = "Potion";
-					if (!sotnApi.AlucardApi.HasItemInInventory(item))
-					{
-						Console.WriteLine($"Player doesn't have any {item}!");
-						return;
-					}
-
-					sotnApi.AlucardApi.TakeOneItemByName(item);
-					ushort indexData = (ushort) Equipment.Items.IndexOf(item);
-					coopMessanger.SendData(MessageType.Effect, BitConverter.GetBytes(indexData));
-					sotnApi.AlucardApi.ActivatePotion(Potion.Potion);
-					Console.WriteLine($"Sending assist: {item}");
-				}
 			}
 		}
 

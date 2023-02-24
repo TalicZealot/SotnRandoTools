@@ -129,3 +129,6 @@ dotnet_diagnostic.CS8604.severity = suggestion
 
 # IDE0047: Remove unnecessary parentheses
 dotnet_style_parentheses_in_arithmetic_binary_operators = always_for_clarity
+
+# CS0618: Type or member is obsolete
+dotnet_diagnostic.CS0618.severity = suggestion

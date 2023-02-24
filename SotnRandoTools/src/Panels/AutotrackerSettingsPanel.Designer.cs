@@ -53,6 +53,7 @@ namespace SotnRandoTools
             this.username = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.trackerDerfaultsButton = new System.Windows.Forms.Button();
+            this.muteCheckBox = new System.Windows.Forms.CheckBox();
             this.relicDisplayGroup.SuspendLayout();
             this.layoutGroup.SuspendLayout();
             this.windowGroup.SuspendLayout();
@@ -137,7 +138,7 @@ namespace SotnRandoTools
             this.layoutGroup.Controls.Add(this.radioCollected);
             this.layoutGroup.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.layoutGroup.ForeColor = System.Drawing.Color.White;
-            this.layoutGroup.Location = new System.Drawing.Point(6, 149);
+            this.layoutGroup.Location = new System.Drawing.Point(6, 137);
             this.layoutGroup.Name = "layoutGroup";
             this.layoutGroup.Size = new System.Drawing.Size(182, 75);
             this.layoutGroup.TabIndex = 4;
@@ -171,9 +172,9 @@ namespace SotnRandoTools
             // 
             this.windowGroup.Controls.Add(this.alwaysOnTopCheckBox);
             this.windowGroup.ForeColor = System.Drawing.Color.White;
-            this.windowGroup.Location = new System.Drawing.Point(6, 245);
+            this.windowGroup.Location = new System.Drawing.Point(6, 218);
             this.windowGroup.Name = "windowGroup";
-            this.windowGroup.Size = new System.Drawing.Size(182, 75);
+            this.windowGroup.Size = new System.Drawing.Size(182, 44);
             this.windowGroup.TabIndex = 5;
             this.windowGroup.TabStop = false;
             this.windowGroup.Text = "Window";
@@ -191,6 +192,7 @@ namespace SotnRandoTools
             // 
             // optionsGroup
             // 
+            this.optionsGroup.Controls.Add(this.muteCheckBox);
             this.optionsGroup.Controls.Add(this.autosplitterCheckBox);
             this.optionsGroup.Controls.Add(this.overlayCheckBox);
             this.optionsGroup.Controls.Add(this.replaysCheckBox);
@@ -198,7 +200,7 @@ namespace SotnRandoTools
             this.optionsGroup.ForeColor = System.Drawing.Color.White;
             this.optionsGroup.Location = new System.Drawing.Point(206, 56);
             this.optionsGroup.Name = "optionsGroup";
-            this.optionsGroup.Size = new System.Drawing.Size(182, 111);
+            this.optionsGroup.Size = new System.Drawing.Size(182, 162);
             this.optionsGroup.TabIndex = 6;
             this.optionsGroup.TabStop = false;
             this.optionsGroup.Text = "Options";
@@ -321,7 +323,7 @@ namespace SotnRandoTools
             // 
             this.groupBox1.Controls.Add(this.username);
             this.groupBox1.ForeColor = System.Drawing.Color.White;
-            this.groupBox1.Location = new System.Drawing.Point(206, 169);
+            this.groupBox1.Location = new System.Drawing.Point(6, 268);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(181, 49);
             this.groupBox1.TabIndex = 8;
@@ -344,6 +346,17 @@ namespace SotnRandoTools
             this.trackerDerfaultsButton.Text = "Tracker Defaults";
             this.trackerDerfaultsButton.UseVisualStyleBackColor = true;
             this.trackerDerfaultsButton.Click += new System.EventHandler(this.trackerDerfaultsButton_Click);
+            // 
+            // muteCheckBox
+            // 
+            this.muteCheckBox.AutoSize = true;
+            this.muteCheckBox.Location = new System.Drawing.Point(6, 111);
+            this.muteCheckBox.Name = "muteCheckBox";
+            this.muteCheckBox.Size = new System.Drawing.Size(79, 17);
+            this.muteCheckBox.TabIndex = 4;
+            this.muteCheckBox.Text = "Mute music";
+            this.muteCheckBox.UseVisualStyleBackColor = true;
+            this.muteCheckBox.CheckedChanged += new System.EventHandler(this.muteCheckBox_CheckedChanged);
             // 
             // AutotrackerSettingsPanel
             // 
@@ -408,5 +421,6 @@ namespace SotnRandoTools
 		private System.Windows.Forms.CheckBox autosplitterCheckBox;
 		private System.Windows.Forms.RadioButton customLocationsSpreadRadio;
 		private System.Windows.Forms.Button trackerDerfaultsButton;
+		private System.Windows.Forms.CheckBox muteCheckBox;
 	}
 }

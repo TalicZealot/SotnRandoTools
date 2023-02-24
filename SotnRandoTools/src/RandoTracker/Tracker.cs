@@ -21,7 +21,6 @@ namespace SotnRandoTools.RandoTracker
 		const string DefaultSeedInfo = "seed(preset)";
 		const long DraculaActorAddress = 0x076e98;
 		private const int AutosplitterReconnectCooldown = 120;
-		private const int AutosplitterReconnectMaxAttempts = 10;
 		private readonly ITrackerGraphicsEngine trackerGraphicsEngine;
 		private readonly IToolConfig toolConfig;
 		private readonly IWatchlistService watchlistService;
@@ -425,11 +424,11 @@ namespace SotnRandoTools.RandoTracker
 		private Autosplitter autosplitter;
 		private bool autosplitterConnected = false;
 		private ushort autosplitterReconnectCounter = 0;
-		private ushort autosplitterReconnectAttempts = 0;
 		private bool draculaSpawned = false;
 		private byte currentMapX = (byte) 0;
 		private byte currentMapY = (byte) 0;
 		private byte currentReplayCooldown = 0;
+		private bool muted = false;
 		private bool started = false;
 		private bool finished = false;
 		private TimeSpan finalTime;
@@ -541,32 +540,47 @@ namespace SotnRandoTools.RandoTracker
 				}
 			}
 
-			if (toolConfig.Tracker.EnableAutosplitter && !autosplitterConnected && autosplitterReconnectCounter == AutosplitterReconnectCooldown && !sotnApi.GameApi.InAlucardMode() && autosplitterReconnectAttempts < AutosplitterReconnectMaxAttempts)
+			if (toolConfig.Tracker.EnableAutosplitter && !autosplitterConnected && autosplitterReconnectCounter == AutosplitterReconnectCooldown && !started)
 			{
 				autosplitterConnected = autosplitter.AtemptConnect();
 				autosplitterReconnectCounter = 0;
-				autosplitterReconnectAttempts++;
 			}
 			if (toolConfig.Tracker.EnableAutosplitter && !autosplitterConnected && autosplitterReconnectCounter < 120 && !sotnApi.GameApi.InAlucardMode())
 			{
 				autosplitterReconnectCounter++;
 			}
-			if (toolConfig.Tracker.EnableAutosplitter && autosplitterConnected)
-			{
-				CheckReset();
-			}
 			CheckStart();
 			CheckSplit();
+			MuteMusic();
+		}
+
+		private void MuteMusic()
+		{
+			uint currentStatus = sotnApi.GameApi.Status;
+			if (!toolConfig.Tracker.MuteMusic || (currentStatus != Status.InGame && currentStatus != Status.MainMenu))
+			{
+				return;
+			}
+
+			if (!muted && SotnApi.Constants.Values.Game.Various.MusicTrackValues.Contains(sotnApi.GameApi.MusicTrack))
+			{
+				sotnApi.GameApi.MuteXA();
+				muted = true;
+			}
+			else if (muted && !SotnApi.Constants.Values.Game.Various.MusicTrackValues.Contains(sotnApi.GameApi.MusicTrack))
+			{
+				sotnApi.GameApi.UnmuteXA();
+				muted = false;
+			}
 		}
 
 		private void InitializeAllLocks()
 		{
-			LoadLocks(Paths.CasualPresetPath, false);
-			LoadLocks(Paths.SafePresetPath, false);
+			LoadLocks(Paths.CasualPresetPath);
 			LoadLocks(Paths.SpeedrunPresetPath, true);
 		}
 
-		private void LoadLocks(string presetFilePath, bool outOfLogic)
+		private void LoadLocks(string presetFilePath, bool outOfLogic = false, bool overwriteLocks = false)
 		{
 			var presetLocations = JObject.Parse(File.ReadAllText(presetFilePath))["lockLocation"];
 			foreach (var location in presetLocations)
@@ -575,6 +589,18 @@ namespace SotnRandoTools.RandoTracker
 				var trackerLocation = locations.Where(x => x.Name.Replace(" ", String.Empty).ToLower() == name).FirstOrDefault();
 				if (trackerLocation != null)
 				{
+					if (overwriteLocks)
+					{
+						if (outOfLogic)
+						{
+							trackerLocation.OutOfLogicLocks.Clear();
+						}
+						else
+						{
+							trackerLocation.Locks.Clear();
+						}
+					}
+
 					foreach (var lockSet in location["locks"])
 					{
 						if (outOfLogic)
@@ -625,7 +651,7 @@ namespace SotnRandoTools.RandoTracker
 		{
 			if (SeedInfo == DefaultSeedInfo && sotnApi.GameApi.Status == Status.MainMenu)
 			{
-				getSeedData();
+				GetSeedData();
 				trackerGraphicsEngine.Render();
 				trackerGraphicsEngine.DrawSeedInfo(SeedInfo);
 			}
@@ -773,7 +799,7 @@ namespace SotnRandoTools.RandoTracker
 			watchlistService.ThrustSwordWatches.ClearChangeCounts();
 		}
 
-		private void getSeedData()
+		private void GetSeedData()
 		{
 			seedName = sotnApi.GameApi.ReadSeedName();
 			preset = sotnApi.GameApi.ReadPresetName();
@@ -808,10 +834,19 @@ namespace SotnRandoTools.RandoTracker
 				case "bat-master":
 					guardedExtension = false;
 					spreadExtension = true;
-					LoadLocks(Paths.BatMasterPresetPath, false);
+					LoadLocks(Paths.BatMasterPresetPath);
 					break;
 				case "speedrun":
-					LoadLocks(Paths.SpeedrunPresetPath, false);
+					LoadLocks(Paths.SpeedrunPresetPath);
+					break;
+				case "open-casual":
+				case "open-safe":
+					LoadLocks(Paths.OpenCasualPresetPath, false, true);
+					LoadLocks(Paths.OpenSpeedrunPresetPath, true, true);
+					break;
+				case "open-adventure":
+					LoadLocks(Paths.OpenCasualPresetPath, false, true);
+					SetEquipmentProgression();
 					break;
 				case "custom":
 					guardedExtension = toolConfig.Tracker.CustomLocationsGuarded;
@@ -988,7 +1023,7 @@ namespace SotnRandoTools.RandoTracker
 										watchlistService.CoopLocationValues[watchIndex] = value;
 										Console.WriteLine($"Added {coopWatch.Notes} at index {watchIndex} value {watchlistService.CoopLocationValues[watchIndex]} to coopValues.");
 									}
-									//ClearMapLocation(locations.IndexOf(location));
+									ClearMapLocation(locations.IndexOf(location));
 								}
 							}
 						}
@@ -1312,14 +1347,6 @@ namespace SotnRandoTools.RandoTracker
 					started = true;
 					stopWatch.Start();
 				}
-			}
-		}
-
-		private void CheckReset()
-		{
-			if (autosplitter.Started && sotnApi.GameApi.Hours == 0 && sotnApi.GameApi.Minutes == 0 && sotnApi.GameApi.Seconds == 0 && sotnApi.GameApi.Frames < 20 && sotnApi.GameApi.Status == Status.InGame)
-			{
-				autosplitter.Restart();
 			}
 		}
 

@@ -81,12 +81,6 @@ namespace SotnRandoTools
 			Process.Start(Paths.SourceLink);
 		}
 
-		private void donateLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-		{
-			donateLink.LinkVisited = true;
-			Process.Start(Paths.DonateLink);
-		}
-
 		private void patchNotesLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
 			string path = Directory.GetCurrentDirectory();

@@ -16,6 +16,7 @@ namespace SotnRandoTools.Configuration
 		public bool SaveReplays { get; set; }
 		public bool EnableAutosplitter { get; set; }
 		public bool UseOverlay { get; set; }
+		public bool MuteMusic { get; set; }
 		public string Username { get; set; }
 		public List<List<int>> OverlaySlots { get; set; }
 		public bool CustomLocationsGuarded { get; set; }
@@ -35,6 +36,7 @@ namespace SotnRandoTools.Configuration
 			SaveReplays = true;
 			EnableAutosplitter = true;
 			UseOverlay = false;
+			MuteMusic = false;
 			CustomLocationsGuarded = true;
 			CustomLocationsEquipment = false;
 			CustomLocationsClassic = false;

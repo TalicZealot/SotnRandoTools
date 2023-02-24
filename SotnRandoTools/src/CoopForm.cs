@@ -87,8 +87,6 @@ namespace SotnRandoTools
 			this.Location = toolConfig.Coop.Location;
 			this.portNumeric.Value = toolConfig.Coop.DefaultPort;
 			this.targetIp.Text = toolConfig.Coop.DefaultServer;
-			inputService.ReadDragonPunch = true;
-			inputService.ReadHalfCircle = true;
 			inputService.Polling++;
 			ValidateAddress();
 		}
@@ -173,8 +171,6 @@ namespace SotnRandoTools
 		private void CoopForm_FormClosing(object sender, FormClosingEventArgs e)
 		{
 			inputService.Polling--;
-			inputService.ReadDragonPunch = false;
-			inputService.ReadHalfCircle = false;
 			coopMessanger.Disconnect();
 			coopMessanger.StopServer();
 			coopMessanger.DisposeAll();

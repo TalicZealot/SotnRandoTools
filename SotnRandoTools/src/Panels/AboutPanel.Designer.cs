@@ -38,7 +38,6 @@ namespace SotnRandoTools
             this.descriptionLabel = new System.Windows.Forms.Label();
             this.readmeLink = new System.Windows.Forms.LinkLabel();
             this.sourceLink = new System.Windows.Forms.LinkLabel();
-            this.donateLink = new System.Windows.Forms.LinkLabel();
             this.sotnApiLink = new System.Windows.Forms.LinkLabel();
             this.updaterLink = new System.Windows.Forms.LinkLabel();
             this.randoLink = new System.Windows.Forms.LinkLabel();
@@ -133,21 +132,6 @@ namespace SotnRandoTools
             this.sourceLink.VisitedLinkColor = System.Drawing.Color.Cyan;
             this.sourceLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.sourceLink_LinkClicked);
             // 
-            // donateLink
-            // 
-            this.donateLink.ActiveLinkColor = System.Drawing.Color.Maroon;
-            this.donateLink.AutoSize = true;
-            this.donateLink.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.donateLink.LinkColor = System.Drawing.Color.DodgerBlue;
-            this.donateLink.Location = new System.Drawing.Point(324, 343);
-            this.donateLink.Name = "donateLink";
-            this.donateLink.Size = new System.Drawing.Size(61, 18);
-            this.donateLink.TabIndex = 8;
-            this.donateLink.TabStop = true;
-            this.donateLink.Text = "Donate";
-            this.donateLink.VisitedLinkColor = System.Drawing.Color.Cyan;
-            this.donateLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.donateLink_LinkClicked);
-            // 
             // sotnApiLink
             // 
             this.sotnApiLink.ActiveLinkColor = System.Drawing.Color.Maroon;
@@ -218,7 +202,6 @@ namespace SotnRandoTools
             this.Controls.Add(this.randoLink);
             this.Controls.Add(this.updaterLink);
             this.Controls.Add(this.sotnApiLink);
-            this.Controls.Add(this.donateLink);
             this.Controls.Add(this.sourceLink);
             this.Controls.Add(this.readmeLink);
             this.Controls.Add(this.descriptionLabel);
@@ -246,7 +229,6 @@ namespace SotnRandoTools
 		private System.Windows.Forms.Label descriptionLabel;
 		private System.Windows.Forms.LinkLabel readmeLink;
 		private System.Windows.Forms.LinkLabel sourceLink;
-		private System.Windows.Forms.LinkLabel donateLink;
 		private System.Windows.Forms.LinkLabel sotnApiLink;
 		private System.Windows.Forms.LinkLabel updaterLink;
 		private System.Windows.Forms.LinkLabel randoLink;

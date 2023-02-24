@@ -29,7 +29,7 @@
       <HintPath>..\..\..\BizHawk\dll\BizHawk.Client.Common.dll</HintPath>
     </Reference>
     <Reference Include="SotnApi">
-      <HintPath>..\..\..\BizHawk\ExternalTools\SotnRandoTools\SotnApi.dll</HintPath>
+      <HintPath>..\..\..\BizHawk\ExternalTools\SotnRandoTools\dll\SotnApi.dll</HintPath>
     </Reference>
   </ItemGroup>
 

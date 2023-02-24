@@ -18,9 +18,9 @@ namespace SotnRandoTools
 		Description = "A collection of tools to enhance the SotN randomizer experience.",
 		LoadAssemblyFiles = new[]
 		{
-			"SotnRandoTools/SotnApi.dll",
-			"SotnRandoTools/SimpleTCP.dll",
-			"SotnRandoTools/WatsonWebsocket.dll"
+			"SotnRandoTools/dll/SotnApi.dll",
+			"SotnRandoTools/dll/SimpleTCP.dll",
+			"SotnRandoTools/dll/WatsonWebsocket.dll"
 		})]
 	[ExternalToolEmbeddedIcon("SotnRandoTools.Resources.BizAlucard.png")]
 	[ExternalToolApplicability.SingleRom(CoreSystem.Playstation, "0DDCBC3D")]
@@ -33,9 +33,6 @@ namespace SotnRandoTools
 		private IMemoryDomains? _memoryDomains { get; set; }
 
 		[RequiredApi]
-		private ICommApi? _maybeCommAPI { get; set; }
-
-		[RequiredApi]
 		private IEmuClientApi? _maybeClientAPI { get; set; }
 
 		[RequiredApi]
@@ -45,29 +42,20 @@ namespace SotnRandoTools
 		private IEmulationApi? _maybeEmuAPI { get; set; }
 
 		[RequiredApi]
-		private IGameInfoApi? _maybeGameInfoAPI { get; set; }
-
-		[RequiredApi]
 		private IGuiApi? _maybeGuiAPI { get; set; }
 
 		[RequiredApi]
 		private IMemoryApi? _maybeMemAPI { get; set; }
 
-		[RequiredApi]
-		private ISQLiteApi? _maybesQLiteApi { get; set; }
-
 		private ApiContainer? _apis;
 
 		private ApiContainer APIs => _apis ??= new ApiContainer(new Dictionary<Type, IExternalApi>
 		{
-			[typeof(ICommApi)] = _maybeCommAPI ?? throw new NullReferenceException(),
 			[typeof(IEmuClientApi)] = _maybeClientAPI ?? throw new NullReferenceException(),
 			[typeof(IJoypadApi)] = _maybeJoypadApi ?? throw new NullReferenceException(),
 			[typeof(IEmulationApi)] = _maybeEmuAPI ?? throw new NullReferenceException(),
-			[typeof(IGameInfoApi)] = _maybeGameInfoAPI ?? throw new NullReferenceException(),
 			[typeof(IGuiApi)] = _maybeGuiAPI ?? throw new NullReferenceException(),
 			[typeof(IMemoryApi)] = _maybeMemAPI ?? throw new NullReferenceException(),
-			[typeof(ISQLiteApi)] = _maybesQLiteApi ?? throw new NullReferenceException(),
 		});
 		private Config GlobalConfig => (_maybeEmuAPI as EmulationApi ?? throw new Exception("required API wasn't fulfilled")).ForbiddenConfigReference;
 
