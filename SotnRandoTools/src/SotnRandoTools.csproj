@@ -11,7 +11,7 @@
     <OutputType>Library</OutputType>
     <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
     <AnalysisLevel>5.0</AnalysisLevel>
-    <Version>1.4.9</Version>
+    <Version>1.5.0</Version>
     <Description>A collection of tools to enhance the experience of playign the SotN randomizer.</Description>
     <Copyright />
     <PackageProjectUrl>https://taliczealot.github.io/</PackageProjectUrl>
@@ -108,10 +108,6 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Configuration\Models\" />
-    <Folder Include="Services\Adapters\" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Copy SourceFiles="$(OutputPath)$(MSBuildProjectName).dll" DestinationFolder="$(ProjectDir)../BizHawk/ExternalTools" />

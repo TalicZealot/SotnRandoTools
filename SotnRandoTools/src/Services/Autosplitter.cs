@@ -14,8 +14,6 @@ namespace SotnRandoTools.Services
 			pipeClient = new NamedPipeClientStream("LiveSplit");
 		}
 
-		public bool Started { get; set; }
-
 		public bool AtemptConnect()
 		{
 			if (!pipeClient.IsConnected)
@@ -40,19 +38,16 @@ namespace SotnRandoTools.Services
 		public void StartTImer()
 		{
 			SendString("starttimer");
-			Started = true;
 		}
 
 		public void Restart()
 		{
 			SendString("reset");
-			Started = false;
 		}
 
 		public void Split()
 		{
 			SendString("split");
-			Started = false;
 		}
 
 		public void Disconnect()

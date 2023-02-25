@@ -540,12 +540,12 @@ namespace SotnRandoTools.RandoTracker
 				}
 			}
 
-			if (toolConfig.Tracker.EnableAutosplitter && !autosplitterConnected && autosplitterReconnectCounter == AutosplitterReconnectCooldown && !started)
+			if (toolConfig.Tracker.EnableAutosplitter && !started && !autosplitterConnected && autosplitterReconnectCounter == AutosplitterReconnectCooldown)
 			{
 				autosplitterConnected = autosplitter.AtemptConnect();
 				autosplitterReconnectCounter = 0;
 			}
-			if (toolConfig.Tracker.EnableAutosplitter && !autosplitterConnected && autosplitterReconnectCounter < 120 && !sotnApi.GameApi.InAlucardMode())
+			else if (toolConfig.Tracker.EnableAutosplitter && !started && !autosplitterConnected && autosplitterReconnectCounter < 120 && !sotnApi.GameApi.InAlucardMode())
 			{
 				autosplitterReconnectCounter++;
 			}
@@ -562,12 +562,14 @@ namespace SotnRandoTools.RandoTracker
 				return;
 			}
 
-			if (!muted && SotnApi.Constants.Values.Game.Various.MusicTrackValues.Contains(sotnApi.GameApi.MusicTrack))
+			bool currentTrackIsSong = sotnApi.GameApi.MusicTrack <= SotnApi.Constants.Values.Game.Various.MusicTrackValues.Last();
+
+			if (!muted && currentTrackIsSong)
 			{
 				sotnApi.GameApi.MuteXA();
 				muted = true;
 			}
-			else if (muted && !SotnApi.Constants.Values.Game.Various.MusicTrackValues.Contains(sotnApi.GameApi.MusicTrack))
+			else if (muted && !currentTrackIsSong)
 			{
 				sotnApi.GameApi.UnmuteXA();
 				muted = false;
@@ -1338,7 +1340,7 @@ namespace SotnRandoTools.RandoTracker
 		{
 			if (sotnApi.GameApi.Hours == 0 && sotnApi.GameApi.Minutes == 0 && sotnApi.GameApi.Seconds == 3 && inGame)
 			{
-				if (toolConfig.Tracker.EnableAutosplitter && !autosplitter.Started)
+				if (toolConfig.Tracker.EnableAutosplitter)
 				{
 					autosplitter.StartTImer();
 				}
