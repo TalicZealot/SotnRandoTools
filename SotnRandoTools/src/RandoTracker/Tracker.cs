@@ -479,6 +479,11 @@ namespace SotnRandoTools.RandoTracker
 		{
 			UpdateSeedLabel();
 
+			if (toolConfig.Tracker.Stereo && sotnApi.GameApi.Status == Status.MainMenu)
+			{
+				sotnApi.GameApi.EnableStartWithStereo();
+			}
+
 			inGame = sotnApi.GameApi.Status == Status.InGame;
 			bool updatedSecondCastle = sotnApi.GameApi.SecondCastle;
 			relicOrItemCollected = false;

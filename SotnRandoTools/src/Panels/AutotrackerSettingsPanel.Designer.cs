@@ -41,6 +41,7 @@ namespace SotnRandoTools
             this.windowGroup = new System.Windows.Forms.GroupBox();
             this.alwaysOnTopCheckBox = new System.Windows.Forms.CheckBox();
             this.optionsGroup = new System.Windows.Forms.GroupBox();
+            this.muteCheckBox = new System.Windows.Forms.CheckBox();
             this.autosplitterCheckBox = new System.Windows.Forms.CheckBox();
             this.overlayCheckBox = new System.Windows.Forms.CheckBox();
             this.replaysCheckBox = new System.Windows.Forms.CheckBox();
@@ -53,7 +54,7 @@ namespace SotnRandoTools
             this.username = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.trackerDerfaultsButton = new System.Windows.Forms.Button();
-            this.muteCheckBox = new System.Windows.Forms.CheckBox();
+            this.stereoCheckBox = new System.Windows.Forms.CheckBox();
             this.relicDisplayGroup.SuspendLayout();
             this.layoutGroup.SuspendLayout();
             this.windowGroup.SuspendLayout();
@@ -140,7 +141,7 @@ namespace SotnRandoTools
             this.layoutGroup.ForeColor = System.Drawing.Color.White;
             this.layoutGroup.Location = new System.Drawing.Point(6, 137);
             this.layoutGroup.Name = "layoutGroup";
-            this.layoutGroup.Size = new System.Drawing.Size(182, 75);
+            this.layoutGroup.Size = new System.Drawing.Size(182, 81);
             this.layoutGroup.TabIndex = 4;
             this.layoutGroup.TabStop = false;
             this.layoutGroup.Text = "Layout";
@@ -172,7 +173,7 @@ namespace SotnRandoTools
             // 
             this.windowGroup.Controls.Add(this.alwaysOnTopCheckBox);
             this.windowGroup.ForeColor = System.Drawing.Color.White;
-            this.windowGroup.Location = new System.Drawing.Point(6, 218);
+            this.windowGroup.Location = new System.Drawing.Point(6, 224);
             this.windowGroup.Name = "windowGroup";
             this.windowGroup.Size = new System.Drawing.Size(182, 44);
             this.windowGroup.TabIndex = 5;
@@ -192,6 +193,7 @@ namespace SotnRandoTools
             // 
             // optionsGroup
             // 
+            this.optionsGroup.Controls.Add(this.stereoCheckBox);
             this.optionsGroup.Controls.Add(this.muteCheckBox);
             this.optionsGroup.Controls.Add(this.autosplitterCheckBox);
             this.optionsGroup.Controls.Add(this.overlayCheckBox);
@@ -204,6 +206,17 @@ namespace SotnRandoTools
             this.optionsGroup.TabIndex = 6;
             this.optionsGroup.TabStop = false;
             this.optionsGroup.Text = "Options";
+            // 
+            // muteCheckBox
+            // 
+            this.muteCheckBox.AutoSize = true;
+            this.muteCheckBox.Location = new System.Drawing.Point(6, 111);
+            this.muteCheckBox.Name = "muteCheckBox";
+            this.muteCheckBox.Size = new System.Drawing.Size(79, 17);
+            this.muteCheckBox.TabIndex = 4;
+            this.muteCheckBox.Text = "Mute music";
+            this.muteCheckBox.UseVisualStyleBackColor = true;
+            this.muteCheckBox.CheckedChanged += new System.EventHandler(this.muteCheckBox_CheckedChanged);
             // 
             // autosplitterCheckBox
             // 
@@ -313,7 +326,7 @@ namespace SotnRandoTools
             // 
             // username
             // 
-            this.username.Location = new System.Drawing.Point(6, 19);
+            this.username.Location = new System.Drawing.Point(5, 20);
             this.username.Name = "username";
             this.username.Size = new System.Drawing.Size(170, 21);
             this.username.TabIndex = 5;
@@ -323,9 +336,9 @@ namespace SotnRandoTools
             // 
             this.groupBox1.Controls.Add(this.username);
             this.groupBox1.ForeColor = System.Drawing.Color.White;
-            this.groupBox1.Location = new System.Drawing.Point(6, 268);
+            this.groupBox1.Location = new System.Drawing.Point(6, 271);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(181, 49);
+            this.groupBox1.Size = new System.Drawing.Size(182, 49);
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
             this.groupBox1.Tag = "Username";
@@ -347,16 +360,16 @@ namespace SotnRandoTools
             this.trackerDerfaultsButton.UseVisualStyleBackColor = true;
             this.trackerDerfaultsButton.Click += new System.EventHandler(this.trackerDerfaultsButton_Click);
             // 
-            // muteCheckBox
+            // stereoCheckBox
             // 
-            this.muteCheckBox.AutoSize = true;
-            this.muteCheckBox.Location = new System.Drawing.Point(6, 111);
-            this.muteCheckBox.Name = "muteCheckBox";
-            this.muteCheckBox.Size = new System.Drawing.Size(79, 17);
-            this.muteCheckBox.TabIndex = 4;
-            this.muteCheckBox.Text = "Mute music";
-            this.muteCheckBox.UseVisualStyleBackColor = true;
-            this.muteCheckBox.CheckedChanged += new System.EventHandler(this.muteCheckBox_CheckedChanged);
+            this.stereoCheckBox.AutoSize = true;
+            this.stereoCheckBox.Location = new System.Drawing.Point(6, 134);
+            this.stereoCheckBox.Name = "stereoCheckBox";
+            this.stereoCheckBox.Size = new System.Drawing.Size(58, 17);
+            this.stereoCheckBox.TabIndex = 5;
+            this.stereoCheckBox.Text = "Stereo";
+            this.stereoCheckBox.UseVisualStyleBackColor = true;
+            this.stereoCheckBox.CheckedChanged += new System.EventHandler(this.stereoCheckBox_CheckedChanged);
             // 
             // AutotrackerSettingsPanel
             // 
@@ -422,5 +435,6 @@ namespace SotnRandoTools
 		private System.Windows.Forms.RadioButton customLocationsSpreadRadio;
 		private System.Windows.Forms.Button trackerDerfaultsButton;
 		private System.Windows.Forms.CheckBox muteCheckBox;
+		private System.Windows.Forms.CheckBox stereoCheckBox;
 	}
 }
