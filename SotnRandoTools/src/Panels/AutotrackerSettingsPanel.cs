@@ -1,6 +1,8 @@
 ﻿using System;
+using System.IO;
 using System.Windows.Forms;
 using SotnRandoTools.Configuration.Interfaces;
+using SotnRandoTools.Constants;
 
 namespace SotnRandoTools
 {
@@ -53,6 +55,9 @@ namespace SotnRandoTools
 			customLocationsSpreadRadio.Checked = toolConfig.Tracker.CustomLocationsSpread;
 
 			username.Text = toolConfig.Tracker.Username;
+
+			openLayoutDialog.InitialDirectory = Directory.GetCurrentDirectory() + Paths.OverlayPath;
+			saveLayoutDialog.InitialDirectory = Directory.GetCurrentDirectory() + Paths.OverlayPath;
 		}
 
 		private void radioProgression_CheckedChanged(object sender, EventArgs e)
@@ -147,6 +152,26 @@ namespace SotnRandoTools
 		private void stereoCheckBox_CheckedChanged(object sender, EventArgs e)
 		{
 			toolConfig.Tracker.Stereo = stereoCheckBox.Checked;
+		}
+
+		private void loadLayoutButton_Click(object sender, EventArgs e)
+		{
+			openLayoutDialog.ShowDialog();
+		}
+
+		private void saveLayoutButton_Click(object sender, EventArgs e)
+		{
+			saveLayoutDialog.ShowDialog();
+		}
+
+		private void openLayoutDialog_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
+		{
+			toolConfig.Tracker.LoadOverlayLayout(openLayoutDialog.FileName);
+		}
+
+		private void saveLayoutDialog_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
+		{
+			toolConfig.Tracker.SaveOverlayLayout(saveLayoutDialog.FileName);
 		}
 	}
 }

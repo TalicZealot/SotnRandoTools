@@ -431,6 +431,7 @@ namespace SotnRandoTools.RandoTracker
 		private bool muted = false;
 		private bool started = false;
 		private bool finished = false;
+		private bool replaySaved = false;
 		private TimeSpan finalTime;
 		private Stopwatch stopWatch = new Stopwatch();
 
@@ -554,6 +555,11 @@ namespace SotnRandoTools.RandoTracker
 			{
 				autosplitterReconnectCounter++;
 			}
+			else if (toolConfig.Tracker.EnableAutosplitter && !started && autosplitterConnected && !sotnApi.GameApi.InAlucardMode())
+			{
+				autosplitterConnected = autosplitter.IsConnected();
+			}
+
 			CheckStart();
 			CheckSplit();
 			MuteMusic();
@@ -837,11 +843,6 @@ namespace SotnRandoTools.RandoTracker
 					break;
 				case "guarded-og":
 					guardedExtension = true;
-					break;
-				case "bat-master":
-					guardedExtension = false;
-					spreadExtension = true;
-					LoadLocks(Paths.BatMasterPresetPath);
 					break;
 				case "speedrun":
 					LoadLocks(Paths.SpeedrunPresetPath);
@@ -1211,7 +1212,7 @@ namespace SotnRandoTools.RandoTracker
 
 		public void SaveReplay()
 		{
-			if (replay.Count < 30)
+			if (replaySaved || replay.Count < 30)
 			{
 				return;
 			}
@@ -1324,6 +1325,7 @@ namespace SotnRandoTools.RandoTracker
 			}
 
 			File.WriteAllBytes(replayPath, replayBytes);
+			replaySaved = true;
 		}
 
 		private void SaveSeedInfo(string info)
@@ -1375,6 +1377,7 @@ namespace SotnRandoTools.RandoTracker
 					stopWatch.Stop();
 					finished = true;
 					finalTime = stopWatch.Elapsed;
+					SaveReplay();
 				}
 			}
 			else

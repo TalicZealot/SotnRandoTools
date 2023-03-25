@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
+using Newtonsoft.Json;
 
 namespace SotnRandoTools.Configuration
 {
@@ -38,7 +40,7 @@ namespace SotnRandoTools.Configuration
 			EnableAutosplitter = true;
 			UseOverlay = false;
 			MuteMusic = false;
-			Stereo = false;
+			Stereo = true;
 			CustomLocationsGuarded = true;
 			CustomLocationsEquipment = false;
 			CustomLocationsClassic = false;
@@ -67,6 +69,38 @@ namespace SotnRandoTools.Configuration
 				new() {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 				new() {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 			};
+		}
+
+		public void SaveOverlayLayout(string path)
+		{
+			string output = JsonConvert.SerializeObject(OverlaySlots, Formatting.Indented);
+			if (File.Exists(path))
+			{
+				File.WriteAllText(path, output);
+			}
+			else
+			{
+				using (StreamWriter sw = File.CreateText(path))
+				{
+					sw.Write(output);
+				}
+			}
+		}
+
+		public void LoadOverlayLayout(string path)
+		{
+			if (File.Exists(path))
+			{
+				string layoutJson = File.ReadAllText(path);
+
+				List<List<int>> layout = JsonConvert.DeserializeObject<List<List<int>>>(layoutJson,
+					new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, MissingMemberHandling = MissingMemberHandling.Ignore }) ?? new List<List<int>>();
+
+				if (layout.Count > 0)
+				{
+					OverlaySlots = layout;
+				}
+			}
 		}
 	}
 }

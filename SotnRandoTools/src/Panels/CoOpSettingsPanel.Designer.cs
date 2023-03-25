@@ -78,7 +78,7 @@ namespace SotnRandoTools
             this.saveButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.saveButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.saveButton.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.saveButton.Location = new System.Drawing.Point(304, 340);
+            this.saveButton.Location = new System.Drawing.Point(304, 380);
             this.saveButton.Name = "saveButton";
             this.saveButton.Size = new System.Drawing.Size(84, 25);
             this.saveButton.TabIndex = 2;
@@ -166,7 +166,7 @@ namespace SotnRandoTools
             this.connectionGroup.ForeColor = System.Drawing.Color.White;
             this.connectionGroup.Location = new System.Drawing.Point(206, 56);
             this.connectionGroup.Name = "connectionGroup";
-            this.connectionGroup.Size = new System.Drawing.Size(182, 110);
+            this.connectionGroup.Size = new System.Drawing.Size(182, 141);
             this.connectionGroup.TabIndex = 5;
             this.connectionGroup.TabStop = false;
             this.connectionGroup.Text = "Connection";
@@ -250,7 +250,7 @@ namespace SotnRandoTools
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.ForeColor = System.Drawing.Color.White;
             this.Name = "CoopSettingsPanel";
-            this.Size = new System.Drawing.Size(395, 368);
+            this.Size = new System.Drawing.Size(395, 408);
             this.Load += new System.EventHandler(this.MultiplayerSettingsPanel_Load);
             this.optionsBox.ResumeLayout(false);
             this.optionsBox.PerformLayout();

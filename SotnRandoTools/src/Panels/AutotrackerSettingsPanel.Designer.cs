@@ -41,6 +41,7 @@ namespace SotnRandoTools
             this.windowGroup = new System.Windows.Forms.GroupBox();
             this.alwaysOnTopCheckBox = new System.Windows.Forms.CheckBox();
             this.optionsGroup = new System.Windows.Forms.GroupBox();
+            this.stereoCheckBox = new System.Windows.Forms.CheckBox();
             this.muteCheckBox = new System.Windows.Forms.CheckBox();
             this.autosplitterCheckBox = new System.Windows.Forms.CheckBox();
             this.overlayCheckBox = new System.Windows.Forms.CheckBox();
@@ -54,13 +55,18 @@ namespace SotnRandoTools
             this.username = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.trackerDerfaultsButton = new System.Windows.Forms.Button();
-            this.stereoCheckBox = new System.Windows.Forms.CheckBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.loadLayoutButton = new System.Windows.Forms.Button();
+            this.saveLayoutButton = new System.Windows.Forms.Button();
+            this.openLayoutDialog = new System.Windows.Forms.OpenFileDialog();
+            this.saveLayoutDialog = new System.Windows.Forms.SaveFileDialog();
             this.relicDisplayGroup.SuspendLayout();
             this.layoutGroup.SuspendLayout();
             this.windowGroup.SuspendLayout();
             this.optionsGroup.SuspendLayout();
             this.customSeedGroup.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // autotrackerPanelTitle
@@ -89,7 +95,7 @@ namespace SotnRandoTools
             this.saveButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.saveButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.saveButton.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.saveButton.Location = new System.Drawing.Point(304, 340);
+            this.saveButton.Location = new System.Drawing.Point(304, 380);
             this.saveButton.Name = "saveButton";
             this.saveButton.Size = new System.Drawing.Size(84, 25);
             this.saveButton.TabIndex = 2;
@@ -206,6 +212,17 @@ namespace SotnRandoTools
             this.optionsGroup.TabIndex = 6;
             this.optionsGroup.TabStop = false;
             this.optionsGroup.Text = "Options";
+            // 
+            // stereoCheckBox
+            // 
+            this.stereoCheckBox.AutoSize = true;
+            this.stereoCheckBox.Location = new System.Drawing.Point(6, 134);
+            this.stereoCheckBox.Name = "stereoCheckBox";
+            this.stereoCheckBox.Size = new System.Drawing.Size(58, 17);
+            this.stereoCheckBox.TabIndex = 5;
+            this.stereoCheckBox.Text = "Stereo";
+            this.stereoCheckBox.UseVisualStyleBackColor = true;
+            this.stereoCheckBox.CheckedChanged += new System.EventHandler(this.stereoCheckBox_CheckedChanged);
             // 
             // muteCheckBox
             // 
@@ -352,7 +369,7 @@ namespace SotnRandoTools
             this.trackerDerfaultsButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.trackerDerfaultsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.trackerDerfaultsButton.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.trackerDerfaultsButton.Location = new System.Drawing.Point(6, 340);
+            this.trackerDerfaultsButton.Location = new System.Drawing.Point(3, 380);
             this.trackerDerfaultsButton.Name = "trackerDerfaultsButton";
             this.trackerDerfaultsButton.Size = new System.Drawing.Size(118, 25);
             this.trackerDerfaultsButton.TabIndex = 9;
@@ -360,22 +377,68 @@ namespace SotnRandoTools
             this.trackerDerfaultsButton.UseVisualStyleBackColor = true;
             this.trackerDerfaultsButton.Click += new System.EventHandler(this.trackerDerfaultsButton_Click);
             // 
-            // stereoCheckBox
+            // groupBox2
             // 
-            this.stereoCheckBox.AutoSize = true;
-            this.stereoCheckBox.Location = new System.Drawing.Point(6, 134);
-            this.stereoCheckBox.Name = "stereoCheckBox";
-            this.stereoCheckBox.Size = new System.Drawing.Size(58, 17);
-            this.stereoCheckBox.TabIndex = 5;
-            this.stereoCheckBox.Text = "Stereo";
-            this.stereoCheckBox.UseVisualStyleBackColor = true;
-            this.stereoCheckBox.CheckedChanged += new System.EventHandler(this.stereoCheckBox_CheckedChanged);
+            this.groupBox2.Controls.Add(this.loadLayoutButton);
+            this.groupBox2.Controls.Add(this.saveLayoutButton);
+            this.groupBox2.ForeColor = System.Drawing.Color.White;
+            this.groupBox2.Location = new System.Drawing.Point(6, 319);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(182, 55);
+            this.groupBox2.TabIndex = 8;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Custom Overlay Layout";
+            // 
+            // loadLayoutButton
+            // 
+            this.loadLayoutButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
+            this.loadLayoutButton.FlatAppearance.BorderSize = 2;
+            this.loadLayoutButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
+            this.loadLayoutButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
+            this.loadLayoutButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.loadLayoutButton.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.loadLayoutButton.Location = new System.Drawing.Point(6, 20);
+            this.loadLayoutButton.Name = "loadLayoutButton";
+            this.loadLayoutButton.Size = new System.Drawing.Size(84, 25);
+            this.loadLayoutButton.TabIndex = 4;
+            this.loadLayoutButton.Text = "Load";
+            this.loadLayoutButton.UseVisualStyleBackColor = true;
+            this.loadLayoutButton.Click += new System.EventHandler(this.loadLayoutButton_Click);
+            // 
+            // saveLayoutButton
+            // 
+            this.saveLayoutButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
+            this.saveLayoutButton.FlatAppearance.BorderSize = 2;
+            this.saveLayoutButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
+            this.saveLayoutButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
+            this.saveLayoutButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.saveLayoutButton.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.saveLayoutButton.Location = new System.Drawing.Point(92, 20);
+            this.saveLayoutButton.Name = "saveLayoutButton";
+            this.saveLayoutButton.Size = new System.Drawing.Size(84, 25);
+            this.saveLayoutButton.TabIndex = 3;
+            this.saveLayoutButton.Text = "Save";
+            this.saveLayoutButton.UseVisualStyleBackColor = true;
+            this.saveLayoutButton.Click += new System.EventHandler(this.saveLayoutButton_Click);
+            // 
+            // openLayoutDialog
+            // 
+            this.openLayoutDialog.FileName = "Layout";
+            this.openLayoutDialog.Filter = "layout config files|*.ini";
+            this.openLayoutDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.openLayoutDialog_FileOk);
+            // 
+            // saveLayoutDialog
+            // 
+            this.saveLayoutDialog.FileName = "Layout";
+            this.saveLayoutDialog.Filter = "layout config files|*.ini";
+            this.saveLayoutDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.saveLayoutDialog_FileOk);
             // 
             // AutotrackerSettingsPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
+            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.trackerDerfaultsButton);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.customSeedGroup);
@@ -389,7 +452,7 @@ namespace SotnRandoTools
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.ForeColor = System.Drawing.Color.White;
             this.Name = "AutotrackerSettingsPanel";
-            this.Size = new System.Drawing.Size(395, 368);
+            this.Size = new System.Drawing.Size(395, 408);
             this.Load += new System.EventHandler(this.AutotrackerSettingsPanel_Load);
             this.relicDisplayGroup.ResumeLayout(false);
             this.relicDisplayGroup.PerformLayout();
@@ -403,6 +466,7 @@ namespace SotnRandoTools
             this.customSeedGroup.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -436,5 +500,10 @@ namespace SotnRandoTools
 		private System.Windows.Forms.Button trackerDerfaultsButton;
 		private System.Windows.Forms.CheckBox muteCheckBox;
 		private System.Windows.Forms.CheckBox stereoCheckBox;
+		private System.Windows.Forms.GroupBox groupBox2;
+		private System.Windows.Forms.Button loadLayoutButton;
+		private System.Windows.Forms.Button saveLayoutButton;
+		private System.Windows.Forms.OpenFileDialog openLayoutDialog;
+		private System.Windows.Forms.SaveFileDialog saveLayoutDialog;
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.IO.Pipes;
+using TwitchLib.Api.Core.Models.Undocumented.ChannelPanels;
 
 namespace SotnRandoTools.Services
 {
@@ -33,6 +34,20 @@ namespace SotnRandoTools.Services
 				pipeWriter = new StreamWriter(pipeClient);
 				return true;
 			}
+		}
+
+		public bool IsConnected()
+		{
+			try
+			{
+				pipeWriter.WriteLine("check");
+				pipeWriter.Flush();
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine("Pipe Error:" + e.Message);
+			}
+			return pipeClient.IsConnected;
 		}
 
 		public void StartTImer()

@@ -60,13 +60,12 @@ namespace SotnRandoTools.Constants
 			{"EyeOfVlad", "./ExternalTools/SotnRandoTools/Images/EyeOfVlad.png"}
 		};
 
-		public const string LogsPath = "./ExternalTools/SotnRandoTools/Logs/";
 		public const string ReplaysPath = "./ExternalTools/SotnRandoTools/Replays/";
+		public const string OverlayPath = @"\ExternalTools\SotnRandoTools\TrackerOverlay\";
 		public const string ChangeLogPath = @"\ExternalTools\SotnRandoTools\ChangeLog.txt";
 
 		public const string CasualPresetPath = "./ExternalTools/SotnRandoTools/Presets/casual.json";
 		public const string SpeedrunPresetPath = "./ExternalTools/SotnRandoTools/Presets/speedrun.json";
-		public const string BatMasterPresetPath = "./ExternalTools/SotnRandoTools/Presets/bat-master.json";
 		public const string OpenCasualPresetPath = "./ExternalTools/SotnRandoTools/Presets/open-casual.json";
 		public const string OpenSpeedrunPresetPath = "./ExternalTools/SotnRandoTools/Presets/open-speedrun.json";
 

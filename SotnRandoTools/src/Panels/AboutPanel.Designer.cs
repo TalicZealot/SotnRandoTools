@@ -79,7 +79,7 @@ namespace SotnRandoTools
             this.updateButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
             this.updateButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.updateButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.updateButton.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.updateButton.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.updateButton.ForeColor = System.Drawing.Color.OrangeRed;
             this.updateButton.Location = new System.Drawing.Point(6, 83);
             this.updateButton.Name = "updateButton";
@@ -108,7 +108,7 @@ namespace SotnRandoTools
             this.readmeLink.AutoSize = true;
             this.readmeLink.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.readmeLink.LinkColor = System.Drawing.Color.DodgerBlue;
-            this.readmeLink.Location = new System.Drawing.Point(7, 343);
+            this.readmeLink.Location = new System.Drawing.Point(3, 390);
             this.readmeLink.Name = "readmeLink";
             this.readmeLink.Size = new System.Drawing.Size(68, 18);
             this.readmeLink.TabIndex = 6;
@@ -123,7 +123,7 @@ namespace SotnRandoTools
             this.sourceLink.AutoSize = true;
             this.sourceLink.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.sourceLink.LinkColor = System.Drawing.Color.DodgerBlue;
-            this.sourceLink.Location = new System.Drawing.Point(171, 343);
+            this.sourceLink.Location = new System.Drawing.Point(158, 390);
             this.sourceLink.Name = "sourceLink";
             this.sourceLink.Size = new System.Drawing.Size(60, 18);
             this.sourceLink.TabIndex = 7;
@@ -180,15 +180,15 @@ namespace SotnRandoTools
             // patchNotesLink
             // 
             this.patchNotesLink.ActiveLinkColor = System.Drawing.Color.Maroon;
-            this.patchNotesLink.AutoSize = true;
-            this.patchNotesLink.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.patchNotesLink.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.patchNotesLink.LinkColor = System.Drawing.Color.DodgerBlue;
-            this.patchNotesLink.Location = new System.Drawing.Point(146, 100);
+            this.patchNotesLink.Location = new System.Drawing.Point(7, 84);
             this.patchNotesLink.Name = "patchNotesLink";
-            this.patchNotesLink.Size = new System.Drawing.Size(98, 18);
+            this.patchNotesLink.Size = new System.Drawing.Size(380, 52);
             this.patchNotesLink.TabIndex = 12;
             this.patchNotesLink.TabStop = true;
             this.patchNotesLink.Text = "Patch Notes";
+            this.patchNotesLink.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.patchNotesLink.Visible = false;
             this.patchNotesLink.VisitedLinkColor = System.Drawing.Color.Cyan;
             this.patchNotesLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.patchNotesLink_LinkClicked);
@@ -198,21 +198,21 @@ namespace SotnRandoTools
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
-            this.Controls.Add(this.patchNotesLink);
             this.Controls.Add(this.randoLink);
             this.Controls.Add(this.updaterLink);
             this.Controls.Add(this.sotnApiLink);
             this.Controls.Add(this.sourceLink);
             this.Controls.Add(this.readmeLink);
             this.Controls.Add(this.descriptionLabel);
-            this.Controls.Add(this.updateButton);
             this.Controls.Add(this.versionLabel);
             this.Controls.Add(this.divider);
             this.Controls.Add(this.autotrackerPanelTitle);
+            this.Controls.Add(this.patchNotesLink);
+            this.Controls.Add(this.updateButton);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.ForeColor = System.Drawing.Color.White;
             this.Name = "AboutPanel";
-            this.Size = new System.Drawing.Size(395, 368);
+            this.Size = new System.Drawing.Size(395, 408);
             this.Load += new System.EventHandler(this.AboutPanel_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
