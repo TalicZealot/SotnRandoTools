@@ -5,5 +5,6 @@
 		int Polling { get; set; }
 		bool ButtonPressed(string button, int frames);
 		void UpdateInputs();
+		bool SupportsR3();
 	}
 }

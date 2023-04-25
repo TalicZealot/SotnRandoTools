@@ -84,6 +84,12 @@ namespace SotnRandoTools.Services
 			return false;
 		}
 
+		public bool SupportsR3()
+		{
+			IReadOnlyDictionary<string, object> inputs = joypadApi.Get();
+			return inputs.ContainsKey(PlaystationInputKeys.R3);
+		}
+
 		private bool CheckNymashock()
 		{
 			return joypadApi.Get().ContainsKey(PlaystationInputKeys.Circle);

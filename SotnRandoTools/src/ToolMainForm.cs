@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using SotnRandoTools.Configuration;
 using SotnRandoTools.Constants;
 using SotnRandoTools.Services;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace SotnRandoTools
 {
@@ -237,8 +238,18 @@ namespace SotnRandoTools
 					coopForm.Close();
 					coopForm.Dispose();
 				}
-				coopForm = new CoopForm(toolConfig, watchlistService, inputService, sotnApi, APIs.Joypad, notificationService);
-				coopForm.Show();
+
+				if (inputService.SupportsR3())
+				{
+					coopForm = new CoopForm(toolConfig, watchlistService, inputService, sotnApi, APIs.Joypad, notificationService);
+					coopForm.Show();
+				}
+				else
+				{
+					MessageBox.Show("You can't use Co Op without setting the Player 1 controller to Dual Shock, in order to support the R3 button.", "Controller not supported",
+								 MessageBoxButtons.OK,
+								 MessageBoxIcon.Warning);
+				}
 			}
 		}
 
