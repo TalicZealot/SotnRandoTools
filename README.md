@@ -37,10 +37,9 @@ BizHawk
 │   │   SotnRandoTools.dll
 │   │
 │   └───SotnRandoTools
-│   │     │   SotnApi.dll
-│   │     │   ...
-│   └───TwitchLib.Api
-│   └───TwitchLib.Api.Helix.Models
+│   │     └───dll
+│   │     └───Images
+│   │     └───...
 ```
 
 ## Usage
