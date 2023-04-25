@@ -77,7 +77,7 @@ namespace SotnRandoTools.Services
 
 		public void UpdateWatchlist(WatchList watches)
 		{
-			watches.UpdateValues(PreviousType.LastChange);
+			watches.UpdateValues(PreviousType.LastFrame);
 		}
 
 		public void ClearAll()
