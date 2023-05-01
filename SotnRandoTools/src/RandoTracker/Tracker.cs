@@ -15,7 +15,7 @@ using SotnRandoTools.Services;
 
 namespace SotnRandoTools.RandoTracker
 {
-	internal sealed class Tracker : ITracker
+	internal sealed class Tracker
 	{
 		const byte ReplayCooldown = 6;
 		const string DefaultSeedInfo = "seed(preset)";
@@ -505,6 +505,7 @@ namespace SotnRandoTools.RandoTracker
 				if (updatedSecondCastle != secondCastle && toolConfig.Tracker.Locations)
 				{
 					secondCastle = updatedSecondCastle;
+					CheckReachability();
 					SetMapLocations();
 				}
 				else if (updatedSecondCastle != secondCastle)
@@ -573,7 +574,7 @@ namespace SotnRandoTools.RandoTracker
 				return;
 			}
 
-			bool currentTrackIsSong = sotnApi.GameApi.MusicTrack <= SotnApi.Constants.Values.Game.Various.MusicTrackValues.Last();
+			bool currentTrackIsSong = sotnApi.GameApi.MusicTrack <= Various.MusicTrackValues.Last();
 
 			if (!muted && currentTrackIsSong)
 			{
@@ -1112,6 +1113,10 @@ namespace SotnRandoTools.RandoTracker
 			{
 				return relic.Collected;
 			}
+			if (name == "holyglasses" && secondCastle)
+			{
+				return true;
+			}
 			Item progressionItem = progressionItems.Where(item => item.Name.ToLower() == name).FirstOrDefault();
 			if (progressionItem != null)
 			{
@@ -1182,12 +1187,12 @@ namespace SotnRandoTools.RandoTracker
 
 			if (currentMapX < 5 && currentMapY < 4)
 			{
-				if (sotnApi.GameApi.Zone2 == (uint) SotnApi.Constants.Values.Game.Enums.Zone.Prologue)
+				if (sotnApi.GameApi.StageId == (uint) SotnApi.Constants.Values.Game.Enums.Stage.Prologue)
 				{
 					replayX += 2;
 					replayY += 32;
 				}
-				else if (sotnApi.GameApi.Zone2 == (uint) SotnApi.Constants.Values.Game.Enums.Zone.Nightmare)
+				else if (sotnApi.GameApi.StageId == (uint) SotnApi.Constants.Values.Game.Enums.Stage.Nightmare)
 				{
 					replayX += 46;
 					replayY += 33;
@@ -1363,12 +1368,12 @@ namespace SotnRandoTools.RandoTracker
 		{
 			if (sotnApi.AlucardApi.MapX == 31 && sotnApi.AlucardApi.MapY == 30 && sotnApi.GameApi.Status == Status.InGame)
 			{
-				LiveEntity boss = sotnApi.EntityApi.GetLiveEntity(DraculaActorAddress);
-				if (boss.Hp > 13 && boss.Hp < 10000 && boss.AiId != 0)
+				Entity boss = sotnApi.EntityApi.GetLiveEntity(DraculaActorAddress);
+				if (boss.Hp > 13 && boss.Hp < 10000 && boss.UpdateFunctionAddress != 0)
 				{
 					draculaSpawned = true;
 				}
-				else if (draculaSpawned && boss.Hp < 1 && boss.AiId != 0)
+				else if (draculaSpawned && boss.Hp < 1 && boss.UpdateFunctionAddress != 0)
 				{
 					if (toolConfig.Tracker.EnableAutosplitter)
 					{

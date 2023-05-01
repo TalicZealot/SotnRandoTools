@@ -67,7 +67,7 @@ namespace SotnRandoTools.Coop
 					break;
 				case MessageType.Location:
 					sotnApi.GameApi.SetRoomValue(watchlistService.CoopLocationWatches[indexByte].Address, dataByte);
-					watchlistService.CoopLocationValues[indexByte] = dataByte;
+					watchlistService.CoopLocationValues[indexByte] |= dataByte;
 					Console.WriteLine($"Received location: {watchlistService.CoopLocationWatches[indexByte].Notes} with value {dataByte}");
 					break;
 				case MessageType.Item:
@@ -82,7 +82,7 @@ namespace SotnRandoTools.Coop
 				case MessageType.WarpFirstCastle:
 					if (indexByte == 0)
 					{
-						sotnApi.AlucardApi.WarpsFirstCastle = sotnApi.AlucardApi.WarpsFirstCastle | dataByte;
+						sotnApi.AlucardApi.WarpsFirstCastle |= dataByte;
 						watchlistService.UpdateWatchlist(watchlistService.WarpsAndShortcutsWatches);
 						watchlistService.WarpsAndShortcutsWatches.ClearChangeCounts();
 						notificationService.AddMessage($"Received warps and shortcuts.");
@@ -98,7 +98,7 @@ namespace SotnRandoTools.Coop
 				case MessageType.WarpSecondCastle:
 					if (indexByte == 0)
 					{
-						sotnApi.AlucardApi.WarpsSecondCastle = sotnApi.AlucardApi.WarpsSecondCastle | dataByte;
+						sotnApi.AlucardApi.WarpsSecondCastle |= dataByte;
 						watchlistService.UpdateWatchlist(watchlistService.WarpsAndShortcutsWatches);
 						watchlistService.WarpsAndShortcutsWatches.ClearChangeCounts();
 						Console.WriteLine($"Received second castle warps with value {dataByte}");
