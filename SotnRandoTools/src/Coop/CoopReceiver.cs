@@ -60,13 +60,14 @@ namespace SotnRandoTools.Coop
 						sotnApi.AlucardApi.GrantRelic((Relic) index);
 						watchlistService.UpdateWatchlist(watchlistService.CoopRelicWatches);
 						watchlistService.CoopRelicWatches.ClearChangeCounts();
-						notificationService.AddMessage(((Relic) index).ToString());
+						notificationService.AddMessage(SotnApi.Constants.Values.Alucard.Equipment.Relics[index]);
 						notificationService.PlayAlert(Paths.ItemPickupSound);
 						Console.WriteLine($"Received relic: {(Relic) index}");
 					}
 					break;
 				case MessageType.Location:
 					sotnApi.GameApi.SetRoomValue(watchlistService.CoopLocationWatches[indexByte].Address, dataByte);
+					sotnApi.AlucardApi.Rooms++;
 					watchlistService.CoopLocationValues[indexByte] |= dataByte;
 					Console.WriteLine($"Received location: {watchlistService.CoopLocationWatches[indexByte].Notes} with value {dataByte}");
 					break;
@@ -241,8 +242,7 @@ namespace SotnRandoTools.Coop
 					Console.WriteLine($"Shortcut {shortcut} not found!");
 					return;
 			}
-
-			notificationService.AddMessage(shortcut.ToString());
+			notificationService.AddMessage(Constants.CoOp.ShortcutNames[(int) shortcut]);
 			Console.WriteLine($"Received shortcut: {shortcut}");
 		}
 

@@ -78,8 +78,11 @@ namespace SotnRandoTools
 
 		public void UpdateCoop()
 		{
-			coopSender.Update();
-			coopReceiver.ExecuteMessage();
+			if (coopSender is not null && coopReceiver is not null)
+			{
+				coopSender.Update();
+				coopReceiver.ExecuteMessage();
+			}
 		}
 
 		private void CoopForm_Load(object sender, EventArgs e)

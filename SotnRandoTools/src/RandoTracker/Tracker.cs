@@ -676,7 +676,6 @@ namespace SotnRandoTools.RandoTracker
 			uint currentRooms = sotnApi.AlucardApi.Rooms;
 			if (currentRooms > roomCount)
 			{
-				roomCount = currentRooms;
 				watchlistService.UpdateWatchlist(watchlistService.SafeLocationWatches);
 				CheckRooms(watchlistService.SafeLocationWatches);
 				if (equipmentExtension || spreadExtension)
@@ -686,6 +685,7 @@ namespace SotnRandoTools.RandoTracker
 				}
 
 			}
+			roomCount = currentRooms;
 		}
 
 		private void UpdateRelics()
