@@ -46,9 +46,13 @@ namespace SotnRandoTools
 
 		private void updateButton_Click(object sender, EventArgs e)
 		{
+#if WIN
 			//handled in main form
 			if (this.UpdateButton_Click != null)
 				this.UpdateButton_Click(this, e);
+#else
+			Process.Start(Paths.LatestReleaseUrl);
+#endif
 		}
 
 		private void sotnApiLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

@@ -91,7 +91,7 @@ namespace SotnRandoTools.Coop
 			{
 				r3Pressed = true;
 				string item = sotnApi.AlucardApi.GetSelectedItemName();
-				if (!item.Contains("empty hand") && !item.Contains("-") && sotnApi.AlucardApi.HasItemInInventory(item))
+				if (!item.Contains("empty hand") && !item.Contains("--") && sotnApi.AlucardApi.HasItemInInventory(item))
 				{
 					sotnApi.AlucardApi.TakeOneItemByName(item);
 					ushort indexData = (ushort) Equipment.Items.IndexOf(item);

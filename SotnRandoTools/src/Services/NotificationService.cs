@@ -4,6 +4,8 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using BizHawk.Client.Common;
 using SotnRandoTools.Configuration.Interfaces;
@@ -32,8 +34,10 @@ namespace SotnRandoTools.Services
 		private Dictionary<string, Image> relicImages = new();
 		private Dictionary<string, MapCoordinates> relicCoordinates = new();
 		private Dictionary<string, MapCoordinates> invertedRelicCoordinates = new();
+#if WIN
 		private System.Windows.Media.MediaPlayer audioPlayer = new();
-		private List<string> messageQueue = new();
+#endif
+		private List<Models.Message> messageQueue = new();
 
 		public NotificationService(IToolConfig toolConfig, IGuiApi guiApi, IEmuClientApi clientAPI)
 		{
@@ -54,14 +58,18 @@ namespace SotnRandoTools.Services
 			countdownTimer.Elapsed += RefreshUI;
 			scale = GetScale();
 			ResizeImages();
+#if WIN
 			audioPlayer.Volume = (double) toolConfig.Coop.Volume / 10F;
+#endif
 		}
 
 		public double Volume
 		{
 			set
 			{
+#if WIN
 				audioPlayer.Volume = value;
+#endif
 			}
 		}
 
@@ -73,6 +81,7 @@ namespace SotnRandoTools.Services
 			{
 				return;
 			}
+#if WIN
 			try
 			{
 				audioPlayer.Dispatcher.Invoke(() =>
@@ -88,13 +97,26 @@ namespace SotnRandoTools.Services
 			{
 				Console.WriteLine(e.Message);
 			}
+#endif
 		}
 
 		public void AddMessage(string message)
 		{
 			if (String.IsNullOrEmpty(message)) throw new ArgumentNullException(nameof(message));
 
-			messageQueue.Add(message);
+            Models.Message duplicate = messageQueue.Where(m => m.Text == message).FirstOrDefault();
+
+
+			if (duplicate is not null)
+			{
+				duplicate.Count++;
+				return;
+			}
+			else
+			{
+				messageQueue.Add(new Models.Message { Text = message, Count = 1});
+			}
+
 			if (messageQueue.Count == 1)
 			{
 				messageTimer.Stop();
@@ -179,7 +201,8 @@ namespace SotnRandoTools.Services
 				guiApi.ClearGraphics();
 				if (messageQueue.Count > 0)
 				{
-					DrawMessage(messageQueue[0], scale, (int) (screenWidth * 0.45), (int) (screenHeight * 0.1), fontSize);
+					string message = messageQueue[0].Text + (messageQueue[0].Count > 1 ? (" x" + messageQueue[0].Count) : "");
+					DrawMessage(message, scale, (int) (screenWidth * 0.45), (int) (screenHeight * 0.1), fontSize);
 				}
 			});
 		}
@@ -203,7 +226,7 @@ namespace SotnRandoTools.Services
 		private void DrawMessage(string message, int scale, int xpos, int ypos, int fontSize)
 		{
 			int messageFontSize = fontSize;
-			while (TextRenderer.MeasureText(messageQueue[0], new Font("Arial", messageFontSize)).Width > (textbox.Width - (20 * scale)))
+			while (TextRenderer.MeasureText(message, new Font("Arial", messageFontSize)).Width > (textbox.Width - (20 * scale)))
 			{
 				messageFontSize -= 2;
 			}

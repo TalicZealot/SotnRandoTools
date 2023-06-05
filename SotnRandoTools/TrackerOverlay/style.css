@@ -1,0 +1,59 @@
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background-color: darkslategrey;
+    min-width: 520px;
+}
+
+#seedInfo {
+    padding: 0.1em;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 4vw;
+    color: white;
+    text-shadow: 1px 1px 2px black, 0 0 1em black, 0 0 0.2em black;
+}
+
+.column {
+    float: left;
+}
+
+.portlet {
+    padding: 0.1em;
+    width: 6vw;
+    height: 6vw;
+}
+
+.relic {
+    width: 100%;
+    height: 100%;
+    image-rendering: pixelated;
+}
+
+.uncollected {
+    filter: grayscale(100%) brightness(50%);
+}
+
+.portlet-header {
+    padding: 0.2em 0.3em;
+    margin-bottom: 0.5em;
+    position: relative;
+}
+
+.portlet-toggle {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    margin-top: -8px;
+}
+
+.portlet-content {
+    padding: 0.4em;
+}
+
+.portlet-placeholder {
+    border: 1px dotted black;
+    margin: 0 1em 1em 0;
+    height: 50px;
+}

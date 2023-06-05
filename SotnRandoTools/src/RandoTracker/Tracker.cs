@@ -288,19 +288,19 @@ namespace SotnRandoTools.RandoTracker
 			new Location { Name = "Luminus",  SecondCastle = true,  EquipmentExtension = true, MapRow = 164, MapCol = 16, Rooms = new List<Room>{
 					new Room { Name = "Luminus", Values = new int[] { 0x10, 0x40 }},
 			}},
-			new Location { Name = "Dragon helm",  SecondCastle = true,  EquipmentExtension = true,  SpreadExtension = true, MapRow = 173, MapCol = 8, Rooms = new List<Room>{
+			new Location { Name = "Dragon helm",  SecondCastle = true,  EquipmentExtension = true, MapRow = 173, MapCol = 8, Rooms = new List<Room>{
 					new Room { Name = "Dragon helm", Values = new int[] { 0x40 }},
 			}},
-			new Location { Name = "Shotel",  SecondCastle = true,  EquipmentExtension = true,  SpreadExtension = true, MapRow = 109, MapCol = 8, Rooms = new List<Room>{
+			new Location { Name = "Shotel",  SecondCastle = true,  EquipmentExtension = true, MapRow = 109, MapCol = 8, Rooms = new List<Room>{
 					new Room { Name = "Shotel", Values = new int[] { 0x40 }},
 			}},
-			new Location { Name = "Badelaire",  SecondCastle = true,  EquipmentExtension = true, MapRow = 145, MapCol = 26, Rooms = new List<Room>{
+			new Location { Name = "Badelaire",  SecondCastle = true,  EquipmentExtension = true, SpreadExtension = true, MapRow = 145, MapCol = 26, Rooms = new List<Room>{
 					new Room { Name = "Badelaire", Values = new int[] { 0x10 }},
 			}},
-			new Location { Name = "Staurolite",  SecondCastle = true,  EquipmentExtension = true,  SpreadExtension = true, MapRow = 132, MapCol = 30, Rooms = new List<Room>{
+			new Location { Name = "Staurolite",  SecondCastle = true,  EquipmentExtension = true, MapRow = 132, MapCol = 30, Rooms = new List<Room>{
 					new Room { Name = "Staurolite", Values = new int[] { 0x40 }},
 			}},
-			new Location { Name = "Forbidden Library Opal",  SecondCastle = true,  EquipmentExtension = true, MapRow = 137, MapCol = 27, Rooms = new List<Room>{
+			new Location { Name = "Forbidden Library Opal",  SecondCastle = true,  EquipmentExtension = true, SpreadExtension = true, MapRow = 137, MapCol = 27, Rooms = new List<Room>{
 					new Room { Name = "Forbidden Library Opal", Values = new int[] { 0x04 }},
 			}},
 			new Location { Name = "Reverse Caverns Diamond",  SecondCastle = true,  EquipmentExtension = true, MapRow = 109, MapCol = 56, Rooms = new List<Room>{
@@ -849,13 +849,9 @@ namespace SotnRandoTools.RandoTracker
 					LoadLocks(Paths.SpeedrunPresetPath);
 					break;
 				case "open-casual":
-				case "open-safe":
-					LoadLocks(Paths.OpenCasualPresetPath, false, true);
-					LoadLocks(Paths.OpenSpeedrunPresetPath, true, true);
-					break;
-				case "open-adventure":
-					LoadLocks(Paths.OpenCasualPresetPath, false, true);
-					SetEquipmentProgression();
+				case "bat-master":
+					LoadLocks(Paths.BatMasterPresetPath, false, true);
+					spreadExtension = true;
 					break;
 				case "custom":
 					guardedExtension = toolConfig.Tracker.CustomLocationsGuarded;

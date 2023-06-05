@@ -16,6 +16,7 @@ This tool and the accompanying library and app are open source. The idea is to i
 - [Symphony of the Night Randomizer Tools](#symphony-of-the-night-randomizer-tools)
   - [Table of Contents](#table-of-contents)
   - [Installation](#installation)
+  - [Installation Linux](#installation-linux)
   - [Usage](#usage)
   - [Updating](#updating)
   - [Autotracker](#autotracker)
@@ -27,7 +28,7 @@ This tool and the accompanying library and app are open source. The idea is to i
   - [Special Thanks](#special-thanks)
 
 ## Installation
-This tool requires Bizhawk version 2.8 or higher.
+This tool requires [the latest BizHawk version](https://github.com/TASEmulators/BizHawk/releases/latest).
 Download the full version from the [latest release](https://github.com/TalicZealot/SotnRandoTools/releases/latest) that looks like this `SotnRandoTools-x.x.x.zip`
 Right click on it and select `Extract all...` then navigate to your BizHawk 2.7+ folder and press `Extract`.
 File structure should look like this:
@@ -41,6 +42,9 @@ BizHawk
 │   │     └───Images
 │   │     └───...
 ```
+
+## Installation Linux
+When playing on Linux get SotnRandoToolsLinux-x.x.x.zip and install as described above, but after that copy the contents of `BizHawk/ExternalTools/SotnRandoTools/dll/` to `BizHawk/ExternalTools/` and `BizHawk/dll/`.
 
 ## Usage
 After launching the game in BizHawk open through ```Tools > Extarnal Tool > Symphony of the Night Randomizer Tools```

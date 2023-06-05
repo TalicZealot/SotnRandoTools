@@ -66,8 +66,7 @@ namespace SotnRandoTools.Constants
 
 		public const string CasualPresetPath = "./ExternalTools/SotnRandoTools/Presets/casual.json";
 		public const string SpeedrunPresetPath = "./ExternalTools/SotnRandoTools/Presets/speedrun.json";
-		public const string OpenCasualPresetPath = "./ExternalTools/SotnRandoTools/Presets/open-casual.json";
-		public const string OpenSpeedrunPresetPath = "./ExternalTools/SotnRandoTools/Presets/open-speedrun.json";
+		public const string BatMasterPresetPath = "./ExternalTools/SotnRandoTools/Presets/bat-master.json";
 
 		public const string ConfigPath = "./ExternalTools/SotnRandoTools/ToolConfig.ini";
 		public const string SeedInfoPath = "./ExternalTools/SotnRandoTools/TrackerOverlay/SeedInfo.txt";
