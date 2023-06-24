@@ -11,10 +11,10 @@
     <OutputType>Library</OutputType>
     <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
     <AnalysisLevel>5.0</AnalysisLevel>
-    <Version>1.5.5</Version>
+    <Version>1.5.6</Version>
     <Description>A collection of tools to enhance the experience of playign the SotN randomizer.</Description>
     <Copyright />
-    <PackageProjectUrl>https://taliczealot.github.io/</PackageProjectUrl>
+    <PackageProjectUrl>https://taliczealot.github.io/#/projects/sotnrandotools</PackageProjectUrl>
     <RepositoryUrl>https://github.com/TalicZealot/SotnRandoTools</RepositoryUrl>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

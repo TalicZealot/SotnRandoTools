@@ -1,13 +1,14 @@
 ﻿using System.ComponentModel;
+using SotnRandoTools.Coop.Enums;
 
 namespace SotnRandoTools.Coop.Models
 {
 	public class CoopViewModel : INotifyPropertyChanged, ICoopViewModel
 	{
-		private bool serverStarted;
-		private bool clientConnected;
-		private string message;
-		public bool ServerStarted
+		private ServerStatus serverStarted = ServerStatus.Stopped;
+		private ClientStatus clientConnected = ClientStatus.ManuallyDisconnected;
+		private string message = "";
+		public ServerStatus ServerStatus
 		{
 			get
 			{
@@ -19,11 +20,12 @@ namespace SotnRandoTools.Coop.Models
 
 				if (PropertyChanged != null)
 				{
-					PropertyChanged(this, new PropertyChangedEventArgs("ServerStarted"));
+					PropertyChanged(this, new PropertyChangedEventArgs(nameof(ServerStatus)));
 				}
 			}
 		}
-		public bool ClientConnected
+
+		public ClientStatus ClientStatus
 		{
 			get
 			{
@@ -35,7 +37,7 @@ namespace SotnRandoTools.Coop.Models
 
 				if (PropertyChanged != null)
 				{
-					PropertyChanged(this, new PropertyChangedEventArgs("ClientConnected"));
+					PropertyChanged(this, new PropertyChangedEventArgs(nameof(ClientStatus)));
 				}
 			}
 		}
@@ -52,7 +54,7 @@ namespace SotnRandoTools.Coop.Models
 
 				if (PropertyChanged != null)
 				{
-					PropertyChanged(this, new PropertyChangedEventArgs("Message"));
+					PropertyChanged(this, new PropertyChangedEventArgs(nameof(Message)));
 				}
 			}
 		}

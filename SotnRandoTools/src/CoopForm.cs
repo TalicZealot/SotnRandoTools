@@ -6,6 +6,7 @@ using BizHawk.Client.Common;
 using SotnApi.Interfaces;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Coop;
+using SotnRandoTools.Coop.Enums;
 using SotnRandoTools.Coop.Models;
 using SotnRandoTools.Services;
 
@@ -21,6 +22,7 @@ namespace SotnRandoTools
 		private readonly INotificationService notificationService;
 		private CoopViewModel coopViewModel = new CoopViewModel();
 		private bool addressValidated = false;
+		private Color BaseBackground = Color.FromArgb(17, 0, 17);
 
 		public CoopForm(IToolConfig toolConfig, IWatchlistService watchlistService, IInputService inputService, ISotnApi sotnApi, IJoypadApi joypadApi, INotificationService notificationService)
 		{
@@ -45,34 +47,96 @@ namespace SotnRandoTools
 
 		private void CoopViewModelPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
 		{
-			if (e.PropertyName == "Message")
+			switch (e.PropertyName)
 			{
-				notificationService.AddMessage(coopViewModel.Message);
-				return;
+				case nameof(CoopViewModel.Message):
+					notificationService.AddMessage(coopViewModel.Message);
+					break;
+				case nameof(CoopViewModel.ServerStatus):
+					SetServerStatus(coopViewModel.ServerStatus);
+					break;
+				case nameof(CoopViewModel.ClientStatus):
+					SetClientStatus(coopViewModel.ClientStatus);
+					break;
+				default:
+					break;
 			}
+		}
 
-			if (!coopViewModel.ClientConnected && !coopViewModel.ServerStarted)
+		private void SetServerStatus(ServerStatus status)
+		{
+			Console.WriteLine(status.ToString());
+			switch (status)
 			{
-				this.connectButton.Text = "Connect";
-				this.hostButton.Text = "Host";
-				this.hostButton.Enabled = true;
-				this.connectButton.Enabled = true;
-				this.targetIp.Enabled = true;
-				this.portNumeric.Enabled = true;
+				case ServerStatus.Started:
+					this.hostButton.Text = "Stop";
+					this.hostButton.ForeColor = Color.Black;
+					this.hostButton.BackColor = Color.Aqua;
+					this.connectButton.BackColor = BaseBackground;
+					this.connectButton.ForeColor = Color.White;
+					this.connectButton.Enabled = false;
+					this.targetIp.Enabled = false;
+					this.portNumeric.Enabled = false;
+					this.IPlabel.Enabled = false;
+					break;
+				case ServerStatus.Stopped:
+					this.hostButton.Text = "Host";
+					this.hostButton.BackColor = BaseBackground;
+					this.hostButton.ForeColor = Color.White;
+					this.connectButton.Enabled = true;
+					this.targetIp.Enabled = true;
+					this.portNumeric.Enabled = true;
+					this.IPlabel.Enabled = true;
+					break;
+				case ServerStatus.Error:
+					this.hostButton.BackColor = Color.Crimson;
+					break;
+				case ServerStatus.ClientConnected:
+					this.hostButton.BackColor = Color.SpringGreen;
+					break;
+				case ServerStatus.ClientDisconnected:
+					this.hostButton.BackColor = Color.Crimson;
+					break;
+				default: break;
 			}
-			else if (coopViewModel.ClientConnected)
+		}
+
+		private void SetClientStatus(ClientStatus status)
+		{
+			Console.WriteLine(status.ToString());
+			switch (status)
 			{
-				this.connectButton.Text = "Disconnect";
-				this.hostButton.Enabled = false;
-				this.targetIp.Enabled = false;
-				this.portNumeric.Enabled = false;
-			}
-			else if (coopViewModel.ServerStarted)
-			{
-				this.hostButton.Text = "Stop";
-				this.connectButton.Enabled = false;
-				this.targetIp.Enabled = false;
-				this.portNumeric.Enabled = false;
+				case ClientStatus.Connected:
+					this.connectButton.Text = "Disconnect";
+					this.connectButton.ForeColor = Color.Black;
+					this.connectButton.BackColor = Color.SpringGreen;
+					this.hostButton.BackColor = BaseBackground;
+					this.hostButton.ForeColor = Color.White;
+					this.hostButton.Enabled = false;
+					this.targetIp.Enabled = false;
+					this.portNumeric.Enabled = false;
+					break;
+				case ClientStatus.Reconnecting:
+					this.connectButton.Text = "Reconnecting";
+					this.connectButton.BackColor = Color.Coral;
+					break;
+				case ClientStatus.Disconnected:
+					this.connectButton.Text = "Connect";
+					this.connectButton.BackColor = Color.Crimson;
+					this.connectButton.ForeColor = Color.White;
+					this.hostButton.Enabled = true;
+					this.targetIp.Enabled = true;
+					this.portNumeric.Enabled = true;
+					break;
+				case ClientStatus.ManuallyDisconnected:
+					this.connectButton.Text = "Connect";
+					this.connectButton.BackColor = BaseBackground;
+					this.connectButton.ForeColor = Color.White;
+					this.hostButton.Enabled = true;
+					this.targetIp.Enabled = true;
+					this.portNumeric.Enabled = true;
+					break;
+				default: break;
 			}
 		}
 
@@ -108,7 +172,7 @@ namespace SotnRandoTools
 
 		private void hostButton_Click(object sender, EventArgs e)
 		{
-			if (coopViewModel.ServerStarted)
+			if (coopViewModel.ServerStatus != ServerStatus.Stopped && coopViewModel.ServerStatus != ServerStatus.Error)
 			{
 				coopMessanger.StopServer();
 				return;
@@ -124,7 +188,7 @@ namespace SotnRandoTools
 
 		private void connectButton_Click(object sender, EventArgs e)
 		{
-			if (coopViewModel.ClientConnected)
+			if (coopViewModel.ClientStatus != ClientStatus.Disconnected && coopViewModel.ClientStatus != ClientStatus.ManuallyDisconnected)
 			{
 				coopMessanger.Disconnect();
 				return;

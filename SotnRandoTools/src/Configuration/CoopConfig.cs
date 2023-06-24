@@ -12,7 +12,7 @@ namespace SotnRandoTools.Configuration
 			SendAssists = true;
 			ShareLocations = true;
 			StoreLastServer = true;
-			DefaultServer = "";
+			DefaultServer = "127.0.0.1:46318";
 			DefaultPort = 46318;
 			Volume = 5;
 		}

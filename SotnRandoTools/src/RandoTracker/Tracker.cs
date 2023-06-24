@@ -19,7 +19,7 @@ namespace SotnRandoTools.RandoTracker
 	{
 		const byte ReplayCooldown = 6;
 		const string DefaultSeedInfo = "seed(preset)";
-		const long DraculaActorAddress = 0x076e98;
+		const long DraculaEntityAddress = 0x076e98;
 		private const int AutosplitterReconnectCooldown = 120;
 		private readonly ITrackerGraphicsEngine trackerGraphicsEngine;
 		private readonly IToolConfig toolConfig;
@@ -1364,7 +1364,7 @@ namespace SotnRandoTools.RandoTracker
 		{
 			if (sotnApi.AlucardApi.MapX == 31 && sotnApi.AlucardApi.MapY == 30 && sotnApi.GameApi.Status == Status.InGame)
 			{
-				Entity boss = sotnApi.EntityApi.GetLiveEntity(DraculaActorAddress);
+				Entity boss = sotnApi.EntityApi.GetLiveEntity(DraculaEntityAddress);
 				if (boss.Hp > 13 && boss.Hp < 10000 && boss.UpdateFunctionAddress != 0)
 				{
 					draculaSpawned = true;

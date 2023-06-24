@@ -53,7 +53,7 @@ namespace SotnRandoTools.Coop
 			{
 				coopViewModel.Message = "Connection timed out!";
 				Console.WriteLine("Connection timed out!");
-				coopViewModel.ClientConnected = false;
+				coopViewModel.ClientStatus = ClientStatus.Disconnected;
 				return;
 			}
 
@@ -66,7 +66,7 @@ namespace SotnRandoTools.Coop
 			{
 				manualDisconnect = true;
 				client.Disconnect();
-				coopViewModel.ClientConnected = false;
+				coopViewModel.ClientStatus = ClientStatus.Disconnected;
 				coopViewModel.Message = "Disconnected";
 			}
 		}
@@ -87,13 +87,13 @@ namespace SotnRandoTools.Coop
 
 			try
 			{
-				coopViewModel.ServerStarted = true;
+				coopViewModel.ServerStatus = ServerStatus.Started;
 				server.Start();
 			}
 			catch (Exception)
 			{
 				Console.WriteLine("Error: Could not start server!");
-				coopViewModel.ServerStarted = false;
+				coopViewModel.ServerStatus = ServerStatus.Error;
 				return;
 			}
 
@@ -115,7 +115,7 @@ namespace SotnRandoTools.Coop
 					server.DisconnectClient(client);
 				}
 				server.Stop();
-				coopViewModel.ServerStarted = false;
+				coopViewModel.ServerStatus = ServerStatus.Stopped;
 				connectedClientAddress = "";
 				coopViewModel.Message = "Server stopped";
 			}
@@ -171,7 +171,7 @@ namespace SotnRandoTools.Coop
 		private void Connected(object sender, ClientConnectedEventArgs e)
 		{
 			Console.WriteLine("Connected successfully.");
-			coopViewModel.ClientConnected = true;
+			coopViewModel.ClientStatus = ClientStatus.Connected;
 			coopViewModel.Message = "Connected";
 
 			if (toolConfig.Coop.StoreLastServer)
@@ -195,14 +195,14 @@ namespace SotnRandoTools.Coop
 				{
 					coopViewModel.Message = "Disconnected";
 					Console.WriteLine("Connection timed out!");
-					coopViewModel.ClientConnected = false;
+					coopViewModel.ClientStatus = ClientStatus.Disconnected;
 					return;
 				}
 			}
 			else
 			{
 				coopViewModel.Message = "Disconnected";
-				coopViewModel.ClientConnected = false;
+				coopViewModel.ClientStatus = ClientStatus.ManuallyDisconnected;
 				manualDisconnect = false;
 			}
 		}
@@ -210,6 +210,7 @@ namespace SotnRandoTools.Coop
 		private void ClientConnected(object sender, ClientConnectedEventArgs e)
 		{
 			coopViewModel.Message = "Client connected";
+			coopViewModel.ServerStatus = ServerStatus.ClientConnected;
 			Console.WriteLine($"Client has connected successfully.");
 			connectedClientAddress = e.IpPort;
 			Console.WriteLine($"Sending settings...");
@@ -219,6 +220,7 @@ namespace SotnRandoTools.Coop
 		private void ClientDisconnected(object sender, ClientDisconnectedEventArgs e)
 		{
 			coopViewModel.Message = "Client disconnected";
+			coopViewModel.ServerStatus = ServerStatus.ClientDisconnected;
 			Console.WriteLine($"Client has disconnected.");
 			if (connectedClientAddress == e.IpPort)
 			{
