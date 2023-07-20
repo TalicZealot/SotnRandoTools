@@ -16,7 +16,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SotnRandoTools.RandoTracker
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SotnRandoTools.Coop.Tests", "SotnRandoTools.UnitTests\Coop.Tests\SotnRandoTools.Coop.Tests\SotnRandoTools.Coop.Tests.csproj", "{1C874766-7E41-435C-9D17-47FF9E06DC14}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SotnRandoTools.Services.Tests", "SotnRandoTools.UnitTests\Services.Tests\SotnRandoTools.Services.Tests\SotnRandoTools.Services.Tests.csproj", "{09F3CF1E-449B-4D29-8D86-F320403D7A6F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SotnRandoTools.Services.Tests", "SotnRandoTools.UnitTests\Services.Tests\SotnRandoTools.Services.Tests\SotnRandoTools.Services.Tests.csproj", "{09F3CF1E-449B-4D29-8D86-F320403D7A6F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

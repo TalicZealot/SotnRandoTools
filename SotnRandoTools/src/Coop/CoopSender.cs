@@ -29,16 +29,11 @@ namespace SotnRandoTools.Coop
 
 		public CoopSender(IToolConfig toolConfig, IWatchlistService watchlistService, IInputService inputService, ISotnApi sotnApi, ICoopMessanger coopMessanger)
 		{
-			if (toolConfig is null) throw new ArgumentNullException(nameof(toolConfig));
-			if (watchlistService is null) throw new ArgumentNullException(nameof(watchlistService));
-			if (inputService is null) throw new ArgumentNullException(nameof(inputService));
-			if (sotnApi is null) throw new ArgumentNullException(nameof(sotnApi));
-			if (coopMessanger is null) throw new ArgumentNullException(nameof(coopMessanger));
-			this.toolConfig = toolConfig;
-			this.watchlistService = watchlistService;
-			this.inputService = inputService;
-			this.sotnApi = sotnApi;
-			this.coopMessanger = coopMessanger;
+			this.toolConfig = toolConfig ?? throw new ArgumentNullException(nameof(toolConfig));
+			this.watchlistService = watchlistService ?? throw new ArgumentNullException(nameof(watchlistService));
+			this.inputService = inputService ?? throw new ArgumentNullException(nameof(inputService));
+			this.sotnApi = sotnApi ?? throw new ArgumentNullException(nameof(sotnApi)); ;
+			this.coopMessanger = coopMessanger ?? throw new ArgumentNullException(nameof(coopMessanger));
 		}
 
 		public void Update()

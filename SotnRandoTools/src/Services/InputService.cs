@@ -17,10 +17,8 @@ namespace SotnRandoTools.Services
 
 		public InputService(IJoypadApi joypadApi, ISotnApi sotnApi)
 		{
-			if (joypadApi is null) throw new ArgumentNullException(nameof(joypadApi));
-			if (sotnApi is null) throw new ArgumentNullException(nameof(sotnApi));
-			this.joypadApi = joypadApi;
-			this.sotnApi = sotnApi;
+			this.joypadApi = joypadApi ?? throw new ArgumentNullException(nameof(joypadApi));
+			this.sotnApi = sotnApi ?? throw new ArgumentNullException(nameof(sotnApi));
 
 			if (!CheckNymashock())
 			{

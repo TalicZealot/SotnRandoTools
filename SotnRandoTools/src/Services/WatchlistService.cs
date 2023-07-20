@@ -21,8 +21,7 @@ namespace SotnRandoTools.Services
 
 		public WatchlistService(IMemoryDomains? memoryDomains)
 		{
-			if (memoryDomains is null) throw new ArgumentNullException(nameof(memoryDomains));
-			this.memoryDomains = memoryDomains;
+			this.memoryDomains = memoryDomains ?? throw new ArgumentNullException(nameof(memoryDomains));
 
 			relicWatches = new WatchList(this.memoryDomains, Globals.SystemId);
 			relicWatches.Load(Paths.RelicWatchesPath, false);

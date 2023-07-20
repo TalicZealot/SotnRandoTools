@@ -16,8 +16,7 @@ namespace SotnRandoTools.Services
 		private WatsonWsServer socketServer;
 		public OverlaySocketServer(IToolConfig toolConfig)
 		{
-			if (toolConfig is null) throw new ArgumentNullException(nameof(toolConfig));
-			this.toolConfig = toolConfig;
+			this.toolConfig = toolConfig ?? throw new ArgumentNullException(nameof(toolConfig));
 
 			socketServer = new WatsonWsServer(new Uri(Globals.SocketUri));
 			socketServer.ClientConnected += ClientConnected;

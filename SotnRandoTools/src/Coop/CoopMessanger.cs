@@ -23,12 +23,9 @@ namespace SotnRandoTools.Coop
 
 		public CoopMessanger(IToolConfig toolConfig, ICoopReceiver coopReceiver, ICoopViewModel coopViewModel)
 		{
-			if (toolConfig is null) throw new ArgumentNullException(nameof(toolConfig));
-			if (coopReceiver is null) throw new ArgumentNullException(nameof(coopReceiver));
-			if (coopViewModel is null) throw new ArgumentNullException(nameof(coopViewModel));
-			this.toolConfig = toolConfig;
-			this.coopReceiver = coopReceiver;
-			this.coopViewModel = coopViewModel;
+			this.toolConfig = toolConfig ?? throw new ArgumentNullException(nameof(toolConfig));
+			this.coopReceiver = coopReceiver ?? throw new ArgumentNullException(nameof(coopReceiver));
+			this.coopViewModel = coopViewModel ?? throw new ArgumentNullException(nameof(coopViewModel));
 		}
 
 		public void Connect(string hostIp, int port)

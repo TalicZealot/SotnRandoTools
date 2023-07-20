@@ -28,12 +28,21 @@
 		<Reference Include="BizHawk.Client.Common">
 			<HintPath>..\..\..\BizHawk\dll\BizHawk.Client.Common.dll</HintPath>
 		</Reference>
+		<Reference Include="BizHawk.Common">
+		  <HintPath>..\..\..\BizHawk\dll\BizHawk.Common.dll</HintPath>
+		</Reference>
 		<Reference Include="BizHawk.Emulation.Common">
 		  <HintPath>..\..\..\BizHawk\dll\BizHawk.Emulation.Common.dll</HintPath>
+		</Reference>
+		<Reference Include="BizHawk.Client.EmuHawk">
+			<HintPath>..\..\..\BizHawk\EmuHawk.exe</HintPath>
 		</Reference>
 		<Reference Include="SotnApi">
 			<HintPath>..\..\..\BizHawk\ExternalTools\SotnRandoTools\dll\SotnApi.dll</HintPath>
 		</Reference>
+		<Reference Include="BizHawk.Bizware.BizwareGL">
+			<HintPath>..\..\..\BizHawk\dll\BizHawk.Bizware.BizwareGL.dll</HintPath>
+		</Reference>
 	</ItemGroup>
-
+	
 </Project>

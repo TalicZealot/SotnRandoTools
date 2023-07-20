@@ -53,10 +53,8 @@ namespace SotnRandoTools.RandoTracker
 
 		public TrackerGraphicsEngine(IGraphics formGraphics, IToolConfig toolConfig)
 		{
-			if (formGraphics is null) throw new ArgumentNullException(nameof(formGraphics));
-			if (toolConfig is null) throw new ArgumentNullException(nameof(toolConfig));
-			this.formGraphics = formGraphics;
-			this.toolConfig = toolConfig;
+			this.formGraphics = formGraphics ?? throw new ArgumentNullException(nameof(formGraphics));
+			this.toolConfig = toolConfig ?? throw new ArgumentNullException(nameof(toolConfig));
 		}
 
 		public bool Refreshed { get; set; }

@@ -24,14 +24,10 @@ namespace SotnRandoTools.Coop
 
 		public CoopReceiver(IToolConfig toolConfig, ISotnApi sotnApi, INotificationService notificationService, IWatchlistService watchlistService)
 		{
-			if (toolConfig is null) throw new ArgumentNullException(nameof(toolConfig));
-			if (sotnApi is null) throw new ArgumentNullException(nameof(sotnApi));
-			if (notificationService is null) throw new ArgumentNullException(nameof(notificationService));
-			if (watchlistService is null) throw new ArgumentNullException(nameof(watchlistService));
-			this.toolConfig = toolConfig;
-			this.sotnApi = sotnApi;
-			this.notificationService = notificationService;
-			this.watchlistService = watchlistService;
+			this.toolConfig = toolConfig ?? throw new ArgumentNullException(nameof(toolConfig));
+			this.sotnApi = sotnApi ?? throw new ArgumentNullException(nameof(sotnApi));
+			this.notificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
+			this.watchlistService = watchlistService ?? throw new ArgumentNullException(nameof(watchlistService));
 		}
 
 		public void EnqueMessage(byte[] data)

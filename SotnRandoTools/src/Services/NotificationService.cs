@@ -41,12 +41,9 @@ namespace SotnRandoTools.Services
 
 		public NotificationService(IToolConfig toolConfig, IGuiApi guiApi, IEmuClientApi clientAPI)
 		{
-			if (guiApi is null) throw new ArgumentNullException(nameof(guiApi));
-			if (toolConfig is null) throw new ArgumentNullException(nameof(toolConfig));
-			if (clientAPI is null) throw new ArgumentNullException(nameof(clientAPI));
-			this.guiApi = guiApi;
-			this.toolConfig = toolConfig;
-			this.clientAPI = clientAPI;
+			this.guiApi = guiApi ?? throw new ArgumentNullException(nameof(guiApi));
+			this.toolConfig = toolConfig ?? throw new ArgumentNullException(nameof(toolConfig));
+			this.clientAPI = clientAPI ?? throw new ArgumentNullException(nameof(clientAPI));
 
 			overlaySocketServer = new OverlaySocketServer(toolConfig);
 			messageTimer = new();

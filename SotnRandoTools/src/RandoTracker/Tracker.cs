@@ -27,7 +27,7 @@ namespace SotnRandoTools.RandoTracker
 		private readonly ISotnApi sotnApi;
 		private readonly INotificationService notificationService;
 
-		private List<Location> locations = new List<Location>
+		private readonly List<Location> locations = new List<Location>
 		{
 			new Location { Name = "SoulOfBat", MapRow = 66, MapCol = 96, Rooms = new List<Room>{
 					new Room { Name = "SoulOfBat", Values = new int[] { 0x01 }},
@@ -359,7 +359,7 @@ namespace SotnRandoTools.RandoTracker
 					new Room { Name = "Beryl circlet", Values = new int[] { 0x10 }},
 			}},
 		};
-		private List<TrackerRelic> relics = new List<TrackerRelic>
+		private readonly List<TrackerRelic> relics = new List<TrackerRelic>
 		{
 				new TrackerRelic { Name = "SoulOfBat", Progression = true},
 				new TrackerRelic { Name = "FireOfBat", Progression = false},
@@ -392,14 +392,14 @@ namespace SotnRandoTools.RandoTracker
 				new TrackerRelic { Name = "RingOfVlad", Progression = true},
 				new TrackerRelic { Name = "EyeOfVlad", Progression = true}
 		};
-		private List<Item> progressionItems = new List<Item>
+		private readonly List<Item> progressionItems = new List<Item>
 		{
 			new Item { Name = "GoldRing", Value = 72 },
 			new Item { Name = "SilverRing", Value = 73 },
 			new Item { Name = "SpikeBreaker", Value = 14 },
 			new Item { Name = "HolyGlasses", Value = 34 }
 		};
-		private List<Item> thrustSwords = new List<Item>
+		private readonly List<Item> thrustSwords = new List<Item>
 		{
 			new Item { Name = "Estoc", Value = 95 },
 			new Item { Name = "Claymore", Value = 98 },
@@ -437,16 +437,11 @@ namespace SotnRandoTools.RandoTracker
 
 		public Tracker(ITrackerGraphicsEngine trackerGraphicsEngine, IToolConfig toolConfig, IWatchlistService watchlistService, ISotnApi sotnApi, INotificationService notificationService)
 		{
-			if (trackerGraphicsEngine is null) throw new ArgumentNullException(nameof(trackerGraphicsEngine));
-			if (toolConfig is null) throw new ArgumentNullException(nameof(toolConfig));
-			if (watchlistService is null) throw new ArgumentNullException(nameof(watchlistService));
-			if (sotnApi is null) throw new ArgumentNullException(nameof(sotnApi));
-			if (notificationService is null) throw new ArgumentNullException(nameof(notificationService));
-			this.trackerGraphicsEngine = trackerGraphicsEngine;
-			this.toolConfig = toolConfig;
-			this.watchlistService = watchlistService;
-			this.sotnApi = sotnApi;
-			this.notificationService = notificationService;
+			this.trackerGraphicsEngine = trackerGraphicsEngine ?? throw new ArgumentNullException(nameof(trackerGraphicsEngine));
+			this.toolConfig = toolConfig ?? throw new ArgumentNullException(nameof(toolConfig));
+			this.watchlistService = watchlistService ?? throw new ArgumentNullException(nameof(watchlistService));
+			this.sotnApi = sotnApi ?? throw new ArgumentNullException(nameof(sotnApi));
+			this.notificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
 
 			if (toolConfig.Tracker.Locations)
 			{
