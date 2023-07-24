@@ -591,8 +591,42 @@ namespace SotnRandoTools.RandoTracker
 
 		private void LoadLocks(string presetFilePath, bool outOfLogic = false, bool overwriteLocks = false)
 		{
-			var presetLocations = JObject.Parse(File.ReadAllText(presetFilePath))["lockLocation"];
-			foreach (var location in presetLocations)
+			if (!File.Exists(presetFilePath))
+			{
+				guardedExtension = toolConfig.Tracker.CustomLocationsGuarded;
+				equipmentExtension = toolConfig.Tracker.CustomLocationsEquipment;
+				spreadExtension = toolConfig.Tracker.CustomLocationsSpread;
+				if (equipmentExtension)
+				{
+					equipmentExtension = true;
+					SetEquipmentProgression();
+				}
+				return;
+			}
+
+			JObject preset = JObject.Parse(File.ReadAllText(presetFilePath));
+			string relicLocationsExtension = (preset.GetValue("relicLocationsExtension") ?? "gaurded").ToString();
+			JToken? presetLocations = preset["lockLocation"];
+
+			switch (relicLocationsExtension)
+			{
+				case "equipment":
+					equipmentExtension = true;
+					SetEquipmentProgression();
+					break;
+				case "spread":
+					spreadExtension = true;
+					break;
+				case "false":
+					guardedExtension = false;
+					break;
+				default:
+					guardedExtension = true;
+					break;
+			}
+
+
+			foreach (JObject location in presetLocations)
 			{
 				string name = location["location"].ToString().Replace(" ", String.Empty).ToLower();
 				var trackerLocation = locations.Where(x => x.Name.Replace(" ", String.Empty).ToLower() == name).FirstOrDefault();
@@ -610,7 +644,7 @@ namespace SotnRandoTools.RandoTracker
 						}
 					}
 
-					foreach (var lockSet in location["locks"])
+					foreach (JToken lockSet in location["locks"])
 					{
 						if (outOfLogic)
 						{
@@ -819,48 +853,7 @@ namespace SotnRandoTools.RandoTracker
 			SeedInfo = seedName + "(" + preset + ")";
 			Console.WriteLine("Randomizer seed information: " + SeedInfo);
 			SaveSeedInfo(SeedInfo);
-			switch (preset)
-			{
-				case "adventure":
-					equipmentExtension = true;
-					SetEquipmentProgression();
-					break;
-				case "expedition":
-					equipmentExtension = true;
-					SetEquipmentProgression();
-					break;
-				case "glitch":
-					equipmentExtension = true;
-					relics[25].Progression = false;
-					SetEquipmentProgression();
-					break;
-				case "og":
-					guardedExtension = false;
-					break;
-				case "guarded-og":
-					guardedExtension = true;
-					break;
-				case "speedrun":
-					LoadLocks(Paths.SpeedrunPresetPath);
-					break;
-				case "open-casual":
-				case "bat-master":
-					LoadLocks(Paths.BatMasterPresetPath, false, true);
-					spreadExtension = true;
-					break;
-				case "custom":
-					guardedExtension = toolConfig.Tracker.CustomLocationsGuarded;
-					equipmentExtension = toolConfig.Tracker.CustomLocationsEquipment;
-					spreadExtension = toolConfig.Tracker.CustomLocationsSpread;
-					if (equipmentExtension)
-					{
-						guardedExtension = true;
-						SetEquipmentProgression();
-					}
-					break;
-				default:
-					break;
-			}
+			LoadLocks(Paths.PresetPath + preset + ".json", false, true);
 			PrepareMapLocations();
 		}
 

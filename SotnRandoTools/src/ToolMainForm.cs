@@ -107,7 +107,10 @@ namespace SotnRandoTools
 
 		private void ToolMainForm_Load(object sender, EventArgs e)
 		{
-			this.Location = toolConfig.Location;
+			if (SystemInformation.VirtualScreen.Width > toolConfig.Location.X && SystemInformation.VirtualScreen.Height > toolConfig.Location.Y)
+			{
+				this.Location = toolConfig.Location;
+			}
 
 			aboutPanel = new AboutPanel();
 			aboutPanel.Location = new Point(0, PanelOffset);

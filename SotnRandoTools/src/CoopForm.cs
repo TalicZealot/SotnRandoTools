@@ -151,7 +151,10 @@ namespace SotnRandoTools
 
 		private void CoopForm_Load(object sender, EventArgs e)
 		{
-			this.Location = toolConfig.Coop.Location;
+			if (SystemInformation.VirtualScreen.Width > toolConfig.Coop.Location.X && SystemInformation.VirtualScreen.Height > toolConfig.Coop.Location.Y)
+			{
+				this.Location = toolConfig.Coop.Location;
+			}
 			this.portNumeric.Value = toolConfig.Coop.DefaultPort;
 			this.targetIp.Text = toolConfig.Coop.DefaultServer;
 			inputService.Polling++;

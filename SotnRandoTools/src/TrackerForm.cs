@@ -54,7 +54,11 @@ namespace SotnRandoTools
 		{
 			this.TopMost = toolConfig.Tracker.AlwaysOnTop;
 			this.Size = new Size(toolConfig.Tracker.Width, toolConfig.Tracker.Height);
-			this.Location = toolConfig.Tracker.Location;
+
+			if (SystemInformation.VirtualScreen.Width > toolConfig.Tracker.Location.X && SystemInformation.VirtualScreen.Height > toolConfig.Tracker.Location.Y)
+			{
+				this.Location = toolConfig.Tracker.Location;
+			}
 
 			drawingSurface = new Bitmap(this.Width, this.Height);
 			Graphics internalGraphics = Graphics.FromImage(drawingSurface);
@@ -85,8 +89,11 @@ namespace SotnRandoTools
 				this.formGraphics = new GraphicsAdapter(internalGraphics);
 			}
 
-			toolConfig.Tracker.Width = this.Width;
-			toolConfig.Tracker.Height = this.Height;
+			if (this.Width <= this.MaximumSize.Width && this.Height <= this.MaximumSize.Height)
+			{
+				toolConfig.Tracker.Width = this.Width;
+				toolConfig.Tracker.Height = this.Height;
+			}
 
 			if (tracker is not null && formGraphics is not null)
 			{
