@@ -593,14 +593,6 @@ namespace SotnRandoTools.RandoTracker
 		{
 			if (!File.Exists(presetFilePath))
 			{
-				guardedExtension = toolConfig.Tracker.CustomLocationsGuarded;
-				equipmentExtension = toolConfig.Tracker.CustomLocationsEquipment;
-				spreadExtension = toolConfig.Tracker.CustomLocationsSpread;
-				if (equipmentExtension)
-				{
-					equipmentExtension = true;
-					SetEquipmentProgression();
-				}
 				return;
 			}
 
@@ -612,6 +604,7 @@ namespace SotnRandoTools.RandoTracker
 			{
 				case "equipment":
 					equipmentExtension = true;
+					guardedExtension = true;
 					SetEquipmentProgression();
 					break;
 				case "spread":
@@ -852,8 +845,22 @@ namespace SotnRandoTools.RandoTracker
 			}
 			SeedInfo = seedName + "(" + preset + ")";
 			Console.WriteLine("Randomizer seed information: " + SeedInfo);
+			if (preset == "custom")
+			{
+				guardedExtension = toolConfig.Tracker.CustomLocationsGuarded;
+				equipmentExtension = toolConfig.Tracker.CustomLocationsEquipment;
+				spreadExtension = toolConfig.Tracker.CustomLocationsSpread;
+				if (equipmentExtension)
+				{
+					guardedExtension = true;
+					SetEquipmentProgression();
+				}
+			}
+			else
+			{
+				LoadLocks(Paths.PresetPath + preset + ".json", false, true);
+			}
 			SaveSeedInfo(SeedInfo);
-			LoadLocks(Paths.PresetPath + preset + ".json", false, true);
 			PrepareMapLocations();
 		}
 
