@@ -618,6 +618,10 @@ namespace SotnRandoTools.RandoTracker
 					break;
 			}
 
+			if (presetLocations is null)
+			{
+				return;
+			}
 
 			foreach (JObject location in presetLocations)
 			{
