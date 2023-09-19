@@ -2,7 +2,7 @@
 {
 	public class Room
 	{
-		public string? Name { get; set; }
+		public int WatchIndex { get; set; }
 		public int[]? Values { get; set; }
 	}
 }

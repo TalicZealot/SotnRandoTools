@@ -26,6 +26,7 @@ namespace SotnRandoTools.RandoTracker.Models
 		public int MapCol { get; set; }
 		public List<string[]>? Locks { get; set; }
 		public List<string[]>? OutOfLogicLocks { get; set; }
+		public List<int> WatchIndecies { get; set; }
 		public List<Room>? Rooms { get; set; }
 	}
 }
