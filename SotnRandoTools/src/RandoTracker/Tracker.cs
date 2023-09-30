@@ -956,7 +956,7 @@ namespace SotnRandoTools.RandoTracker
 			}
 			else
 			{
-				LoadLocks(Paths.PresetPath + preset + ".json", false, true);
+				LoadLocks(Paths.presetFilePath + preset + ".json", false, true);
 			}
 			SaveSeedInfo(SeedInfo);
 			PrepareMapLocations();
