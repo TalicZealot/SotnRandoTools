@@ -666,7 +666,7 @@ namespace SotnRandoTools.RandoTracker
 				case "spread":
 					spreadExtension = true;
 					break;
-				case "false":
+				case "False":
 					guardedExtension = false;
 					break;
 				default:
