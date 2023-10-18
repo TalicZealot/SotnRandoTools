@@ -124,13 +124,10 @@
   <data name="Tracker" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Tracker.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Khaos" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Khaos.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="VectorSimple" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\VectorSimple.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="BizAlucard" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\BizAlucard.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\BizAlucard.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

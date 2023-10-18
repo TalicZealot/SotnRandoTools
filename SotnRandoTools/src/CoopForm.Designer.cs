@@ -30,7 +30,6 @@ namespace SotnRandoTools
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CoopForm));
             this.hostButton = new System.Windows.Forms.Button();
             this.connectButton = new System.Windows.Forms.Button();
             this.targetIp = new System.Windows.Forms.TextBox();
@@ -181,7 +180,6 @@ namespace SotnRandoTools
             this.Controls.Add(this.clientGroup);
             this.Controls.Add(this.serverGroup);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(800, 800);
             this.MinimumSize = new System.Drawing.Size(100, 100);

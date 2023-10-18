@@ -159,6 +159,10 @@ namespace SotnRandoTools
 			this.targetIp.Text = toolConfig.Coop.DefaultServer;
 			inputService.Polling++;
 			ValidateAddress();
+
+#if WIN
+			this.Icon = SotnRandoTools.Properties.Resources.Icon;
+#endif
 		}
 
 		private void CoopForm_Move(object sender, EventArgs e)

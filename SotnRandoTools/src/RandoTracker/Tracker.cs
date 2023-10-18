@@ -653,8 +653,14 @@ namespace SotnRandoTools.RandoTracker
 			}
 
 			JObject preset = JObject.Parse(File.ReadAllText(presetFilePath));
+			string presetId = preset.SelectToken("metadata.id").ToString();
 			string relicLocationsExtension = (preset.GetValue("relicLocationsExtension") ?? "gaurded").ToString();
 			JToken? presetLocations = preset["lockLocation"];
+
+			if (presetId == "glitch")
+			{
+				relicLocationsExtension = "equipment";
+			}
 
 			switch (relicLocationsExtension)
 			{

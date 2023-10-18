@@ -29,7 +29,6 @@ namespace SotnRandoTools
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ToolMainForm));
             this.mainMenuPanel = new System.Windows.Forms.Panel();
             this.autotrackerSelect = new System.Windows.Forms.Button();
             this.aboutButton = new System.Windows.Forms.Button();
@@ -62,7 +61,6 @@ namespace SotnRandoTools
             this.autotrackerSelect.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.autotrackerSelect.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.autotrackerSelect.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.autotrackerSelect.Image = global::SotnRandoTools.Properties.Resources.Tracker;
             this.autotrackerSelect.Location = new System.Drawing.Point(12, 12);
             this.autotrackerSelect.Name = "autotrackerSelect";
             this.autotrackerSelect.Size = new System.Drawing.Size(88, 70);
@@ -82,7 +80,6 @@ namespace SotnRandoTools
             this.aboutButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.aboutButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.aboutButton.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.aboutButton.Image = global::SotnRandoTools.Properties.Resources.VectorSimple;
             this.aboutButton.Location = new System.Drawing.Point(200, 12);
             this.aboutButton.Name = "aboutButton";
             this.aboutButton.Size = new System.Drawing.Size(88, 70);
@@ -117,7 +114,6 @@ namespace SotnRandoTools
             this.multiplayerSelect.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
             this.multiplayerSelect.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.multiplayerSelect.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.multiplayerSelect.Image = global::SotnRandoTools.Properties.Resources.coop;
             this.multiplayerSelect.Location = new System.Drawing.Point(106, 12);
             this.multiplayerSelect.Name = "multiplayerSelect";
             this.multiplayerSelect.Size = new System.Drawing.Size(88, 70);
@@ -153,7 +149,6 @@ namespace SotnRandoTools
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.ForeColor = System.Drawing.Color.White;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimumSize = new System.Drawing.Size(200, 200);
             this.Name = "ToolMainForm";

@@ -65,6 +65,10 @@ namespace SotnRandoTools
 			this.formGraphics = new GraphicsAdapter(internalGraphics);
 			this.trackerGraphicsEngine = new TrackerGraphicsEngine(formGraphics, toolConfig);
 			this.tracker = new Tracker(trackerGraphicsEngine, toolConfig, watchlistService, sotnApi, notificationService);
+
+#if WIN
+			this.Icon = SotnRandoTools.Properties.Resources.Icon;
+#endif
 		}
 
 		private void TrackerForm_Paint(object sender, PaintEventArgs e)
