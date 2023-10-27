@@ -12,6 +12,7 @@ cd NewRelease
 if [ "$2" == "-l" ]; then
     rm -r ExternalTools/SotnRandoTools/Updater
     7z a -tzip $HOME/Desktop/SotnRandoTools-Linux-$1.zip ExternalTools
+    cd ..
 else
     7z a -tzip $HOME/Desktop/SotnRandoTools-$1.zip ExternalTools
     rm -r ExternalTools/SotnRandoTools/Updater
@@ -19,5 +20,5 @@ else
     7z a -tzip $HOME/Desktop/Update-$1.zip SotnRandoTools/*
     7z a -tzip $HOME/Desktop/Update-$1.zip SotnRandoTools.dll
     cd ../..
-    rm -r NewRelease
 fi
+rm -r NewRelease

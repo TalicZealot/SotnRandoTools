@@ -724,7 +724,7 @@ namespace SotnRandoTools.RandoTracker
 					{
 						trackerLocation.OutOfLogicLocks.Clear();
 					}
-					else
+					if (!outOfLogic)
 					{
 						trackerLocation.Locks.Clear();
 					}
