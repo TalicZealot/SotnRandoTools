@@ -456,6 +456,26 @@ namespace SotnRandoTools.RandoTracker
 			{ "zweihander", 3 },
 			{ "obsidiansword", 4 },
 		};
+		private readonly HashSet<string> VanillaPresets = new HashSet<string>
+		{
+			"adventure",
+			"bat-master",
+			"casual",
+			"empty-hand",
+			"expedition",
+			//"gem-farmer",
+			//"glitch",
+			"guarded-og",
+			"lycanthrope",
+			"nimble",
+			"og",
+			//"rat-race",
+			"safe",
+			"scavenger",
+			"speedrun",
+			"third-castle",
+			"warlock"
+		};
 
 		private string preset = "";
 		private string seedName = "";
@@ -656,6 +676,8 @@ namespace SotnRandoTools.RandoTracker
 			string presetId = preset.SelectToken("metadata.id").ToString();
 			string relicLocationsExtension = (preset.GetValue("relicLocationsExtension") ?? "gaurded").ToString();
 			JToken? presetLocations = preset["lockLocation"];
+			JToken? presetLocationsAllowed = preset["lockLocationAllowed"];
+			bool isVanilla = VanillaPresets.Contains(presetId);
 
 			if (presetId == "glitch")
 			{
@@ -689,35 +711,59 @@ namespace SotnRandoTools.RandoTracker
 			{
 				string name = location["location"].ToString().Replace(" ", String.Empty).ToLower();
 				var trackerLocation = locations.Where(x => x.Name.Replace(" ", String.Empty).ToLower() == name).FirstOrDefault();
-				if (trackerLocation != null)
-				{
-					if (overwriteLocks)
-					{
-						if (outOfLogic)
-						{
-							trackerLocation.OutOfLogicLocks.Clear();
-						}
-						else
-						{
-							trackerLocation.Locks.Clear();
-						}
-					}
 
-					foreach (JToken lockSet in location["locks"])
-					{
-						if (outOfLogic)
-						{
-							trackerLocation.OutOfLogicLocks.Add(lockSet.ToString().Replace(" ", String.Empty).ToLower().Split('+'));
-						}
-						else
-						{
-							trackerLocation.Locks.Add(lockSet.ToString().Replace(" ", String.Empty).ToLower().Split('+'));
-						}
-					}
-				}
-				else
+				if (trackerLocation == null)
 				{
 					Console.WriteLine($"Could not find location {name}.");
+					continue;
+				}
+
+				if (overwriteLocks)
+				{
+					if (outOfLogic || !isVanilla)
+					{
+						trackerLocation.OutOfLogicLocks.Clear();
+					}
+					else
+					{
+						trackerLocation.Locks.Clear();
+					}
+				}
+
+				foreach (JToken lockSet in location["locks"])
+				{
+					if (outOfLogic)
+					{
+						trackerLocation.OutOfLogicLocks.Add(lockSet.ToString().Replace(" ", String.Empty).ToLower().Split('+'));
+					}
+					else
+					{
+						trackerLocation.Locks.Add(lockSet.ToString().Replace(" ", String.Empty).ToLower().Split('+'));
+					}
+				}
+			}
+
+			if (presetLocationsAllowed is null)
+			{
+				return;
+			}
+
+			foreach (JObject location in presetLocationsAllowed)
+			{
+				string name = location["location"].ToString().Replace(" ", String.Empty).ToLower();
+				var trackerLocation = locations.Where(x => x.Name.Replace(" ", String.Empty).ToLower() == name).FirstOrDefault();
+
+				if (trackerLocation == null)
+				{
+					Console.WriteLine($"Could not find location {name}.");
+					continue;
+				}
+
+				trackerLocation.OutOfLogicLocks.Clear();
+
+				foreach (JToken lockSet in location["locks"])
+				{
+					trackerLocation.OutOfLogicLocks.Add(lockSet.ToString().Replace(" ", String.Empty).ToLower().Split('+'));
 				}
 			}
 		}
