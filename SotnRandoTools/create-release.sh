@@ -1,10 +1,15 @@
 #!/bin/bash
+if [ $# -eq 0 ]; then
+    >&2 echo "Usage: create-release version [-l linux]"
+    exit 1
+fi
+
 mkdir NewRelease
 cp -r BizHawk/ExternalTools NewRelease
 rm NewRelease/ExternalTools/SotnRandoTools/ToolConfig.ini
 rm -r NewRelease/ExternalTools/SotnRandoTools/Replays/*
 cd NewRelease
-if [ "$2" == "lin" ]; then
+if [ "$2" == "-l" ]; then
     rm -r ExternalTools/SotnRandoTools/Updater
     7z a -tzip $HOME/Desktop/SotnRandoTools-Linux-$1.zip ExternalTools
 else
