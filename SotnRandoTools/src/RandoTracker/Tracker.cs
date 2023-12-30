@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using BizHawk.Client.Common;
+using BizHawk.Emulation.Common;
 using Newtonsoft.Json.Linq;
 using SotnApi.Constants.Values.Game;
 using SotnApi.Interfaces;
@@ -30,333 +30,333 @@ namespace SotnRandoTools.RandoTracker
 
 		private readonly List<Location> locations = new List<Location>
 		{
-			new Location { Name = "SoulOfBat", MapRow = 66, MapCol = 96, WatchIndecies = new List<int>{0}, Rooms = new List<Room>{
+			new Location { Name = "SoulOfBat", Y = 66, X = 192, WatchIndecies = new List<int>{0}, Rooms = new List<Room>{
 					new Room { WatchIndex = 0, Values = new int[] { 0x01 }},
 			}},
-			new Location { Name = "FireOfBat", MapRow = 26, MapCol = 118, WatchIndecies = new List<int>{1}, Rooms = new List<Room>{
+			new Location { Name = "FireOfBat", Y = 26, X = 236, WatchIndecies = new List<int>{1}, Rooms = new List<Room>{
 					new Room { WatchIndex = 1, Values = new int[] { 0x01 }},
 			}},
-			new Location { Name = "EchoOfBat", MapRow = 46, MapCol = 32, WatchIndecies = new List<int>{2}, Rooms = new List<Room>{
+			new Location { Name = "EchoOfBat", Y = 46, X = 64, WatchIndecies = new List<int>{2}, Rooms = new List<Room>{
 					new Room { WatchIndex = 2, Values = new int[] { 0x04 }},
 			}},
-			new Location { Name = "SoulOfWolf", MapRow = 54, MapCol = 122, WatchIndecies = new List<int>{3, 4}, Rooms = new List<Room>{
+			new Location { Name = "SoulOfWolf", Y = 54, X = 244, WatchIndecies = new List<int>{3, 4}, Rooms = new List<Room>{
 					new Room { WatchIndex = 3, Values = new int[] { 0x10 }},
 					new Room { WatchIndex = 4, Values = new int[] { 0x10 }},
 			}},
-			new Location { Name = "PowerOfWolf", MapRow = 134, MapCol = 4, WatchIndecies = new List<int>{5}, Rooms = new List<Room>{
+			new Location { Name = "PowerOfWolf", Y = 134, X = 8, WatchIndecies = new List<int>{5}, Rooms = new List<Room>{
 					new Room { WatchIndex = 5, Values = new int[] { 0x01, 0x04 }},
 			}},
-			new Location { Name = "SkillOfWolf", MapRow = 114, MapCol = 30, WatchIndecies = new List<int>{6}, Rooms = new List<Room>{
+			new Location { Name = "SkillOfWolf", Y = 114, X = 60, WatchIndecies = new List<int>{6}, Rooms = new List<Room>{
 					new Room { WatchIndex = 6, Values = new int[] { 0x01 }},
 			}},
-			new Location { Name = "FormOfMist", MapRow = 70, MapCol = 42, WatchIndecies = new List<int>{7}, Rooms = new List<Room>{
+			new Location { Name = "FormOfMist", Y = 70, X = 84, WatchIndecies = new List<int>{7}, Rooms = new List<Room>{
 					new Room { WatchIndex = 7, Values = new int[] { 0x04, 0x10 }},
 			}},
-			new Location { Name = "PowerOfMist", MapRow = 18, MapCol = 62, WatchIndecies = new List<int>{8, 9, 10}, Rooms = new List<Room>{
+			new Location { Name = "PowerOfMist", Y = 18, X = 124, WatchIndecies = new List<int>{8, 9, 10}, Rooms = new List<Room>{
 					new Room { WatchIndex = 8, Values = new int[] { 0x01 }},
 					new Room { WatchIndex = 9, Values = new int[] { 0x01 }},
 					new Room { WatchIndex = 10, Values = new int[] { 0x40 }},
 			}},
-			new Location { Name = "CubeOfZoe", MapRow = 126, MapCol = 38, WatchIndecies = new List<int>{11}, Rooms = new List<Room>{
+			new Location { Name = "CubeOfZoe", Y = 126, X = 76, WatchIndecies = new List<int>{11}, Rooms = new List<Room>{
 					new Room { WatchIndex = 11, Values = new int[] { 0x01, 0x04 }},
 			}},
-			new Location { Name = "SpiritOrb", MapRow = 107, MapCol = 50, WatchIndecies = new List<int>{12, 13}, Rooms = new List<Room>{
+			new Location { Name = "SpiritOrb", Y = 107, X = 100, WatchIndecies = new List<int>{12, 13}, Rooms = new List<Room>{
 					new Room { WatchIndex = 12, Values = new int[] { 0x10 }},
 					new Room { WatchIndex = 13, Values = new int[] { 0x04 }},
 			}},
-			new Location { Name = "GravityBoots", MapRow = 74, MapCol = 68, WatchIndecies = new List<int>{14}, Rooms = new List<Room>{
+			new Location { Name = "GravityBoots", Y = 74, X = 136, WatchIndecies = new List<int>{14}, Rooms = new List<Room>{
 					new Room { WatchIndex = 14, Values = new int[] { 0x04 }},
 			}},
-			new Location { Name = "LeapStone", MapRow = 26, MapCol = 62, WatchIndecies = new List<int>{15, 16}, Rooms = new List<Room>{
+			new Location { Name = "LeapStone", Y = 26, X = 124, WatchIndecies = new List<int>{15, 16}, Rooms = new List<Room>{
 					new Room { WatchIndex = 15, Values = new int[] { 0x01 }},
 					new Room { WatchIndex = 16, Values = new int[] { 0x01 }},
 			}},
-			new Location { Name = "HolySymbol", MapRow = 146, MapCol = 110, WatchIndecies = new List<int>{17}, Rooms = new List<Room>{
+			new Location { Name = "HolySymbol", Y = 146, X = 220, WatchIndecies = new List<int>{17}, Rooms = new List<Room>{
 					new Room { WatchIndex = 17, Values = new int[] { 0x01 }},
 			}},
-			new Location { Name = "FaerieScroll", MapRow = 54, MapCol = 118, WatchIndecies = new List<int>{18}, Rooms = new List<Room>{
+			new Location { Name = "FaerieScroll", Y = 54, X = 236, WatchIndecies = new List<int>{18}, Rooms = new List<Room>{
 					new Room { WatchIndex = 18, Values = new int[] { 0x01 }},
 			}},
-			new Location { Name = "JewelOfOpen", MapRow = 62, MapCol = 98, WatchIndecies = new List<int>{19}, Rooms = new List<Room>{
+			new Location { Name = "JewelOfOpen", Y = 62, X = 196, WatchIndecies = new List<int>{19}, Rooms = new List<Room>{
 					new Room { WatchIndex = 19, Values = new int[] { 0x10 }},
 			}},
-			new Location { Name = "MermanStatue", MapRow = 150, MapCol = 16, WatchIndecies = new List<int>{20}, Rooms = new List<Room>{
+			new Location { Name = "MermanStatue", Y = 150, X = 32, WatchIndecies = new List<int>{20}, Rooms = new List<Room>{
 					new Room { WatchIndex = 20, Values = new int[] { 0x40 }},
 			}},
-			new Location { Name = "BatCard", MapRow = 90, MapCol = 26, WatchIndecies = new List<int>{21}, Rooms = new List<Room>{
+			new Location { Name = "BatCard", Y = 90, X = 52, WatchIndecies = new List<int>{21}, Rooms = new List<Room>{
 					new Room { WatchIndex = 21, Values = new int[] { 0x10 }},
 			}},
-			new Location { Name = "GhostCard", MapRow = 10, MapCol = 78, WatchIndecies = new List<int>{22}, Rooms = new List<Room>{
+			new Location { Name = "GhostCard", Y = 10, X = 156, WatchIndecies = new List<int>{22}, Rooms = new List<Room>{
 					new Room { WatchIndex = 22, Values = new int[] { 0x01, 0x04 }},
 			}},
-			new Location { Name = "FaerieCard", MapRow = 54, MapCol = 104, WatchIndecies = new List<int>{23}, Rooms = new List<Room>{
+			new Location { Name = "FaerieCard", Y = 54, X = 208, WatchIndecies = new List<int>{23}, Rooms = new List<Room>{
 					new Room { WatchIndex = 23, Values = new int[] { 0x40 }},
 			}},
-			new Location { Name = "DemonCard", MapRow = 158, MapCol = 58, WatchIndecies = new List<int>{24}, Rooms = new List<Room>{
+			new Location { Name = "DemonCard", Y = 158, X = 117, WatchIndecies = new List<int>{24}, Rooms = new List<Room>{
 					new Room { WatchIndex = 24, Values = new int[] { 0x10 }},
 			}},
-			new Location { Name = "SwordCard", MapRow = 54, MapCol = 40, WatchIndecies = new List<int>{25}, Rooms = new List<Room>{
+			new Location { Name = "SwordCard", Y = 54, X = 80, WatchIndecies = new List<int>{25}, Rooms = new List<Room>{
 					new Room { WatchIndex = 25, Values = new int[] { 0x40 }},
 			}},
-			new Location { Name = "CrystalCloak",  GuardedExtension = true,  SpreadExtension = true, MapRow = 134, MapCol = 80, WatchIndecies = new List<int>{26}, Rooms = new List<Room>{
+			new Location { Name = "CrystalCloak",  GuardedExtension = true,  SpreadExtension = true, Y = 134, X = 160, WatchIndecies = new List<int>{26}, Rooms = new List<Room>{
 					new Room { WatchIndex = 26, Values = new int[] { 0x40 }},
 			}},
-			new Location { Name = "Mormegil",  GuardedExtension = true, MapRow = 182, MapCol = 34, WatchIndecies = new List<int>{27}, Rooms = new List<Room>{
+			new Location { Name = "Mormegil",  GuardedExtension = true, Y = 182, X = 68, WatchIndecies = new List<int>{27}, Rooms = new List<Room>{
 					new Room { WatchIndex = 27, Values = new int[] { 0x10 }},
 			}},
-			new Location { Name = "GoldRing", MapRow = 114, MapCol = 90, WatchIndecies = new List<int>{28}, Rooms = new List<Room>{
+			new Location { Name = "GoldRing", Y = 114, X = 180, WatchIndecies = new List<int>{28}, Rooms = new List<Room>{
 					new Room { WatchIndex = 28, Values = new int[] { 0x10 }},
 			}},
-			new Location { Name = "Spikebreaker", MapRow = 186, MapCol = 82, WatchIndecies = new List<int>{29}, Rooms = new List<Room>{
+			new Location { Name = "Spikebreaker", Y = 186, X = 164, WatchIndecies = new List<int>{29}, Rooms = new List<Room>{
 					new Room { WatchIndex = 29, Values = new int[] { 0x10 }},
 			}},
-			new Location { Name = "SilverRing", MapRow = 42, MapCol = 17, WatchIndecies = new List<int>{30}, Rooms = new List<Room>{
+			new Location { Name = "SilverRing", Y = 42, X = 32, WatchIndecies = new List<int>{30}, Rooms = new List<Room>{
 					new Room { WatchIndex = 30, Values = new int[] { 0x10 }},
 			}},
-			new Location { Name = "HolyGlasses", MapRow = 106, MapCol = 64, WatchIndecies = new List<int>{31}, Rooms = new List<Room>{
+			new Location { Name = "HolyGlasses", Y = 106, X = 128, WatchIndecies = new List<int>{31}, Rooms = new List<Room>{
 					new Room { WatchIndex = 31, Values = new int[] { 0x40 }},
 			}},
-			new Location { Name = "HeartOfVlad",  SecondCastle = true, MapRow = 165, MapCol = 80, WatchIndecies = new List<int>{32, 33}, Rooms = new List<Room>{
+			new Location { Name = "HeartOfVlad",  SecondCastle = true, Y = 165, X = 160, WatchIndecies = new List<int>{32, 33}, Rooms = new List<Room>{
 					new Room { WatchIndex = 32, Values = new int[] { 0x01 }},
 					new Room { WatchIndex = 33, Values = new int[] { 0x40 }},
 			}},
-			new Location { Name = "ToothOfVlad",  SecondCastle = true, MapRow = 125, MapCol = 12, WatchIndecies = new List<int>{34}, Rooms = new List<Room>{
+			new Location { Name = "ToothOfVlad",  SecondCastle = true, Y = 125, X = 24, WatchIndecies = new List<int>{34}, Rooms = new List<Room>{
 					new Room { WatchIndex = 34, Values = new int[] { 0x10, 0x04 }},
 			}},
-			new Location { Name = "RibOfVlad",  SecondCastle = true, MapRow = 153, MapCol = 88, WatchIndecies = new List<int>{35}, Rooms = new List<Room>{
+			new Location { Name = "RibOfVlad",  SecondCastle = true, Y = 153, X = 176, WatchIndecies = new List<int>{35}, Rooms = new List<Room>{
 					new Room { WatchIndex = 35, Values = new int[] { 0x01 }},
 			}},
-			new Location { Name = "RingOfVlad",  SecondCastle = true, MapRow = 177, MapCol = 46, WatchIndecies = new List<int>{36}, Rooms = new List<Room>{
+			new Location { Name = "RingOfVlad",  SecondCastle = true, Y = 177, X = 92, WatchIndecies = new List<int>{36}, Rooms = new List<Room>{
 					new Room { WatchIndex = 36, Values = new int[] { 0x01 }},
 			}},
-			new Location { Name = "EyeOfVlad",  SecondCastle = true, MapRow = 57, MapCol = 66, WatchIndecies = new List<int>{37}, Rooms = new List<Room>{
+			new Location { Name = "EyeOfVlad",  SecondCastle = true, Y = 57, X = 132, WatchIndecies = new List<int>{37}, Rooms = new List<Room>{
 					new Room { WatchIndex = 37, Values = new int[] { 0x10, 0x40 }},
 			}},
-			new Location { Name = "ForceOfEcho",  SecondCastle = true, MapRow = 53, MapCol = 16, WatchIndecies = new List<int>{38}, Rooms = new List<Room>{
+			new Location { Name = "ForceOfEcho",  SecondCastle = true, Y = 53, X = 32, WatchIndecies = new List<int>{38}, Rooms = new List<Room>{
 					new Room { WatchIndex = 38, Values = new int[] { 0x40 }},
 			}},
-			new Location { Name = "GasCloud",  SecondCastle = true, MapRow = 17, MapCol = 92, WatchIndecies = new List<int>{39}, Rooms = new List<Room>{
+			new Location { Name = "GasCloud",  SecondCastle = true, Y = 17, X = 184, WatchIndecies = new List<int>{39}, Rooms = new List<Room>{
 					new Room { WatchIndex = 39, Values = new int[] { 0x04 }},
 			}},
-			new Location { Name = "RingOfArcana",  SecondCastle = true,  GuardedExtension = true,  SpreadExtension = true, MapRow = 109, MapCol = 100, WatchIndecies = new List<int>{40}, Rooms = new List<Room>{
+			new Location { Name = "RingOfArcana",  SecondCastle = true,  GuardedExtension = true,  SpreadExtension = true, Y = 109, X = 200, WatchIndecies = new List<int>{40}, Rooms = new List<Room>{
 					new Room { WatchIndex = 40, Values = new int[] { 0x04 }},
 			}},
-			new Location { Name = "DarkBlade",  SecondCastle = true,  GuardedExtension = true,  SpreadExtension = true, MapRow = 65, MapCol = 46, WatchIndecies = new List<int>{41}, Rooms = new List<Room>{
+			new Location { Name = "DarkBlade",  SecondCastle = true,  GuardedExtension = true,  SpreadExtension = true, Y = 65, X = 92, WatchIndecies = new List<int>{41}, Rooms = new List<Room>{
 					new Room { WatchIndex = 41, Values = new int[] { 0x01 }},
 			}},
-			new Location { Name = "Trio",  SecondCastle = true,  GuardedExtension = true,  SpreadExtension = true, MapRow = 129, MapCol = 86, WatchIndecies = new List<int>{42, 43}, Rooms = new List<Room>{
+			new Location { Name = "Trio",  SecondCastle = true,  GuardedExtension = true,  SpreadExtension = true, Y = 129, X = 172, WatchIndecies = new List<int>{42, 43}, Rooms = new List<Room>{
 					new Room { WatchIndex = 42, Values = new int[] { 0x40 }},
 					new Room { WatchIndex = 43, Values = new int[] { 0x01 }},
 			}},
-			new Location { Name = "Walk armor",  EquipmentExtension = true, MapRow = 182, MapCol = 46, WatchIndecies = new List<int>{0}, Rooms = new List<Room>{
+			new Location { Name = "Walk armor",  EquipmentExtension = true, Y = 183, X = 93, WatchIndecies = new List<int>{0}, Rooms = new List<Room>{
 					new Room { WatchIndex = 0, Values = new int[] { 0x01 }},
 			}},
-			new Location { Name = "Icebrand",  EquipmentExtension = true, MapRow = 182, MapCol = 48, WatchIndecies = new List<int>{1}, Rooms = new List<Room>{
+			new Location { Name = "Icebrand",  EquipmentExtension = true, Y = 183, X = 97, WatchIndecies = new List<int>{1}, Rooms = new List<Room>{
 					new Room { WatchIndex = 1, Values = new int[] { 0x40 }},
 			}},
-			new Location { Name = "Bloodstone",  EquipmentExtension = true, MapRow = 182, MapCol = 56, WatchIndecies = new List<int>{3}, Rooms = new List<Room>{
+			new Location { Name = "Bloodstone",  EquipmentExtension = true, Y = 183, X = 113, WatchIndecies = new List<int>{3}, Rooms = new List<Room>{
 					new Room { WatchIndex = 3, Values = new int[] { 0x40 }},
 			}},
-			new Location { Name = "Combat knife",  EquipmentExtension = true, MapRow = 174, MapCol = 62, WatchIndecies = new List<int>{4}, Rooms = new List<Room>{
+			new Location { Name = "Combat knife",  EquipmentExtension = true, Y = 175, X = 125, WatchIndecies = new List<int>{4}, Rooms = new List<Room>{
 					new Room { WatchIndex = 4, Values = new int[] { 0x01 }},
 			}},
-			new Location { Name = "Ring of Ares",  EquipmentExtension = true, MapRow = 146, MapCol = 74, WatchIndecies = new List<int>{5}, Rooms = new List<Room>{
+			new Location { Name = "Ring of Ares",  EquipmentExtension = true, Y = 147, X = 149, WatchIndecies = new List<int>{5}, Rooms = new List<Room>{
 					new Room { WatchIndex = 5, Values = new int[] { 0x10 }},
 			}},
-			new Location { Name = "Knuckle duster",  EquipmentExtension = true, MapRow = 150, MapCol = 80, WatchIndecies = new List<int>{6}, Rooms = new List<Room>{
+			new Location { Name = "Knuckle duster",  EquipmentExtension = true, Y = 151, X = 161, WatchIndecies = new List<int>{6}, Rooms = new List<Room>{
 					new Room { WatchIndex = 6, Values = new int[] { 0x40 }},
 			}},
-			new Location { Name = "Caverns Onyx",  EquipmentExtension = true, MapRow = 146, MapCol = 92, WatchIndecies = new List<int>{7}, Rooms = new List<Room>{
+			new Location { Name = "Caverns Onyx",  EquipmentExtension = true, Y = 147, X = 181, WatchIndecies = new List<int>{7}, Rooms = new List<Room>{
 					new Room { WatchIndex = 7, Values = new int[] { 0x10, 0x40 }},
 			}},
-			new Location { Name = "Bandanna",  EquipmentExtension = true, MapRow = 90, MapCol = 70, WatchIndecies = new List<int>{11}, Rooms = new List<Room>{
+			new Location { Name = "Bandanna",  EquipmentExtension = true, Y = 91, X = 141, WatchIndecies = new List<int>{11}, Rooms = new List<Room>{
 					new Room { WatchIndex = 11, Values = new int[] { 0x01 }},
 			}},
-			new Location { Name = "Nunchaku",  EquipmentExtension = true, MapRow = 134, MapCol = 76, WatchIndecies = new List<int>{12}, Rooms = new List<Room>{
+			new Location { Name = "Nunchaku",  EquipmentExtension = true, Y = 133, X = 153, WatchIndecies = new List<int>{12}, Rooms = new List<Room>{
 					new Room { WatchIndex = 12, Values = new int[] { 0x04, 0x10 }},
 			}},
-			new Location { Name = "Secret Boots",  EquipmentExtension = true, MapRow = 138, MapCol = 48, WatchIndecies = new List<int>{13, 14}, Rooms = new List<Room>{
+			new Location { Name = "Secret Boots",  EquipmentExtension = true, Y = 139, X = 97, WatchIndecies = new List<int>{13, 14}, Rooms = new List<Room>{
 					new Room { WatchIndex = 13, Values = new int[] { 0x01 }},
 					new Room { WatchIndex = 14, Values = new int[] { 0x01 }},
 			}},
-			new Location { Name = "Holy mail",  EquipmentExtension = true, MapRow = 134, MapCol = 10, WatchIndecies = new List<int>{16}, Rooms = new List<Room>{
+			new Location { Name = "Holy mail",  EquipmentExtension = true, Y = 135, X = 21, WatchIndecies = new List<int>{16}, Rooms = new List<Room>{
 					new Room { WatchIndex = 16, Values = new int[] { 0x10 }},
 			}},
-			new Location { Name = "Jewel sword",  EquipmentExtension = true, MapRow = 146, MapCol = 20, WatchIndecies = new List<int>{17}, Rooms = new List<Room>{
+			new Location { Name = "Jewel sword",  EquipmentExtension = true, Y = 147, X = 41, WatchIndecies = new List<int>{17}, Rooms = new List<Room>{
 					new Room { WatchIndex = 17, Values = new int[] { 0x04 }},
 			}},
-			new Location { Name = "Sunglasses",  EquipmentExtension = true, MapRow = 106, MapCol = 32, WatchIndecies = new List<int>{20}, Rooms = new List<Room>{
+			new Location { Name = "Sunglasses",  EquipmentExtension = true, Y = 107, X = 65, WatchIndecies = new List<int>{20}, Rooms = new List<Room>{
 					new Room { WatchIndex = 20, Values = new int[] { 0x40 }},
 			}},
-			new Location { Name = "Basilard",  EquipmentExtension = true, MapRow = 118, MapCol = 32, WatchIndecies = new List<int>{21}, Rooms = new List<Room>{
+			new Location { Name = "Basilard",  EquipmentExtension = true, Y = 119, X = 65, WatchIndecies = new List<int>{21}, Rooms = new List<Room>{
 					new Room { WatchIndex = 21, Values = new int[] { 0x40 }},
 			}},
-			new Location { Name = "Cloth cape",  EquipmentExtension = true, MapRow = 98, MapCol = 20, WatchIndecies = new List<int>{22}, Rooms = new List<Room>{
+			new Location { Name = "Cloth cape",  EquipmentExtension = true, Y = 99, X = 41, WatchIndecies = new List<int>{22}, Rooms = new List<Room>{
 					new Room { WatchIndex = 22, Values = new int[] { 0x04 }},
 			}},
-			new Location { Name = "Mystic pendant",  EquipmentExtension = true, MapRow = 86, MapCol = 8, WatchIndecies = new List<int>{23, 24}, Rooms = new List<Room>{
+			new Location { Name = "Mystic pendant",  EquipmentExtension = true, Y = 87, X = 15, WatchIndecies = new List<int>{23, 24}, Rooms = new List<Room>{
 					new Room { WatchIndex = 23, Values = new int[] { 0x40 }},
 					new Room { WatchIndex = 24, Values = new int[] { 0x40 }},
 			}},
-			new Location { Name = "Ankh of Life",  EquipmentExtension = true, MapRow = 78, MapCol = 12, WatchIndecies = new List<int>{25}, Rooms = new List<Room>{
+			new Location { Name = "Ankh of Life",  EquipmentExtension = true, Y = 79, X = 23, WatchIndecies = new List<int>{25}, Rooms = new List<Room>{
 					new Room { WatchIndex = 25, Values = new int[] { 0x04, 0x01 }},
 			}},
-			new Location { Name = "Morningstar",  EquipmentExtension = true, MapRow = 66, MapCol = 16, WatchIndecies = new List<int>{26, 27}, Rooms = new List<Room>{
+			new Location { Name = "Morningstar",  EquipmentExtension = true, Y = 67, X = 33, WatchIndecies = new List<int>{26, 27}, Rooms = new List<Room>{
 					new Room { WatchIndex = 26, Values = new int[] { 0x10 }},
 					new Room { WatchIndex = 27, Values = new int[] { 0x10 }},
 			}},
-			new Location { Name = "Goggles",  EquipmentExtension = true, MapRow = 66, MapCol = 20, WatchIndecies = new List<int>{28}, Rooms = new List<Room>{
+			new Location { Name = "Goggles",  EquipmentExtension = true, Y = 67, X = 41, WatchIndecies = new List<int>{28}, Rooms = new List<Room>{
 					new Room { WatchIndex = 28, Values = new int[] { 0x04 }},
 			}},
-			new Location { Name = "Silver plate",  EquipmentExtension = true, MapRow = 30, MapCol = 28, WatchIndecies = new List<int>{29}, Rooms = new List<Room>{
+			new Location { Name = "Silver plate",  EquipmentExtension = true, Y = 31, X = 59, WatchIndecies = new List<int>{29}, Rooms = new List<Room>{
 					new Room { WatchIndex = 29, Values = new int[] { 0x04, 0x01 }},
 			}},
-			new Location { Name = "Cutlass",  EquipmentExtension = true, MapRow = 22, MapCol = 54, WatchIndecies = new List<int>{30, 31}, Rooms = new List<Room>{
+			new Location { Name = "Cutlass",  EquipmentExtension = true, Y = 23, X = 111, WatchIndecies = new List<int>{30, 31}, Rooms = new List<Room>{
 					new Room { WatchIndex = 30, Values = new int[] { 0x40 }},
 					new Room { WatchIndex = 31, Values = new int[] { 0x01 }},
 			}},
-			new Location { Name = "Platinum mail",  EquipmentExtension = true, MapRow = 6, MapCol = 70, WatchIndecies = new List<int>{32}, Rooms = new List<Room>{
+			new Location { Name = "Platinum mail",  EquipmentExtension = true, Y = 7, X = 141, WatchIndecies = new List<int>{32}, Rooms = new List<Room>{
 					new Room { WatchIndex = 32, Values = new int[] { 0x01 }},
 			}},
-			new Location { Name = "Falchion",  EquipmentExtension = true, MapRow = 14, MapCol = 78, WatchIndecies = new List<int>{33}, Rooms = new List<Room>{
+			new Location { Name = "Falchion",  EquipmentExtension = true, Y = 15, X = 157, WatchIndecies = new List<int>{33}, Rooms = new List<Room>{
 					new Room { WatchIndex = 33, Values = new int[] { 0x01 }},
 			}},
-			new Location { Name = "Gold plate",  EquipmentExtension = true, MapRow = 38, MapCol = 98, WatchIndecies = new List<int>{34}, Rooms = new List<Room>{
+			new Location { Name = "Gold plate",  EquipmentExtension = true, Y = 39, X = 197, WatchIndecies = new List<int>{34}, Rooms = new List<Room>{
 					new Room { WatchIndex = 34, Values = new int[] { 0x10 }},
 			}},
-			new Location { Name = "Bekatowa",  EquipmentExtension = true, MapRow = 38, MapCol = 111, WatchIndecies = new List<int>{35, 36}, Rooms = new List<Room>{
+			new Location { Name = "Bekatowa",  EquipmentExtension = true, Y = 39, X = 223, WatchIndecies = new List<int>{35, 36}, Rooms = new List<Room>{
 					new Room { WatchIndex = 35, Values = new int[] { 0x01, 0x04 }},
 					new Room { WatchIndex = 36, Values = new int[] { 0x01, 0x04 }},
 			}},
-			new Location { Name = "Gladius",  EquipmentExtension = true, MapRow = 74, MapCol = 118, WatchIndecies = new List<int>{37}, Rooms = new List<Room>{
+			new Location { Name = "Gladius",  EquipmentExtension = true, Y = 75, X = 237, WatchIndecies = new List<int>{37}, Rooms = new List<Room>{
 					new Room { WatchIndex = 37, Values = new int[] { 0x01 }},
 			}},
-			new Location { Name = "Jewel knuckles",  EquipmentExtension = true, MapRow = 90, MapCol = 118, WatchIndecies = new List<int>{38}, Rooms = new List<Room>{
+			new Location { Name = "Jewel knuckles",  EquipmentExtension = true, Y = 91, X = 237, WatchIndecies = new List<int>{38}, Rooms = new List<Room>{
 					new Room { WatchIndex = 38, Values = new int[] { 0x01 }},
 			}},
-			new Location { Name = "Bronze cuirass",  EquipmentExtension = true, MapRow = 66, MapCol = 98, WatchIndecies = new List<int>{39}, Rooms = new List<Room>{
+			new Location { Name = "Bronze cuirass",  EquipmentExtension = true, Y = 67, X = 197, WatchIndecies = new List<int>{39}, Rooms = new List<Room>{
 					new Room { WatchIndex = 39, Values = new int[] { 0x10 }},
 			}},
-			new Location { Name = "Holy rod",  EquipmentExtension = true, MapRow = 54, MapCol = 100, WatchIndecies = new List<int>{40}, Rooms = new List<Room>{
+			new Location { Name = "Holy rod",  EquipmentExtension = true, Y = 55, X = 201, WatchIndecies = new List<int>{40}, Rooms = new List<Room>{
 					new Room { WatchIndex = 40, Values = new int[] { 0x04 }},
 			}},
-			new Location { Name = "Library Onyx",  EquipmentExtension = true, MapRow = 66, MapCol = 94, WatchIndecies = new List<int>{41}, Rooms = new List<Room>{
+			new Location { Name = "Library Onyx",  EquipmentExtension = true, Y = 67, X = 119, WatchIndecies = new List<int>{41}, Rooms = new List<Room>{
 					new Room { WatchIndex = 41, Values = new int[] { 0x04 }},
 			}},
-			new Location { Name = "Alucart Sword",  EquipmentExtension = true, MapRow = 82, MapCol = 68, WatchIndecies = new List<int>{42}, Rooms = new List<Room>{
+			new Location { Name = "Alucart Sword",  EquipmentExtension = true, Y = 83, X = 137, WatchIndecies = new List<int>{42}, Rooms = new List<Room>{
 					new Room { WatchIndex = 42, Values = new int[] { 0x04 }},
 			}},
-			new Location { Name = "Broadsword",  EquipmentExtension = true, MapRow = 70, MapCol = 64, WatchIndecies = new List<int>{43}, Rooms = new List<Room>{
+			new Location { Name = "Broadsword",  EquipmentExtension = true, Y = 71, X = 129, WatchIndecies = new List<int>{43}, Rooms = new List<Room>{
 					new Room { WatchIndex = 43, Values = new int[] { 0x40 }},
 			}},
-			new Location { Name = "Estoc",  EquipmentExtension = true, MapRow = 42, MapCol = 60, WatchIndecies = new List<int>{44}, Rooms = new List<Room>{
+			new Location { Name = "Estoc",  EquipmentExtension = true, Y = 43, X = 121, WatchIndecies = new List<int>{44}, Rooms = new List<Room>{
 					new Room { WatchIndex = 44, Values = new int[] { 0x04 }},
 			}},
-			new Location { Name = "Olrox Garnet",  EquipmentExtension = true, MapRow = 54, MapCol = 66, WatchIndecies = new List<int>{45}, Rooms = new List<Room>{
+			new Location { Name = "Olrox Garnet",  EquipmentExtension = true, Y = 55, X = 133, WatchIndecies = new List<int>{45}, Rooms = new List<Room>{
 					new Room { WatchIndex = 45, Values = new int[] { 0x10 }},
 			}},
-			new Location { Name = "Holy sword",  EquipmentExtension = true, MapRow = 62, MapCol = 38, WatchIndecies = new List<int>{46}, Rooms = new List<Room>{
+			new Location { Name = "Holy sword",  EquipmentExtension = true, Y = 63, X = 77, WatchIndecies = new List<int>{46}, Rooms = new List<Room>{
 					new Room { WatchIndex = 46, Values = new int[] { 0x01 }},
 			}},
-			new Location { Name = "Knight shield",  EquipmentExtension = true, MapRow = 70, MapCol = 28, WatchIndecies = new List<int>{47}, Rooms = new List<Room>{
+			new Location { Name = "Knight shield",  EquipmentExtension = true, Y = 71, X = 57, WatchIndecies = new List<int>{47}, Rooms = new List<Room>{
 					new Room { WatchIndex = 47, Values = new int[] { 0x01, 0x04 }},
 			}},
-			new Location { Name = "Shield rod",  EquipmentExtension = true, MapRow = 78, MapCol = 26, WatchIndecies = new List<int>{48}, Rooms = new List<Room>{
+			new Location { Name = "Shield rod",  EquipmentExtension = true, Y = 79, X = 53, WatchIndecies = new List<int>{48}, Rooms = new List<Room>{
 					new Room { WatchIndex = 48, Values = new int[] { 0x10 }},
 			}},
-			new Location { Name = "Blood cloak",  EquipmentExtension = true, MapRow = 78, MapCol = 40, WatchIndecies = new List<int>{49}, Rooms = new List<Room>{
+			new Location { Name = "Blood cloak",  EquipmentExtension = true, Y = 79, X = 81, WatchIndecies = new List<int>{49}, Rooms = new List<Room>{
 					new Room { WatchIndex = 49, Values = new int[] { 0x40 }},
 			}},
-			new Location { Name = "Bastard sword",  SecondCastle = true,  EquipmentExtension = true, MapRow = 193, MapCol = 60, WatchIndecies = new List<int>{50}, Rooms = new List<Room>{
+			new Location { Name = "Bastard sword",  SecondCastle = true,  EquipmentExtension = true, Y = 194, X = 121, WatchIndecies = new List<int>{50}, Rooms = new List<Room>{
 					new Room { WatchIndex = 50, Values = new int[] { 0x04 }},
 			}},
-			new Location { Name = "Royal cloak",  SecondCastle = true,  EquipmentExtension = true, MapRow = 193, MapCol = 56, WatchIndecies = new List<int>{51}, Rooms = new List<Room>{
+			new Location { Name = "Royal cloak",  SecondCastle = true,  EquipmentExtension = true, Y = 194, X = 113, WatchIndecies = new List<int>{51}, Rooms = new List<Room>{
 					new Room { WatchIndex = 51, Values = new int[] { 0x40 }},
 			}},
-			new Location { Name = "Lightning mail",  SecondCastle = true,  EquipmentExtension = true, MapRow = 173, MapCol = 48, WatchIndecies = new List<int>{52}, Rooms = new List<Room>{
+			new Location { Name = "Lightning mail",  SecondCastle = true,  EquipmentExtension = true, Y = 174, X = 97, WatchIndecies = new List<int>{52}, Rooms = new List<Room>{
 					new Room { WatchIndex = 52, Values = new int[] { 0x40 }},
 			}},
-			new Location { Name = "Sword of Dawn",  SecondCastle = true,  EquipmentExtension = true, MapRow = 173, MapCol = 64, WatchIndecies = new List<int>{53, 54}, Rooms = new List<Room>{
+			new Location { Name = "Sword of Dawn",  SecondCastle = true,  EquipmentExtension = true, Y = 174, X = 129, WatchIndecies = new List<int>{53, 54}, Rooms = new List<Room>{
 					new Room { WatchIndex = 53, Values = new int[] { 0x40 }},
 					new Room { WatchIndex = 54, Values = new int[] { 0x01 }},
 			}},
-			new Location { Name = "Moon rod",  SecondCastle = true,  EquipmentExtension = true, MapRow = 173, MapCol = 42, WatchIndecies = new List<int>{55}, Rooms = new List<Room>{
+			new Location { Name = "Moon rod",  SecondCastle = true,  EquipmentExtension = true, Y = 174, X = 85, WatchIndecies = new List<int>{55}, Rooms = new List<Room>{
 					new Room { WatchIndex = 55, Values = new int[] { 0x10 }},
 			}},
-			new Location { Name = "Sunstone",  SecondCastle = true,  EquipmentExtension = true, MapRow = 161, MapCol = 28, WatchIndecies = new List<int>{56}, Rooms = new List<Room>{
+			new Location { Name = "Sunstone",  SecondCastle = true,  EquipmentExtension = true, Y = 162, X = 57, WatchIndecies = new List<int>{56}, Rooms = new List<Room>{
 					new Room { WatchIndex = 56, Values = new int[] { 0x04 }},
 			}},
-			new Location { Name = "Luminus",  SecondCastle = true,  EquipmentExtension = true, MapRow = 164, MapCol = 16, WatchIndecies = new List<int>{57}, Rooms = new List<Room>{
+			new Location { Name = "Luminus",  SecondCastle = true,  EquipmentExtension = true, Y = 165, X = 33, WatchIndecies = new List<int>{57}, Rooms = new List<Room>{
 					new Room { WatchIndex = 57, Values = new int[] { 0x10, 0x40 }},
 			}},
-			new Location { Name = "Dragon helm",  SecondCastle = true,  EquipmentExtension = true, MapRow = 173, MapCol = 8, WatchIndecies = new List<int>{58}, Rooms = new List<Room>{
+			new Location { Name = "Dragon helm",  SecondCastle = true,  EquipmentExtension = true, Y = 174, X = 17, WatchIndecies = new List<int>{58}, Rooms = new List<Room>{
 					new Room { WatchIndex = 58, Values = new int[] { 0x40 }},
 			}},
-			new Location { Name = "Shotel",  SecondCastle = true,  EquipmentExtension = true, MapRow = 109, MapCol = 8, WatchIndecies = new List<int>{59}, Rooms = new List<Room>{
+			new Location { Name = "Shotel",  SecondCastle = true,  EquipmentExtension = true, Y = 110, X = 17, WatchIndecies = new List<int>{59}, Rooms = new List<Room>{
 					new Room { WatchIndex = 59, Values = new int[] { 0x40 }},
 			}},
-			new Location { Name = "Badelaire",  SecondCastle = true,  EquipmentExtension = true, SpreadExtension = true, MapRow = 145, MapCol = 26, WatchIndecies = new List<int>{60}, Rooms = new List<Room>{
+			new Location { Name = "Badelaire",  SecondCastle = true,  EquipmentExtension = true, SpreadExtension = true, Y = 146, X = 53, WatchIndecies = new List<int>{60}, Rooms = new List<Room>{
 					new Room { WatchIndex = 60, Values = new int[] { 0x10 }},
 			}},
-			new Location { Name = "Staurolite",  SecondCastle = true,  EquipmentExtension = true, MapRow = 132, MapCol = 30, WatchIndecies = new List<int>{62}, Rooms = new List<Room>{
+			new Location { Name = "Staurolite",  SecondCastle = true,  EquipmentExtension = true, Y = 133, X = 61, WatchIndecies = new List<int>{62}, Rooms = new List<Room>{
 					new Room { WatchIndex = 62, Values = new int[] { 0x40 }},
 			}},
-			new Location { Name = "Forbidden Library Opal",  SecondCastle = true,  EquipmentExtension = true, SpreadExtension = true, MapRow = 137, MapCol = 27, WatchIndecies = new List<int>{61}, Rooms = new List<Room>{
+			new Location { Name = "Forbidden Library Opal",  SecondCastle = true,  EquipmentExtension = true, SpreadExtension = true, Y = 138, X = 57, WatchIndecies = new List<int>{61}, Rooms = new List<Room>{
 					new Room { WatchIndex = 61, Values = new int[] { 0x04 }},
 			}},
-			new Location { Name = "Reverse Caverns Diamond",  SecondCastle = true,  EquipmentExtension = true, MapRow = 109, MapCol = 56, WatchIndecies = new List<int>{63}, Rooms = new List<Room>{
+			new Location { Name = "Reverse Caverns Diamond",  SecondCastle = true,  EquipmentExtension = true, Y = 110, X = 113, WatchIndecies = new List<int>{63}, Rooms = new List<Room>{
 					new Room { WatchIndex = 63, Values = new int[] { 0x40 }},
 			}},
-			new Location { Name = "Reverse Caverns Opal",  SecondCastle = true,  EquipmentExtension = true, MapRow = 89, MapCol = 52, WatchIndecies = new List<int>{64}, Rooms = new List<Room>{
+			new Location { Name = "Reverse Caverns Opal",  SecondCastle = true,  EquipmentExtension = true, Y = 90, X = 101, WatchIndecies = new List<int>{64}, Rooms = new List<Room>{
 					new Room { WatchIndex = 64, Values = new int[] { 0x04 }},
 			}},
-			new Location { Name = "Reverse Caverns Garnet",  SecondCastle = true,  EquipmentExtension = true, MapRow = 69, MapCol = 82, WatchIndecies = new List<int>{65}, Rooms = new List<Room>{
+			new Location { Name = "Reverse Caverns Garnet",  SecondCastle = true,  EquipmentExtension = true, Y = 70, X = 165, WatchIndecies = new List<int>{65}, Rooms = new List<Room>{
 					new Room {  WatchIndex = 65, Values = new int[] { 0x10 }},
 			}},
-			new Location { Name = "Osafune katana",  SecondCastle = true,  EquipmentExtension = true, MapRow = 49, MapCol = 76, WatchIndecies = new List<int>{66}, Rooms = new List<Room>{
+			new Location { Name = "Osafune katana",  SecondCastle = true,  EquipmentExtension = true, Y = 50, X = 153, WatchIndecies = new List<int>{66}, Rooms = new List<Room>{
 					new Room { WatchIndex = 66, Values = new int[] { 0x04 }},
 			}},
-			new Location { Name = "Alucard shield",  SecondCastle = true,  EquipmentExtension = true, MapRow = 49, MapCol = 110, WatchIndecies = new List<int>{67}, Rooms = new List<Room>{
+			new Location { Name = "Alucard shield",  SecondCastle = true,  EquipmentExtension = true, Y = 50, X = 221, WatchIndecies = new List<int>{67}, Rooms = new List<Room>{
 					new Room { WatchIndex = 67, Values = new int[] { 0x01 }},
 			}},
-			new Location { Name = "Alucard sword",  SecondCastle = true,  EquipmentExtension = true, MapRow = 41, MapCol = 68, WatchIndecies = new List<int>{68}, Rooms = new List<Room>{
+			new Location { Name = "Alucard sword",  SecondCastle = true,  EquipmentExtension = true, Y = 42, X = 137, WatchIndecies = new List<int>{68}, Rooms = new List<Room>{
 					new Room { WatchIndex = 68, Values = new int[] { 0x04 }},
 			}},
-			new Location { Name = "Necklace of J",  SecondCastle = true,  EquipmentExtension = true, MapRow = 17, MapCol = 78, WatchIndecies = new List<int>{69}, Rooms = new List<Room>{
+			new Location { Name = "Necklace of J",  SecondCastle = true,  EquipmentExtension = true, Y = 18, X = 157, WatchIndecies = new List<int>{69}, Rooms = new List<Room>{
 					new Room { WatchIndex = 69, Values = new int[] { 0x01 }},
 			}},
-			new Location { Name = "Floating Catacombs Diamond",  SecondCastle = true,  EquipmentExtension = true, MapRow = 17, MapCol = 80, WatchIndecies = new List<int>{70}, Rooms = new List<Room>{
+			new Location { Name = "Floating Catacombs Diamond",  SecondCastle = true,  EquipmentExtension = true, Y = 18, X = 161, WatchIndecies = new List<int>{70}, Rooms = new List<Room>{
 					new Room { WatchIndex = 70, Values = new int[] { 0x40 }},
 			}},
-			new Location { Name = "Talwar",  SecondCastle = true,  EquipmentExtension = true, MapRow = 173, MapCol = 88, WatchIndecies = new List<int>{71, 72}, Rooms = new List<Room>{
+			new Location { Name = "Talwar",  SecondCastle = true,  EquipmentExtension = true, Y = 174, X = 177, WatchIndecies = new List<int>{71, 72}, Rooms = new List<Room>{
 					new Room { WatchIndex = 71, Values = new int[] { 0x01 }},
 					new Room { WatchIndex = 72, Values = new int[] { 0x40 }},
 			}},
-			new Location { Name = "Twilight cloak",  SecondCastle = true,  EquipmentExtension = true, MapRow = 157, MapCol = 110, WatchIndecies = new List<int>{73}, Rooms = new List<Room>{
+			new Location { Name = "Twilight cloak",  SecondCastle = true,  EquipmentExtension = true, Y = 158, X = 221, WatchIndecies = new List<int>{73}, Rooms = new List<Room>{
 					new Room { WatchIndex = 73, Values = new int[] { 0x04 }},
 			}},
-			new Location { Name = "Alucard Mail",  SecondCastle = true,  EquipmentExtension = true, MapRow = 145, MapCol = 60, WatchIndecies = new List<int>{74}, Rooms = new List<Room>{
+			new Location { Name = "Alucard Mail",  SecondCastle = true,  EquipmentExtension = true, Y = 146, X = 121, WatchIndecies = new List<int>{74}, Rooms = new List<Room>{
 					new Room { WatchIndex = 74, Values = new int[] { 0x04 }},
 			}},
-			new Location { Name = "Sword of Hador",  SecondCastle = true,  EquipmentExtension = true, MapRow = 129, MapCol = 62, WatchIndecies = new List<int>{75}, Rooms = new List<Room>{
+			new Location { Name = "Sword of Hador",  SecondCastle = true,  EquipmentExtension = true, Y = 130, X = 125, WatchIndecies = new List<int>{75}, Rooms = new List<Room>{
 					new Room { WatchIndex = 75, Values = new int[] { 0x01 }},
 			}},
-			new Location { Name = "Fury Plate",  SecondCastle = true,  EquipmentExtension = true, MapRow = 137, MapCol = 88, WatchIndecies = new List<int>{76}, Rooms = new List<Room>{
+			new Location { Name = "Fury Plate",  SecondCastle = true,  EquipmentExtension = true, Y = 138, X = 177, WatchIndecies = new List<int>{76}, Rooms = new List<Room>{
 					new Room { WatchIndex = 76, Values = new int[] { 0x40 }},
 			}},
-			new Location { Name = "Gram",  SecondCastle = true,  EquipmentExtension = true, MapRow = 121, MapCol = 86, WatchIndecies = new List<int>{77}, Rooms = new List<Room>{
+			new Location { Name = "Gram",  SecondCastle = true,  EquipmentExtension = true, Y = 122, X = 173, WatchIndecies = new List<int>{77}, Rooms = new List<Room>{
 					new Room { WatchIndex = 77, Values = new int[] { 0x01 }},
 			}},
-			new Location { Name = "Goddess shield",  SecondCastle = true,  EquipmentExtension = true, MapRow = 93, MapCol = 94, WatchIndecies = new List<int>{78}, Rooms = new List<Room>{
+			new Location { Name = "Goddess shield",  SecondCastle = true,  EquipmentExtension = true, Y = 94, X = 189, WatchIndecies = new List<int>{78}, Rooms = new List<Room>{
 					new Room { WatchIndex = 78, Values = new int[] { 0x01 }},
 			}},
-			new Location { Name = "Katana",  SecondCastle = true,  EquipmentExtension = true, MapRow = 73, MapCol = 102, WatchIndecies = new List<int>{79}, Rooms = new List<Room>{
+			new Location { Name = "Katana",  SecondCastle = true,  EquipmentExtension = true, Y = 74, X = 205, WatchIndecies = new List<int>{79}, Rooms = new List<Room>{
 					new Room { WatchIndex = 79, Values = new int[] { 0x01 }},
 			}},
-			new Location { Name = "Talisman",  SecondCastle = true,  EquipmentExtension = true, MapRow = 69, MapCol = 86, WatchIndecies = new List<int>{80}, Rooms = new List<Room>{
+			new Location { Name = "Talisman",  SecondCastle = true,  EquipmentExtension = true, Y = 70, X = 173, WatchIndecies = new List<int>{80}, Rooms = new List<Room>{
 					new Room { WatchIndex = 80, Values = new int[] { 0x01 }},
 			}},
-			new Location { Name = "Beryl circlet",  SecondCastle = true,  EquipmentExtension = true, MapRow = 53, MapCol = 106, WatchIndecies = new List<int>{81}, Rooms = new List<Room>{
+			new Location { Name = "Beryl circlet",  SecondCastle = true,  EquipmentExtension = true, Y = 54, X = 213, WatchIndecies = new List<int>{81}, Rooms = new List<Room>{
 					new Room { WatchIndex = 81, Values = new int[] { 0x10 }},
 			}},
 		};
@@ -665,6 +665,62 @@ namespace SotnRandoTools.RandoTracker
 			LoadLocks(Paths.SpeedrunPresetPath, true);
 		}
 
+		private bool LoadExtension(string extensionFilePath)
+		{
+			if (!File.Exists(extensionFilePath))
+			{
+				return false;
+			}
+
+			JObject extension = JObject.Parse(File.ReadAllText(extensionFilePath));
+			JToken? customLocations = extension["customLocations"];
+			MemoryDomain domain = watchlistService.SafeLocationWatches[0].Domain;
+
+			if (customLocations is null)
+			{
+				return false;
+			}
+			foreach (JObject location in customLocations)
+			{
+				string locationName = location["location"].ToString();
+				JToken? rooms = location["rooms"];
+				Location customLocation = new Location
+				{
+					Name = location["location"].ToString(),
+					Y = (int) location["y"],
+					X = (int) location["x"],
+					SecondCastle = (bool) location["secondCastle"],
+					WatchIndecies = new List<int>(),
+					Rooms = new List<Room>()
+				};
+
+				if (rooms is null)
+				{
+					continue;
+				}
+				int roomCounter = 1;
+				foreach (var room in rooms)
+				{
+					watchlistService.SafeLocationWatches.Add(Watch.GenerateWatch(domain, Convert.ToInt64(room["address"].ToString(), 16), WatchSize.Byte, WatchDisplayType.Hex, false, locationName + roomCounter));
+					roomCounter++;
+					List<int> values = new List<int>();
+					JToken? valuesJson = room["values"];
+					foreach (var value in valuesJson)
+					{
+						values.Add(Convert.ToInt32(value.ToString(), 16));
+					}
+
+					Room customRoom = new Room { WatchIndex = watchlistService.SafeLocationWatches.Count - 1, Values = values.ToArray() };
+					customLocation.WatchIndecies.Add(watchlistService.SafeLocationWatches.Count - 1);
+					customLocation.Rooms.Add(customRoom);
+				}
+
+				locations.Add(customLocation);
+			}
+
+			return true;
+		}
+
 		private void LoadLocks(string presetFilePath, bool outOfLogic = false, bool overwriteLocks = false)
 		{
 			if (!File.Exists(presetFilePath))
@@ -698,7 +754,10 @@ namespace SotnRandoTools.RandoTracker
 					guardedExtension = false;
 					break;
 				default:
-					guardedExtension = true;
+					if (!LoadExtension(Paths.PresetPath + relicLocationsExtension + ".json"))
+					{
+						guardedExtension = true;
+					}
 					break;
 			}
 
@@ -997,13 +1056,23 @@ namespace SotnRandoTools.RandoTracker
 			Console.WriteLine("Randomizer seed information: " + SeedInfo);
 			if (preset == "custom")
 			{
-				guardedExtension = toolConfig.Tracker.CustomLocationsGuarded;
-				equipmentExtension = toolConfig.Tracker.CustomLocationsEquipment;
-				spreadExtension = toolConfig.Tracker.CustomLocationsSpread;
-				if (equipmentExtension)
+				switch (toolConfig.Tracker.CustomExtension)
 				{
-					guardedExtension = true;
-					SetEquipmentProgression();
+					case "guarded":
+						guardedExtension = true;
+						break;
+					case "equipment":
+						equipmentExtension = true;
+						guardedExtension = true;
+						break;
+					case "spread":
+						spreadExtension = true;
+						break;
+					case "classic":
+						break;
+					default:
+						LoadExtension(Paths.PresetPath + toolConfig.Tracker.CustomExtension + ".json");
+						break;
 				}
 			}
 			else
@@ -1095,22 +1164,27 @@ namespace SotnRandoTools.RandoTracker
 
 		private void ColorMapRoom(int locationIndex, uint color, bool secondCastle)
 		{
-			uint row = (uint) locations[locationIndex].MapRow;
-			uint col = (uint) locations[locationIndex].MapCol;
+			uint x = (uint) locations[locationIndex].X;
+			uint y = (uint) locations[locationIndex].Y;
 			if (secondCastle)
 			{
-				row = 199 - row;
-				col = 126 - col;
+				x = 252 - x;
+				y = 199 - y;
 			}
 			uint borderColor = color > 0 ? (uint) MapColor.Border : 0;
 
 			if (locations[locationIndex].EquipmentExtension && spreadExtension == false)
 			{
-				sotnApi.RenderingApi.ColorMapLocation(row, col, color);
+				if (secondCastle)
+				{
+					x += 2;
+					y += 1;
+				}
+				sotnApi.MapApi.ColorMapLocation(x, y, color);
 			}
 			else
 			{
-				sotnApi.RenderingApi.ColorMapRoom(row, col, color, borderColor);
+				sotnApi.MapApi.ColorMapRoom(x, y, color, borderColor);
 			}
 		}
 
@@ -1120,14 +1194,19 @@ namespace SotnRandoTools.RandoTracker
 
 			for (int i = 0; i < uncheckedLocation.Length; i++)
 			{
-				uint row = (uint) uncheckedLocation[i].MapRow;
-				uint col = (uint) uncheckedLocation[i].MapCol;
+				uint x = (uint) uncheckedLocation[i].X;
+				uint y = (uint) uncheckedLocation[i].Y;
 				if (secondCastle)
 				{
-					row = 199 - row;
-					col = 126 - col;
+					x = 252 - x;
+					y = 199 - y;
+					if (uncheckedLocation[i].EquipmentExtension)
+					{
+						x += 2;
+						y += 1;
+					}
 				}
-				if (!sotnApi.RenderingApi.RoomIsRendered(row, col))
+				if (!sotnApi.MapApi.RoomIsRendered(x, y))
 				{
 					return false;
 				}

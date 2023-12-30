@@ -48,6 +48,7 @@ namespace SotnRandoTools
             this.replaysCheckBox = new System.Windows.Forms.CheckBox();
             this.locationsCheckbox = new System.Windows.Forms.CheckBox();
             this.customSeedGroup = new System.Windows.Forms.GroupBox();
+            this.customLocationsCustomExtensionRadio = new System.Windows.Forms.RadioButton();
             this.customLocationsSpreadRadio = new System.Windows.Forms.RadioButton();
             this.customLocationsClassicRadio = new System.Windows.Forms.RadioButton();
             this.customLocationsEquipmentRadio = new System.Windows.Forms.RadioButton();
@@ -60,6 +61,7 @@ namespace SotnRandoTools
             this.saveLayoutButton = new System.Windows.Forms.Button();
             this.openLayoutDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveLayoutDialog = new System.Windows.Forms.SaveFileDialog();
+            this.customExtension = new System.Windows.Forms.TextBox();
             this.relicDisplayGroup.SuspendLayout();
             this.layoutGroup.SuspendLayout();
             this.windowGroup.SuspendLayout();
@@ -281,6 +283,8 @@ namespace SotnRandoTools
             // 
             // customSeedGroup
             // 
+            this.customSeedGroup.Controls.Add(this.customExtension);
+            this.customSeedGroup.Controls.Add(this.customLocationsCustomExtensionRadio);
             this.customSeedGroup.Controls.Add(this.customLocationsSpreadRadio);
             this.customSeedGroup.Controls.Add(this.customLocationsClassicRadio);
             this.customSeedGroup.Controls.Add(this.customLocationsEquipmentRadio);
@@ -288,10 +292,22 @@ namespace SotnRandoTools
             this.customSeedGroup.ForeColor = System.Drawing.Color.White;
             this.customSeedGroup.Location = new System.Drawing.Point(206, 224);
             this.customSeedGroup.Name = "customSeedGroup";
-            this.customSeedGroup.Size = new System.Drawing.Size(182, 96);
+            this.customSeedGroup.Size = new System.Drawing.Size(182, 150);
             this.customSeedGroup.TabIndex = 7;
             this.customSeedGroup.TabStop = false;
-            this.customSeedGroup.Text = "Custom Seed Locations";
+            this.customSeedGroup.Text = "Custom Location Extension";
+            // 
+            // customLocationsCustomExtensionRadio
+            // 
+            this.customLocationsCustomExtensionRadio.AutoSize = true;
+            this.customLocationsCustomExtensionRadio.Location = new System.Drawing.Point(6, 92);
+            this.customLocationsCustomExtensionRadio.Name = "customLocationsCustomExtensionRadio";
+            this.customLocationsCustomExtensionRadio.Size = new System.Drawing.Size(61, 17);
+            this.customLocationsCustomExtensionRadio.TabIndex = 5;
+            this.customLocationsCustomExtensionRadio.TabStop = true;
+            this.customLocationsCustomExtensionRadio.Text = "Custom";
+            this.customLocationsCustomExtensionRadio.UseVisualStyleBackColor = true;
+            this.customLocationsCustomExtensionRadio.CheckedChanged += new System.EventHandler(this.customLocationsCustomExtensionRadio_CheckedChanged);
             // 
             // customLocationsSpreadRadio
             // 
@@ -308,7 +324,7 @@ namespace SotnRandoTools
             // customLocationsClassicRadio
             // 
             this.customLocationsClassicRadio.AutoSize = true;
-            this.customLocationsClassicRadio.Location = new System.Drawing.Point(6, 66);
+            this.customLocationsClassicRadio.Location = new System.Drawing.Point(98, 44);
             this.customLocationsClassicRadio.Name = "customLocationsClassicRadio";
             this.customLocationsClassicRadio.Size = new System.Drawing.Size(57, 17);
             this.customLocationsClassicRadio.TabIndex = 3;
@@ -433,6 +449,14 @@ namespace SotnRandoTools
             this.saveLayoutDialog.Filter = "layout config files|*.ini";
             this.saveLayoutDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.saveLayoutDialog_FileOk);
             // 
+            // customExtension
+            // 
+            this.customExtension.Location = new System.Drawing.Point(6, 115);
+            this.customExtension.Name = "customExtension";
+            this.customExtension.Size = new System.Drawing.Size(170, 21);
+            this.customExtension.TabIndex = 6;
+            this.customExtension.TextChanged += new System.EventHandler(this.customExtension_TextChanged);
+            // 
             // AutotrackerSettingsPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -505,5 +529,7 @@ namespace SotnRandoTools
 		private System.Windows.Forms.Button saveLayoutButton;
 		private System.Windows.Forms.OpenFileDialog openLayoutDialog;
 		private System.Windows.Forms.SaveFileDialog saveLayoutDialog;
+		private System.Windows.Forms.RadioButton customLocationsCustomExtensionRadio;
+		private System.Windows.Forms.TextBox customExtension;
 	}
 }

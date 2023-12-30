@@ -12,7 +12,6 @@ using SotnRandoTools.Configuration;
 using SotnRandoTools.Constants;
 using SotnRandoTools.Properties;
 using SotnRandoTools.Services;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace SotnRandoTools
 {

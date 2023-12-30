@@ -22,8 +22,8 @@ namespace SotnRandoTools.RandoTracker.Models
 		public bool SpreadExtension { get; set; }
 		public MapColor AvailabilityColor { get; set; }
 		public bool Visited { get; set; }
-		public int MapRow { get; set; }
-		public int MapCol { get; set; }
+		public int X { get; set; }
+		public int Y { get; set; }
 		public List<string[]>? Locks { get; set; }
 		public List<string[]>? OutOfLogicLocks { get; set; }
 		public List<int> WatchIndecies { get; set; }

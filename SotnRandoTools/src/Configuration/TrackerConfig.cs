@@ -26,6 +26,8 @@ namespace SotnRandoTools.Configuration
 		public bool CustomLocationsEquipment { get; set; }
 		public bool CustomLocationsClassic { get; set; }
 		public bool CustomLocationsSpread { get; set; }
+		public bool CustomLocationsCustom { get; set; }
+		public string CustomExtension {  get; set; }
 		public int Width { get; set; }
 		public int Height { get; set; }
 		public Point Location { get; set; }
@@ -45,6 +47,8 @@ namespace SotnRandoTools.Configuration
 			CustomLocationsEquipment = false;
 			CustomLocationsClassic = false;
 			CustomLocationsSpread = false;
+			CustomLocationsCustom = false;
+			CustomExtension = "";
 			Width = 260;
 			Height = 490;
 			Username = "";

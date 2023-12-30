@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.IO.Pipes;
-using TwitchLib.Api.Core.Models.Undocumented.ChannelPanels;
 
 namespace SotnRandoTools.Services
 {

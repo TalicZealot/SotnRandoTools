@@ -5,7 +5,6 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using BizHawk.Client.Common;
 using SotnRandoTools.Configuration.Interfaces;
@@ -101,7 +100,7 @@ namespace SotnRandoTools.Services
 		{
 			if (String.IsNullOrEmpty(message)) throw new ArgumentNullException(nameof(message));
 
-            Models.Message duplicate = messageQueue.Where(m => m.Text == message).FirstOrDefault();
+			Models.Message duplicate = messageQueue.Where(m => m.Text == message).FirstOrDefault();
 
 
 			if (duplicate is not null)
@@ -111,7 +110,7 @@ namespace SotnRandoTools.Services
 			}
 			else
 			{
-				messageQueue.Add(new Models.Message { Text = message, Count = 1});
+				messageQueue.Add(new Models.Message { Text = message, Count = 1 });
 			}
 
 			if (messageQueue.Count == 1)
