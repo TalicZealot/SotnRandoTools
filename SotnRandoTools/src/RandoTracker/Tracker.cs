@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Web.Configuration;
 using BizHawk.Client.Common;
 using BizHawk.Emulation.Common;
 using Newtonsoft.Json.Linq;
@@ -30,72 +31,72 @@ namespace SotnRandoTools.RandoTracker
 
 		private readonly List<Location> locations = new List<Location>
 		{
-			new Location { Name = "SoulOfBat", Y = 66, X = 192, WatchIndecies = new List<int>{0}, Rooms = new List<Room>{
+			new Location { Name = "SoulOfBat", ClassicExtension = true, Y = 66, X = 192, WatchIndecies = new List<int>{0}, Rooms = new List<Room>{
 					new Room { WatchIndex = 0, Values = new int[] { 0x01 }},
 			}},
-			new Location { Name = "FireOfBat", Y = 26, X = 236, WatchIndecies = new List<int>{1}, Rooms = new List<Room>{
+			new Location { Name = "FireOfBat", ClassicExtension = true, Y = 26, X = 236, WatchIndecies = new List<int>{1}, Rooms = new List<Room>{
 					new Room { WatchIndex = 1, Values = new int[] { 0x01 }},
 			}},
-			new Location { Name = "EchoOfBat", Y = 46, X = 64, WatchIndecies = new List<int>{2}, Rooms = new List<Room>{
+			new Location { Name = "EchoOfBat", ClassicExtension = true, Y = 46, X = 64, WatchIndecies = new List<int>{2}, Rooms = new List<Room>{
 					new Room { WatchIndex = 2, Values = new int[] { 0x04 }},
 			}},
-			new Location { Name = "SoulOfWolf", Y = 54, X = 244, WatchIndecies = new List<int>{3, 4}, Rooms = new List<Room>{
+			new Location { Name = "SoulOfWolf", ClassicExtension = true, Y = 54, X = 244, WatchIndecies = new List<int>{3, 4}, Rooms = new List<Room>{
 					new Room { WatchIndex = 3, Values = new int[] { 0x10 }},
 					new Room { WatchIndex = 4, Values = new int[] { 0x10 }},
 			}},
-			new Location { Name = "PowerOfWolf", Y = 134, X = 8, WatchIndecies = new List<int>{5}, Rooms = new List<Room>{
+			new Location { Name = "PowerOfWolf", ClassicExtension = true, Y = 134, X = 8, WatchIndecies = new List<int>{5}, Rooms = new List<Room>{
 					new Room { WatchIndex = 5, Values = new int[] { 0x01, 0x04 }},
 			}},
-			new Location { Name = "SkillOfWolf", Y = 114, X = 60, WatchIndecies = new List<int>{6}, Rooms = new List<Room>{
+			new Location { Name = "SkillOfWolf", ClassicExtension = true, Y = 114, X = 60, WatchIndecies = new List<int>{6}, Rooms = new List<Room>{
 					new Room { WatchIndex = 6, Values = new int[] { 0x01 }},
 			}},
-			new Location { Name = "FormOfMist", Y = 70, X = 84, WatchIndecies = new List<int>{7}, Rooms = new List<Room>{
+			new Location { Name = "FormOfMist", ClassicExtension = true, Y = 70, X = 84, WatchIndecies = new List<int>{7}, Rooms = new List<Room>{
 					new Room { WatchIndex = 7, Values = new int[] { 0x04, 0x10 }},
 			}},
-			new Location { Name = "PowerOfMist", Y = 18, X = 124, WatchIndecies = new List<int>{8, 9, 10}, Rooms = new List<Room>{
+			new Location { Name = "PowerOfMist", ClassicExtension = true, Y = 18, X = 124, WatchIndecies = new List<int>{8, 9, 10}, Rooms = new List<Room>{
 					new Room { WatchIndex = 8, Values = new int[] { 0x01 }},
 					new Room { WatchIndex = 9, Values = new int[] { 0x01 }},
 					new Room { WatchIndex = 10, Values = new int[] { 0x40 }},
 			}},
-			new Location { Name = "CubeOfZoe", Y = 126, X = 76, WatchIndecies = new List<int>{11}, Rooms = new List<Room>{
+			new Location { Name = "CubeOfZoe", ClassicExtension = true, Y = 126, X = 76, WatchIndecies = new List<int>{11}, Rooms = new List<Room>{
 					new Room { WatchIndex = 11, Values = new int[] { 0x01, 0x04 }},
 			}},
-			new Location { Name = "SpiritOrb", Y = 107, X = 100, WatchIndecies = new List<int>{12, 13}, Rooms = new List<Room>{
+			new Location { Name = "SpiritOrb", ClassicExtension = true, Y = 107, X = 100, WatchIndecies = new List<int>{12, 13}, Rooms = new List<Room>{
 					new Room { WatchIndex = 12, Values = new int[] { 0x10 }},
 					new Room { WatchIndex = 13, Values = new int[] { 0x04 }},
 			}},
-			new Location { Name = "GravityBoots", Y = 74, X = 136, WatchIndecies = new List<int>{14}, Rooms = new List<Room>{
+			new Location { Name = "GravityBoots", ClassicExtension = true, Y = 74, X = 136, WatchIndecies = new List<int>{14}, Rooms = new List<Room>{
 					new Room { WatchIndex = 14, Values = new int[] { 0x04 }},
 			}},
-			new Location { Name = "LeapStone", Y = 26, X = 124, WatchIndecies = new List<int>{15, 16}, Rooms = new List<Room>{
+			new Location { Name = "LeapStone", ClassicExtension = true, Y = 26, X = 124, WatchIndecies = new List<int>{15, 16}, Rooms = new List<Room>{
 					new Room { WatchIndex = 15, Values = new int[] { 0x01 }},
 					new Room { WatchIndex = 16, Values = new int[] { 0x01 }},
 			}},
-			new Location { Name = "HolySymbol", Y = 146, X = 220, WatchIndecies = new List<int>{17}, Rooms = new List<Room>{
+			new Location { Name = "HolySymbol", ClassicExtension = true, Y = 146, X = 220, WatchIndecies = new List<int>{17}, Rooms = new List<Room>{
 					new Room { WatchIndex = 17, Values = new int[] { 0x01 }},
 			}},
-			new Location { Name = "FaerieScroll", Y = 54, X = 236, WatchIndecies = new List<int>{18}, Rooms = new List<Room>{
+			new Location { Name = "FaerieScroll", ClassicExtension = true, Y = 54, X = 236, WatchIndecies = new List<int>{18}, Rooms = new List<Room>{
 					new Room { WatchIndex = 18, Values = new int[] { 0x01 }},
 			}},
-			new Location { Name = "JewelOfOpen", Y = 62, X = 196, WatchIndecies = new List<int>{19}, Rooms = new List<Room>{
+			new Location { Name = "JewelOfOpen", ClassicExtension = true, Y = 62, X = 196, WatchIndecies = new List<int>{19}, Rooms = new List<Room>{
 					new Room { WatchIndex = 19, Values = new int[] { 0x10 }},
 			}},
-			new Location { Name = "MermanStatue", Y = 150, X = 32, WatchIndecies = new List<int>{20}, Rooms = new List<Room>{
+			new Location { Name = "MermanStatue", ClassicExtension = true, Y = 150, X = 32, WatchIndecies = new List<int>{20}, Rooms = new List<Room>{
 					new Room { WatchIndex = 20, Values = new int[] { 0x40 }},
 			}},
-			new Location { Name = "BatCard", Y = 90, X = 52, WatchIndecies = new List<int>{21}, Rooms = new List<Room>{
+			new Location { Name = "BatCard", ClassicExtension = true, Y = 90, X = 52, WatchIndecies = new List<int>{21}, Rooms = new List<Room>{
 					new Room { WatchIndex = 21, Values = new int[] { 0x10 }},
 			}},
-			new Location { Name = "GhostCard", Y = 10, X = 156, WatchIndecies = new List<int>{22}, Rooms = new List<Room>{
+			new Location { Name = "GhostCard", ClassicExtension = true, Y = 10, X = 156, WatchIndecies = new List<int>{22}, Rooms = new List<Room>{
 					new Room { WatchIndex = 22, Values = new int[] { 0x01, 0x04 }},
 			}},
-			new Location { Name = "FaerieCard", Y = 54, X = 208, WatchIndecies = new List<int>{23}, Rooms = new List<Room>{
+			new Location { Name = "FaerieCard", ClassicExtension = true, Y = 54, X = 208, WatchIndecies = new List<int>{23}, Rooms = new List<Room>{
 					new Room { WatchIndex = 23, Values = new int[] { 0x40 }},
 			}},
-			new Location { Name = "DemonCard", Y = 158, X = 117, WatchIndecies = new List<int>{24}, Rooms = new List<Room>{
+			new Location { Name = "DemonCard", ClassicExtension = true, Y = 158, X = 117, WatchIndecies = new List<int>{24}, Rooms = new List<Room>{
 					new Room { WatchIndex = 24, Values = new int[] { 0x10 }},
 			}},
-			new Location { Name = "SwordCard", Y = 54, X = 80, WatchIndecies = new List<int>{25}, Rooms = new List<Room>{
+			new Location { Name = "SwordCard", ClassicExtension = true, Y = 54, X = 80, WatchIndecies = new List<int>{25}, Rooms = new List<Room>{
 					new Room { WatchIndex = 25, Values = new int[] { 0x40 }},
 			}},
 			new Location { Name = "CrystalCloak",  GuardedExtension = true,  SpreadExtension = true, Y = 134, X = 160, WatchIndecies = new List<int>{26}, Rooms = new List<Room>{
@@ -104,38 +105,38 @@ namespace SotnRandoTools.RandoTracker
 			new Location { Name = "Mormegil",  GuardedExtension = true, Y = 182, X = 68, WatchIndecies = new List<int>{27}, Rooms = new List<Room>{
 					new Room { WatchIndex = 27, Values = new int[] { 0x10 }},
 			}},
-			new Location { Name = "GoldRing", Y = 114, X = 180, WatchIndecies = new List<int>{28}, Rooms = new List<Room>{
+			new Location { Name = "GoldRing", ClassicExtension = true, Y = 114, X = 180, WatchIndecies = new List<int>{28}, Rooms = new List<Room>{
 					new Room { WatchIndex = 28, Values = new int[] { 0x10 }},
 			}},
-			new Location { Name = "Spikebreaker", Y = 186, X = 164, WatchIndecies = new List<int>{29}, Rooms = new List<Room>{
+			new Location { Name = "Spikebreaker", ClassicExtension = true, Y = 186, X = 164, WatchIndecies = new List<int>{29}, Rooms = new List<Room>{
 					new Room { WatchIndex = 29, Values = new int[] { 0x10 }},
 			}},
-			new Location { Name = "SilverRing", Y = 42, X = 32, WatchIndecies = new List<int>{30}, Rooms = new List<Room>{
+			new Location { Name = "SilverRing", ClassicExtension = true, Y = 42, X = 32, WatchIndecies = new List<int>{30}, Rooms = new List<Room>{
 					new Room { WatchIndex = 30, Values = new int[] { 0x10 }},
 			}},
-			new Location { Name = "HolyGlasses", Y = 106, X = 128, WatchIndecies = new List<int>{31}, Rooms = new List<Room>{
+			new Location { Name = "HolyGlasses", ClassicExtension = true, Y = 106, X = 128, WatchIndecies = new List<int>{31}, Rooms = new List<Room>{
 					new Room { WatchIndex = 31, Values = new int[] { 0x40 }},
 			}},
-			new Location { Name = "HeartOfVlad",  SecondCastle = true, Y = 165, X = 160, WatchIndecies = new List<int>{32, 33}, Rooms = new List<Room>{
+			new Location { Name = "HeartOfVlad", ClassicExtension = true,  SecondCastle = true, Y = 165, X = 160, WatchIndecies = new List<int>{32, 33}, Rooms = new List<Room>{
 					new Room { WatchIndex = 32, Values = new int[] { 0x01 }},
 					new Room { WatchIndex = 33, Values = new int[] { 0x40 }},
 			}},
-			new Location { Name = "ToothOfVlad",  SecondCastle = true, Y = 125, X = 24, WatchIndecies = new List<int>{34}, Rooms = new List<Room>{
+			new Location { Name = "ToothOfVlad", ClassicExtension = true,  SecondCastle = true, Y = 125, X = 24, WatchIndecies = new List<int>{34}, Rooms = new List<Room>{
 					new Room { WatchIndex = 34, Values = new int[] { 0x10, 0x04 }},
 			}},
-			new Location { Name = "RibOfVlad",  SecondCastle = true, Y = 153, X = 176, WatchIndecies = new List<int>{35}, Rooms = new List<Room>{
+			new Location { Name = "RibOfVlad", ClassicExtension = true,  SecondCastle = true, Y = 153, X = 176, WatchIndecies = new List<int>{35}, Rooms = new List<Room>{
 					new Room { WatchIndex = 35, Values = new int[] { 0x01 }},
 			}},
-			new Location { Name = "RingOfVlad",  SecondCastle = true, Y = 177, X = 92, WatchIndecies = new List<int>{36}, Rooms = new List<Room>{
+			new Location { Name = "RingOfVlad", ClassicExtension = true,  SecondCastle = true, Y = 177, X = 92, WatchIndecies = new List<int>{36}, Rooms = new List<Room>{
 					new Room { WatchIndex = 36, Values = new int[] { 0x01 }},
 			}},
-			new Location { Name = "EyeOfVlad",  SecondCastle = true, Y = 57, X = 132, WatchIndecies = new List<int>{37}, Rooms = new List<Room>{
+			new Location { Name = "EyeOfVlad", ClassicExtension = true,  SecondCastle = true, Y = 57, X = 132, WatchIndecies = new List<int>{37}, Rooms = new List<Room>{
 					new Room { WatchIndex = 37, Values = new int[] { 0x10, 0x40 }},
 			}},
-			new Location { Name = "ForceOfEcho",  SecondCastle = true, Y = 53, X = 32, WatchIndecies = new List<int>{38}, Rooms = new List<Room>{
+			new Location { Name = "ForceOfEcho", ClassicExtension = true,  SecondCastle = true, Y = 53, X = 32, WatchIndecies = new List<int>{38}, Rooms = new List<Room>{
 					new Room { WatchIndex = 38, Values = new int[] { 0x40 }},
 			}},
-			new Location { Name = "GasCloud",  SecondCastle = true, Y = 17, X = 184, WatchIndecies = new List<int>{39}, Rooms = new List<Room>{
+			new Location { Name = "GasCloud", ClassicExtension = true,  SecondCastle = true, Y = 17, X = 184, WatchIndecies = new List<int>{39}, Rooms = new List<Room>{
 					new Room { WatchIndex = 39, Values = new int[] { 0x04 }},
 			}},
 			new Location { Name = "RingOfArcana",  SecondCastle = true,  GuardedExtension = true,  SpreadExtension = true, Y = 109, X = 200, WatchIndecies = new List<int>{40}, Rooms = new List<Room>{
@@ -481,9 +482,11 @@ namespace SotnRandoTools.RandoTracker
 		private string seedName = "";
 		private uint roomCount = 2;
 		private bool inGame = false;
+		private bool classicExtension = true;
 		private bool guardedExtension = true;
 		private bool equipmentExtension = false;
 		private bool spreadExtension = false;
+		private bool customExtension = false;
 		private bool gameReset = true;
 		private bool secondCastle = false;
 		private bool restarted = false;
@@ -675,6 +678,31 @@ namespace SotnRandoTools.RandoTracker
 			JObject extension = JObject.Parse(File.ReadAllText(extensionFilePath));
 			JToken? customLocations = extension["customLocations"];
 			MemoryDomain domain = watchlistService.SafeLocationWatches[0].Domain;
+			string extends = (extension.GetValue("extends") ?? "classic").ToString();
+			customExtension = true;
+
+			switch (extends)
+			{
+				case "equipment":
+					equipmentExtension = true;
+					guardedExtension = true;
+					classicExtension = true;
+					SetEquipmentProgression();
+					break;
+				case "guarded":
+					classicExtension = true;
+					guardedExtension = true;
+					break;
+				case "spread":
+					spreadExtension = true;
+					classicExtension = true;
+					break;
+				case "classic":
+					classicExtension = true;
+					break;
+				default:
+					break;
+			}
 
 			if (customLocations is null)
 			{
@@ -684,15 +712,26 @@ namespace SotnRandoTools.RandoTracker
 			{
 				string locationName = location["location"].ToString();
 				JToken? rooms = location["rooms"];
-				Location customLocation = new Location
+				Location? customLocation = locations.Where(x => x.Name == location["location"].ToString()).FirstOrDefault();
+
+				if (customLocation is null)
 				{
-					Name = location["location"].ToString(),
-					Y = (int) location["y"],
-					X = (int) location["x"],
-					SecondCastle = (bool) location["secondCastle"],
-					WatchIndecies = new List<int>(),
-					Rooms = new List<Room>()
-				};
+					customLocation = new Location
+					{
+						Name = location["location"].ToString(),
+						Y = (int) location["y"],
+						X = (int) location["x"],
+						SecondCastle = (bool) location["secondCastle"],
+						CustomExtension = true
+					};
+				}
+				else
+				{
+					customLocation.X = (int) location["x"];
+					customLocation.Y = (int) location["y"];
+					customLocation.SecondCastle = (bool) location["secondCastle"];
+					customLocation.CustomExtension = true;
+				}
 
 				if (rooms is null)
 				{
@@ -745,18 +784,21 @@ namespace SotnRandoTools.RandoTracker
 				case "equipment":
 					equipmentExtension = true;
 					guardedExtension = true;
+					classicExtension = true;
 					SetEquipmentProgression();
 					break;
 				case "spread":
 					spreadExtension = true;
+					classicExtension = true;
 					break;
 				case "False":
-					guardedExtension = false;
+					classicExtension = true;
 					break;
 				default:
 					if (!LoadExtension(Paths.PresetPath + relicLocationsExtension + ".json"))
 					{
 						guardedExtension = true;
+						classicExtension = true;
 					}
 					break;
 			}
@@ -773,8 +815,11 @@ namespace SotnRandoTools.RandoTracker
 
 				if (trackerLocation == null)
 				{
-					Console.WriteLine($"Could not find location {name}.");
-					continue;
+					trackerLocation = new Location
+					{
+						Name = location["location"].ToString()
+					};
+					locations.Add(trackerLocation);
 				}
 
 				if (overwriteLocks)
@@ -867,19 +912,21 @@ namespace SotnRandoTools.RandoTracker
 		private void UpdateLocations()
 		{
 			uint currentRooms = sotnApi.AlucardApi.Rooms;
-			if (currentRooms > roomCount)
+			if (currentRooms <= roomCount)
 			{
-				watchlistService.UpdateWatchlist(watchlistService.SafeLocationWatches);
-				CheckRooms(watchlistService.SafeLocationWatches);
-				watchlistService.SafeLocationWatches.ClearChangeCounts();
-				if (equipmentExtension || spreadExtension)
-				{
-					watchlistService.UpdateWatchlist(watchlistService.EquipmentLocationWatches);
-					CheckRooms(watchlistService.EquipmentLocationWatches, true);
-					watchlistService.EquipmentLocationWatches.ClearChangeCounts();
-				}
-
+				roomCount = currentRooms;
+				return;
 			}
+			watchlistService.UpdateWatchlist(watchlistService.SafeLocationWatches);
+			CheckRooms(watchlistService.SafeLocationWatches);
+			watchlistService.SafeLocationWatches.ClearChangeCounts();
+			if (equipmentExtension || spreadExtension)
+			{
+				watchlistService.UpdateWatchlist(watchlistService.EquipmentLocationWatches);
+				CheckRooms(watchlistService.EquipmentLocationWatches, true);
+				watchlistService.EquipmentLocationWatches.ClearChangeCounts();
+			}
+
 			roomCount = currentRooms;
 		}
 
@@ -1109,36 +1156,14 @@ namespace SotnRandoTools.RandoTracker
 		{
 			for (int i = 0; i < locations.Count; i++)
 			{
-				if (locations[i].SpreadExtension && !locations[i].GuardedExtension && !locations[i].EquipmentExtension && !spreadExtension)
+				locations[i].Visited = true;
+				if ((locations[i].ClassicExtension && classicExtension) || 
+					(locations[i].GuardedExtension && guardedExtension) || 
+					(locations[i].EquipmentExtension && equipmentExtension) || 
+					(locations[i].SpreadExtension && spreadExtension) ||
+					(locations[i].CustomExtension && customExtension))
 				{
-					locations[i].Visited = true;
-					continue;
-				}
-				if (locations[i].EquipmentExtension && !equipmentExtension)
-				{
-					if (locations[i].SpreadExtension && !spreadExtension)
-					{
-						locations[i].Visited = true;
-						continue;
-					}
-					else if (!locations[i].SpreadExtension)
-					{
-						locations[i].Visited = true;
-						continue;
-					}
-				}
-				if (locations[i].GuardedExtension && !guardedExtension)
-				{
-					if (locations[i].SpreadExtension && !spreadExtension)
-					{
-						locations[i].Visited = true;
-						continue;
-					}
-					else if (!locations[i].SpreadExtension)
-					{
-						locations[i].Visited = true;
-						continue;
-					}
+					locations[i].Visited = false;
 				}
 			}
 		}
@@ -1226,10 +1251,10 @@ namespace SotnRandoTools.RandoTracker
 					continue;
 				}
 
-				Location? location = locations.Where(x => x.WatchIndecies.Contains(j) && x.EquipmentExtension == equipment).FirstOrDefault();
+				Location? location = locations.Where(x => x.WatchIndecies.Contains(j) && !x.Visited && x.EquipmentExtension == equipment).FirstOrDefault();
 				Room? room = location?.Rooms.Where(y => y.WatchIndex == j).FirstOrDefault();
 
-				if (location == null || room == null || location.Visited || watch.Value == 0)
+				if (location == null || room == null || watch.Value == 0)
 				{
 					continue;
 				}
@@ -1269,14 +1294,19 @@ namespace SotnRandoTools.RandoTracker
 
 			for (int j = 0; j < locations.Count; j++)
 			{
-				Location? location = locations[j];
-				location.AvailabilityColor = MapColor.Unavailable;
-				if (location.Locks.Count == 0)
+				locations[j].AvailabilityColor = MapColor.Unavailable;
+
+				if (locations[j].Visited)
 				{
-					location.AvailabilityColor = MapColor.Available;
 					continue;
 				}
-				foreach (var lockSet in location.Locks)
+
+				if (locations[j].Locks.Count == 0)
+				{
+					locations[j].AvailabilityColor = MapColor.Available;
+					continue;
+				}
+				foreach (var lockSet in locations[j].Locks)
 				{
 					bool unlock = true;
 					for (int i = 0; i < lockSet.Length; i++)
@@ -1286,20 +1316,20 @@ namespace SotnRandoTools.RandoTracker
 					if (unlock)
 					{
 						changes++;
-						location.AvailabilityColor = MapColor.Available;
+						locations[j].AvailabilityColor = MapColor.Available;
 						break;
 					}
 				}
-				if (location.AvailabilityColor == MapColor.Available)
+				if (locations[j].AvailabilityColor == MapColor.Available)
 				{
 					continue;
 				}
-				if (location.OutOfLogicLocks.Count == 0)
+				if (locations[j].OutOfLogicLocks.Count == 0)
 				{
-					location.AvailabilityColor = MapColor.Allowed;
+					locations[j].AvailabilityColor = MapColor.Allowed;
 					continue;
 				}
-				foreach (var lockSet in location.OutOfLogicLocks)
+				foreach (var lockSet in locations[j].OutOfLogicLocks)
 				{
 					bool unlock = true;
 					for (int i = 0; i < lockSet.Length; i++)
@@ -1311,10 +1341,10 @@ namespace SotnRandoTools.RandoTracker
 						changes++;
 						if (preset == "speedrun" || preset == "glitch")
 						{
-							location.AvailabilityColor = MapColor.Available;
+							locations[j].AvailabilityColor = MapColor.Available;
 							break;
 						}
-						location.AvailabilityColor = MapColor.Allowed;
+						locations[j].AvailabilityColor = MapColor.Allowed;
 						break;
 					}
 				}
