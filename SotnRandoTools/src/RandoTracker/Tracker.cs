@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Web.Configuration;
+using System.Windows.Forms;
 using BizHawk.Client.Common;
 using BizHawk.Emulation.Common;
 using Newtonsoft.Json.Linq;
@@ -19,9 +20,9 @@ namespace SotnRandoTools.RandoTracker
 {
 	internal sealed class Tracker
 	{
-		const byte ReplayCooldown = 6;
-		const string DefaultSeedInfo = "seed(preset)";
-		const long DraculaEntityAddress = 0x076e98;
+		private const byte ReplayCooldown = 6;
+		private const string DefaultSeedInfo = "seed(preset)";
+		private const long DraculaEntityAddress = 0x076e98;
 		private const int AutosplitterReconnectCooldown = 120;
 		private readonly ITrackerGraphicsEngine trackerGraphicsEngine;
 		private readonly IToolConfig toolConfig;
@@ -477,6 +478,10 @@ namespace SotnRandoTools.RandoTracker
 			"third-castle",
 			"warlock"
 		};
+		private readonly int[] watchToLocation = new int[300];
+		private readonly int[] watchToLocationEquipment = new int[300];
+		private readonly int[] watchToRoom = new int[300];
+		private readonly int[] watchToRoomEquipment = new int[300];
 
 		private string preset = "";
 		private string seedName = "";
@@ -516,6 +521,7 @@ namespace SotnRandoTools.RandoTracker
 
 			if (toolConfig.Tracker.Locations)
 			{
+				InitializeWatchMaps();
 				InitializeAllLocks();
 				CheckReachability();
 			}
@@ -662,6 +668,32 @@ namespace SotnRandoTools.RandoTracker
 			}
 		}
 
+		private void InitializeWatchMaps()
+		{
+			for (int i = 0; i < 37; i++)
+			{
+				for (int j = 0; j < locations[i].WatchIndecies.Count; j++)
+				{
+					watchToLocation[locations[i].WatchIndecies[j]] = i;
+				}
+				for (int j = 0; j < locations[i].Rooms.Count; j++)
+				{
+					watchToRoom[locations[i].Rooms[j].WatchIndex] = j;
+				}
+			}
+			for (int i = 37; i < locations.Count; i++)
+			{
+				for (int j = 0; j < locations[i].WatchIndecies.Count; j++)
+				{
+					watchToLocationEquipment[locations[i].WatchIndecies[j]] = i;
+				}
+				for (int j = 0; j < locations[i].Rooms.Count; j++)
+				{
+					watchToRoomEquipment[locations[i].Rooms[j].WatchIndex] = j;
+				}
+			}
+		}
+
 		private void InitializeAllLocks()
 		{
 			LoadLocks(Paths.CasualPresetPath);
@@ -752,11 +784,11 @@ namespace SotnRandoTools.RandoTracker
 					Room customRoom = new Room { WatchIndex = watchlistService.SafeLocationWatches.Count - 1, Values = values.ToArray() };
 					customLocation.WatchIndecies.Add(watchlistService.SafeLocationWatches.Count - 1);
 					customLocation.Rooms.Add(customRoom);
+					watchToRoom[watchlistService.SafeLocationWatches.Count - 1] = roomCounter - 1;
+					watchToLocation[watchlistService.SafeLocationWatches.Count - 1] = locations.Count;
 				}
-
 				locations.Add(customLocation);
 			}
-
 			return true;
 		}
 
@@ -1157,9 +1189,9 @@ namespace SotnRandoTools.RandoTracker
 			for (int i = 0; i < locations.Count; i++)
 			{
 				locations[i].Visited = true;
-				if ((locations[i].ClassicExtension && classicExtension) || 
-					(locations[i].GuardedExtension && guardedExtension) || 
-					(locations[i].EquipmentExtension && equipmentExtension) || 
+				if ((locations[i].ClassicExtension && classicExtension) ||
+					(locations[i].GuardedExtension && guardedExtension) ||
+					(locations[i].EquipmentExtension && equipmentExtension) ||
 					(locations[i].SpreadExtension && spreadExtension) ||
 					(locations[i].CustomExtension && customExtension))
 				{
@@ -1215,27 +1247,38 @@ namespace SotnRandoTools.RandoTracker
 
 		private bool LocationsDrawn()
 		{
-			Location[] uncheckedLocation = locations.Where(l => (!l.Visited && l.SecondCastle == secondCastle)).Take(4).ToArray();
+			Location uncheckedLocation = locations[0];
 
-			for (int i = 0; i < uncheckedLocation.Length; i++)
+			for (int i = 0; i < locations.Count; i++)
 			{
-				uint x = (uint) uncheckedLocation[i].X;
-				uint y = (uint) uncheckedLocation[i].Y;
-				if (secondCastle)
+				if (!locations[i].Visited && locations[i].SecondCastle == secondCastle)
 				{
-					x = 252 - x;
-					y = 199 - y;
-					if (uncheckedLocation[i].EquipmentExtension)
-					{
-						x += 2;
-						y += 1;
-					}
-				}
-				if (!sotnApi.MapApi.RoomIsRendered(x, y))
-				{
-					return false;
+					uncheckedLocation = locations[i];
 				}
 			}
+
+			if (uncheckedLocation.Visited)
+			{
+				return true;
+			}
+
+			uint x = (uint) uncheckedLocation.X;
+			uint y = (uint) uncheckedLocation.Y;
+			if (secondCastle)
+			{
+				x = 252 - x;
+				y = 199 - y;
+				if (uncheckedLocation.EquipmentExtension)
+				{
+					x += 2;
+					y += 1;
+				}
+			}
+			if (!sotnApi.MapApi.RoomIsRendered(x, y))
+			{
+				return false;
+			}
+
 
 			return true;
 		}
@@ -1245,16 +1288,10 @@ namespace SotnRandoTools.RandoTracker
 			for (int j = 0; j < watchlist.Count; j++)
 			{
 				Watch? watch = watchlist[j];
+				Location location = equipment ? locations[watchToLocationEquipment[j]] : locations[watchToLocation[j]];
+				Room room = equipment ? location.Rooms[watchToRoomEquipment[j]] : location.Rooms[watchToRoom[j]];
 
-				if (watch.ChangeCount == 0)
-				{
-					continue;
-				}
-
-				Location? location = locations.Where(x => x.WatchIndecies.Contains(j) && !x.Visited && x.EquipmentExtension == equipment).FirstOrDefault();
-				Room? room = location?.Rooms.Where(y => y.WatchIndex == j).FirstOrDefault();
-
-				if (location == null || room == null || watch.Value == 0)
+				if (watch.ChangeCount == 0 || location.Visited || location.EquipmentExtension != equipment || watch.Value == 0)
 				{
 					continue;
 				}
@@ -1280,7 +1317,7 @@ namespace SotnRandoTools.RandoTracker
 						{
 							coopWatch.Update(PreviousType.LastFrame);
 							watchlistService.CoopLocationValues[watchIndex] = value;
-							Console.WriteLine($"Added {coopWatch.Notes} at index {watchIndex} value {watchlistService.CoopLocationValues[watchIndex]} to coopValues.");
+							//Console.WriteLine($"Added {coopWatch.Notes} at index {watchIndex} value {watchlistService.CoopLocationValues[watchIndex]} to coopValues.");
 						}
 						ClearMapLocation(locations.IndexOf(location));
 					}
@@ -1376,7 +1413,6 @@ namespace SotnRandoTools.RandoTracker
 			}
 			if (name == "thrustsword" && swordToIndex.ContainsKey(name))
 			{
-				Item thrustSword = thrustSwords[swordToIndex[name]];
 				return true;
 			}
 
