@@ -4,7 +4,7 @@ using SotnRandoTools.RandoTracker.Interfaces;
 using System;
 using Xunit;
 
-namespace SotnRandoTools.RandoTracker.Tests.TrackerGraphicsEngineTests
+namespace SotnRandoTools.RandoTracker.Tests.TrackerRendererGDITests
 {
     public class ChangeGraphicsShould
     {
@@ -15,7 +15,7 @@ namespace SotnRandoTools.RandoTracker.Tests.TrackerGraphicsEngineTests
             var mockedFormGraphics = Substitute.For<IGraphics>();
             var mockedToolConfig = Substitute.For<IToolConfig>();
             //Act
-            TrackerGraphicsEngine trackerGraphicsEngine = new TrackerGraphicsEngine(mockedFormGraphics, mockedToolConfig);
+            TrackerRendererGDI trackerGraphicsEngine = new TrackerRendererGDI(mockedFormGraphics, mockedToolConfig);
             //Assert
             Assert.Throws<ArgumentNullException>(() => trackerGraphicsEngine.ChangeGraphics(null));
         }

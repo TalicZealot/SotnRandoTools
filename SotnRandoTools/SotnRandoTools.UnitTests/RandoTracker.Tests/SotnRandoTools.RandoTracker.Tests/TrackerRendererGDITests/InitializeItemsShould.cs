@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using Xunit;
 
-namespace SotnRandoTools.RandoTracker.Tests.TrackerGraphicsEngineTests
+namespace SotnRandoTools.RandoTracker.Tests.TrackerRendererGDITests
 {
     public class InitializeItemsShould
     {
@@ -20,7 +20,7 @@ namespace SotnRandoTools.RandoTracker.Tests.TrackerGraphicsEngineTests
             List<Item> testProgressionItems = new List<Item>();
             List<Item> testThrustSwords = new List<Item>();
             //Act
-            TrackerGraphicsEngine trackerGraphicsEngine = new TrackerGraphicsEngine(mockedFormGraphics, mockedToolConfig);
+            TrackerRendererGDI trackerGraphicsEngine = new TrackerRendererGDI(mockedFormGraphics, mockedToolConfig);
             //Assert
             Assert.Throws<ArgumentNullException>(() => trackerGraphicsEngine.InitializeItems(null, testProgressionItems, testThrustSwords));
         }
@@ -35,7 +35,7 @@ namespace SotnRandoTools.RandoTracker.Tests.TrackerGraphicsEngineTests
             List<Item> testProgressionItems = new List<Item>();
             List<Item> testThrustSwords = new List<Item>();
             //Act
-            TrackerGraphicsEngine trackerGraphicsEngine = new TrackerGraphicsEngine(mockedFormGraphics, mockedToolConfig);
+            TrackerRendererGDI trackerGraphicsEngine = new TrackerRendererGDI(mockedFormGraphics, mockedToolConfig);
             //Assert
             Assert.Throws<ArgumentNullException>(() => trackerGraphicsEngine.InitializeItems(testRelics, null, testThrustSwords));
         }
@@ -50,7 +50,7 @@ namespace SotnRandoTools.RandoTracker.Tests.TrackerGraphicsEngineTests
             List<Item> testProgressionItems = new List<Item>();
             List<Item> testThrustSwords = new List<Item>();
             //Act
-            TrackerGraphicsEngine trackerGraphicsEngine = new TrackerGraphicsEngine(mockedFormGraphics, mockedToolConfig);
+            TrackerRendererGDI trackerGraphicsEngine = new TrackerRendererGDI(mockedFormGraphics, mockedToolConfig);
             //Assert
             Assert.Throws<ArgumentNullException>(() => trackerGraphicsEngine.InitializeItems(testRelics, testProgressionItems, null));
         }

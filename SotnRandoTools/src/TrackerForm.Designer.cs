@@ -39,13 +39,12 @@ namespace SotnRandoTools
             this.ClientSize = new System.Drawing.Size(284, 361);
             this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(800, 800);
-            this.MinimumSize = new System.Drawing.Size(100, 100);
+            this.MinimumSize = new System.Drawing.Size(200, 200);
             this.Name = "TrackerForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Autotracker";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.TrackerForm_FormClosing);
             this.Load += new System.EventHandler(this.TrackerForm_Load);
-            this.Paint += new System.Windows.Forms.PaintEventHandler(this.TrackerForm_Paint);
             this.Move += new System.EventHandler(this.TrackerForm_Move);
             this.Resize += new System.EventHandler(this.TrackerForm_Resize);
             this.ResumeLayout(false);

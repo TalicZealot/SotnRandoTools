@@ -4,7 +4,7 @@ using SotnRandoTools.RandoTracker.Interfaces;
 using System;
 using Xunit;
 
-namespace SotnRandoTools.RandoTracker.Tests.TrackerGraphicsEngineTests
+namespace SotnRandoTools.RandoTracker.Tests.TrackerRendererGDITests
 {
     public class ConstructorShould
     {
@@ -15,7 +15,7 @@ namespace SotnRandoTools.RandoTracker.Tests.TrackerGraphicsEngineTests
             var mockedFormGraphics = Substitute.For<IGraphics>();
             var mockedToolConfig = Substitute.For<IToolConfig>();
             //Act&Assert
-            Assert.Throws<ArgumentNullException>(() => new TrackerGraphicsEngine(null, mockedToolConfig));
+            Assert.Throws<ArgumentNullException>(() => new TrackerRendererGDI(null, mockedToolConfig));
         }
 
         [Fact]
@@ -25,7 +25,7 @@ namespace SotnRandoTools.RandoTracker.Tests.TrackerGraphicsEngineTests
             var mockedFormGraphics = Substitute.For<IGraphics>();
             var mockedToolConfig = Substitute.For<IToolConfig>();
             //Act&Assert
-            Assert.Throws<ArgumentNullException>(() => new TrackerGraphicsEngine(mockedFormGraphics, null));
+            Assert.Throws<ArgumentNullException>(() => new TrackerRendererGDI(mockedFormGraphics, null));
         }
 
         [Fact]
@@ -35,7 +35,7 @@ namespace SotnRandoTools.RandoTracker.Tests.TrackerGraphicsEngineTests
             var mockedFormGraphics = Substitute.For<IGraphics>();
             var mockedToolConfig = Substitute.For<IToolConfig>();
             //Act
-            TrackerGraphicsEngine trackerGraphicsEngine = new TrackerGraphicsEngine(mockedFormGraphics, mockedToolConfig);
+            TrackerRendererGDI trackerGraphicsEngine = new TrackerRendererGDI(mockedFormGraphics, mockedToolConfig);
             //Assert
             Assert.NotNull(trackerGraphicsEngine);
         }

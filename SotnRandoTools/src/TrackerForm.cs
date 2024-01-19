@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using BizHawk.Bizware.Graphics;
+using BizHawk.Bizware.Graphics.Controls;
 using SotnApi.Interfaces;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.RandoTracker;
-using SotnRandoTools.RandoTracker.Adapters;
 using SotnRandoTools.Services;
 
 namespace SotnRandoTools
@@ -16,10 +17,12 @@ namespace SotnRandoTools
 		private readonly ISotnApi sotnApi;
 		private readonly INotificationService notificationService;
 
-		private GraphicsAdapter? formGraphics;
+		private IGL_OpenGL? gl;
+		private GraphicsControl? graphicsControl;
 		private Tracker? tracker;
-		private TrackerGraphicsEngine? trackerGraphicsEngine;
+		private TrackerRendererOpenGL? trackerRendererOpenGL;
 		private Bitmap drawingSurface;
+		private GuiRenderer guiRenderer;
 
 		public TrackerForm(IToolConfig toolConfig, IWatchlistService watchlistService, ISotnApi sotnApi, INotificationService notificationService)
 		{
@@ -36,18 +39,33 @@ namespace SotnRandoTools
 			SuspendLayout();
 			ResumeLayout();
 		}
+
 		public void UpdateTracker()
 		{
 			if (tracker is not null)
 			{
 				this.tracker.Update();
-			}
+				if (!this.trackerRendererOpenGL.Refreshed)
+				{
+					trackerRendererOpenGL.Render();
+					this.trackerRendererOpenGL.Refreshed = true;
 
-			if (trackerGraphicsEngine.Refreshed)
-			{
-				trackerGraphicsEngine.Refreshed = false;
-				this.Invalidate();
+				}
 			}
+		}
+
+		private void InitializeRenderer()
+		{
+			this.gl = new IGL_OpenGL();
+			gl.ClearColor(Color.FromArgb(17, 00, 17));
+			this.graphicsControl = GraphicsControlFactory.CreateGraphicsControl(gl);
+			this.Controls.Add(graphicsControl);
+			graphicsControl.Location = new Point(0, 0);
+			graphicsControl.Width = this.Width;
+			graphicsControl.Height = this.Height;
+			graphicsControl.Visible = true;
+			this.guiRenderer = new GuiRenderer(gl);
+			guiRenderer.SetDefaultPipeline();
 		}
 
 		private void TrackerForm_Load(object sender, EventArgs e)
@@ -60,23 +78,14 @@ namespace SotnRandoTools
 				this.Location = toolConfig.Tracker.Location;
 			}
 
-			drawingSurface = new Bitmap(this.Width, this.Height);
-			Graphics internalGraphics = Graphics.FromImage(drawingSurface);
-			this.formGraphics = new GraphicsAdapter(internalGraphics);
-			this.trackerGraphicsEngine = new TrackerGraphicsEngine(formGraphics, toolConfig);
-			this.tracker = new Tracker(trackerGraphicsEngine, toolConfig, watchlistService, sotnApi, notificationService);
+			InitializeRenderer();
+			this.trackerRendererOpenGL = new TrackerRendererOpenGL(toolConfig, guiRenderer, graphicsControl);
+			this.tracker = new Tracker(trackerRendererOpenGL, toolConfig, watchlistService, sotnApi, notificationService);
+			trackerRendererOpenGL.CalculateGrid(this.Width, this.Height);
 
 #if WIN
 			this.Icon = SotnRandoTools.Properties.Resources.Icon;
 #endif
-		}
-
-		private void TrackerForm_Paint(object sender, PaintEventArgs e)
-		{
-			if (tracker != null)
-			{
-				e.Graphics.DrawImage(drawingSurface, 0, 0);
-			}
 		}
 
 		private void TrackerForm_Resize(object sender, EventArgs e)
@@ -86,27 +95,19 @@ namespace SotnRandoTools
 				return;
 			}
 
-			if (this.Width > toolConfig.Tracker.Width || this.Height > toolConfig.Tracker.Height)
-			{
-				drawingSurface = new Bitmap(this.Width, this.Height);
-				Graphics internalGraphics = Graphics.FromImage(drawingSurface);
-				this.formGraphics = new GraphicsAdapter(internalGraphics);
-			}
-
 			if (this.Width <= this.MaximumSize.Width && this.Height <= this.MaximumSize.Height)
 			{
 				toolConfig.Tracker.Width = this.Width;
 				toolConfig.Tracker.Height = this.Height;
 			}
 
-			if (tracker is not null && formGraphics is not null)
+			if (trackerRendererOpenGL is not null)
 			{
-				trackerGraphicsEngine.ChangeGraphics(formGraphics);
-				trackerGraphicsEngine.CalculateGrid(this.Width, this.Height);
-				tracker.DrawRelicsAndItems();
+				graphicsControl.Width = this.Width;
+				graphicsControl.Height = this.Height;
+				trackerRendererOpenGL.CalculateGrid(this.Width, this.Height);
+				trackerRendererOpenGL.Render();
 			}
-
-			this.Invalidate();
 		}
 
 		private void TrackerForm_Move(object sender, EventArgs e)

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace SotnRandoTools.Constants
+﻿namespace SotnRandoTools.Constants
 {
 	public static class Paths
 	{
@@ -25,40 +23,8 @@ namespace SotnRandoTools.Constants
 		public const string WarpsAndShortcutsWatchPath = "./ExternalTools/SotnRandoTools/Watches/WarpsAndShortcuts.wch";
 
 		public const string ImagesPath = "./ExternalTools/SotnRandoTools/Images/";
+		public const string CombinedTexture = "./ExternalTools/SotnRandoTools/Images/texture.png";
 		public const string TextboxImage = "./ExternalTools/SotnRandoTools/Images/SotnTextBox.png";
-		public static readonly Dictionary<string, string> RelicImages = new Dictionary<string, string>
-		{
-			{"SoulOfBat", "./ExternalTools/SotnRandoTools/Images/SoulOfBat.png"},
-			{"FireOfBat", "./ExternalTools/SotnRandoTools/Images/FireOfBat.png"},
-			{"EchoOfBat", "./ExternalTools/SotnRandoTools/Images/EchoOfBat.png"},
-			{"ForceOfEcho", "./ExternalTools/SotnRandoTools/Images/ForceOfEcho.png"},
-			{"SoulOfWolf", "./ExternalTools/SotnRandoTools/Images/SoulOfWolf.png"},
-			{"PowerOfWolf", "./ExternalTools/SotnRandoTools/Images/PowerOfWolf.png"},
-			{"SkillOfWolf", "./ExternalTools/SotnRandoTools/Images/SkillOfWolf.png"},
-			{"FormOfMist", "./ExternalTools/SotnRandoTools/Images/FormOfMist.png"},
-			{"PowerOfMist", "./ExternalTools/SotnRandoTools/Images/PowerOfMist.png"},
-			{"GasCloud", "./ExternalTools/SotnRandoTools/Images/GasCloud.png"},
-			{"CubeOfZoe", "./ExternalTools/SotnRandoTools/Images/CubeOfZoe.png"},
-			{"SpiritOrb", "./ExternalTools/SotnRandoTools/Images/SpiritOrb.png"},
-			{"GravityBoots", "./ExternalTools/SotnRandoTools/Images/GravityBoots.png"},
-			{"LeapStone", "./ExternalTools/SotnRandoTools/Images/LeapStone.png"},
-			{"HolySymbol", "./ExternalTools/SotnRandoTools/Images/HolySymbol.png"},
-			{"FaerieScroll", "./ExternalTools/SotnRandoTools/Images/FaerieScroll.png"},
-			{"JewelOfOpen", "./ExternalTools/SotnRandoTools/Images/JewelOfOpen.png"},
-			{"MermanStatue", "./ExternalTools/SotnRandoTools/Images/MermanStatue.png"},
-			{"BatCard", "./ExternalTools/SotnRandoTools/Images/BatCard.png"},
-			{"GhostCard", "./ExternalTools/SotnRandoTools/Images/GhostCard.png"},
-			{"FaerieCard", "./ExternalTools/SotnRandoTools/Images/FaerieCard.png"},
-			{"DemonCard", "./ExternalTools/SotnRandoTools/Images/DemonCard.png"},
-			{"SwordCard", "./ExternalTools/SotnRandoTools/Images/SwordCard.png"},
-			{"SpriteCard" , "./ExternalTools/SotnRandoTools/Images/SpriteCard.png"},
-			{"NoseDevilCard", "./ExternalTools/SotnRandoTools/Images/NoseDevilCard.png"},
-			{"HeartOfVlad", "./ExternalTools/SotnRandoTools/Images/HeartOfVlad.png"},
-			{"ToothOfVlad", "./ExternalTools/SotnRandoTools/Images/ToothOfVlad.png"},
-			{"RibOfVlad", "./ExternalTools/SotnRandoTools/Images/RibOfVlad.png"},
-			{"RingOfVlad", "./ExternalTools/SotnRandoTools/Images/RingOfVlad.png"},
-			{"EyeOfVlad", "./ExternalTools/SotnRandoTools/Images/EyeOfVlad.png"}
-		};
 
 		public const string ReplaysPath = "./ExternalTools/SotnRandoTools/Replays/";
 		public const string OverlayPath = @"\ExternalTools\SotnRandoTools\TrackerOverlay\";

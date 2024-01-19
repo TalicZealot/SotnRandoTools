@@ -130,7 +130,7 @@ namespace SotnRandoTools
 				coopSettingsPanel.NotificationService = notificationService;
 			}
 			autotrackerSelect.Image = Resources.Tracker;
-			multiplayerSelect.Image = Resources.coop;
+			coopSelect.Image = Resources.coop;
 			aboutButton.Image = Resources.VectorSimple;
 #if WIN
 			this.Icon = Resources.Icon;
@@ -238,7 +238,7 @@ namespace SotnRandoTools
 			}
 		}
 
-		private void multiplayerLaunch_Click(object sender, EventArgs e)
+		private void coopLaunch_Click(object sender, EventArgs e)
 		{
 			if (sotnApi is not null && watchlistService is not null && APIs.Joypad is not null)
 			{
@@ -271,19 +271,19 @@ namespace SotnRandoTools
 
 			coopSettingsPanel.Visible = false;
 			coopSettingsPanel.Enabled = false;
-			multiplayerLaunch.Visible = false;
-			multiplayerLaunch.Enabled = false;
+			coopLaunch.Visible = false;
+			coopLaunch.Enabled = false;
 
 			aboutPanel.Visible = false;
 			aboutPanel.Enabled = false;
 		}
 
-		private void multiplayerSelect_Click(object sender, EventArgs e)
+		private void coopSelect_Click(object sender, EventArgs e)
 		{
 			coopSettingsPanel.Visible = true;
 			coopSettingsPanel.Enabled = true;
-			multiplayerLaunch.Visible = true;
-			multiplayerLaunch.Enabled = true;
+			coopLaunch.Visible = true;
+			coopLaunch.Enabled = true;
 
 			autotrackerSettingsPanel.Visible = false;
 			autotrackerSettingsPanel.Enabled = false;
@@ -306,8 +306,8 @@ namespace SotnRandoTools
 
 			coopSettingsPanel.Visible = false;
 			coopSettingsPanel.Enabled = false;
-			multiplayerLaunch.Visible = false;
-			multiplayerLaunch.Enabled = false;
+			coopLaunch.Visible = false;
+			coopLaunch.Enabled = false;
 		}
 
 		private void ToolMainForm_Move(object sender, EventArgs e)

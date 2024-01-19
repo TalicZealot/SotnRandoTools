@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Web.Configuration;
-using System.Windows.Forms;
 using BizHawk.Client.Common;
 using BizHawk.Emulation.Common;
 using Newtonsoft.Json.Linq;
@@ -24,7 +22,7 @@ namespace SotnRandoTools.RandoTracker
 		private const string DefaultSeedInfo = "seed(preset)";
 		private const long DraculaEntityAddress = 0x076e98;
 		private const int AutosplitterReconnectCooldown = 120;
-		private readonly ITrackerGraphicsEngine trackerGraphicsEngine;
+		private readonly ITrackerRenderer trackerRenderer;
 		private readonly IToolConfig toolConfig;
 		private readonly IWatchlistService watchlistService;
 		private readonly ISotnApi sotnApi;
@@ -511,9 +509,9 @@ namespace SotnRandoTools.RandoTracker
 		private TimeSpan finalTime;
 		private Stopwatch stopWatch = new Stopwatch();
 
-		public Tracker(ITrackerGraphicsEngine trackerGraphicsEngine, IToolConfig toolConfig, IWatchlistService watchlistService, ISotnApi sotnApi, INotificationService notificationService)
+		public Tracker(ITrackerRenderer trackerRenderer, IToolConfig toolConfig, IWatchlistService watchlistService, ISotnApi sotnApi, INotificationService notificationService)
 		{
-			this.trackerGraphicsEngine = trackerGraphicsEngine ?? throw new ArgumentNullException(nameof(trackerGraphicsEngine));
+			this.trackerRenderer = trackerRenderer ?? throw new ArgumentNullException(nameof(trackerRenderer));
 			this.toolConfig = toolConfig ?? throw new ArgumentNullException(nameof(toolConfig));
 			this.watchlistService = watchlistService ?? throw new ArgumentNullException(nameof(watchlistService));
 			this.sotnApi = sotnApi ?? throw new ArgumentNullException(nameof(sotnApi));
@@ -534,19 +532,14 @@ namespace SotnRandoTools.RandoTracker
 				autosplitter = new();
 			}
 
-			trackerGraphicsEngine.InitializeItems(relics, progressionItems, thrustSwords);
-			trackerGraphicsEngine.CalculateGrid(toolConfig.Tracker.Width, toolConfig.Tracker.Height);
+			trackerRenderer.InitializeItems(relics, progressionItems, thrustSwords);
+			trackerRenderer.CalculateGrid(toolConfig.Tracker.Width, toolConfig.Tracker.Height);
 			this.SeedInfo = DefaultSeedInfo;
-			DrawRelicsAndItems();
+			trackerRenderer.SeedInfo = SeedInfo;
+			trackerRenderer.Render();
 		}
 
 		public string SeedInfo { get; set; }
-
-		public void DrawRelicsAndItems()
-		{
-			trackerGraphicsEngine.Render();
-			trackerGraphicsEngine.DrawSeedInfo(SeedInfo);
-		}
 
 		public void Update()
 		{
@@ -591,7 +584,7 @@ namespace SotnRandoTools.RandoTracker
 				if (objectChanges)
 				{
 					UpdateOverlay();
-					DrawRelicsAndItems();
+					trackerRenderer.Render();
 					if (toolConfig.Tracker.Locations)
 					{
 						CheckReachability();
@@ -622,7 +615,7 @@ namespace SotnRandoTools.RandoTracker
 				if (!restarted)
 				{
 					ResetToDefaults();
-					DrawRelicsAndItems();
+					trackerRenderer.Render();
 					restarted = true;
 				}
 			}
@@ -936,8 +929,7 @@ namespace SotnRandoTools.RandoTracker
 			if (SeedInfo == DefaultSeedInfo && sotnApi.GameApi.Status == Status.MainMenu)
 			{
 				GetSeedData();
-				trackerGraphicsEngine.Render();
-				trackerGraphicsEngine.DrawSeedInfo(SeedInfo);
+				trackerRenderer.Render();
 			}
 		}
 
@@ -1132,7 +1124,7 @@ namespace SotnRandoTools.RandoTracker
 				preset = "custom";
 			}
 			SeedInfo = seedName + "(" + preset + ")";
-			Console.WriteLine("Randomizer seed information: " + SeedInfo);
+			trackerRenderer.SeedInfo = SeedInfo;
 			if (preset == "custom")
 			{
 				switch (toolConfig.Tracker.CustomExtension)
@@ -1168,9 +1160,9 @@ namespace SotnRandoTools.RandoTracker
 			relics[10].Progression = true;
 			relics[21].Progression = true;
 			relics[24].Progression = true;
-			trackerGraphicsEngine.SetProgression();
-			trackerGraphicsEngine.CalculateGrid(toolConfig.Tracker.Width, toolConfig.Tracker.Height);
-			trackerGraphicsEngine.Render();
+			trackerRenderer.SetProgression();
+			trackerRenderer.CalculateGrid(toolConfig.Tracker.Width, toolConfig.Tracker.Height);
+			trackerRenderer.Render();
 		}
 
 		private void SetMapLocations()

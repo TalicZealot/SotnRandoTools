@@ -32,8 +32,8 @@ namespace SotnRandoTools
             this.mainMenuPanel = new System.Windows.Forms.Panel();
             this.autotrackerSelect = new System.Windows.Forms.Button();
             this.aboutButton = new System.Windows.Forms.Button();
-            this.multiplayerLaunch = new System.Windows.Forms.Button();
-            this.multiplayerSelect = new System.Windows.Forms.Button();
+            this.coopLaunch = new System.Windows.Forms.Button();
+            this.coopSelect = new System.Windows.Forms.Button();
             this.autotrackerLaunch = new System.Windows.Forms.Button();
             this.mainMenuPanel.SuspendLayout();
             this.SuspendLayout();
@@ -42,8 +42,8 @@ namespace SotnRandoTools
             // 
             this.mainMenuPanel.Controls.Add(this.autotrackerSelect);
             this.mainMenuPanel.Controls.Add(this.aboutButton);
-            this.mainMenuPanel.Controls.Add(this.multiplayerLaunch);
-            this.mainMenuPanel.Controls.Add(this.multiplayerSelect);
+            this.mainMenuPanel.Controls.Add(this.coopLaunch);
+            this.mainMenuPanel.Controls.Add(this.coopSelect);
             this.mainMenuPanel.Controls.Add(this.autotrackerLaunch);
             this.mainMenuPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.mainMenuPanel.Location = new System.Drawing.Point(0, 0);
@@ -88,39 +88,39 @@ namespace SotnRandoTools
             this.aboutButton.UseVisualStyleBackColor = false;
             this.aboutButton.Click += new System.EventHandler(this.aboutButton_Click);
             // 
-            // multiplayerLaunch
+            // coopLaunch
             // 
-            this.multiplayerLaunch.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
-            this.multiplayerLaunch.FlatAppearance.BorderSize = 2;
-            this.multiplayerLaunch.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
-            this.multiplayerLaunch.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
-            this.multiplayerLaunch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.multiplayerLaunch.Location = new System.Drawing.Point(106, 88);
-            this.multiplayerLaunch.Name = "multiplayerLaunch";
-            this.multiplayerLaunch.Size = new System.Drawing.Size(87, 29);
-            this.multiplayerLaunch.TabIndex = 3;
-            this.multiplayerLaunch.Text = "Launch Co-Op";
-            this.multiplayerLaunch.UseVisualStyleBackColor = true;
-            this.multiplayerLaunch.Visible = false;
-            this.multiplayerLaunch.Click += new System.EventHandler(this.multiplayerLaunch_Click);
+            this.coopLaunch.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
+            this.coopLaunch.FlatAppearance.BorderSize = 2;
+            this.coopLaunch.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
+            this.coopLaunch.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
+            this.coopLaunch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.coopLaunch.Location = new System.Drawing.Point(106, 88);
+            this.coopLaunch.Name = "coopLaunch";
+            this.coopLaunch.Size = new System.Drawing.Size(87, 29);
+            this.coopLaunch.TabIndex = 3;
+            this.coopLaunch.Text = "Launch Co-Op";
+            this.coopLaunch.UseVisualStyleBackColor = true;
+            this.coopLaunch.Visible = false;
+            this.coopLaunch.Click += new System.EventHandler(this.coopLaunch_Click);
             // 
-            // multiplayerSelect
+            // coopSelect
             // 
-            this.multiplayerSelect.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(0)))), ((int)(((byte)(35)))));
-            this.multiplayerSelect.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.multiplayerSelect.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
-            this.multiplayerSelect.FlatAppearance.BorderSize = 2;
-            this.multiplayerSelect.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
-            this.multiplayerSelect.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
-            this.multiplayerSelect.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.multiplayerSelect.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.multiplayerSelect.Location = new System.Drawing.Point(106, 12);
-            this.multiplayerSelect.Name = "multiplayerSelect";
-            this.multiplayerSelect.Size = new System.Drawing.Size(88, 70);
-            this.multiplayerSelect.TabIndex = 2;
-            this.multiplayerSelect.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.multiplayerSelect.UseVisualStyleBackColor = false;
-            this.multiplayerSelect.Click += new System.EventHandler(this.multiplayerSelect_Click);
+            this.coopSelect.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(0)))), ((int)(((byte)(35)))));
+            this.coopSelect.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.coopSelect.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(21)))), ((int)(((byte)(57)))));
+            this.coopSelect.FlatAppearance.BorderSize = 2;
+            this.coopSelect.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(35)))), ((int)(((byte)(67)))));
+            this.coopSelect.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(20)))), ((int)(((byte)(48)))));
+            this.coopSelect.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.coopSelect.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.coopSelect.Location = new System.Drawing.Point(106, 12);
+            this.coopSelect.Name = "coopSelect";
+            this.coopSelect.Size = new System.Drawing.Size(88, 70);
+            this.coopSelect.TabIndex = 2;
+            this.coopSelect.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.coopSelect.UseVisualStyleBackColor = false;
+            this.coopSelect.Click += new System.EventHandler(this.coopSelect_Click);
             // 
             // autotrackerLaunch
             // 
@@ -165,8 +165,8 @@ namespace SotnRandoTools
 
         private System.Windows.Forms.Panel mainMenuPanel;
         private System.Windows.Forms.Button autotrackerLaunch;
-        private System.Windows.Forms.Button multiplayerLaunch;
-        private System.Windows.Forms.Button multiplayerSelect;
+        private System.Windows.Forms.Button coopLaunch;
+        private System.Windows.Forms.Button coopSelect;
         private System.Windows.Forms.Button aboutButton;
         private System.Windows.Forms.Button autotrackerSelect;
 	}

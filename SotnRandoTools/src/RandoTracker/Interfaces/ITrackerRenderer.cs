@@ -4,12 +4,12 @@ using SotnRandoTools.RandoTracker.Models;
 
 namespace SotnRandoTools.RandoTracker
 {
-	internal interface ITrackerGraphicsEngine
+	internal interface ITrackerRenderer
 	{
 		bool Refreshed { get; set; }
+		string SeedInfo { get; set; }
 		void SetProgression();
 		void CalculateGrid(int width, int height);
-		void DrawSeedInfo(string seedInfo);
 		void Render();
 		void ChangeGraphics(IGraphics formGraphics);
 		void InitializeItems(List<Models.TrackerRelic> relics, List<Item> progressionItems, List<Item> thrustSwords);

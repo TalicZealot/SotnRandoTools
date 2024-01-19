@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.Linq;
+using BizHawk.Bizware.BizwareGL;
+using BizHawk.Bizware.Graphics.Controls;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Constants;
 using SotnRandoTools.RandoTracker.Interfaces;
@@ -10,7 +11,7 @@ using SotnRandoTools.RandoTracker.Models;
 
 namespace SotnRandoTools.RandoTracker
 {
-	internal sealed class TrackerGraphicsEngine : ITrackerGraphicsEngine
+	internal sealed class TrackerRendererOpenGL : ITrackerRenderer
 	{
 		private const int TextPadding = 5;
 		private const int LabelOffset = 50;
@@ -21,17 +22,22 @@ namespace SotnRandoTools.RandoTracker
 		private const int CellSize = ImageSize + CellPadding;
 		private const double PixelPerfectSnapMargin = 0.18;
 		private Color DefaultBackground = Color.FromArgb(17, 00, 17);
+		private int Width = 100;
+		private int Height = 100;
 
-		private IGraphics formGraphics;
 		private readonly IToolConfig toolConfig;
+		private readonly IGuiRenderer guiRenderer;
+		private readonly GraphicsControl graphicsControl;
 
 		private List<TrackerRelic>? relics;
 		private List<Item>? progressionItems;
 		private List<Item>? thrustSwords;
 
-		private List<Bitmap> relicImages = new List<Bitmap>();
-		private List<Bitmap> progressionItemImages = new List<Bitmap>();
-		private Bitmap? thrustSwordImage;
+		private Texture2d texture;
+		private Texture2d greyscaleTexture;
+		private Texture2d infoTexture;
+		private Bitmap seedInfoBitmap;
+		private SolidBrush textBrush;
 
 		private List<Rectangle> relicSlots = new List<Rectangle>();
 		private List<Rectangle> vladRelicSlots = new List<Rectangle>();
@@ -41,23 +47,29 @@ namespace SotnRandoTools.RandoTracker
 		private float scale = 1;
 		private int progressionRelics = 0;
 		private bool vladProgression = true;
-		private ColorMatrix greyscaleColorMatrix = new ColorMatrix(
-			new float[][]
-			{
-				new float[] {.1f, .1f, .1f, 0, 0},
-				new float[] {.3f, .3f, .3f, 0, 0},
-				new float[] {.1f, .1f, .1f, 0, 0},
-				new float[] {0, 0, 0, 1, 0},
-				new float[] {0, 0, 0, 0, 1}
-			});
+		private string seedInfo = "seed(preset)";
 
-		public TrackerGraphicsEngine(IGraphics formGraphics, IToolConfig toolConfig)
+		public TrackerRendererOpenGL(IToolConfig toolConfig, IGuiRenderer guiRenderer, GraphicsControl graphicsControl)
 		{
-			this.formGraphics = formGraphics ?? throw new ArgumentNullException(nameof(formGraphics));
 			this.toolConfig = toolConfig ?? throw new ArgumentNullException(nameof(toolConfig));
+			this.guiRenderer = guiRenderer ?? throw new ArgumentNullException(nameof(guiRenderer));
+			this.graphicsControl = graphicsControl ?? throw new ArgumentNullException(nameof(graphicsControl));
+			LoadImages();
 		}
 
 		public bool Refreshed { get; set; }
+		public string SeedInfo
+		{
+			get
+			{
+				return seedInfo;
+			}
+			set
+			{
+				seedInfo = value;
+				GetSeedInfo();
+			}
+		}
 
 		public void InitializeItems(List<TrackerRelic> relics, List<Item> progressionItems, List<Item> thrustSwords)
 		{
@@ -78,8 +90,6 @@ namespace SotnRandoTools.RandoTracker
 
 			vladProgression = relics[25].Progression;
 
-			LoadImages();
-
 			initialized = true;
 		}
 
@@ -97,14 +107,10 @@ namespace SotnRandoTools.RandoTracker
 			vladProgression = relics[25].Progression;
 		}
 
-		public void ChangeGraphics(IGraphics formGraphics)
-		{
-			if (formGraphics is null) throw new ArgumentNullException(nameof(formGraphics));
-			this.formGraphics = formGraphics;
-		}
-
 		public void CalculateGrid(int width, int height)
 		{
+			this.Width = width;
+			this.Height = height;
 			if (width < 100 || width > 800) throw new ArgumentOutOfRangeException(nameof(width));
 			if (height < 100 || height > 800) throw new ArgumentOutOfRangeException(nameof(height));
 
@@ -136,7 +142,6 @@ namespace SotnRandoTools.RandoTracker
 			relicSlots = new List<Rectangle>();
 			vladRelicSlots = new List<Rectangle>();
 			progressionItemSlots = new List<Rectangle>();
-
 
 			int row = 0;
 			int col = 0;
@@ -170,20 +175,7 @@ namespace SotnRandoTools.RandoTracker
 				progressionItemSlots.Add(new Rectangle((int) (CellPadding + (col * (ImageSize + CellPadding) * scale)), LabelOffset + (int) (row * (ImageSize + CellPadding) * scale), (int) (ImageSize * scale), (int) (ImageSize * scale)));
 				col++;
 			}
-		}
-
-		public void DrawSeedInfo(string seedInfo)
-		{
-			if (seedInfo is null) throw new ArgumentNullException(nameof(seedInfo));
-			if (seedInfo == String.Empty) throw new ArgumentException("Parameter seedInfo is empty!");
-
-			int fontSize = SeedInfoFontSize;
-			while (formGraphics.MeasureString(seedInfo, new Font("Tahoma", fontSize)).Width > (toolConfig.Tracker.Width - (TextPadding * 3)))
-			{
-				fontSize--;
-			}
-
-			formGraphics.DrawString(seedInfo, new Font("Tahoma", fontSize), new SolidBrush(Color.White), TextPadding, TextPadding);
+			GetSeedInfo();
 		}
 
 		public void Render()
@@ -193,6 +185,10 @@ namespace SotnRandoTools.RandoTracker
 				return;
 			}
 
+			graphicsControl.Begin();
+			guiRenderer.Begin(Width, Height);
+			guiRenderer.EnableBlending();
+			guiRenderer.Owner.ClearColor(DefaultBackground);
 			if (toolConfig.Tracker.GridLayout)
 			{
 				GridRender();
@@ -201,85 +197,80 @@ namespace SotnRandoTools.RandoTracker
 			{
 				CollectedRender();
 			}
+			GetSeedInfo();
+			guiRenderer.Draw(infoTexture, 0, 0);
+			guiRenderer.End();
+			graphicsControl.SwapBuffers();
+		}
 
-			Refreshed = true;
+		private void GetSeedInfo()
+		{
+			seedInfoBitmap = new Bitmap(toolConfig.Tracker.Width - (TextPadding * 3), LabelOffset);
+			Graphics graphics = Graphics.FromImage(seedInfoBitmap);
+			int fontSize = SeedInfoFontSize;
+			Font infoFont = new Font("Tahoma", fontSize);
+			while (graphics.MeasureString(SeedInfo, infoFont).Width > (toolConfig.Tracker.Width - (TextPadding * 3)))
+			{
+				fontSize--;
+				infoFont = new Font("Tahoma", fontSize);
+			}
+			graphics.DrawString(SeedInfo, infoFont, textBrush, TextPadding, TextPadding);
+			infoTexture = guiRenderer.Owner.LoadTexture(seedInfoBitmap);
 		}
 
 		private void GridRender()
 		{
-			formGraphics.Clear(DefaultBackground);
-			ImageAttributes greyscaleAttributes = new ImageAttributes();
-			greyscaleAttributes.SetColorMatrix(greyscaleColorMatrix);
-
 			int normalRelicCount = 0;
+			int slotWidth = relicSlots[0].Width;
+			int slotHeight = relicSlots[0].Height;
+			float offset = 14 / texture.Width;
+			float itemsOffset = 600 / texture.Width;
 			for (int i = 0; i < 25; i++)
 			{
-				if (relics[i].Collected && ((toolConfig.Tracker.ProgressionRelicsOnly && relics[i].Progression) || !toolConfig.Tracker.ProgressionRelicsOnly))
+				if (toolConfig.Tracker.ProgressionRelicsOnly && !relics[i].Progression)
 				{
-					formGraphics.DrawImage(relicImages[i], relicSlots[normalRelicCount], 0, 0, relicImages[i].Width, relicImages[i].Height, GraphicsUnit.Pixel);
-					normalRelicCount++;
+					continue;
 				}
-				else if ((toolConfig.Tracker.ProgressionRelicsOnly && relics[i].Progression) || !toolConfig.Tracker.ProgressionRelicsOnly)
-				{
-					formGraphics.DrawImage(relicImages[i], relicSlots[normalRelicCount], 0, 0, relicImages[i].Width, relicImages[i].Height, GraphicsUnit.Pixel, greyscaleAttributes);
-					normalRelicCount++;
-				}
+				guiRenderer.DrawSubrect(relics[i].Collected ? texture : greyscaleTexture, relicSlots[normalRelicCount].Location.X, relicSlots[normalRelicCount].Location.Y, slotWidth, slotHeight, 20 * i / texture.Width, 0, (20 * i / texture.Width) + offset, 1);
+				normalRelicCount++;
 			}
 			var thrustSword = thrustSwords.Where(x => x.Status).FirstOrDefault();
-			if (thrustSword != null && thrustSwordImage != null)
-			{
-				formGraphics.DrawImage(thrustSwordImage, relicSlots[normalRelicCount], 0, 0, thrustSwordImage.Width, thrustSwordImage.Height, GraphicsUnit.Pixel);
-			}
-			else if (thrustSwordImage != null)
-			{
-				formGraphics.DrawImage(thrustSwordImage, relicSlots[normalRelicCount], 0, 0, thrustSwordImage.Width, thrustSwordImage.Height, GraphicsUnit.Pixel, greyscaleAttributes);
-			}
+			guiRenderer.DrawSubrect(thrustSword is not null ? texture : greyscaleTexture, relicSlots[normalRelicCount].Location.X, relicSlots[normalRelicCount].Location.Y, slotWidth, slotHeight, 680 / texture.Width, 0, 694 / texture.Width, 1);
+
 
 			if (vladProgression)
 			{
 				for (int i = 25; i < relics.Count; i++)
 				{
-					if (relics[i].Collected)
-					{
-						formGraphics.DrawImage(relicImages[i], vladRelicSlots[i - 25], 0, 0, relicImages[i].Width, relicImages[i].Height, GraphicsUnit.Pixel);
-					}
-					else
-					{
-						formGraphics.DrawImage(relicImages[i], vladRelicSlots[i - 25], 0, 0, relicImages[i].Width, relicImages[i].Height, GraphicsUnit.Pixel, greyscaleAttributes);
-					}
+					guiRenderer.DrawSubrect(relics[i].Collected ? texture : greyscaleTexture, vladRelicSlots[i - 25].Location.X, vladRelicSlots[i - 25].Location.Y, slotWidth, slotHeight, 20 * i / texture.Width, 0, (20 * i / texture.Width) + offset, 1);
 				}
 			}
 
 			for (int i = 0; i < progressionItems.Count; i++)
 			{
-				if (progressionItems[i].Status)
-				{
-					formGraphics.DrawImage(progressionItemImages[i], progressionItemSlots[i], 0, 0, progressionItemImages[i].Width, progressionItemImages[i].Height, GraphicsUnit.Pixel);
-				}
-				else
-				{
-					formGraphics.DrawImage(progressionItemImages[i], progressionItemSlots[i], 0, 0, progressionItemImages[i].Width, progressionItemImages[i].Height, GraphicsUnit.Pixel, greyscaleAttributes);
-				}
+				guiRenderer.DrawSubrect(progressionItems[i].Status ? texture : greyscaleTexture, progressionItemSlots[i].Location.X, progressionItemSlots[i].Location.Y, slotWidth, slotHeight, (20 * i / texture.Width) + itemsOffset, 0, (20 * i / texture.Width) + itemsOffset + offset, 1);
 			}
 		}
 
 		private void CollectedRender()
 		{
-			formGraphics.Clear(DefaultBackground);
-
 			int normalRelicCount = 0;
+			int slotWidth = relicSlots[0].Width;
+			int slotHeight = relicSlots[0].Height;
+			float offset = 14 / texture.Width;
+			float itemsOffset = 600 / texture.Width;
 			for (int i = 0; i < 25; i++)
 			{
 				if (relics[i].Collected && ((toolConfig.Tracker.ProgressionRelicsOnly && relics[i].Progression) || !toolConfig.Tracker.ProgressionRelicsOnly))
 				{
-					formGraphics.DrawImage(relicImages[i], relicSlots[normalRelicCount], 0, 0, relicImages[i].Width, relicImages[i].Height, GraphicsUnit.Pixel);
+					guiRenderer.DrawSubrect(texture, relicSlots[normalRelicCount].Location.X, relicSlots[normalRelicCount].Location.Y, slotWidth, slotHeight, 20 * i / texture.Width, 0, (20 * i / texture.Width) + offset, 1);
 					normalRelicCount++;
 				}
 			}
 			var thrustSword = thrustSwords.Where(x => x.Status).FirstOrDefault();
-			if (thrustSword != null && thrustSwordImage != null)
+			if (thrustSword != null)
 			{
-				formGraphics.DrawImage(thrustSwordImage, relicSlots[normalRelicCount], 0, 0, thrustSwordImage.Width, thrustSwordImage.Height, GraphicsUnit.Pixel);
+				guiRenderer.DrawSubrect(texture, relicSlots[normalRelicCount].Location.X, relicSlots[normalRelicCount].Location.Y, slotWidth, slotHeight, 680 / texture.Width, 0, 694 / texture.Width, 1);
 			}
 
 			if (vladProgression)
@@ -289,7 +280,7 @@ namespace SotnRandoTools.RandoTracker
 				{
 					if (relics[i].Collected)
 					{
-						formGraphics.DrawImage(relicImages[i], vladRelicSlots[vladRelicCount], 0, 0, relicImages[i].Width, relicImages[i].Height, GraphicsUnit.Pixel);
+						guiRenderer.DrawSubrect(texture, vladRelicSlots[vladRelicCount].Location.X, vladRelicSlots[vladRelicCount].Location.Y, slotWidth, slotHeight, 20 * i / texture.Width, 0, (20 * i / texture.Width) + offset, 1);
 						vladRelicCount++;
 					}
 				}
@@ -300,7 +291,7 @@ namespace SotnRandoTools.RandoTracker
 			{
 				if (progressionItems[i].Status)
 				{
-					formGraphics.DrawImage(progressionItemImages[i], progressionItemSlots[progressionItemCount], 0, 0, progressionItemImages[i].Width, progressionItemImages[i].Height, GraphicsUnit.Pixel);
+					guiRenderer.DrawSubrect(texture, progressionItemSlots[progressionItemCount].Location.X, progressionItemSlots[progressionItemCount].Location.Y, slotWidth, slotHeight, (20 * i / texture.Width) + itemsOffset, 0, (20 * i / texture.Width) + itemsOffset + offset, 1);
 					progressionItemCount++;
 				}
 			}
@@ -308,18 +299,27 @@ namespace SotnRandoTools.RandoTracker
 
 		private void LoadImages()
 		{
-			foreach (var relic in Constants.Paths.RelicImages)
+			Bitmap textureBitmap = new Bitmap(Paths.CombinedTexture);
+			Bitmap greyscaleTextureBitmap = new Bitmap(Paths.CombinedTexture);
+			textBrush = new SolidBrush(Color.White);
+			for (int i = 0; i < greyscaleTextureBitmap.Width; i++)
 			{
-				relicImages.Add(new Bitmap(Image.FromFile(relic.Value)));
+				for (int j = 0; j < greyscaleTextureBitmap.Height; j++)
+				{
+					Color pixelColor = greyscaleTextureBitmap.GetPixel(i, j);
+					int grayScale = (int) ((pixelColor.R * 0.1) + (pixelColor.G * 0.3) + (pixelColor.B * 0.1));
+					Color adjusted = Color.FromArgb(pixelColor.A, grayScale, grayScale, grayScale);
+					greyscaleTextureBitmap.SetPixel(i, j, adjusted);
+				}
 			}
 
-			foreach (var item in progressionItems)
-			{
-				progressionItemImages.Add(new Bitmap(Image.FromFile(Paths.ImagesPath + item.Name + ".png")));
-			}
-
-			thrustSwordImage = new Bitmap(Image.FromFile(Paths.ImagesPath + "Claymore.png"));
+			texture = guiRenderer.Owner.LoadTexture(textureBitmap);
+			greyscaleTexture = guiRenderer.Owner.LoadTexture(greyscaleTextureBitmap);
 		}
 
+		public void ChangeGraphics(IGraphics formGraphics)
+		{
+			return;
+		}
 	}
 }

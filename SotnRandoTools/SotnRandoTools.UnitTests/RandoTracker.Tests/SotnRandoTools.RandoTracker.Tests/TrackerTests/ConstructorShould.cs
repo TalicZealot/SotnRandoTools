@@ -17,7 +17,7 @@ namespace SotnRandoTools.RandoTracker.Tests.TrackerTests
         {
             //Arrange
             var mockedMemAPI = Substitute.For<IMemoryApi>();
-            var mockedGraphicsEngine = Substitute.For<ITrackerGraphicsEngine>();
+            var mockedGraphicsEngine = Substitute.For<ITrackerRenderer>();
             var mockedToolConfig = Substitute.For<IToolConfig>();
             var mockedwatchlistService = Substitute.For<IWatchlistService>();
             var mockedSotnApi = Substitute.For<ISotnApi>();
@@ -30,7 +30,7 @@ namespace SotnRandoTools.RandoTracker.Tests.TrackerTests
         public void ThrowArgumentNullException_WhenToolConfigIsNull()
         {
             //Arrange
-            var mockedGraphicsEngine = Substitute.For<ITrackerGraphicsEngine>();
+            var mockedGraphicsEngine = Substitute.For<ITrackerRenderer>();
             var mockedToolConfig = Substitute.For<IToolConfig>();
             var mockedwatchlistService = Substitute.For<IWatchlistService>();
             var mockedSotnApi = Substitute.For<ISotnApi>();
@@ -43,7 +43,7 @@ namespace SotnRandoTools.RandoTracker.Tests.TrackerTests
         public void ThrowArgumentNullException_WhenWatchlistServiceIsNull()
         {
             //Arrange
-            var mockedGraphicsEngine = Substitute.For<ITrackerGraphicsEngine>();
+            var mockedGraphicsEngine = Substitute.For<ITrackerRenderer>();
             var mockedToolConfig = Substitute.For<IToolConfig>();
             var mockedwatchlistService = Substitute.For<IWatchlistService>();
             var mockedSotnApi = Substitute.For<ISotnApi>();
@@ -56,7 +56,7 @@ namespace SotnRandoTools.RandoTracker.Tests.TrackerTests
         public void ThrowArgumentNullException_WhenSotnApiIsNull()
         {
             //Arrange
-            var mockedGraphicsEngine = Substitute.For<ITrackerGraphicsEngine>();
+            var mockedGraphicsEngine = Substitute.For<ITrackerRenderer>();
             var mockedToolConfig = Substitute.For<IToolConfig>();
             var mockedwatchlistService = Substitute.For<IWatchlistService>();
             var mockedSotnApi = Substitute.For<ISotnApi>();
@@ -69,7 +69,7 @@ namespace SotnRandoTools.RandoTracker.Tests.TrackerTests
         public void ThrowArgumentNullException_WhenNotificationServiceIsNull()
         {
             //Arrange
-            var mockedGraphicsEngine = Substitute.For<ITrackerGraphicsEngine>();
+            var mockedGraphicsEngine = Substitute.For<ITrackerRenderer>();
             var mockedToolConfig = Substitute.For<IToolConfig>();
             var mockedwatchlistService = Substitute.For<IWatchlistService>();
             var mockedSotnApi = Substitute.For<ISotnApi>();
@@ -82,7 +82,7 @@ namespace SotnRandoTools.RandoTracker.Tests.TrackerTests
         public void ReturnsAnInstance_WhenParametersAreNotNull()
         {
             //Arrange
-            var mockedGraphicsEngine = Substitute.For<ITrackerGraphicsEngine>();
+            var mockedGraphicsEngine = Substitute.For<ITrackerRenderer>();
             var mockedToolConfig = Substitute.For<IToolConfig>();
             var mockedwatchlistService = Substitute.For<IWatchlistService>();
             var mockedSotnApi = Substitute.For<ISotnApi>();

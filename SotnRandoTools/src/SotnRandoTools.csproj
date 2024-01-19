@@ -11,7 +11,7 @@
     <OutputType>Library</OutputType>
     <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
     <AnalysisLevel>5.0</AnalysisLevel>
-    <Version>1.6.6</Version>
+    <Version>1.6.7</Version>
     <Description>A collection of tools to enhance the experience of playign the SotN randomizer.</Description>
     <Copyright />
     <PackageProjectUrl>https://taliczealot.github.io/#/projects/sotnrandotools</PackageProjectUrl>
@@ -54,9 +54,19 @@
     <PackageReference Include="SuperSimpleTcp" Version="2.4.0" />
     <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
-	<PackageReference Include="TwitchLib.Api" Version="3.3.0" />
-    <PackageReference Include="TwitchLib.PubSub" Version="3.2.3" />
     <PackageReference Include="WatsonWebsocket" Version="2.3.0" />
+    <Reference Include="BizHawk.Bizware.BizwareGL">
+      <HintPath>..\BizHawk\dll\BizHawk.Bizware.BizwareGL.dll</HintPath>
+    </Reference>
+    <Reference Include="BizHawk.Bizware.Graphics">
+      <HintPath>..\BizHawk\dll\BizHawk.Bizware.Graphics.dll</HintPath>
+    </Reference>
+    <Reference Include="BizHawk.Bizware.Graphics.Controls">
+      <HintPath>..\BizHawk\dll\BizHawk.Bizware.Graphics.Controls.dll</HintPath>
+    </Reference>
+    <Reference Include="BizHawk.Common">
+      <HintPath>..\BizHawk\dll\BizHawk.Common.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="SotnApi">
       <HintPath>..\BizHawk\ExternalTools\SotnRandoTools\dll\SotnApi.dll</HintPath>
@@ -66,9 +76,7 @@
     <Reference Include="BizHawk.Client.Common" HintPath="$(ProjectDir)../BizHawk/dll/BizHawk.Client.Common.dll" />
 	<Reference Include="BizHawk.Emulation.Common" HintPath="$(ProjectDir)../BizHawk/dll/BizHawk.Emulation.Common.dll" />
     <Reference Include="BizHawk.Client.EmuHawk" HintPath="$(ProjectDir)../BizHawk/EmuHawk.exe" />
-    <Reference Include="BizHawk.Common" HintPath="$(ProjectDir)../BizHawk/dll/BizHawk.Common.dll" />
-    <Reference Include="BizHawk.WinForms.Controls" HintPath="$(ProjectDir)../BizHawk/dll/BizHawk.WinForms.Controls.dll" />
-	<Reference Include="BizHawk.Bizware.BizwareGL" HintPath="$(ProjectDir)../BizHawk/dll/BizHawk.Bizware.BizwareGL.dll" />
+	<Reference Include="BizHawk.WinForms.Controls" HintPath="$(ProjectDir)../BizHawk/dll/BizHawk.WinForms.Controls.dll" />
 	<Reference Include="WindowsBase, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
   </ItemGroup>
   <ItemGroup>
