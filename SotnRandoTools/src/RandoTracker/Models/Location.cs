@@ -2,7 +2,7 @@
 
 namespace SotnRandoTools.RandoTracker.Models
 {
-	public class Location
+	internal sealed class Location
 	{
 		public Location()
 		{

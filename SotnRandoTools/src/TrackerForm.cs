@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using BizHawk.Bizware.Graphics;
-using BizHawk.Bizware.Graphics.Controls;
+//using BizHawk.Bizware.Graphics;
+//using BizHawk.Bizware.Graphics.Controls;
 using SotnApi.Interfaces;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.RandoTracker;
+using SotnRandoTools.RandoTracker.Adapters;
 using SotnRandoTools.Services;
 
 namespace SotnRandoTools
@@ -17,12 +18,16 @@ namespace SotnRandoTools
 		private readonly ISotnApi sotnApi;
 		private readonly INotificationService notificationService;
 
+#if GL
 		private IGL_OpenGL? gl;
 		private GraphicsControl? graphicsControl;
-		private Tracker? tracker;
 		private TrackerRendererOpenGL? trackerRendererOpenGL;
-		private Bitmap drawingSurface;
 		private GuiRenderer guiRenderer;
+#endif
+		private GraphicsAdapter? formGraphics;
+		private TrackerRendererGDI? trackerRendererGDI;
+		private Tracker? tracker;
+		private Bitmap drawingSurface;
 
 		public TrackerForm(IToolConfig toolConfig, IWatchlistService watchlistService, ISotnApi sotnApi, INotificationService notificationService)
 		{
@@ -44,18 +49,26 @@ namespace SotnRandoTools
 		{
 			if (tracker is not null)
 			{
-				this.tracker.Update();
+				tracker.Update();
+#if GL
 				if (!this.trackerRendererOpenGL.Refreshed)
 				{
 					trackerRendererOpenGL.Render();
 					this.trackerRendererOpenGL.Refreshed = true;
 
 				}
+#endif
+				if (trackerRendererGDI.Refreshed)
+				{
+					trackerRendererGDI.Refreshed = false;
+					this.Invalidate();
+				}
 			}
 		}
 
 		private void InitializeRenderer()
 		{
+#if GL
 			this.gl = new IGL_OpenGL();
 			gl.ClearColor(Color.FromArgb(17, 00, 17));
 			this.graphicsControl = GraphicsControlFactory.CreateGraphicsControl(gl);
@@ -66,26 +79,41 @@ namespace SotnRandoTools
 			graphicsControl.Visible = true;
 			this.guiRenderer = new GuiRenderer(gl);
 			guiRenderer.SetDefaultPipeline();
+#endif
 		}
 
 		private void TrackerForm_Load(object sender, EventArgs e)
 		{
-			this.TopMost = toolConfig.Tracker.AlwaysOnTop;
-			this.Size = new Size(toolConfig.Tracker.Width, toolConfig.Tracker.Height);
+			TopMost = toolConfig.Tracker.AlwaysOnTop;
+			Size = new Size(toolConfig.Tracker.Width, toolConfig.Tracker.Height);
 
 			if (SystemInformation.VirtualScreen.Width > toolConfig.Tracker.Location.X && SystemInformation.VirtualScreen.Height > toolConfig.Tracker.Location.Y)
 			{
-				this.Location = toolConfig.Tracker.Location;
+				Location = toolConfig.Tracker.Location;
 			}
 
+#if GL
 			InitializeRenderer();
-			this.trackerRendererOpenGL = new TrackerRendererOpenGL(toolConfig, guiRenderer, graphicsControl);
-			this.tracker = new Tracker(trackerRendererOpenGL, toolConfig, watchlistService, sotnApi, notificationService);
+			trackerRendererOpenGL = new TrackerRendererOpenGL(toolConfig, guiRenderer, graphicsControl);
 			trackerRendererOpenGL.CalculateGrid(this.Width, this.Height);
+#endif
+			drawingSurface = new Bitmap(this.Width, this.Height);
+			Graphics internalGraphics = Graphics.FromImage(drawingSurface);
+			this.formGraphics = new GraphicsAdapter(internalGraphics);
+			trackerRendererGDI = new TrackerRendererGDI(formGraphics, toolConfig);
+			tracker = new Tracker(trackerRendererGDI, toolConfig, watchlistService, sotnApi, notificationService);
 
 #if WIN
 			this.Icon = SotnRandoTools.Properties.Resources.Icon;
 #endif
+		}
+
+		private void TrackerForm_Paint(object sender, PaintEventArgs e)
+		{
+			if (tracker != null)
+			{
+				e.Graphics.DrawImage(drawingSurface, 0, 0);
+			}
 		}
 
 		private void TrackerForm_Resize(object sender, EventArgs e)
@@ -94,7 +122,7 @@ namespace SotnRandoTools
 			{
 				return;
 			}
-
+#if GL
 			if (this.Width <= this.MaximumSize.Width && this.Height <= this.MaximumSize.Height)
 			{
 				toolConfig.Tracker.Width = this.Width;
@@ -107,6 +135,27 @@ namespace SotnRandoTools
 				graphicsControl.Height = this.Height;
 				trackerRendererOpenGL.CalculateGrid(this.Width, this.Height);
 				trackerRendererOpenGL.Render();
+			}
+#endif
+			if (this.Width > toolConfig.Tracker.Width || this.Height > toolConfig.Tracker.Height)
+			{
+				drawingSurface = new Bitmap(this.Width, this.Height);
+				Graphics internalGraphics = Graphics.FromImage(drawingSurface);
+				this.formGraphics = new GraphicsAdapter(internalGraphics);
+			}
+
+			if (this.Width <= this.MaximumSize.Width && this.Height <= this.MaximumSize.Height)
+			{
+				toolConfig.Tracker.Width = this.Width;
+				toolConfig.Tracker.Height = this.Height;
+			}
+
+			if (tracker is not null && formGraphics is not null)
+			{
+				trackerRendererGDI.ChangeGraphics(formGraphics);
+				trackerRendererGDI.CalculateGrid(this.Width, this.Height);
+				this.Invalidate();
+				trackerRendererGDI.Render();
 			}
 		}
 
@@ -128,8 +177,6 @@ namespace SotnRandoTools
 			notificationService.StopOverlayServer();
 
 			tracker.CloseAutosplitter();
-			tracker = null;
 		}
-
 	}
 }

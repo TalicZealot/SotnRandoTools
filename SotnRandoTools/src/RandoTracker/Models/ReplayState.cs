@@ -1,6 +1,6 @@
 ﻿namespace SotnRandoTools.RandoTracker.Models
 {
-	public struct ReplayState
+	internal class ReplayState
 	{
 		public byte X { get; set; }
 		public byte Y { get; set; }

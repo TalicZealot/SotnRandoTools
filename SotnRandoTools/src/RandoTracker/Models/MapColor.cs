@@ -1,6 +1,6 @@
 ﻿namespace SotnRandoTools.RandoTracker.Models
 {
-	public enum MapColor
+	internal enum MapColor
 	{
 		Available = 0x8,
 		Unavailable = 0xD,

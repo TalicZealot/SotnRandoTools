@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using BizHawk.Client.Common;
 using BizHawk.Emulation.Common;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SotnApi.Constants.Values.Game;
 using SotnApi.Interfaces;
@@ -493,7 +494,8 @@ namespace SotnRandoTools.RandoTracker
 		private bool gameReset = true;
 		private bool secondCastle = false;
 		private bool restarted = false;
-		private List<ReplayState> replay = new();
+		private List<ReplayState> replay = new(20000);
+		private int replayLenght = 0;
 		private ushort prologueTime = 0;
 		private Autosplitter autosplitter;
 		private bool autosplitterConnected = false;
@@ -537,6 +539,7 @@ namespace SotnRandoTools.RandoTracker
 			this.SeedInfo = DefaultSeedInfo;
 			trackerRenderer.SeedInfo = SeedInfo;
 			trackerRenderer.Render();
+			InitializeReplay();
 		}
 
 		public string SeedInfo { get; set; }
@@ -700,13 +703,11 @@ namespace SotnRandoTools.RandoTracker
 				return false;
 			}
 
-			JObject extension = JObject.Parse(File.ReadAllText(extensionFilePath));
-			JToken? customLocations = extension["customLocations"];
+			Extension? extension = JsonConvert.DeserializeObject<Extension>(File.ReadAllText(extensionFilePath));
 			MemoryDomain domain = watchlistService.SafeLocationWatches[0].Domain;
-			string extends = (extension.GetValue("extends") ?? "classic").ToString();
 			customExtension = true;
 
-			switch (extends)
+			switch (extension.Extends)
 			{
 				case "equipment":
 					equipmentExtension = true;
@@ -729,47 +730,36 @@ namespace SotnRandoTools.RandoTracker
 					break;
 			}
 
-			if (customLocations is null)
+			foreach (ExtensionLocation location in extension.Locations)
 			{
-				return false;
-			}
-			foreach (JObject location in customLocations)
-			{
-				string locationName = location["location"].ToString();
-				JToken? rooms = location["rooms"];
-				Location? customLocation = locations.Where(x => x.Name == location["location"].ToString()).FirstOrDefault();
+				Location? customLocation = locations.Where(x => x.Name == location.Name).FirstOrDefault();
 
 				if (customLocation is null)
 				{
 					customLocation = new Location
 					{
-						Name = location["location"].ToString(),
-						Y = (int) location["y"],
-						X = (int) location["x"],
-						SecondCastle = (bool) location["secondCastle"],
+						Name = location.Name,
+						Y = location.X,
+						X = location.Y,
+						SecondCastle = location.SecondCastle,
 						CustomExtension = true
 					};
 				}
 				else
 				{
-					customLocation.X = (int) location["x"];
-					customLocation.Y = (int) location["y"];
-					customLocation.SecondCastle = (bool) location["secondCastle"];
+					customLocation.X = location.X;
+					customLocation.Y = location.Y;
+					customLocation.SecondCastle = location.SecondCastle;
 					customLocation.CustomExtension = true;
 				}
 
-				if (rooms is null)
-				{
-					continue;
-				}
 				int roomCounter = 1;
-				foreach (var room in rooms)
+				foreach (var room in location.Rooms)
 				{
-					watchlistService.SafeLocationWatches.Add(Watch.GenerateWatch(domain, Convert.ToInt64(room["address"].ToString(), 16), WatchSize.Byte, WatchDisplayType.Hex, false, locationName + roomCounter));
+					watchlistService.SafeLocationWatches.Add(Watch.GenerateWatch(domain, room.Address, WatchSize.Byte, WatchDisplayType.Hex, false, location.Name + roomCounter));
 					roomCounter++;
 					List<int> values = new List<int>();
-					JToken? valuesJson = room["values"];
-					foreach (var value in valuesJson)
+					foreach (var value in room.Values)
 					{
 						values.Add(Convert.ToInt32(value.ToString(), 16));
 					}
@@ -792,19 +782,15 @@ namespace SotnRandoTools.RandoTracker
 				return;
 			}
 
-			JObject preset = JObject.Parse(File.ReadAllText(presetFilePath));
-			string presetId = preset.SelectToken("metadata.id").ToString();
-			string relicLocationsExtension = (preset.GetValue("relicLocationsExtension") ?? "gaurded").ToString();
-			JToken? presetLocations = preset["lockLocation"];
-			JToken? presetLocationsAllowed = preset["lockLocationAllowed"];
-			bool isVanilla = VanillaPresets.Contains(presetId);
+			Preset? preset = JsonConvert.DeserializeObject<Preset>(File.ReadAllText(presetFilePath));
+			bool isVanilla = VanillaPresets.Contains(preset.Metadata.Id);
 
-			if (presetId == "glitch")
+			if (preset.Metadata.Id == "glitch")
 			{
-				relicLocationsExtension = "equipment";
+				preset.RelicLocationsExtension = "equipment";
 			}
 
-			switch (relicLocationsExtension)
+			switch (preset.RelicLocationsExtension)
 			{
 				case "equipment":
 					equipmentExtension = true;
@@ -820,7 +806,7 @@ namespace SotnRandoTools.RandoTracker
 					classicExtension = true;
 					break;
 				default:
-					if (!LoadExtension(Paths.PresetPath + relicLocationsExtension + ".json"))
+					if (!LoadExtension(Paths.PresetPath + preset.RelicLocationsExtension + ".json"))
 					{
 						guardedExtension = true;
 						classicExtension = true;
@@ -828,21 +814,15 @@ namespace SotnRandoTools.RandoTracker
 					break;
 			}
 
-			if (presetLocations is null)
+			foreach (LockLocation location in preset.LockLocations)
 			{
-				return;
-			}
-
-			foreach (JObject location in presetLocations)
-			{
-				string name = location["location"].ToString().Replace(" ", String.Empty).ToLower();
-				var trackerLocation = locations.Where(x => x.Name.Replace(" ", String.Empty).ToLower() == name).FirstOrDefault();
+				var trackerLocation = locations.Where(x => x.Name.Replace(" ", String.Empty).ToLower() == location.Name.Replace(" ", String.Empty).ToLower()).FirstOrDefault();
 
 				if (trackerLocation == null)
 				{
 					trackerLocation = new Location
 					{
-						Name = location["location"].ToString()
+						Name = location.Name
 					};
 					locations.Add(trackerLocation);
 				}
@@ -859,40 +839,33 @@ namespace SotnRandoTools.RandoTracker
 					}
 				}
 
-				foreach (JToken lockSet in location["locks"])
+				foreach (string lockSet in location.Locks)
 				{
 					if (outOfLogic)
 					{
-						trackerLocation.OutOfLogicLocks.Add(lockSet.ToString().Replace(" ", String.Empty).ToLower().Split('+'));
+						trackerLocation.OutOfLogicLocks.Add(lockSet.Replace(" ", String.Empty).ToLower().Split('+'));
 					}
 					else
 					{
-						trackerLocation.Locks.Add(lockSet.ToString().Replace(" ", String.Empty).ToLower().Split('+'));
+						trackerLocation.Locks.Add(lockSet.Replace(" ", String.Empty).ToLower().Split('+'));
 					}
 				}
 			}
 
-			if (presetLocationsAllowed is null)
+			foreach (LockLocation location in preset.LockLocationsAllowed)
 			{
-				return;
-			}
-
-			foreach (JObject location in presetLocationsAllowed)
-			{
-				string name = location["location"].ToString().Replace(" ", String.Empty).ToLower();
-				var trackerLocation = locations.Where(x => x.Name.Replace(" ", String.Empty).ToLower() == name).FirstOrDefault();
+				var trackerLocation = locations.Where(x => x.Name.Replace(" ", String.Empty).ToLower() == location.Name).FirstOrDefault();
 
 				if (trackerLocation == null)
 				{
-					Console.WriteLine($"Could not find location {name}.");
 					continue;
 				}
 
 				trackerLocation.OutOfLogicLocks.Clear();
 
-				foreach (JToken lockSet in location["locks"])
+				foreach (string lockSet in location.Locks)
 				{
-					trackerLocation.OutOfLogicLocks.Add(lockSet.ToString().Replace(" ", String.Empty).ToLower().Split('+'));
+					trackerLocation.OutOfLogicLocks.Add(lockSet.Replace(" ", String.Empty).ToLower().Split('+'));
 				}
 			}
 		}
@@ -976,7 +949,7 @@ namespace SotnRandoTools.RandoTracker
 							relics[i].X += 100;
 						}
 						relics[i].Y = currentMapY;
-						relics[i].CollectedAt = (ushort) replay.Count;
+						relics[i].CollectedAt = (ushort) replayLenght;
 					}
 					if (!relics[i].Collected)
 					{
@@ -1018,7 +991,7 @@ namespace SotnRandoTools.RandoTracker
 							progressionItems[i].X += 100;
 						}
 						progressionItems[i].Y = currentMapY;
-						progressionItems[i].CollectedAt = (ushort) replay.Count;
+						progressionItems[i].CollectedAt = (ushort) replayLenght;
 					}
 					progressionItems[i].Collected = true;
 				}
@@ -1084,7 +1057,7 @@ namespace SotnRandoTools.RandoTracker
 							thrustSwords[i].X += 100;
 						}
 						thrustSwords[i].Y = currentMapY;
-						thrustSwords[i].CollectedAt = (ushort) replay.Count;
+						thrustSwords[i].CollectedAt = (ushort) replayLenght;
 					}
 					thrustSwords[i].Collected = true;
 
@@ -1309,7 +1282,6 @@ namespace SotnRandoTools.RandoTracker
 						{
 							coopWatch.Update(PreviousType.LastFrame);
 							watchlistService.CoopLocationValues[watchIndex] = value;
-							//Console.WriteLine($"Added {coopWatch.Notes} at index {watchIndex} value {watchlistService.CoopLocationValues[watchIndex]} to coopValues.");
 						}
 						ClearMapLocation(locations.IndexOf(location));
 					}
@@ -1457,6 +1429,14 @@ namespace SotnRandoTools.RandoTracker
 			return relicsNumber;
 		}
 
+		private void InitializeReplay()
+		{
+			for (int i = 0; i < replay.Capacity; i++)
+			{
+				replay.Add(new ReplayState());
+			}
+		}
+
 		private void SaveReplayLine()
 		{
 			byte replayX = currentMapX;
@@ -1476,25 +1456,26 @@ namespace SotnRandoTools.RandoTracker
 				}
 			}
 
-			if ((inGame && (replayX > 1 && replayY > 0) && (replayX < 200 && replayY < 200) && !(replayY == 44 && replayX < 19 && !secondCastle)) && (replay.Count == 0 || (replay[replay.Count - 1].X != replayX || replay[replay.Count - 1].Y != replayY)))
+			if ((inGame && (replayX > 1 && replayY > 0) && (replayX < 200 && replayY < 200) && !(replayY == 44 && replayX < 19 && !secondCastle)) && (replayLenght == 0 || (replay[replayLenght - 1].X != replayX || replay[replayLenght - 1].Y != replayY)))
 			{
-				if (replay.Count == 0)
-				{
-					replay.Add(new ReplayState { X = replayX, Y = replayY });
-				}
-				else
+				if (replayLenght >= replay.Capacity)
 				{
 					replay.Add(new ReplayState { X = (byte) (replayX + (secondCastle ? 100 : 0)), Y = replayY });
 				}
+				else
+				{
+					replay[replayLenght].X = (byte) (replayX + (secondCastle ? 100 : 0));
+					replay[replayLenght].Y = replayY;
+				}
+				replayLenght++;
 			}
 
-			var state = replay[replay.Count - 1];
-			state.Time++;
+			replay[replayLenght - 1].Time++;
 		}
 
 		public void SaveReplay()
 		{
-			if (replaySaved || replay.Count < 30)
+			if (replaySaved || replayLenght < 30)
 			{
 				return;
 			}
@@ -1527,7 +1508,7 @@ namespace SotnRandoTools.RandoTracker
 			}
 			replayPath = Paths.ReplaysPath + replayPath + ".sotnr";
 
-			byte[] replayBytes = new byte[2 + (replay.Count * 4) + ((relics.Count + progressionItems.Count + 1) * 4)];
+			byte[] replayBytes = new byte[2 + (replayLenght * 4) + ((relics.Count + progressionItems.Count + 1) * 4)];
 
 			int replayIndex = 0;
 			byte[] finalTimeSecondsBytes = BitConverter.GetBytes((ushort) finalTime.TotalSeconds);
@@ -1592,8 +1573,9 @@ namespace SotnRandoTools.RandoTracker
 				replayIndex++;
 			}
 
-			foreach (var state in replay)
+			for (int i = 0; i < replayLenght; i++)
 			{
+				ReplayState state = replay[i];
 				replayBytes[replayIndex] = state.X;
 				replayIndex++;
 				replayBytes[replayIndex] = state.Y;

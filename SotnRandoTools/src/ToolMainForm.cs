@@ -167,6 +167,7 @@ namespace SotnRandoTools
 				}
 			}
 
+			_maybeMemAPI.UseMemoryDomain(_memoryDomains.MainMemory.Name);
 			sotnApi = new SotnApi.Main.SotnApi(_maybeMemAPI);
 			watchlistService = new WatchlistService(_memoryDomains);
 			inputService = new InputService(_maybeJoypadApi, sotnApi);

@@ -1,6 +1,6 @@
 ﻿namespace SotnRandoTools.RandoTracker.Models
 {
-	public class TrackerRelic
+	internal sealed class TrackerRelic
 	{
 		public TrackerRelic()
 		{

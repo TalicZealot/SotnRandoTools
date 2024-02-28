@@ -1,6 +1,6 @@
 ﻿namespace SotnRandoTools.RandoTracker.Models
 {
-	public class Item
+	internal sealed class Item
 	{
 		public Item()
 		{
