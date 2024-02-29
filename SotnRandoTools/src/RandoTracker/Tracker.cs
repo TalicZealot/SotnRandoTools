@@ -539,7 +539,7 @@ namespace SotnRandoTools.RandoTracker
 			this.SeedInfo = DefaultSeedInfo;
 			trackerRenderer.SeedInfo = SeedInfo;
 			trackerRenderer.Render();
-			InitializeReplay();
+			AllocateReplay();
 		}
 
 		public string SeedInfo { get; set; }
@@ -1429,9 +1429,10 @@ namespace SotnRandoTools.RandoTracker
 			return relicsNumber;
 		}
 
-		private void InitializeReplay()
+		private void AllocateReplay()
 		{
-			for (int i = 0; i < replay.Capacity; i++)
+			replay.Add(new ReplayState());
+			for (int i = replay.Count; i < replay.Capacity; i++)
 			{
 				replay.Add(new ReplayState());
 			}
@@ -1458,16 +1459,13 @@ namespace SotnRandoTools.RandoTracker
 
 			if ((inGame && (replayX > 1 && replayY > 0) && (replayX < 200 && replayY < 200) && !(replayY == 44 && replayX < 19 && !secondCastle)) && (replayLenght == 0 || (replay[replayLenght - 1].X != replayX || replay[replayLenght - 1].Y != replayY)))
 			{
-				if (replayLenght >= replay.Capacity)
-				{
-					replay.Add(new ReplayState { X = (byte) (replayX + (secondCastle ? 100 : 0)), Y = replayY });
-				}
-				else
-				{
-					replay[replayLenght].X = (byte) (replayX + (secondCastle ? 100 : 0));
-					replay[replayLenght].Y = replayY;
-				}
 				replayLenght++;
+				if (replayLenght == replay.Capacity)
+				{
+					AllocateReplay();
+				}
+				replay[replayLenght - 1].X = (byte) (replayX + (secondCastle ? 100 : 0));
+				replay[replayLenght - 1].Y = replayY;
 			}
 
 			replay[replayLenght - 1].Time++;
