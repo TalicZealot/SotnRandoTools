@@ -6,7 +6,6 @@ using System.Linq;
 using BizHawk.Client.Common;
 using BizHawk.Emulation.Common;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using SotnApi.Constants.Values.Game;
 using SotnApi.Interfaces;
 using SotnApi.Models;
@@ -739,8 +738,8 @@ namespace SotnRandoTools.RandoTracker
 					customLocation = new Location
 					{
 						Name = location.Name,
-						Y = location.X,
-						X = location.Y,
+						X = location.X,
+						Y = location.Y,
 						SecondCastle = location.SecondCastle,
 						CustomExtension = true
 					};
@@ -753,10 +752,10 @@ namespace SotnRandoTools.RandoTracker
 					customLocation.CustomExtension = true;
 				}
 
-				int roomCounter = 1;
+				int roomCounter = 0;
 				foreach (var room in location.Rooms)
 				{
-					watchlistService.SafeLocationWatches.Add(Watch.GenerateWatch(domain, room.Address, WatchSize.Byte, WatchDisplayType.Hex, false, location.Name + roomCounter));
+					watchlistService.SafeLocationWatches.Add(Watch.GenerateWatch(domain, Convert.ToInt64(room.Address, 16), WatchSize.Byte, WatchDisplayType.Hex, false, location.Name + roomCounter));
 					roomCounter++;
 					List<int> values = new List<int>();
 					foreach (var value in room.Values)
@@ -1359,8 +1358,6 @@ namespace SotnRandoTools.RandoTracker
 
 		private bool TrackedObjectStatus(string name)
 		{
-			if (name is null) { throw new ArgumentNullException(nameof(name)); }
-
 			if (relicToIndex.ContainsKey(name))
 			{
 				TrackerRelic relic = relics[relicToIndex[name]];

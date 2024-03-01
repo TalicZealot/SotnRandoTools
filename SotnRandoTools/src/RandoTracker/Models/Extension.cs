@@ -1,14 +1,15 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace SotnRandoTools.RandoTracker.Models
 {
 	internal sealed class ExtensionRoom
 	{
 		[JsonProperty("address")]
-		public long Address { get; set; }
+		public string Address { get; set; }
 		[JsonProperty("values")]
-		public int[]? Values { get; set; }
+		public string[] Values { get; set; }
 	}
 	internal sealed class ExtensionLocation
 	{
@@ -27,7 +28,7 @@ namespace SotnRandoTools.RandoTracker.Models
 	{
 		[JsonProperty("extends")]
 		public string Extends { get; set; } = "classic";
-		[JsonProperty("locations")]
+		[JsonProperty("customLocations")]
 		public List<ExtensionLocation> Locations { get; set; } = new List<ExtensionLocation>();
 	}
 }
