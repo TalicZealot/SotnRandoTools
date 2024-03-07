@@ -177,6 +177,8 @@ namespace SotnRandoTools
 			notificationService.StopOverlayServer();
 
 			tracker.CloseAutosplitter();
+			//Dispose of tracker properly.
+			tracker = null;
 		}
 	}
 }
