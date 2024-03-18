@@ -18,10 +18,10 @@ namespace SotnRandoTools.RandoTracker
 		private const int ImageSize = 14;
 		private const int CellPadding = 2;
 		private const int Columns = 8;
-		private const int SeedInfoFontSize = 18;
+		private const int SeedInfoFontSize = 19;
 		private const int CellSize = ImageSize + CellPadding;
 		private const double PixelPerfectSnapMargin = 0.18;
-		private Color DefaultBackground = Color.FromArgb(17, 00, 17);
+		private readonly Color DefaultBackground = Color.FromArgb(17, 00, 17);
 		private int Width = 100;
 		private int Height = 100;
 
@@ -37,7 +37,7 @@ namespace SotnRandoTools.RandoTracker
 		private Texture2d greyscaleTexture;
 		private Texture2d infoTexture;
 		private Bitmap seedInfoBitmap;
-		private SolidBrush textBrush;
+		private readonly SolidBrush textBrush = new SolidBrush(Color.White);
 
 		private List<Rectangle> relicSlots = new List<Rectangle>();
 		private List<Rectangle> vladRelicSlots = new List<Rectangle>();
@@ -111,8 +111,6 @@ namespace SotnRandoTools.RandoTracker
 		{
 			this.Width = width;
 			this.Height = height;
-			if (width < 100 || width > 800) throw new ArgumentOutOfRangeException(nameof(width));
-			if (height < 100 || height > 800) throw new ArgumentOutOfRangeException(nameof(height));
 
 			int adjustedColumns = (int) (Columns * (((float) width / (float) height)));
 			if (adjustedColumns < 5)
@@ -301,7 +299,6 @@ namespace SotnRandoTools.RandoTracker
 		{
 			Bitmap textureBitmap = new Bitmap(Paths.CombinedTexture);
 			Bitmap greyscaleTextureBitmap = new Bitmap(Paths.CombinedTexture);
-			textBrush = new SolidBrush(Color.White);
 			for (int i = 0; i < greyscaleTextureBitmap.Width; i++)
 			{
 				for (int j = 0; j < greyscaleTextureBitmap.Height; j++)

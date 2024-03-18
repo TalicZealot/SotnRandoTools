@@ -16,10 +16,12 @@ namespace SotnRandoTools.RandoTracker
 		private const int ImageSize = 14;
 		private const int CellPadding = 2;
 		private const int Columns = 8;
-		private const int SeedInfoFontSize = 18;
+		private const int SeedInfoFontSize = 19;
 		private const int CellSize = ImageSize + CellPadding;
 		private const double PixelPerfectSnapMargin = 0.18;
-		private Color DefaultBackground = Color.FromArgb(17, 00, 17);
+		private readonly Color DefaultBackground = Color.FromArgb(17, 00, 17);
+		private readonly SolidBrush textBrush = new SolidBrush(Color.White);
+		private Font infoFont = new Font("Tahoma", SeedInfoFontSize);
 
 		private IGraphics formGraphics;
 		private readonly IToolConfig toolConfig;
@@ -27,9 +29,6 @@ namespace SotnRandoTools.RandoTracker
 		private List<TrackerRelic>? relics;
 		private List<Item>? progressionItems;
 		private List<Item>? thrustSwords;
-
-		private List<Bitmap> relicImages = new List<Bitmap>();
-		private List<Bitmap> progressionItemImages = new List<Bitmap>();
 
 		private Bitmap texture;
 		private Bitmap greyscaleTexture;
@@ -98,9 +97,6 @@ namespace SotnRandoTools.RandoTracker
 
 		public void CalculateGrid(int width, int height)
 		{
-			if (width < 100 || width > 800) throw new ArgumentOutOfRangeException(nameof(width));
-			if (height < 100 || height > 800) throw new ArgumentOutOfRangeException(nameof(height));
-
 			int adjustedColumns = (int) (Columns * (((float) width / (float) height)));
 			if (adjustedColumns < 5)
 			{
@@ -163,6 +159,7 @@ namespace SotnRandoTools.RandoTracker
 				progressionItemSlots.Add(new Rectangle((int) (CellPadding + (col * (ImageSize + CellPadding) * scale)), LabelOffset + (int) (row * (ImageSize + CellPadding) * scale), (int) (ImageSize * scale), (int) (ImageSize * scale)));
 				col++;
 			}
+			ResizeInfo();
 		}
 
 		public void Render()
@@ -180,20 +177,20 @@ namespace SotnRandoTools.RandoTracker
 			{
 				CollectedRender();
 			}
-			DrawSeedInfo();
+			formGraphics.DrawString(SeedInfo, infoFont, textBrush, TextPadding, TextPadding);
 
 			Refreshed = true;
 		}
 
-		private void DrawSeedInfo()
+		private void ResizeInfo()
 		{
 			int fontSize = SeedInfoFontSize;
-			while (formGraphics.MeasureString(SeedInfo, new Font("Tahoma", fontSize)).Width > (toolConfig.Tracker.Width - (TextPadding * 3)))
+			infoFont = new Font("Tahoma", fontSize);
+			while (formGraphics.MeasureString(SeedInfo, infoFont).Width > (toolConfig.Tracker.Width - (TextPadding * 3)))
 			{
 				fontSize--;
+				infoFont = new Font("Tahoma", fontSize);
 			}
-
-			formGraphics.DrawString(SeedInfo, new Font("Tahoma", fontSize), new SolidBrush(Color.White), TextPadding, TextPadding);
 		}
 
 		private void GridRender()
@@ -209,7 +206,15 @@ namespace SotnRandoTools.RandoTracker
 				formGraphics.DrawImage(relics[i].Collected ? texture : greyscaleTexture, relicSlots[normalRelicCount], 20 * i, 0, ImageSize, ImageSize, GraphicsUnit.Pixel);
 				normalRelicCount++;
 			}
-			var thrustSword = thrustSwords.Where(x => x.Status).FirstOrDefault();
+			Item? thrustSword = null;
+			for (int i = 0; i < thrustSwords.Count; i++)
+			{
+				if (thrustSwords[i].Status)
+				{
+					thrustSword = thrustSwords[i];
+					break;
+				}
+			}
 			formGraphics.DrawImage(thrustSword is not null ? texture : greyscaleTexture, relicSlots[normalRelicCount], 680, 0, ImageSize, ImageSize, GraphicsUnit.Pixel);
 
 			if (vladProgression)

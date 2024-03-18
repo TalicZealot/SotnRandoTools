@@ -801,8 +801,9 @@ namespace SotnRandoTools.RandoTracker
 					spreadExtension = true;
 					classicExtension = true;
 					break;
-				case "False":
+				case "false":
 					classicExtension = true;
+					guardedExtension = false;
 					break;
 				default:
 					if (!LoadExtension(Paths.PresetPath + preset.RelicLocationsExtension + ".json"))

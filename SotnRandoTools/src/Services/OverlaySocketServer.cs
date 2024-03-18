@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using SotnApi.Constants.Addresses.Alucard;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Constants;
 using SotnRandoTools.Services.Interfaces;
@@ -10,10 +11,29 @@ using WatsonWebsocket;
 
 namespace SotnRandoTools.Services
 {
+	internal sealed class TrackerObjects
+	{
+		[JsonProperty("relics")]
+		public int Relics { get; set; }
+		[JsonProperty("irems")]
+		public int Items { get; set; }
+		[JsonProperty("type")]
+		public string Type { get; } = "relics";
+	}
+	internal sealed class TrackerSlots
+	{
+		[JsonProperty("slots")]
+		public List<List<int>> Slots { get; set; }
+		[JsonProperty("type")]
+		public string Type { get; } = "slots";
+	}
 	internal sealed class OverlaySocketServer : IOverlaySocketServer
 	{
 		private readonly IToolConfig toolConfig;
 		private WatsonWsServer socketServer;
+		private readonly List<string> clients = new();
+		private TrackerObjects trackerObjects = new();
+		private TrackerSlots trackerSlots = new();
 		public OverlaySocketServer(IToolConfig toolConfig)
 		{
 			this.toolConfig = toolConfig ?? throw new ArgumentNullException(nameof(toolConfig));
@@ -22,6 +42,7 @@ namespace SotnRandoTools.Services
 			socketServer.ClientConnected += ClientConnected;
 			socketServer.ClientDisconnected += ClientDisconnected;
 			socketServer.MessageReceived += MessageReceived;
+			trackerSlots.Slots = toolConfig.Tracker.OverlaySlots;
 		}
 
 		public void StartServer()
@@ -42,38 +63,28 @@ namespace SotnRandoTools.Services
 
 		public void UpdateTracker(int relics, int items)
 		{
-			JObject data = JObject.FromObject(new
-			{
-				relics = relics,
-				items = items,
-				type = "relics"
-			});
+			trackerObjects.Relics = relics;
+			trackerObjects.Items = items;
 
-			foreach (var client in socketServer.ListClients())
+			for (int i = 0; i < clients.Count; i++)
 			{
-				socketServer.SendAsync(client, data.ToString());
+				socketServer.SendAsync(clients[i], JsonConvert.SerializeObject(trackerObjects));
 			}
 		}
 
 		private void ClientConnected(object sender, ClientConnectedEventArgs args)
 		{
-			Console.WriteLine("Client connected: " + args.IpPort);
+			clients.Add(args.IpPort);
 
-			JObject data = JObject.FromObject(new
+			for (int i = 0; i < clients.Count; i++)
 			{
-				slots = toolConfig.Tracker.OverlaySlots,
-				type = "slots"
-			});
-
-			foreach (var client in socketServer.ListClients())
-			{
-				socketServer.SendAsync(client, data.ToString());
+				socketServer.SendAsync(clients[i], JsonConvert.SerializeObject(trackerSlots));
 			}
 		}
 
 		private void ClientDisconnected(object sender, ClientDisconnectedEventArgs args)
 		{
-			Console.WriteLine("Client disconnected: " + args.IpPort);
+			clients.Remove(args.IpPort);
 		}
 
 		private void MessageReceived(object sender, MessageReceivedEventArgs args)
