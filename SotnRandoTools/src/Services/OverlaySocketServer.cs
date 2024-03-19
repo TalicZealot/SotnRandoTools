@@ -15,7 +15,7 @@ namespace SotnRandoTools.Services
 	{
 		[JsonProperty("relics")]
 		public int Relics { get; set; }
-		[JsonProperty("irems")]
+		[JsonProperty("items")]
 		public int Items { get; set; }
 		[JsonProperty("type")]
 		public string Type { get; } = "relics";
