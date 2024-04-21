@@ -240,7 +240,7 @@ namespace SotnRandoTools.RandoTracker
 			new Location { Name = "Holy rod",  EquipmentExtension = true, Y = 55, X = 201, WatchIndecies = new List<int>{40}, Rooms = new List<Room>{
 					new Room { WatchIndex = 40, Values = new int[] { 0x04 }},
 			}},
-			new Location { Name = "Library Onyx",  EquipmentExtension = true, Y = 67, X = 119, WatchIndecies = new List<int>{41}, Rooms = new List<Room>{
+			new Location { Name = "Library Onyx",  EquipmentExtension = true, Y = 67, X = 186, WatchIndecies = new List<int>{41}, Rooms = new List<Room>{
 					new Room { WatchIndex = 41, Values = new int[] { 0x04 }},
 			}},
 			new Location { Name = "Alucart Sword",  EquipmentExtension = true, Y = 83, X = 137, WatchIndecies = new List<int>{42}, Rooms = new List<Room>{

@@ -98,6 +98,7 @@ namespace SotnRandoTools.Services
 				if (newSlots is not null)
 				{
 					toolConfig.Tracker.OverlaySlots = newSlots;
+					trackerSlots.Slots = toolConfig.Tracker.OverlaySlots;
 				}
 			}
 
