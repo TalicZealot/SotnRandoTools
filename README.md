@@ -10,6 +10,7 @@ This tool and the accompanying library and app are open source. The idea is to i
 * [SotnApi](https://github.com/TalicZealot/SotnApi)
 * [SimpleLatestReleaseUpdater](https://github.com/TalicZealot/SimpleLatestReleaseUpdater)
 * [SotN Randomizer Source](https://github.com/3snowp7im/SotN-Randomizer)
+* [SotN Decomp](https://github.com/Xeeynamo/sotn-decomp)
 
 ## Table of Contents
 
@@ -30,7 +31,7 @@ This tool and the accompanying library and app are open source. The idea is to i
 ## Installation
 This tool requires [the latest BizHawk version](https://github.com/TASEmulators/BizHawk/releases/latest).
 Download the full version from the [latest release](https://github.com/TalicZealot/SotnRandoTools/releases/latest) that looks like this `SotnRandoTools-x.x.x.zip`
-Right click on it and select `Extract all...` then navigate to your BizHawk 2.7+ folder and press `Extract`.
+Right click on it and select `Extract all...` then navigate to your BizHawkfolder and press `Extract`.
 File structure should look like this:
 ```
 BizHawk
@@ -74,15 +75,10 @@ Khaos has moved to [https://github.com/TalicZealot/SotnKhaosTools](https://githu
 * [Latest BizHawk release](https://github.com/TASVideos/BizHawk/releases/latest)
 
 ## Contributors
-* [3snowp7im](https://github.com/3snowp7im) - SotN Randomizer developer
 * [fatihG](https://twitter.com/fatihG_) - Familiar card icons, replay system concept.
 
 ## Special Thanks
-* asdheyb
-* fatihG
-* EmilyNyx
-* DinnerDog
-* Gods666thChild
-* LordalexZader
-* ziggypigster
-* chrisaegrimm
+* Wild Mouse - the goat
+* SotN Rando Community
+* SotN Decomp Researchers
+* Everybody who donated during the development of the project
