@@ -7,10 +7,6 @@ namespace SotnRandoTools.RandoTracker.Models
 	{
 		[JsonProperty("id")]
 		public string Id { get; set; }
-		public string Name { get; set; }
-		public string Description { get; set; }
-		public string Author { get; set; }
-		public int Weight { get; set; }
 	}
 	internal sealed class LockLocation
 	{
@@ -32,5 +28,7 @@ namespace SotnRandoTools.RandoTracker.Models
 		public List<LockLocation> LockLocations { get; set; } = new List<LockLocation>();
 		[JsonProperty("lockLocationAllowed")]
 		public List<LockLocation> LockLocationsAllowed { get; set; } = new List<LockLocation>();
+		[JsonProperty("progressionRelics")]
+		public List<string> ProgressionRelics { get; set; } = new List<string>();
 	}
 }

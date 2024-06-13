@@ -89,9 +89,15 @@ namespace SotnRandoTools
 			{
 				string configJson = File.ReadAllText(Paths.ConfigPath);
 
-				toolConfig = JsonConvert.DeserializeObject<ToolConfig>(configJson,
-					new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, MissingMemberHandling = MissingMemberHandling.Ignore }) ?? new ToolConfig();
-
+				try
+				{
+					toolConfig = JsonConvert.DeserializeObject<ToolConfig>(configJson,
+						new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, MissingMemberHandling = MissingMemberHandling.Ignore }) ?? new ToolConfig();
+				}
+				catch
+				{
+					toolConfig = new ToolConfig();
+				}
 			}
 			else
 			{
@@ -180,6 +186,10 @@ namespace SotnRandoTools
 
 		public override void UpdateValues(ToolFormUpdateType type)
 		{
+			if (type != ToolFormUpdateType.PostFrame)
+			{
+				return;
+			}
 			if (coopForm is not null)
 			{
 				inputService.UpdateInputs();

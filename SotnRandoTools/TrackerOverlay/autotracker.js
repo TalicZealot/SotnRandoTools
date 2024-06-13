@@ -1,6 +1,6 @@
 const mainContainer = document.getElementById('tracker');
 var socket;
-var slots = [];
+var slots;
 let relicIds = [
     "blank",
     "SoulOfBat",
@@ -45,25 +45,24 @@ for (let i = 0; i < 30; i++) {
     bitFlags.push(Math.pow(2, i));
 }
 
-function InsertItems() {
-    $("#tracker").empty();
-    let cellsHtml = "";
+const draggables = document.querySelectorAll('.portlet');
 
-    for (let i = 0; i < slots.length; i++) {
-        cellsHtml += '<div class="column">';
-        let columnHtml = "";
-        for (let j = 0; j < slots[i].length; j++) {
-            if (slots[i][j] > 0) {
-                columnHtml += (`<div class="portlet" data-index="${slots[i][j]}"><img class="relic uncollected" id="${relicIds[slots[i][j]]}" src="../Images/${relicIds[slots[i][j]]}.png" alt=""></div>`);
-            } else {
-                columnHtml += (`<div class="portlet" data-index="0"></div>`);
-            }
+draggables.forEach(draggable => {
+    draggable.addEventListener('dragstart', handleDragStart);
+    draggable.addEventListener('dragover', handleDragOver);
+    draggable.addEventListener('drop', handleDrop);
+});
+
+function insertItems() {
+    const byteArray = new Uint8Array(slots);
+    for (let i = 1; i < byteArray.length; i++) {
+        const cell = $("#cell" + (i - 1).toString());
+        cell.empty();
+        cell.attr("data-relic", byteArray[i]);
+        if (byteArray[i] > 0) {
+            cell.append(`<img class="relic uncollected" id="${relicIds[byteArray[i]]}" src="../Images/${relicIds[byteArray[i]]}.png" alt="" draggable="false">`);
         }
-        cellsHtml += columnHtml + '</div>';
-        columnHtml = "";
     }
-
-    $("#tracker").append(cellsHtml);
 }
 
 function updateStatus(relics, items) {
@@ -103,7 +102,7 @@ function updateStatus(relics, items) {
     relicStates[34] = items & bitFlags[3];
     relicStates[35] = items & bitFlags[4];
 
-    for (let i = 0; i < relicIds.length; i++) {
+    for (let i = 1; i < relicIds.length; i++) {
         let currentRelic = $('#' + relicIds[i]);
         if (relicStates[i] && currentRelic.hasClass('uncollected')) {
             currentRelic.removeClass('uncollected');
@@ -115,83 +114,85 @@ function updateStatus(relics, items) {
 
 function saveChanges() {
     if (socket != null && socket.readyState == 1) {
-        let message = {
-            event: "save-slots",
-            slots: slots
-        }
-
-        socket.send(JSON.stringify(message));
-        console.log("Saving slots");
+        socket.send(slots);
     } else {
         console.log("Socket is not open!");
     }
 }
 
-function setSLots() {
-    slots = [];
-    for (let i = 0; i < mainContainer.children.length; i++) {
-        slots.push([]);
-        let cells = Array.from(mainContainer.children[i].children);
-        cells.forEach(cell => {
-            let id = cell.dataset.index;
-            if (id == null || id == undefined) {
-                id = 0;
-            }
-            slots[slots.length - 1].push(id);
-        });
-    }
-}
-
 function connectWebsocket() {
     socket = new WebSocket("ws://localhost:9646");
+    socket.binaryType = "arraybuffer";
 
-    socket.onopen = function() {
-        console.log("connected");
-    };
-
-    socket.onclose = function() {
+    socket.onclose = function () {
         socket = null;
-        setTimeout(connectWebsocket, 1000); //try to reconnect
+        setTimeout(connectWebsocket, 4000); //try to reconnect
     };
 
-    socket.onmessage = function(message) {
-        var socketMessage = JSON.parse(message.data);
-        console.log(socketMessage);
+    socket.onerror = function (e) {
+        socket.close();
+        socket = null;
+    };
 
-        if (socketMessage.type == "relics") {
-            updateStatus(socketMessage.relics, socketMessage.items);
-        }
-
-        if (socketMessage.type == "slots") {
-            slots = socketMessage.slots;
-            InsertItems();
-            initializeCells();
+    socket.onmessage = function (e) {
+        const dataView = new DataView(e.data);
+        if (dataView.getInt8(0) == 0) {
+            updateStatus(dataView.getInt32(1, true), dataView.getInt32(5, true));
+        } else {
+            slots = e.data;
+            insertItems();
         }
     };
 }
 
-function initializeCells() {
-    $(".column").sortable({
-        connectWith: ".column",
-        handle: ".relic",
-        cancel: ".portlet-toggle",
-        placeholder: "portlet-placeholder ui-corner-all"
-    });
+function handleDragStart(event) {
+    event.dataTransfer.setData('text/plain', event.target.id);
+}
 
-    $(".portlet").mouseup(function() {
-        setSLots();
-        saveChanges();
-    });
+function handleDrop(event) {
+    event.preventDefault();
+    const draggedId = event.dataTransfer.getData('text/plain');
+    const draggedElement = document.getElementById(draggedId);
+    let draggedRelic = parseInt(draggedElement.dataset.relic, 10);
+    let draggedIndex = parseInt(draggedElement.dataset.index, 10);
+    let draggedImage = null;
+    if (draggedElement.children.length > 0) {
+        draggedImage = draggedElement.children[0].cloneNode();
+    }
 
-    $(".portlet")
-        .addClass("ui-widget ui-widget-content ui-helper-clearfix ui-corner-all")
-        .find(".relic")
-        .addClass("ui-widget-header ui-corner-all")
-        .prepend("<span class='ui-icon ui-icon-minusthick portlet-toggle'></span>");
+    let targetRelic = parseInt(event.currentTarget.dataset.relic, 10);
+    let targetIndex = parseInt(event.currentTarget.dataset.index, 10);
+    let targetImage = null;
+    if (event.currentTarget.children.length > 0) {
+        targetImage = event.currentTarget.children[0].cloneNode();
+    }
 
+    const byteArray = new Uint8Array(slots);
+    byteArray[draggedIndex] = targetRelic;
+    byteArray[targetIndex] = draggedRelic;
+
+    event.currentTarget.dataset.relic = draggedRelic;
+    draggedElement.dataset.relic = targetRelic;
+
+    draggedElement.innerHTML = '';
+    event.currentTarget.innerHTML = '';
+    console.log(targetImage);
+
+    if (targetImage !== null) {
+        draggedElement.appendChild(targetImage);
+    }
+    if (draggedImage !== null) {  
+        event.currentTarget.appendChild(draggedImage);
+    }
+
+    saveChanges();
+}
+
+function handleDragOver(event) {
+    event.preventDefault();
 }
 
 // Initiate on document load
-$(function() {
+$(function () {
     connectWebsocket();
 });

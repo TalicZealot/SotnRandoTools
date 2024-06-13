@@ -1,10 +1,85 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using Newtonsoft.Json;
 
 namespace SotnRandoTools.Configuration
 {
+	public class ByteArrayConverter : JsonConverter
+	{
+		public override void WriteJson(
+			JsonWriter writer,
+			object value,
+			JsonSerializer serializer)
+		{
+			if (value == null)
+			{
+				writer.WriteNull();
+				return;
+			}
+
+			byte[] data = (byte[]) value;
+
+			// Compose an array.
+			writer.WriteStartArray();
+
+			for (var i = 0; i < data.Length; i++)
+			{
+				writer.WriteValue(data[i]);
+			}
+
+			writer.WriteEndArray();
+		}
+
+		public override object ReadJson(
+			JsonReader reader,
+			Type objectType,
+			object existingValue,
+			JsonSerializer serializer)
+		{
+			if (reader.TokenType == JsonToken.StartArray)
+			{
+				var byteList = new List<byte>();
+
+				while (reader.Read())
+				{
+					switch (reader.TokenType)
+					{
+						case JsonToken.Integer:
+							byteList.Add(Convert.ToByte(reader.Value));
+							break;
+						case JsonToken.EndArray:
+							return TrackerConfig.GetDefaultOverlay();
+						case JsonToken.Comment:
+							// skip
+							break;
+						default:
+							throw new Exception(
+							string.Format(
+								"Unexpected token when reading bytes: {0}",
+								reader.TokenType));
+					}
+				}
+
+				throw new Exception("Unexpected end when reading bytes.");
+			}
+			else
+			{
+				return TrackerConfig.GetDefaultOverlay();
+				//throw new Exception(
+				//	string.Format(
+				//		"Unexpected token parsing binary. "
+				//		+ "Expected StartArray, got {0}.",
+				//		reader.TokenType));
+			}
+		}
+
+		public override bool CanConvert(Type objectType)
+		{
+			return objectType == typeof(byte[]);
+		}
+	}
 	public class TrackerConfig
 	{
 		public TrackerConfig()
@@ -21,7 +96,8 @@ namespace SotnRandoTools.Configuration
 		public bool MuteMusic { get; set; }
 		public bool Stereo { get; set; }
 		public string Username { get; set; }
-		public List<List<int>> OverlaySlots { get; set; }
+		[JsonConverter(typeof(ByteArrayConverter))]
+		public byte[] OverlaySlots { get; set; }
 		public bool CustomLocationsGuarded { get; set; }
 		public bool CustomLocationsEquipment { get; set; }
 		public bool CustomLocationsClassic { get; set; }
@@ -52,32 +128,46 @@ namespace SotnRandoTools.Configuration
 			Width = 260;
 			Height = 490;
 			Username = "";
-			OverlaySlots = new List<List<int>>
+			OverlaySlots = new byte[]
 			{
-				new() {1, 6, 11, 16, 21, 35, 26, 31, 0, 0, 0, 0, 0, 0},
-				new() {2, 7, 12, 17, 22, 0, 27, 32, 0, 0, 0, 0, 0, 0},
-				new() {3, 8, 13, 18, 23, 0, 28, 33, 0, 0, 0, 0, 0, 0},
-				new() {4, 9, 14, 19, 24, 0, 29, 34, 0, 0, 0, 0, 0, 0},
-				new() {5, 10, 15, 20, 25, 0, 30, 0, 0, 0, 0, 0, 0, 0},
-				new() {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				new() {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				new() {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				new() {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				new() {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				new() {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				new() {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				new() {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				new() {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				new() {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				new() {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				new() {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-				new() {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+				1, 1, 6, 11, 16, 21, 35, 26, 31, 0, 0,
+				2, 7, 12, 17, 22, 0, 27, 32, 0, 0,
+				3, 8, 13, 18, 23, 0, 28, 33, 0, 0,
+				4, 9, 14, 19, 24, 0, 29, 34, 0, 0,
+				5, 10, 15, 20, 25, 0, 30, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+			};
+		}
+
+		public static byte[] GetDefaultOverlay()
+		{
+			return new byte[]
+			{
+				1, 1, 6, 11, 16, 21, 35, 26, 31, 0, 0,
+				2, 7, 12, 17, 22, 0, 27, 32, 0, 0,
+				3, 8, 13, 18, 23, 0, 28, 33, 0, 0,
+				4, 9, 14, 19, 24, 0, 29, 34, 0, 0,
+				5, 10, 15, 20, 25, 0, 30, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 			};
 		}
 
 		public void SaveOverlayLayout(string path)
 		{
-			string output = JsonConvert.SerializeObject(OverlaySlots, Formatting.Indented);
+			JsonConverter[] converters = new JsonConverter[] { new ByteArrayConverter() };
+			string output = JsonConvert.SerializeObject(OverlaySlots, Formatting.Indented, converters);
 			if (File.Exists(path))
 			{
 				File.WriteAllText(path, output);
@@ -97,10 +187,10 @@ namespace SotnRandoTools.Configuration
 			{
 				string layoutJson = File.ReadAllText(path);
 
-				List<List<int>> layout = JsonConvert.DeserializeObject<List<List<int>>>(layoutJson,
-					new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, MissingMemberHandling = MissingMemberHandling.Ignore }) ?? new List<List<int>>();
+				byte[] layout = JsonConvert.DeserializeObject<byte[]>(layoutJson,
+					new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, MissingMemberHandling = MissingMemberHandling.Ignore });
 
-				if (layout.Count > 0)
+				if (layout.Length > 0)
 				{
 					OverlaySlots = layout;
 				}

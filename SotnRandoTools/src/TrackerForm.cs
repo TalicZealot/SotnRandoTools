@@ -70,7 +70,6 @@ namespace SotnRandoTools
 		{
 #if GL
 			this.gl = new IGL_OpenGL();
-			gl.ClearColor(Color.FromArgb(17, 00, 17));
 			this.graphicsControl = GraphicsControlFactory.CreateGraphicsControl(gl);
 			this.Controls.Add(graphicsControl);
 			graphicsControl.Location = new Point(0, 0);

@@ -746,10 +746,8 @@ namespace SotnRandoTools.RandoTracker
 				}
 				else
 				{
-					customLocation.X = location.X;
-					customLocation.Y = location.Y;
-					customLocation.SecondCastle = location.SecondCastle;
 					customLocation.CustomExtension = true;
+					continue;
 				}
 
 				int roomCounter = 0;
@@ -868,6 +866,13 @@ namespace SotnRandoTools.RandoTracker
 					trackerLocation.OutOfLogicLocks.Add(lockSet.Replace(" ", String.Empty).ToLower().Split('+'));
 				}
 			}
+
+			for (int i = 0; i < preset.ProgressionRelics.Count; i++)
+			{
+				var relic = relics.Where(r => r.Name.Replace(" ", String.Empty).ToLower() == preset.ProgressionRelics[i].ToLower()).FirstOrDefault();
+				relic.Progression = true;
+			}
+			trackerRenderer.SetProgression();
 		}
 
 		private void ResetToDefaults()
@@ -917,7 +922,7 @@ namespace SotnRandoTools.RandoTracker
 			watchlistService.UpdateWatchlist(watchlistService.SafeLocationWatches);
 			CheckRooms(watchlistService.SafeLocationWatches);
 			watchlistService.SafeLocationWatches.ClearChangeCounts();
-			if (equipmentExtension || spreadExtension)
+			if (equipmentExtension || spreadExtension || customExtension)
 			{
 				watchlistService.UpdateWatchlist(watchlistService.EquipmentLocationWatches);
 				CheckRooms(watchlistService.EquipmentLocationWatches, true);
@@ -1098,6 +1103,7 @@ namespace SotnRandoTools.RandoTracker
 			}
 			SeedInfo = seedName + "(" + preset + ")";
 			trackerRenderer.SeedInfo = SeedInfo;
+			trackerRenderer.CalculateGrid(toolConfig.Tracker.Width, toolConfig.Tracker.Height);
 			if (preset == "custom")
 			{
 				switch (toolConfig.Tracker.CustomExtension)
@@ -1131,6 +1137,7 @@ namespace SotnRandoTools.RandoTracker
 		{
 			//Set Cube of Zoe, Demon card and Nose Devil to progression
 			relics[10].Progression = true;
+			relics[14].Progression = true;
 			relics[21].Progression = true;
 			relics[24].Progression = true;
 			trackerRenderer.SetProgression();
