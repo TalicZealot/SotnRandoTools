@@ -20,8 +20,7 @@ namespace SotnRandoTools
 		LoadAssemblyFiles = new[]
 		{
 			"SotnRandoTools/dll/SotnApi.dll",
-			"SotnRandoTools/dll/SimpleTCP.dll",
-			"SotnRandoTools/dll/WatsonWebsocket.dll"
+			"SotnRandoTools/dll/SimpleTCP.dll"
 		})]
 	[ExternalToolEmbeddedIcon("SotnRandoTools.Resources.BizAlucard.png")]
 	[ExternalToolApplicability.SingleRom(CoreSystem.Playstation, "0DDCBC3D")]

@@ -518,12 +518,6 @@ namespace SotnRandoTools.RandoTracker
 			this.sotnApi = sotnApi ?? throw new ArgumentNullException(nameof(sotnApi));
 			this.notificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
 
-			if (toolConfig.Tracker.Locations)
-			{
-				InitializeWatchMaps();
-				InitializeAllLocks();
-				CheckReachability();
-			}
 			if (toolConfig.Tracker.UseOverlay)
 			{
 				notificationService.StartOverlayServer();
@@ -535,6 +529,12 @@ namespace SotnRandoTools.RandoTracker
 
 			trackerRenderer.InitializeItems(relics, progressionItems, thrustSwords);
 			trackerRenderer.CalculateGrid(toolConfig.Tracker.Width, toolConfig.Tracker.Height);
+			if (toolConfig.Tracker.Locations)
+			{
+				InitializeWatchMaps();
+				InitializeAllLocks();
+				CheckReachability();
+			}
 			this.SeedInfo = DefaultSeedInfo;
 			trackerRenderer.SeedInfo = SeedInfo;
 			trackerRenderer.Render();
