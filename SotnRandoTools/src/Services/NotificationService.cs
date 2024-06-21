@@ -4,20 +4,18 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
 using System.Windows.Forms;
 using BizHawk.Client.Common;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Constants;
-using SotnRandoTools.Services.Models;
 
 namespace SotnRandoTools.Services
 {
 	internal sealed class NotificationService : INotificationService
 	{
 		private OverlaySocketServer overlaySocketServer;
-		private const int NotificationTime = 5 * 1000;
-		private const int NotificationTimeFast = 3 * 1000;
+		private const int MessageDuration = 120;
+		private const int MessageDurationFast = 60;
 		private const int MapOffsetX = 16;
 		private const int MapOffsetY = 20;
 		private Color WallColor = Color.FromArgb(192, 192, 192);
@@ -26,17 +24,14 @@ namespace SotnRandoTools.Services
 		private readonly IToolConfig toolConfig;
 		private readonly IEmuClientApi clientAPI;
 
-		private System.Timers.Timer messageTimer;
-		private System.Timers.Timer countdownTimer;
 		private int scale;
 		private Image textbox;
-		private Dictionary<string, Image> relicImages = new();
-		private Dictionary<string, MapCoordinates> relicCoordinates = new();
-		private Dictionary<string, MapCoordinates> invertedRelicCoordinates = new();
 #if WIN
 		private System.Windows.Media.MediaPlayer audioPlayer = new();
 #endif
-		private List<Models.Message> messageQueue = new();
+		private Queue<string> messageQueue = new();
+		private int messageFrames = 0;
+		private bool updated = false;
 
 		public NotificationService(IToolConfig toolConfig, IGuiApi guiApi, IEmuClientApi clientAPI)
 		{
@@ -45,14 +40,7 @@ namespace SotnRandoTools.Services
 			this.clientAPI = clientAPI ?? throw new ArgumentNullException(nameof(clientAPI));
 
 			overlaySocketServer = new OverlaySocketServer(toolConfig);
-			messageTimer = new();
-			messageTimer.Interval = NotificationTime;
-			messageTimer.Elapsed += DequeueMessage;
-			messageTimer.Start();
-			countdownTimer = new();
-			countdownTimer.Interval = 1000;
-			countdownTimer.Elapsed += RefreshUI;
-			scale = GetScale();
+			scale = clientAPI.GetWindowSize();
 			ResizeImages();
 #if WIN
 			audioPlayer.Volume = (double) toolConfig.Coop.Volume / 10F;
@@ -72,11 +60,6 @@ namespace SotnRandoTools.Services
 		public void PlayAlert(string url)
 		{
 			if (String.IsNullOrEmpty(url)) throw new ArgumentNullException(nameof(url));
-
-			if (url == String.Empty)
-			{
-				return;
-			}
 #if WIN
 			try
 			{
@@ -98,37 +81,15 @@ namespace SotnRandoTools.Services
 
 		public void AddMessage(string message)
 		{
-			if (String.IsNullOrEmpty(message)) throw new ArgumentNullException(nameof(message));
-
-			Models.Message duplicate = messageQueue.Where(m => m.Text == message).FirstOrDefault();
-
-
-			if (duplicate is not null)
+			if (messageQueue.Count > 0 && messageQueue.Peek() == message)
 			{
-				duplicate.Count++;
 				return;
 			}
-			else
-			{
-				messageQueue.Add(new Models.Message { Text = message, Count = 1 });
-			}
-
+			updated = true;
+			messageQueue.Enqueue(message);
 			if (messageQueue.Count == 1)
 			{
-				messageTimer.Stop();
-				messageTimer.Start();
-			}
-			if (messageQueue.Count > 1)
-			{
-				messageTimer.Interval = NotificationTimeFast;
-			}
-			else
-			{
-				messageTimer.Interval = NotificationTime;
-			}
-			if (!countdownTimer.Enabled)
-			{
-				countdownTimer.Start();
+				messageFrames = MessageDuration;
 			}
 		}
 
@@ -147,40 +108,39 @@ namespace SotnRandoTools.Services
 			overlaySocketServer.UpdateTracker(relics, items);
 		}
 
-		public void SetRelicCoordinates(string relic, int mapCol, int mapRow)
+		public void Refresh()
 		{
-			if (String.IsNullOrEmpty(relic)) throw new ArgumentNullException(nameof(relic));
-			if (mapCol < 0 || mapCol > Globals.MaximumMapCols) throw new ArgumentOutOfRangeException(nameof(mapCol));
-			if (mapRow < 0 || mapRow > Globals.MaximumMapRows) throw new ArgumentOutOfRangeException(nameof(mapRow));
-
-			if (relicCoordinates.ContainsKey(relic))
+			if (messageQueue.Count > 0)
 			{
-				return;
+				if (messageFrames == 0)
+				{
+					messageQueue.Dequeue();
+					updated = true;
+					if (messageQueue.Count > 0)
+					{
+						messageFrames = MessageDuration;
+					}
+					if (messageQueue.Count > 2)
+					{
+						messageFrames = MessageDurationFast;
+					}
+				}
+				messageFrames--;
 			}
-			relicCoordinates.Add(relic, new MapCoordinates { Xpos = (mapCol * 2) + MapOffsetX, Ypos = mapRow + MapOffsetY });
-		}
-
-		public void SetInvertedRelicCoordinates(string relic, int mapCol, int mapRow)
-		{
-			if (String.IsNullOrEmpty(relic)) throw new ArgumentNullException(nameof(relic));
-			if (mapCol < 0 || mapCol > Globals.MaximumMapCols) throw new ArgumentOutOfRangeException(nameof(mapCol));
-			if (mapRow < 0 || mapRow > Globals.MaximumMapRows) throw new ArgumentOutOfRangeException(nameof(mapRow));
-
-			if (invertedRelicCoordinates.ContainsKey(relic))
+			if (updated)
 			{
-				return;
+				DrawUI();
+				updated = false;
 			}
-			invertedRelicCoordinates.Add(relic, new MapCoordinates { Xpos = (mapCol * 2) + MapOffsetX, Ypos = mapRow + MapOffsetY });
 		}
 
 		private void DrawUI()
 		{
-			int newScale = GetScale();
+			int newScale = clientAPI.GetWindowSize();
 			if (scale != newScale)
 			{
 				scale = newScale;
 				ResizeImages();
-				Console.WriteLine($"Changed scale to {scale}");
 			}
 
 			int fontSize = 11 * scale;
@@ -197,26 +157,9 @@ namespace SotnRandoTools.Services
 				guiApi.ClearGraphics();
 				if (messageQueue.Count > 0)
 				{
-					string message = messageQueue[0].Text + (messageQueue[0].Count > 1 ? (" x" + messageQueue[0].Count) : "");
-					DrawMessage(message, scale, (int) (screenWidth * 0.45), (int) (screenHeight * 0.1), fontSize);
+					DrawMessage(messageQueue.Peek(), scale, (int) (screenWidth * 0.45), (int) (screenHeight * 0.1), fontSize);
 				}
 			});
-		}
-
-		private int GetScale()
-		{
-			int scale = clientAPI.GetWindowSize();
-			if (IsPixelPro())
-			{
-				scale *= 2;
-			}
-			return scale;
-		}
-
-		private bool IsPixelPro()
-		{
-			int bufferWidth = clientAPI.BufferWidth();
-			return bufferWidth == 800;
 		}
 
 		private void DrawMessage(string message, int scale, int xpos, int ypos, int fontSize)
@@ -230,24 +173,7 @@ namespace SotnRandoTools.Services
 			guiApi.DrawString(xpos + (int) (textbox.Width / 2), ypos + (11 * scale), message, Color.White, null, messageFontSize, "Arial", "bold", "center", "center");
 		}
 
-		private void DequeueMessage(Object sender, EventArgs e)
-		{
-			if (messageQueue.Count > 0)
-			{
-				messageQueue.RemoveAt(0);
-			}
-		}
-
-		private void RefreshUI(Object sender, EventArgs e)
-		{
-			DrawUI();
-			if (messageQueue.Count == 0)
-			{
-				countdownTimer.Stop();
-			}
-		}
-
-		private Bitmap ResizeImage(Image image, int width, int height)
+		private static Bitmap ResizeImage(Image image, int width, int height)
 		{
 			var destRect = new Rectangle(0, 0, width, height);
 			var destImage = new Bitmap(width, height);

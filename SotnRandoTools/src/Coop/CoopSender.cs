@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-using SotnApi.Constants.Values.Alucard;
-using SotnApi.Constants.Values.Alucard.Enums;
 using SotnApi.Interfaces;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Constants;
 using SotnRandoTools.Coop.Enums;
 using SotnRandoTools.Coop.Interfaces;
 using SotnRandoTools.Services;
-using MethodInvoker = System.Windows.Forms.MethodInvoker;
 
 namespace SotnRandoTools.Coop
 {
@@ -19,123 +13,95 @@ namespace SotnRandoTools.Coop
 		private readonly IToolConfig toolConfig;
 		private readonly ISotnApi sotnApi;
 		private readonly IWatchlistService watchlistService;
-		private readonly IInputService inputService;
-		private readonly ICoopMessanger coopMessanger;
-		private Queue<MethodInvoker> queuedMessages = new();
-
-		private bool r3Pressed = false;
+		private readonly ICoopController coopController;
+		private bool selectPressedFrame1 = false;
+		private bool selectPressedFrame2 = false;
 		private bool selectPressed = false;
-		private bool circlePressed = false;
+		private bool inGame = false;
+		private bool gameStarted = false;
 
-		public CoopSender(IToolConfig toolConfig, IWatchlistService watchlistService, IInputService inputService, ISotnApi sotnApi, ICoopMessanger coopMessanger)
+		public CoopSender(IToolConfig toolConfig, IWatchlistService watchlistService, ISotnApi sotnApi, ICoopController coopController)
 		{
 			this.toolConfig = toolConfig ?? throw new ArgumentNullException(nameof(toolConfig));
 			this.watchlistService = watchlistService ?? throw new ArgumentNullException(nameof(watchlistService));
-			this.inputService = inputService ?? throw new ArgumentNullException(nameof(inputService));
 			this.sotnApi = sotnApi ?? throw new ArgumentNullException(nameof(sotnApi)); ;
-			this.coopMessanger = coopMessanger ?? throw new ArgumentNullException(nameof(coopMessanger));
+			this.coopController = coopController ?? throw new ArgumentNullException(nameof(coopController));
 		}
 
 		public void Update()
 		{
-			if (!sotnApi.GameApi.InAlucardMode() || !coopMessanger.IsConnected())
+			if (!gameStarted && sotnApi.GameApi.InAlucardMode())
+			{
+				gameStarted = true;
+				inGame = true;
+			}
+			if (gameStarted && sotnApi.GameApi.Status == SotnApi.Constants.Values.Game.Status.MainMenu)
+			{
+				inGame = false;
+				return;
+			}
+			if (gameStarted && !inGame && sotnApi.GameApi.InAlucardMode() && coopController.IsConnected())
+			{
+				inGame = true;
+				SendSynchRequest();
+			}
+			if (!sotnApi.GameApi.InAlucardMode() || !coopController.IsConnected())
+			{
+				return;
+			}
+			CheckSelectButton();
+			SendRelics();
+			SendItem();
+			SendLocations();
+			SendWarpsAndShortcuts();
+			CheckSynchRequest();
+		}
+
+		private void CheckSelectButton()
+		{
+			selectPressedFrame1 = selectPressedFrame2;
+			if ((sotnApi.GameApi.InputFlags & SotnApi.Constants.Values.Game.Controller.Select) == SotnApi.Constants.Values.Game.Controller.Select)
+			{
+				selectPressedFrame2 = true;
+			}
+			else
+			{
+				selectPressedFrame2 = false;
+			}
+
+			if (selectPressedFrame2 && !selectPressedFrame1)
+			{
+				selectPressed = true;
+			}
+			else
+			{
+				selectPressed = false;
+			}
+		}
+
+		private void SendItem()
+		{
+			if (!sotnApi.GameApi.EquipMenuOpen() || !sotnApi.GameApi.IsInMenu() || !selectPressed)
 			{
 				return;
 			}
 
-			if (toolConfig.Coop.ConnectionShareRelics)
+			selectPressed = true;
+			int item = sotnApi.AlucardApi.GetSelectedItem();
+			if (item != -1 && sotnApi.AlucardApi.HasItemInInventory(item))
 			{
-				UpdateRelics();
-			}
+				sotnApi.AlucardApi.TakeOneItem(item);
+				byte[] indexData = BitConverter.GetBytes(item);
+				byte[] data = new byte[3];
+				data[0] = (byte) MessageType.Item;
+				data[1] = indexData[0];
+				data[2] = indexData[1];
 
-			if (toolConfig.Coop.ConnectionShareWarps)
-			{
-				UpdateWarpsAndShortcuts();
-				UpdateSendAllWarps();
-			}
-
-			if (toolConfig.Coop.ConnectionSendItems)
-			{
-				UpdateSendItem();
-			}
-
-			if (toolConfig.Coop.ConnectionSendAssists)
-			{
-				UpdateAssist();
-			}
-
-			if (toolConfig.Coop.ConnectionShareLocations)
-			{
-				UpdateLocations();
-			}
-
-			SendMessage();
-		}
-
-		private void SendMessage()
-		{
-			if (queuedMessages.Count > 0)
-			{
-				queuedMessages.Dequeue()();
+				coopController.SendData(data);
 			}
 		}
 
-		private void UpdateSendItem()
-		{
-			if (inputService.ButtonPressed(PlaystationInputKeys.R3, Globals.UpdateCooldownFrames) && r3Pressed == false && sotnApi.GameApi.IsInMenu() && sotnApi.GameApi.EquipMenuOpen())
-			{
-				r3Pressed = true;
-				string item = sotnApi.AlucardApi.GetSelectedItemName();
-				if (!item.Contains("empty hand") && !item.Contains("--") && sotnApi.AlucardApi.HasItemInInventory(item))
-				{
-					sotnApi.AlucardApi.TakeOneItemByName(item);
-					ushort indexData = (ushort) Equipment.Items.IndexOf(item);
-					queuedMessages.Enqueue(new MethodInvoker(() => { coopMessanger.SendData(MessageType.Item, BitConverter.GetBytes(indexData)); }));
-					Console.WriteLine($"Sending item: {item}");
-				}
-				else
-				{
-					Console.WriteLine($"Player doesn't have any {item}!");
-				}
-			}
-			else if (!inputService.ButtonPressed(PlaystationInputKeys.R3, Globals.UpdateCooldownFrames))
-			{
-				r3Pressed = false;
-			}
-		}
-
-		private void UpdateAssist()
-		{
-			if (inputService.ButtonPressed(PlaystationInputKeys.Circle, Globals.UpdateCooldownFrames) && circlePressed == false && sotnApi.GameApi.IsInMenu() && sotnApi.GameApi.EquipMenuOpen())
-			{
-				circlePressed = true;
-				string item = sotnApi.AlucardApi.GetSelectedItemName();
-				if (!sotnApi.AlucardApi.HasItemInInventory(item))
-				{
-					Console.WriteLine($"Player doesn't have any {item}!");
-					return;
-				}
-
-				Potion potion;
-				if (Enum.TryParse(Regex.Replace(item, "[ .]", ""), true, out potion))
-				{
-					sotnApi.AlucardApi.TakeOneItemByName(item);
-					ushort indexData = (ushort) Equipment.Items.IndexOf(item);
-					coopMessanger.SendData(MessageType.Effect, BitConverter.GetBytes(indexData));
-					Console.WriteLine($"Sending assist: {item}");
-				}
-				else
-				{
-					Console.WriteLine($"Item {item} can't be used for an assist.");
-				}
-			}
-			else if (!inputService.ButtonPressed(PlaystationInputKeys.Circle, Globals.UpdateCooldownFrames))
-			{
-				circlePressed = false;
-			}
-		}
-
-		private void UpdateRelics()
+		private void SendRelics()
 		{
 			watchlistService.UpdateWatchlist(watchlistService.CoopRelicWatches);
 			for (int i = 0; i < watchlistService.CoopRelicWatches.Count; i++)
@@ -144,29 +110,31 @@ namespace SotnRandoTools.Coop
 				{
 					if (watchlistService.CoopRelicWatches[i].Value > 0)
 					{
-						coopMessanger.SendData(MessageType.Relic, BitConverter.GetBytes((ushort) i));
-						Console.WriteLine($"Sending relic: {watchlistService.CoopRelicWatches[i].Notes}");
+						byte[] data = new byte[2];
+						data[0] = (byte) MessageType.Relic;
+						data[1] = (byte) i;
+						coopController.SendData(data);
 					}
 				}
 			}
 			watchlistService.CoopRelicWatches.ClearChangeCounts();
 		}
 
-		private void UpdateLocations()
+		private void SendLocations()
 		{
 			for (int i = 0; i < watchlistService.CoopLocationWatches.Count; i++)
 			{
 				if (watchlistService.CoopLocationWatches[i].ChangeCount > 0)
 				{
-					var data = new byte[] { (byte) i, (byte) watchlistService.CoopLocationValues[i] };
-					queuedMessages.Enqueue(new MethodInvoker(() => { coopMessanger.SendData(MessageType.Location, data); }));
+					var data = new byte[] { (byte) MessageType.Location, (byte) i, (byte) watchlistService.CoopLocationValues[i] };
+					coopController.SendData(data);
 					Console.WriteLine($"Sending Location: {watchlistService.CoopLocationWatches[i].Notes} with value {(byte) watchlistService.CoopLocationValues[i]} at index {i}");
 				}
 			}
 			watchlistService.CoopLocationWatches.ClearChangeCounts();
 		}
 
-		private void UpdateWarpsAndShortcuts()
+		private void SendWarpsAndShortcuts()
 		{
 			watchlistService.UpdateWatchlist(watchlistService.WarpsAndShortcutsWatches);
 			for (int i = 0; i < watchlistService.WarpsAndShortcutsWatches.Count; i++)
@@ -175,60 +143,57 @@ namespace SotnRandoTools.Coop
 				{
 					if (watchlistService.WarpsAndShortcutsWatches[i].Value > 0)
 					{
-						if (watchlistService.WarpsAndShortcutsWatches[i].Notes == "WarpsFirstCastle")
+						byte[] data = new byte[3];
+						if (i == 0)
 						{
-							int difference = watchlistService.WarpsAndShortcutsWatches[i].Previous ^ watchlistService.WarpsAndShortcutsWatches[i].Value;
-							queuedMessages.Enqueue(new MethodInvoker(() => { coopMessanger.SendData(MessageType.WarpFirstCastle, BitConverter.GetBytes((ushort) difference)); }));
+							byte[] difference = BitConverter.GetBytes((ushort) (watchlistService.WarpsAndShortcutsWatches[i].Previous ^ watchlistService.WarpsAndShortcutsWatches[i].Value));
+							data[0] = (byte) MessageType.WarpFirstCastle;
+							data[1] = difference[0];
+							data[2] = difference[1];
+							coopController.SendData(data);
 							Console.WriteLine($"Sending first castle warp {difference}.");
 
 						}
-						else if (watchlistService.WarpsAndShortcutsWatches[i].Notes == "WarpsSecondCastle")
+						else if (i == 1)
 						{
-							int difference = watchlistService.WarpsAndShortcutsWatches[i].Previous ^ watchlistService.WarpsAndShortcutsWatches[i].Value;
-							queuedMessages.Enqueue(new MethodInvoker(() => { coopMessanger.SendData(MessageType.WarpSecondCastle, BitConverter.GetBytes((ushort) difference)); }));
+							byte[] difference = BitConverter.GetBytes((ushort) (watchlistService.WarpsAndShortcutsWatches[i].Previous ^ watchlistService.WarpsAndShortcutsWatches[i].Value));
+							data[0] = (byte) MessageType.WarpFirstCastle;
+							data[1] = difference[0];
+							data[2] = difference[1];
+							coopController.SendData(data);
 							Console.WriteLine($"Sending second castle warp {difference}.");
 						}
 						else
 						{
-							byte[] data = BitConverter.GetBytes((ushort) (Shortcut) Enum.Parse(typeof(Shortcut), watchlistService.WarpsAndShortcutsWatches[i].Notes));
-							queuedMessages.Enqueue(new MethodInvoker(() => { coopMessanger.SendData(MessageType.Shortcut, data); }));
+							byte[] shortcutData = BitConverter.GetBytes((ushort) (Shortcut) Enum.Parse(typeof(Shortcut), watchlistService.WarpsAndShortcutsWatches[i].Notes));
+							data[0] = (byte) MessageType.Shortcut;
+							data[1] = shortcutData[0];
+							data[2] = shortcutData[1];
 							Console.WriteLine($"Sending shortcut: {watchlistService.WarpsAndShortcutsWatches[i].Notes}");
 						}
+						coopController.SendData(data);
 					}
 				}
 			}
 			watchlistService.WarpsAndShortcutsWatches.ClearChangeCounts();
 		}
 
-		private void UpdateSendAllWarps()
+		private void CheckSynchRequest()
 		{
-			if (inputService.ButtonPressed(PlaystationInputKeys.Select, Globals.UpdateCooldownFrames) && selectPressed == false && sotnApi.GameApi.IsInMenu() && sotnApi.GameApi.RelicMenuOpen())
+			if (!sotnApi.GameApi.RelicMenuOpen() || !sotnApi.GameApi.IsInMenu() || !selectPressed)
 			{
-				selectPressed = true;
-				var warpsFirstCastle = new byte[] { 0, (byte) watchlistService.WarpsAndShortcutsWatches.Where(w => w.Notes == "WarpsFirstCastle").FirstOrDefault().Value };
-				var warpsSecondCastle = new byte[] { 0, (byte) watchlistService.WarpsAndShortcutsWatches.Where(w => w.Notes == "WarpsSecondCastle").FirstOrDefault().Value };
-
-
-				queuedMessages.Enqueue(new MethodInvoker(() => { coopMessanger.SendData(MessageType.WarpFirstCastle, warpsFirstCastle); }));
-				Console.WriteLine($"Sending first castle warps with value {warpsFirstCastle[1]}");
-				queuedMessages.Enqueue(new MethodInvoker(() => { coopMessanger.SendData(MessageType.WarpSecondCastle, warpsSecondCastle); }));
-				Console.WriteLine($"Sending second castle warps with value {warpsSecondCastle[1]}");
-
-				int shortcuts = 0;
-				for (int i = 2; i < watchlistService.WarpsAndShortcutsWatches.Count; i++)
-				{
-					if (watchlistService.WarpsAndShortcutsWatches[i].Value > 0)
-					{
-						shortcuts = shortcuts | (int) (ShortcutFlags) Enum.Parse(typeof(ShortcutFlags), watchlistService.WarpsAndShortcutsWatches[i].Notes);
-					}
-				}
-				queuedMessages.Enqueue(new MethodInvoker(() => { coopMessanger.SendData(MessageType.Shortcut, BitConverter.GetBytes((ushort) shortcuts)); }));
-				Console.WriteLine($"Sending shortcuts with flags {(ushort) shortcuts}");
+				return;
 			}
-			else if (!inputService.ButtonPressed(PlaystationInputKeys.Select, Globals.UpdateCooldownFrames))
-			{
-				selectPressed = false;
-			}
+
+			SendSynchRequest();
+		}
+
+		private void SendSynchRequest()
+		{
+			byte[] data = new byte[1];
+			data[0] = (byte) MessageType.SynchRequest;
+			coopController.SendData(data);
+			Console.WriteLine("Requested synch");
 		}
 	}
 }

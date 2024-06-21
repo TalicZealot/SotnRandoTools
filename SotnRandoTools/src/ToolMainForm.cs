@@ -20,7 +20,6 @@ namespace SotnRandoTools
 		LoadAssemblyFiles = new[]
 		{
 			"SotnRandoTools/dll/SotnApi.dll",
-			"SotnRandoTools/dll/SimpleTCP.dll"
 		})]
 	[ExternalToolEmbeddedIcon("SotnRandoTools.Resources.BizAlucard.png")]
 	[ExternalToolApplicability.SingleRom(CoreSystem.Playstation, "0DDCBC3D")]
@@ -63,7 +62,6 @@ namespace SotnRandoTools
 		private ToolConfig toolConfig;
 		private WatchlistService? watchlistService;
 		private NotificationService? notificationService;
-		private InputService? inputService;
 		private TrackerForm? trackerForm;
 		private CoopForm? coopForm;
 		private AutotrackerSettingsPanel? autotrackerSettingsPanel;
@@ -175,7 +173,6 @@ namespace SotnRandoTools
 			_maybeMemAPI.UseMemoryDomain(_memoryDomains.MainMemory.Name);
 			sotnApi = new SotnApi.Main.SotnApi(_maybeMemAPI);
 			watchlistService = new WatchlistService(_memoryDomains);
-			inputService = new InputService(_maybeJoypadApi, sotnApi);
 			notificationService = new NotificationService(toolConfig, _maybeGuiAPI, _maybeClientAPI);
 			if (coopSettingsPanel is not null)
 			{
@@ -191,7 +188,11 @@ namespace SotnRandoTools
 			}
 			if (coopForm is not null)
 			{
-				inputService.UpdateInputs();
+				coopForm.UpdateCoop();
+			}
+			if (notificationService is not null)
+			{
+				notificationService.Refresh();
 			}
 			cooldown++;
 			if (cooldown == Globals.UpdateCooldownFrames)
@@ -200,10 +201,6 @@ namespace SotnRandoTools
 				if (trackerForm is not null)
 				{
 					trackerForm.UpdateTracker();
-				}
-				if (coopForm is not null)
-				{
-					coopForm.UpdateCoop();
 				}
 			}
 		}
@@ -231,7 +228,6 @@ namespace SotnRandoTools
 
 			sotnApi = null;
 			watchlistService = null;
-			inputService = null;
 		}
 
 		private void autotrackerLaunch_Click(object sender, EventArgs e)
@@ -257,18 +253,8 @@ namespace SotnRandoTools
 					coopForm.Close();
 					coopForm.Dispose();
 				}
-
-				if (inputService.SupportsR3())
-				{
-					coopForm = new CoopForm(toolConfig, watchlistService, inputService, sotnApi, APIs.Joypad, notificationService);
-					coopForm.Show();
-				}
-				else
-				{
-					MessageBox.Show("You can't use Co Op without setting the Player 1 controller to Dual Shock, in order to support the R3 button.", "Controller not supported",
-								 MessageBoxButtons.OK,
-								 MessageBoxIcon.Warning);
-				}
+				coopForm = new CoopForm(toolConfig, watchlistService, sotnApi, APIs.Joypad, notificationService);
+				coopForm.Show();
 			}
 		}
 

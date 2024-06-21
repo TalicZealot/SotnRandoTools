@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
+using System.Collections.Concurrent;
+using System.Reflection;
+using BizHawk.Emulation.Common;
 using SotnApi.Constants.Values.Alucard;
 using SotnApi.Constants.Values.Alucard.Enums;
 using SotnApi.Constants.Values.Game;
@@ -10,7 +11,6 @@ using SotnRandoTools.Constants;
 using SotnRandoTools.Coop.Enums;
 using SotnRandoTools.Coop.Interfaces;
 using SotnRandoTools.Services;
-using MethodInvoker = System.Windows.Forms.MethodInvoker;
 
 namespace SotnRandoTools.Coop
 {
@@ -20,23 +20,19 @@ namespace SotnRandoTools.Coop
 		private readonly ISotnApi sotnApi;
 		private readonly INotificationService notificationService;
 		private readonly IWatchlistService watchlistService;
-		private Queue<MethodInvoker> queuedMessages = new();
+		private readonly ICoopController coopController;
 
-		public CoopReceiver(IToolConfig toolConfig, ISotnApi sotnApi, INotificationService notificationService, IWatchlistService watchlistService)
+		public CoopReceiver(IToolConfig toolConfig, IWatchlistService watchlistService, ISotnApi sotnApi, INotificationService notificationService, ICoopController coopController)
 		{
 			this.toolConfig = toolConfig ?? throw new ArgumentNullException(nameof(toolConfig));
 			this.sotnApi = sotnApi ?? throw new ArgumentNullException(nameof(sotnApi));
 			this.notificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
 			this.watchlistService = watchlistService ?? throw new ArgumentNullException(nameof(watchlistService));
+			this.coopController = coopController ?? throw new ArgumentNullException(nameof(coopController));
+			MessageQueue = new();
 		}
 
-		public void EnqueMessage(byte[] data)
-		{
-			if (data is null) throw new ArgumentNullException(nameof(data));
-			if (data.Length < 2) throw new ArgumentException("Array length for data should be at least 2.");
-
-			queuedMessages.Enqueue(new MethodInvoker(() => ProcessMessage(data)));
-		}
+		public ConcurrentQueue<byte[]> MessageQueue { get; set; }
 
 		private void ProcessMessage(byte[] data)
 		{
@@ -51,14 +47,13 @@ namespace SotnRandoTools.Coop
 			switch (type)
 			{
 				case MessageType.Relic:
-					if (!sotnApi.AlucardApi.HasRelic((Relic) index))
+					if (!sotnApi.AlucardApi.HasRelic((Relic) indexByte))
 					{
-						sotnApi.AlucardApi.GrantRelic((Relic) index);
+						sotnApi.AlucardApi.GrantRelic((Relic) indexByte);
 						watchlistService.UpdateWatchlist(watchlistService.CoopRelicWatches);
 						watchlistService.CoopRelicWatches.ClearChangeCounts();
-						notificationService.AddMessage(SotnApi.Constants.Values.Alucard.Equipment.Relics[index]);
+						notificationService.AddMessage(SotnApi.Constants.Values.Alucard.Equipment.Relics[indexByte]);
 						notificationService.PlayAlert(Paths.ItemPickupSound);
-						Console.WriteLine($"Received relic: {(Relic) index}");
 					}
 					break;
 				case MessageType.Location:
@@ -72,9 +67,6 @@ namespace SotnRandoTools.Coop
 					notificationService.AddMessage(Equipment.Items[index]);
 					notificationService.PlayAlert(Paths.ItemPickupSound);
 					Console.WriteLine($"Received item: {Equipment.Items[index]}");
-					break;
-				case MessageType.Effect:
-					DecodeAssist(Equipment.Items[index]);
 					break;
 				case MessageType.WarpFirstCastle:
 					if (indexByte == 0)
@@ -119,69 +111,30 @@ namespace SotnRandoTools.Coop
 					watchlistService.UpdateWatchlist(watchlistService.WarpsAndShortcutsWatches);
 					watchlistService.WarpsAndShortcutsWatches.ClearChangeCounts();
 					break;
-				case MessageType.Settings:
-					DecodeSettings((int) index);
-					Console.WriteLine($"Received co-op settings from host with value {index}.");
+				case MessageType.SynchRequest:
+					SendSynchAll();
+					Console.WriteLine($"Sending Synch");
+					break;
+				case MessageType.SynchAll:
+					DecodeSynch(data);
+					Console.WriteLine($"Received relics, warps and shortcuts");
 					break;
 				default:
 					break;
 			}
 		}
 
-		public void ExecuteMessage()
+		public void Update()
 		{
 			//avoid marble gallery softlock
 			bool insideMarbleGalleryDoorRooms = (sotnApi.GameApi.Room == Various.MarbleGalleryDoorToCavernsRoom || sotnApi.GameApi.Room == Various.MarbleGalleryBlueDoorRoom) && (sotnApi.GameApi.Area == Various.MarbleGalleryArea);
-			if (sotnApi.GameApi.InAlucardMode() && !insideMarbleGalleryDoorRooms)
+			if (!sotnApi.GameApi.InAlucardMode() || insideMarbleGalleryDoorRooms)
 			{
-				if (queuedMessages.Count > 0)
-				{
-					queuedMessages.Dequeue()();
-				}
+				return;
 			}
-		}
-
-		private void DecodeSettings(int settings)
-		{
-			if ((settings & (int) SettingsFlags.ShareRelics) == (int) SettingsFlags.ShareRelics)
+			if (!MessageQueue.IsEmpty && MessageQueue.TryDequeue(out byte[] data))
 			{
-				toolConfig.Coop.ConnectionShareRelics = true;
-			}
-			else
-			{
-				toolConfig.Coop.ConnectionShareRelics = false;
-			}
-			if ((settings & (int) SettingsFlags.ShareWarps) == (int) SettingsFlags.ShareWarps)
-			{
-				toolConfig.Coop.ConnectionShareWarps = true; ;
-			}
-			else
-			{
-				toolConfig.Coop.ConnectionShareWarps = false;
-			}
-			if ((settings & (int) SettingsFlags.SendItems) == (int) SettingsFlags.SendItems)
-			{
-				toolConfig.Coop.ConnectionSendItems = true; ;
-			}
-			else
-			{
-				toolConfig.Coop.ConnectionSendItems = false;
-			}
-			if ((settings & (int) SettingsFlags.SendAssists) == (int) SettingsFlags.SendAssists)
-			{
-				toolConfig.Coop.ConnectionSendAssists = true; ;
-			}
-			else
-			{
-				toolConfig.Coop.ConnectionSendAssists = false;
-			}
-			if ((settings & (int) SettingsFlags.ShareLocations) == (int) SettingsFlags.ShareLocations)
-			{
-				toolConfig.Coop.ConnectionShareLocations = true; ;
-			}
-			else
-			{
-				toolConfig.Coop.ConnectionShareLocations = false;
+				ProcessMessage(data);
 			}
 		}
 
@@ -321,20 +274,64 @@ namespace SotnRandoTools.Coop
 			}
 		}
 
-		private void DecodeAssist(string item)
+		private void SendSynchAll()
 		{
-			Potion potion;
-			if (Enum.TryParse(Regex.Replace(item, "[ .]", ""), true, out potion))
+			watchlistService.UpdateWatchlist(watchlistService.WarpsAndShortcutsWatches);
+			watchlistService.WarpsAndShortcutsWatches.ClearChangeCounts();
+			byte[] data = new byte[9];
+			data[0] = (byte) MessageType.SynchAll;
+			data[1] = (byte) watchlistService.WarpsAndShortcutsWatches[0].Value;
+			data[2] = (byte) watchlistService.WarpsAndShortcutsWatches[1].Value;
+			int shortcuts = 0;
+			for (int i = 2; i < watchlistService.WarpsAndShortcutsWatches.Count; i++)
 			{
-				sotnApi.AlucardApi.ActivatePotion(potion);
+				if (watchlistService.WarpsAndShortcutsWatches[i].Value > 0)
+				{
+					shortcuts = shortcuts | (int) (ShortcutFlags) Enum.Parse(typeof(ShortcutFlags), watchlistService.WarpsAndShortcutsWatches[i].Notes);
+				}
 			}
-			else
-			{
-				Console.WriteLine($"Assist {item} not found!");
-				return;
-			}
+			byte[] shortcutBytes = BitConverter.GetBytes((ushort) shortcuts);
+			data[3] = shortcutBytes[0];
+			data[4] = shortcutBytes[1];
 
-			Console.WriteLine($"Received assist: {item}");
+
+			int relicsNumber = 0;
+			for (int i = 0; i < watchlistService.RelicWatches.Count; i++)
+			{
+				if (watchlistService.RelicWatches[i].Value > 0)
+				{
+					relicsNumber |= (int) Math.Pow(2, i);
+				}
+			}
+			byte[] relicsBytes = BitConverter.GetBytes(relicsNumber);
+			data[5] = relicsBytes[0];
+			data[6] = relicsBytes[1];
+			data[7] = relicsBytes[2];
+			data[8] = relicsBytes[3];
+
+			coopController.SendData(data);
+		}
+
+		private void DecodeSynch(byte[] data)
+		{
+			sotnApi.AlucardApi.WarpsFirstCastle |= data[1];
+			sotnApi.AlucardApi.WarpsSecondCastle |= data[2];
+			ushort shortcut = BitConverter.ToUInt16(data, 3);
+			DecodeShortcuts(shortcut);
+			int encodedRelics = BitConverter.ToInt32(data, 5);
+
+			int relicCount = Enum.GetValues(typeof(Relic)).Length;
+			for (int i = 0; i < relicCount; i++)
+			{
+				int flag = (int) Math.Pow(2, i);
+				if ((encodedRelics & flag) == flag)
+				{
+					sotnApi.AlucardApi.GrantRelic((Relic) i);
+				}
+			}
+			watchlistService.CoopRelicWatches.ClearChangeCounts();
+			watchlistService.UpdateWatchlist(watchlistService.WarpsAndShortcutsWatches);
+			watchlistService.WarpsAndShortcutsWatches.ClearChangeCounts();
 		}
 	}
 }

@@ -5,10 +5,8 @@ namespace SotnRandoTools.Coop.Models
 {
 	public interface ICoopViewModel
 	{
-		ClientStatus ClientStatus { get; set; }
-		ServerStatus ServerStatus { get; set; }
-		string Message { get; set; }
-
+		NetworkStatus Status { get; set; }
+		int Ping { get; set; }
 		event PropertyChangedEventHandler PropertyChanged;
 	}
 }

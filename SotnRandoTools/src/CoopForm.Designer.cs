@@ -39,9 +39,13 @@ namespace SotnRandoTools
             this.serverGroup = new System.Windows.Forms.GroupBox();
             this.clientGroup = new System.Windows.Forms.GroupBox();
             this.addressTooltip = new System.Windows.Forms.ToolTip(this.components);
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.ping = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.portNumeric)).BeginInit();
             this.serverGroup.SuspendLayout();
             this.clientGroup.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // hostButton
@@ -84,7 +88,6 @@ namespace SotnRandoTools
             this.targetIp.Name = "targetIp";
             this.targetIp.Size = new System.Drawing.Size(219, 21);
             this.targetIp.TabIndex = 2;
-            this.targetIp.UseSystemPasswordChar = true;
             this.targetIp.TextChanged += new System.EventHandler(this.targetIp_TextChanged);
             this.targetIp.Validating += new System.ComponentModel.CancelEventHandler(this.targetIp_Validating);
             this.targetIp.Validated += new System.EventHandler(this.targetIp_Validated);
@@ -146,7 +149,7 @@ namespace SotnRandoTools
             this.serverGroup.ForeColor = System.Drawing.Color.White;
             this.serverGroup.Location = new System.Drawing.Point(4, 12);
             this.serverGroup.Name = "serverGroup";
-            this.serverGroup.Size = new System.Drawing.Size(275, 58);
+            this.serverGroup.Size = new System.Drawing.Size(275, 53);
             this.serverGroup.TabIndex = 7;
             this.serverGroup.TabStop = false;
             this.serverGroup.Text = "Server";
@@ -158,9 +161,9 @@ namespace SotnRandoTools
             this.clientGroup.Controls.Add(this.IPlabel);
             this.clientGroup.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.clientGroup.ForeColor = System.Drawing.Color.White;
-            this.clientGroup.Location = new System.Drawing.Point(4, 74);
+            this.clientGroup.Location = new System.Drawing.Point(4, 71);
             this.clientGroup.Name = "clientGroup";
-            this.clientGroup.Size = new System.Drawing.Size(275, 79);
+            this.clientGroup.Size = new System.Drawing.Size(275, 73);
             this.clientGroup.TabIndex = 8;
             this.clientGroup.TabStop = false;
             this.clientGroup.Text = "Client";
@@ -169,6 +172,43 @@ namespace SotnRandoTools
             // 
             this.addressTooltip.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Error;
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.ping);
+            this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.groupBox1.ForeColor = System.Drawing.Color.White;
+            this.groupBox1.Location = new System.Drawing.Point(4, 150);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(275, 47);
+            this.groupBox1.TabIndex = 8;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Connection";
+            // 
+            // ping
+            // 
+            this.ping.AutoSize = true;
+            this.ping.BackColor = System.Drawing.Color.Transparent;
+            this.ping.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.ping.ForeColor = System.Drawing.Color.White;
+            this.ping.Location = new System.Drawing.Point(36, 21);
+            this.ping.Name = "ping";
+            this.ping.Size = new System.Drawing.Size(15, 16);
+            this.ping.TabIndex = 7;
+            this.ping.Text = "0";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.BackColor = System.Drawing.Color.Transparent;
+            this.label1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label1.ForeColor = System.Drawing.Color.White;
+            this.label1.Location = new System.Drawing.Point(5, 23);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(31, 13);
+            this.label1.TabIndex = 6;
+            this.label1.Text = "Ping:";
+            // 
             // CoopForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -176,7 +216,8 @@ namespace SotnRandoTools
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(0)))), ((int)(((byte)(17)))));
             this.CausesValidation = false;
-            this.ClientSize = new System.Drawing.Size(284, 158);
+            this.ClientSize = new System.Drawing.Size(284, 203);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.clientGroup);
             this.Controls.Add(this.serverGroup);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -194,6 +235,8 @@ namespace SotnRandoTools
             this.serverGroup.PerformLayout();
             this.clientGroup.ResumeLayout(false);
             this.clientGroup.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -209,6 +252,9 @@ namespace SotnRandoTools
 		private System.Windows.Forms.GroupBox serverGroup;
 		private System.Windows.Forms.GroupBox clientGroup;
 		private System.Windows.Forms.ToolTip addressTooltip;
+		private System.Windows.Forms.GroupBox groupBox1;
+		private System.Windows.Forms.Label ping;
+		private System.Windows.Forms.Label label1;
 	}
 }
 

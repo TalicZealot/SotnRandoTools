@@ -2,7 +2,7 @@
 {
 	public static class Paths
 	{
-		public const string ItemPickupSound = "./ExternalTools/SotnRandoTools/Sounds/Item.mp3";
+		public const string ItemPickupSound = "./ExternalTools/SotnRandoTools/Sounds/Item.wav";
 
 		public const string SourceLink = "https://github.com/TalicZealot/SotnRandoTools/";
 		public const string ReadmeLink = "https://github.com/TalicZealot/SotnRandoTools/blob/main/README.md";

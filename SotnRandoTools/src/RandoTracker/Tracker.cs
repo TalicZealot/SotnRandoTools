@@ -243,7 +243,7 @@ namespace SotnRandoTools.RandoTracker
 			new Location { Name = "Library Onyx",  EquipmentExtension = true, Y = 67, X = 186, WatchIndecies = new List<int>{41}, Rooms = new List<Room>{
 					new Room { WatchIndex = 41, Values = new int[] { 0x04 }},
 			}},
-			new Location { Name = "Alucart Sword",  EquipmentExtension = true, Y = 83, X = 137, WatchIndecies = new List<int>{42}, Rooms = new List<Room>{
+			new Location { Name = "Alucart sword",  EquipmentExtension = true, Y = 83, X = 137, WatchIndecies = new List<int>{42}, Rooms = new List<Room>{
 					new Room { WatchIndex = 42, Values = new int[] { 0x04 }},
 			}},
 			new Location { Name = "Broadsword",  EquipmentExtension = true, Y = 71, X = 129, WatchIndecies = new List<int>{43}, Rooms = new List<Room>{
@@ -746,7 +746,16 @@ namespace SotnRandoTools.RandoTracker
 				}
 				else
 				{
-					customLocation.CustomExtension = true;
+					if (customLocation.CustomExtension)
+					{
+						customLocation.X = location.X;
+						customLocation.Y = location.Y;
+						customLocation.SecondCastle = location.SecondCastle;
+					}
+					else
+					{
+						customLocation.CustomExtension = true;
+					}
 					continue;
 				}
 
@@ -820,7 +829,8 @@ namespace SotnRandoTools.RandoTracker
 				{
 					trackerLocation = new Location
 					{
-						Name = location.Name
+						Name = location.Name,
+						CustomExtension = true
 					};
 					locations.Add(trackerLocation);
 				}
@@ -839,20 +849,31 @@ namespace SotnRandoTools.RandoTracker
 
 				foreach (string lockSet in location.Locks)
 				{
+					string[] newLockSet = lockSet.Replace(" ", String.Empty).ToLower().Split('+');
+					for (int i = 0; i < preset.Aliases.Count; i++)
+					{
+						for (int j = 0; j < newLockSet.Length; j++)
+						{
+							if (newLockSet[j] == preset.Aliases[i].Replaced.Replace(" ", String.Empty).ToLower())
+							{
+								newLockSet[j] = preset.Aliases[i].Relic.Replace(" ", String.Empty).ToLower();
+							}
+						}
+					}
 					if (outOfLogic)
 					{
-						trackerLocation.OutOfLogicLocks.Add(lockSet.Replace(" ", String.Empty).ToLower().Split('+'));
+						trackerLocation.OutOfLogicLocks.Add(newLockSet);
 					}
 					else
 					{
-						trackerLocation.Locks.Add(lockSet.Replace(" ", String.Empty).ToLower().Split('+'));
+						trackerLocation.Locks.Add(newLockSet);
 					}
 				}
 			}
 
 			foreach (LockLocation location in preset.LockLocationsAllowed)
 			{
-				var trackerLocation = locations.Where(x => x.Name.Replace(" ", String.Empty).ToLower() == location.Name).FirstOrDefault();
+				var trackerLocation = locations.Where(x => x.Name.Replace(" ", String.Empty).ToLower() == location.Name.Replace(" ", String.Empty).ToLower()).FirstOrDefault();
 
 				if (trackerLocation == null)
 				{
@@ -863,7 +884,19 @@ namespace SotnRandoTools.RandoTracker
 
 				foreach (string lockSet in location.Locks)
 				{
-					trackerLocation.OutOfLogicLocks.Add(lockSet.Replace(" ", String.Empty).ToLower().Split('+'));
+					string[] newLockSet = lockSet.Replace(" ", String.Empty).ToLower().Split('+');
+					for (int i = 0; i < preset.Aliases.Count; i++)
+					{
+						for (int j = 0; j < newLockSet.Length; j++)
+						{
+							if (newLockSet[j] == preset.Aliases[i].Replaced.Replace(" ", String.Empty).ToLower())
+							{
+								newLockSet[j] = preset.Aliases[i].Relic.Replace(" ", String.Empty).ToLower();
+							}
+						}
+					}
+
+					trackerLocation.OutOfLogicLocks.Add(newLockSet);
 				}
 			}
 
@@ -1149,6 +1182,10 @@ namespace SotnRandoTools.RandoTracker
 		{
 			for (int i = 0; i < locations.Count; i++)
 			{
+				if (locations[i].X == 0 && locations[i].Y == 0)
+				{
+					continue;
+				}
 				if (!locations[i].Visited && locations[i].SecondCastle == secondCastle)
 				{
 					ColorMapRoom(i, (uint) locations[i].AvailabilityColor, locations[i].SecondCastle);
@@ -1195,12 +1232,17 @@ namespace SotnRandoTools.RandoTracker
 		{
 			uint x = (uint) locations[locationIndex].X;
 			uint y = (uint) locations[locationIndex].Y;
+			if (x <= 0 || y <= 0)
+			{
+				return;
+			}
 			if (secondCastle)
 			{
 				x = 252 - x;
 				y = 199 - y;
 			}
 			uint borderColor = color > 0 ? (uint) MapColor.Border : 0;
+
 
 			if (locations[locationIndex].EquipmentExtension && spreadExtension == false)
 			{
@@ -1223,6 +1265,10 @@ namespace SotnRandoTools.RandoTracker
 
 			for (int i = 0; i < locations.Count; i++)
 			{
+				if (locations[i].X == 0 && locations[i].Y == 0)
+				{
+					continue;
+				}
 				if (!locations[i].Visited && locations[i].SecondCastle == secondCastle)
 				{
 					uncheckedLocation = locations[i];
@@ -1304,7 +1350,7 @@ namespace SotnRandoTools.RandoTracker
 			{
 				locations[j].AvailabilityColor = MapColor.Unavailable;
 
-				if (locations[j].Visited)
+				if (locations[j].Visited || ((locations[j].X == 0 && locations[j].Y == 0)))
 				{
 					continue;
 				}
@@ -1595,7 +1641,7 @@ namespace SotnRandoTools.RandoTracker
 			replaySaved = true;
 		}
 
-		private void SaveSeedInfo(string info)
+		private static void SaveSeedInfo(string info)
 		{
 			if (File.Exists(Paths.SeedInfoPath))
 			{

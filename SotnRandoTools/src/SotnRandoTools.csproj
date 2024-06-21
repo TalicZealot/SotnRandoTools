@@ -11,7 +11,7 @@
 		<OutputType>Library</OutputType>
 		<EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
 		<AnalysisLevel>5.0</AnalysisLevel>
-		<Version>1.7.0</Version>
+		<Version>1.7.1</Version>
 		<Description>A collection of tools to enhance the experience of playing the SotN randomizer.</Description>
 		<Copyright />
 		<PackageProjectUrl>https://taliczealot.github.io/#/projects/sotnrandotools</PackageProjectUrl>
@@ -59,7 +59,6 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" PrivateAssets="all" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-		<PackageReference Include="SuperSimpleTcp" Version="2.4.0" />
 		<PackageReference Include="System.Drawing.Common" Version="6.0.0" />
 		<PackageReference Include="System.Net.Http" Version="4.3.4" />
 		<Reference Include="BizHawk.Common" HintPath="$(ProjectDir)../BizHawk/dll/BizHawk.Common.dll" />

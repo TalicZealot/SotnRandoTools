@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using BizHawk.Client.Common;
@@ -7,6 +8,7 @@ using SotnApi.Interfaces;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Coop;
 using SotnRandoTools.Coop.Enums;
+using SotnRandoTools.Coop.Interfaces;
 using SotnRandoTools.Coop.Models;
 using SotnRandoTools.Services;
 
@@ -14,17 +16,14 @@ namespace SotnRandoTools
 {
 	internal sealed partial class CoopForm : Form
 	{
-		private readonly IInputService inputService;
 		private readonly IToolConfig toolConfig;
-		private CoopSender? coopSender;
-		private CoopMessanger? coopMessanger;
-		private CoopReceiver? coopReceiver;
+		private CoopController? coopController;
 		private readonly INotificationService notificationService;
 		private CoopViewModel coopViewModel = new CoopViewModel();
 		private bool addressValidated = false;
 		private Color BaseBackground = Color.FromArgb(17, 0, 17);
 
-		public CoopForm(IToolConfig toolConfig, IWatchlistService watchlistService, IInputService inputService, ISotnApi sotnApi, IJoypadApi joypadApi, INotificationService notificationService)
+		public CoopForm(IToolConfig toolConfig, IWatchlistService watchlistService, ISotnApi sotnApi, IJoypadApi joypadApi, INotificationService notificationService)
 		{
 			if (toolConfig is null) throw new ArgumentNullException(nameof(toolConfig));
 			if (watchlistService is null) throw new ArgumentNullException(nameof(watchlistService));
@@ -33,11 +32,8 @@ namespace SotnRandoTools
 			if (notificationService is null) throw new ArgumentNullException(nameof(notificationService));
 			this.toolConfig = toolConfig;
 			this.notificationService = notificationService;
-			this.inputService = inputService;
 
-			this.coopReceiver = new CoopReceiver(toolConfig, sotnApi, notificationService, watchlistService);
-			this.coopMessanger = new CoopMessanger(toolConfig, coopReceiver, coopViewModel);
-			this.coopSender = new CoopSender(toolConfig, watchlistService, inputService, sotnApi, coopMessanger);
+			this.coopController = new CoopController(toolConfig, watchlistService, sotnApi, coopViewModel, notificationService);
 			InitializeComponent();
 			SuspendLayout();
 			ResumeLayout();
@@ -49,26 +45,23 @@ namespace SotnRandoTools
 		{
 			switch (e.PropertyName)
 			{
-				case nameof(CoopViewModel.Message):
-					notificationService.AddMessage(coopViewModel.Message);
+				case nameof(CoopViewModel.Ping):
+					this.ping.Text = coopViewModel.Ping.ToString();
 					break;
-				case nameof(CoopViewModel.ServerStatus):
-					SetServerStatus(coopViewModel.ServerStatus);
-					break;
-				case nameof(CoopViewModel.ClientStatus):
-					SetClientStatus(coopViewModel.ClientStatus);
+				case nameof(CoopViewModel.Status):
+					SetServerStatus(coopViewModel.Status);
 					break;
 				default:
 					break;
 			}
 		}
 
-		private void SetServerStatus(ServerStatus status)
+		private void SetServerStatus(NetworkStatus status)
 		{
-			Console.WriteLine(status.ToString());
 			switch (status)
 			{
-				case ServerStatus.Started:
+				case NetworkStatus.Started:
+					notificationService.AddMessage("Server started");
 					this.hostButton.Text = "Stop";
 					this.hostButton.ForeColor = Color.Black;
 					this.hostButton.BackColor = Color.Aqua;
@@ -79,7 +72,8 @@ namespace SotnRandoTools
 					this.portNumeric.Enabled = false;
 					this.IPlabel.Enabled = false;
 					break;
-				case ServerStatus.Stopped:
+				case NetworkStatus.Stopped:
+					notificationService.AddMessage("Server stopped");
 					this.hostButton.Text = "Host";
 					this.hostButton.BackColor = BaseBackground;
 					this.hostButton.ForeColor = Color.White;
@@ -88,50 +82,83 @@ namespace SotnRandoTools
 					this.portNumeric.Enabled = true;
 					this.IPlabel.Enabled = true;
 					break;
-				case ServerStatus.Error:
+				case NetworkStatus.ServerError:
+					notificationService.AddMessage("Server error");
 					this.hostButton.BackColor = Color.Crimson;
+					this.hostButton.Text = "Host";
+					this.hostButton.ForeColor = Color.White;
+					this.connectButton.Enabled = true;
+					this.targetIp.Enabled = true;
+					this.portNumeric.Enabled = true;
+					this.IPlabel.Enabled = true;
 					break;
-				case ServerStatus.ClientConnected:
+				case NetworkStatus.ClientError:
+					notificationService.AddMessage("Client error");
+					this.connectButton.BackColor = Color.Crimson;
+					this.connectButton.Text = "Connect";
+					this.connectButton.ForeColor = Color.White;
+					this.hostButton.Enabled = true;
+					this.hostButton.Enabled = true;
+					this.targetIp.Enabled = true;
+					this.portNumeric.Enabled = true;
+					break;
+				case NetworkStatus.ClientConnected:
+					notificationService.AddMessage("Client connected");
 					this.hostButton.BackColor = Color.SpringGreen;
 					break;
-				case ServerStatus.ClientDisconnected:
+				case NetworkStatus.ClientDisconnected:
+					notificationService.AddMessage("Client disconnected");
 					this.hostButton.BackColor = Color.Crimson;
 					break;
-				default: break;
-			}
-		}
-
-		private void SetClientStatus(ClientStatus status)
-		{
-			Console.WriteLine(status.ToString());
-			switch (status)
-			{
-				case ClientStatus.Connected:
+				case NetworkStatus.Connected:
+					notificationService.AddMessage("Connected");
 					this.connectButton.Text = "Disconnect";
 					this.connectButton.ForeColor = Color.Black;
 					this.connectButton.BackColor = Color.SpringGreen;
 					this.hostButton.BackColor = BaseBackground;
 					this.hostButton.ForeColor = Color.White;
+					this.connectButton.Enabled = true;
 					this.hostButton.Enabled = false;
 					this.targetIp.Enabled = false;
 					this.portNumeric.Enabled = false;
 					break;
-				case ClientStatus.Reconnecting:
+				case NetworkStatus.Reconnecting:
+					notificationService.AddMessage("Reconnecting");
 					this.connectButton.Text = "Reconnecting";
 					this.connectButton.BackColor = Color.Coral;
+					this.hostButton.BackColor = BaseBackground;
+					this.hostButton.ForeColor = Color.White;
+					this.connectButton.Enabled = true;
+					this.hostButton.Enabled = false;
+					this.targetIp.Enabled = false;
+					this.portNumeric.Enabled = false;
 					break;
-				case ClientStatus.Disconnected:
+				case NetworkStatus.Disconnected:
+					notificationService.AddMessage("Disconnected");
 					this.connectButton.Text = "Connect";
 					this.connectButton.BackColor = Color.Crimson;
 					this.connectButton.ForeColor = Color.White;
 					this.hostButton.Enabled = true;
+					this.hostButton.Enabled = true;
 					this.targetIp.Enabled = true;
 					this.portNumeric.Enabled = true;
 					break;
-				case ClientStatus.ManuallyDisconnected:
+				case NetworkStatus.TimedOut:
+					notificationService.AddMessage("Timed out");
+					this.connectButton.Text = "Connect";
+					this.connectButton.BackColor = Color.Crimson;
+					this.connectButton.ForeColor = Color.White;
+					this.connectButton.Enabled = true;
+					this.hostButton.Enabled = true;
+					this.targetIp.Enabled = true;
+					this.portNumeric.Enabled = true;
+					break;
+				case NetworkStatus.ManuallyDisconnected:
+					notificationService.AddMessage("Disconnected");
 					this.connectButton.Text = "Connect";
 					this.connectButton.BackColor = BaseBackground;
 					this.connectButton.ForeColor = Color.White;
+					this.hostButton.Enabled = true;
 					this.hostButton.Enabled = true;
 					this.targetIp.Enabled = true;
 					this.portNumeric.Enabled = true;
@@ -142,10 +169,9 @@ namespace SotnRandoTools
 
 		public void UpdateCoop()
 		{
-			if (coopSender is not null && coopReceiver is not null)
+			if (coopController != null)
 			{
-				coopSender.Update();
-				coopReceiver.ExecuteMessage();
+				coopController.Update();
 			}
 		}
 
@@ -156,13 +182,12 @@ namespace SotnRandoTools
 				this.Location = toolConfig.Coop.Location;
 			}
 			this.portNumeric.Value = toolConfig.Coop.DefaultPort;
-			this.targetIp.Text = toolConfig.Coop.DefaultServer;
-			inputService.Polling++;
+			this.targetIp.Text = "127.0.0.1:46318";
 			ValidateAddress();
-
-#if WIN
-			this.Icon = SotnRandoTools.Properties.Resources.Icon;
-#endif
+			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+			{
+				this.Icon = SotnRandoTools.Properties.Resources.Icon;
+			}
 		}
 
 		private void CoopForm_Move(object sender, EventArgs e)
@@ -173,15 +198,11 @@ namespace SotnRandoTools
 			}
 		}
 
-		private void CoopForm_FormClosed(object sender, FormClosedEventArgs e)
-		{
-		}
-
 		private void hostButton_Click(object sender, EventArgs e)
 		{
-			if (coopViewModel.ServerStatus != ServerStatus.Stopped && coopViewModel.ServerStatus != ServerStatus.Error)
+			if (coopViewModel.Status != NetworkStatus.Stopped && coopViewModel.Status != NetworkStatus.ServerError)
 			{
-				coopMessanger.StopServer();
+				coopController.StopServer();
 				return;
 			}
 
@@ -189,15 +210,15 @@ namespace SotnRandoTools
 
 			if (port > 1024 && port < 49151)
 			{
-				coopMessanger.StartServer(port);
+				coopController.StartServer(port);
 			}
 		}
 
 		private void connectButton_Click(object sender, EventArgs e)
 		{
-			if (coopViewModel.ClientStatus != ClientStatus.Disconnected && coopViewModel.ClientStatus != ClientStatus.ManuallyDisconnected)
+			if (coopViewModel.Status == NetworkStatus.Connected)
 			{
-				coopMessanger.Disconnect();
+				coopController.Disconnect();
 				return;
 			}
 
@@ -209,8 +230,7 @@ namespace SotnRandoTools
 			}
 			else
 			{
-				Console.WriteLine("Connecting...");
-				coopMessanger.Connect(hostAddress[0], Int32.Parse(hostAddress[1]));
+				coopController.Connect(hostAddress[0], Int32.Parse(hostAddress[1]));
 			}
 		}
 
@@ -231,8 +251,8 @@ namespace SotnRandoTools
 			if (!validIpPort.IsMatch(this.targetIp.Text))
 			{
 				addressValidated = false;
-				this.targetIp.Text = "";
-				this.targetIp.BackColor = Color.Red;
+				this.connectButton.BackColor = Color.Red;
+				//this.targetIp.BackColor = Color.Red;
 				this.addressTooltip.SetToolTip(targetIp, "Invalid address!");
 				this.addressTooltip.ToolTipIcon = ToolTipIcon.Warning;
 				this.addressTooltip.Active = true;
@@ -244,13 +264,10 @@ namespace SotnRandoTools
 
 		private void CoopForm_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			inputService.Polling--;
-			coopMessanger.Disconnect();
-			coopMessanger.StopServer();
-			coopMessanger.DisposeAll();
-			coopMessanger = null;
-			coopReceiver = null;
-			coopSender = null;
+			coopController.Disconnect();
+			coopController.StopServer();
+			coopController.DisposeAll();
+			coopController = null;
 		}
 
 		private void targetIp_TextChanged(object sender, EventArgs e)

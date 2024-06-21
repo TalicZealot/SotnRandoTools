@@ -21,17 +21,13 @@ namespace SotnRandoTools.Services
 		private HttpListener server;
 		private bool started = false;
 		private List<WSClient> clients = new List<WSClient>();
-		private static CancellationTokenSource socketLoopTokenSource;
-		private static CancellationTokenSource listenerLoopTokenSource;
+		private CancellationTokenSource socketLoopTokenSource;
+		private CancellationTokenSource listenerLoopTokenSource;
 		private int socketCounter = 0;
 		private byte[] relicsData = new byte[10];
 		public OverlaySocketServer(IToolConfig toolConfig)
 		{
 			this.toolConfig = toolConfig ?? throw new ArgumentNullException(nameof(toolConfig));
-			socketLoopTokenSource = new CancellationTokenSource();
-			listenerLoopTokenSource = new CancellationTokenSource();
-			server = new HttpListener();
-			server.Prefixes.Add(Globals.WebSocketUri);
 		}
 
 		public void StartServer()
@@ -40,6 +36,10 @@ namespace SotnRandoTools.Services
 			{
 				return;
 			}
+			socketLoopTokenSource = new CancellationTokenSource();
+			listenerLoopTokenSource = new CancellationTokenSource();
+			server = new HttpListener();
+			server.Prefixes.Add(Globals.WebSocketUri);
 			started = true;
 			server.Start();
 			Task.Run(() => AcceptClients().ConfigureAwait(false));

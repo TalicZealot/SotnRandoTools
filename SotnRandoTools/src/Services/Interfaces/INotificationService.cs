@@ -8,7 +8,5 @@
 		void StartOverlayServer();
 		void StopOverlayServer();
 		void UpdateTrackerOverlay(int relics, int items);
-		void SetRelicCoordinates(string relic, int mapCol, int mapRow);
-		void SetInvertedRelicCoordinates(string relic, int mapCol, int mapRow);
 	}
 }

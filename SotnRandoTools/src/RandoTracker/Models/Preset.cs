@@ -15,6 +15,13 @@ namespace SotnRandoTools.RandoTracker.Models
 		[JsonProperty("locks")]
 		public List<string> Locks { get; set; } = new List<string>();
 	}
+	internal sealed class Alias
+	{
+		[JsonProperty("relic")]
+		public string Relic { get; set; }
+		[JsonProperty("alias")]
+		public string Replaced { get; set; }
+	}
 
 	internal sealed class Preset
 	{
@@ -24,6 +31,8 @@ namespace SotnRandoTools.RandoTracker.Models
 		public string Inherits { get; set; }
 		[JsonProperty("relicLocationsExtension")]
 		public string RelicLocationsExtension { get; set; }
+		[JsonProperty("alias")]
+		public List<Alias> Aliases { get; set; } = new List<Alias>();
 		[JsonProperty("lockLocation")]
 		public List<LockLocation> LockLocations { get; set; } = new List<LockLocation>();
 		[JsonProperty("lockLocationAllowed")]

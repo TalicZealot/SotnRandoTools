@@ -5,13 +5,15 @@ namespace SotnRandoTools.Coop.Enums
 	[Flags]
 	public enum MessageType : byte
 	{
+		Ping,
+		Pong,
 		Relic,
 		Item,
-		Effect,
 		WarpFirstCastle,
 		WarpSecondCastle,
 		Shortcut,
-		Settings,
+		SynchRequest,
+		SynchAll,
 		Location
 	}
 }

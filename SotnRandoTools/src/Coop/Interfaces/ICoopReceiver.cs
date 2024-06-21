@@ -1,7 +1,9 @@
-﻿namespace SotnRandoTools.Coop.Interfaces
+﻿using System.Collections.Concurrent;
+
+namespace SotnRandoTools.Coop.Interfaces
 {
 	internal interface ICoopReceiver
 	{
-		void EnqueMessage(byte[] data);
+		ConcurrentQueue<byte[]> MessageQueue { get; set; }
 	}
 }

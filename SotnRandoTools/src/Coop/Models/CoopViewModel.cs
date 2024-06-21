@@ -5,60 +5,41 @@ namespace SotnRandoTools.Coop.Models
 {
 	public class CoopViewModel : INotifyPropertyChanged, ICoopViewModel
 	{
-		private ServerStatus serverStarted = ServerStatus.Stopped;
-		private ClientStatus clientConnected = ClientStatus.ManuallyDisconnected;
+		private NetworkStatus status = NetworkStatus.Stopped;
 		private string message = "";
-		public ServerStatus ServerStatus
+		private int ping = -1;
+		public NetworkStatus Status
 		{
 			get
 			{
-				return serverStarted;
+				return status;
 			}
 			set
 			{
-				serverStarted = value;
+				status = value;
 
 				if (PropertyChanged != null)
 				{
-					PropertyChanged(this, new PropertyChangedEventArgs(nameof(ServerStatus)));
+					PropertyChanged(this, new PropertyChangedEventArgs(nameof(Status)));
 				}
 			}
 		}
-
-		public ClientStatus ClientStatus
+		public int Ping 
 		{
 			get
 			{
-				return clientConnected;
+				return ping;
 			}
 			set
 			{
-				clientConnected = value;
+				ping = value;
 
 				if (PropertyChanged != null)
 				{
-					PropertyChanged(this, new PropertyChangedEventArgs(nameof(ClientStatus)));
+					PropertyChanged(this, new PropertyChangedEventArgs(nameof(Ping)));
 				}
 			}
 		}
-
-		public string Message
-		{
-			get
-			{
-				return message;
-			}
-			set
-			{
-				message = value;
-
-				if (PropertyChanged != null)
-				{
-					PropertyChanged(this, new PropertyChangedEventArgs(nameof(Message)));
-				}
-			}
-		}
-
 		public event PropertyChangedEventHandler PropertyChanged;
 	}
 }

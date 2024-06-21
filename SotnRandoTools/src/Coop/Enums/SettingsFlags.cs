@@ -3,7 +3,7 @@
 namespace SotnRandoTools.Coop.Enums
 {
 	[Flags]
-	public enum SettingsFlags
+	public enum SettingsFlags : byte
 	{
 		ShareRelics = 0b_0000_0001,
 		ShareWarps = 0b_0000_0010,

@@ -1,15 +1,13 @@
-﻿using SotnRandoTools.Coop.Enums;
-
-namespace SotnRandoTools.Coop.Interfaces
+﻿namespace SotnRandoTools.Coop.Interfaces
 {
-	internal interface ICoopMessanger
+	internal interface ICoopController
 	{
 		void Connect(string hostIp, int port);
 		void Disconnect();
 		void StartServer(int port);
 		void StopServer();
 		void DisposeAll();
-		void SendData(MessageType type, byte[] data);
+		void SendData(byte[] data);
 		bool IsConnected();
 	}
 }
