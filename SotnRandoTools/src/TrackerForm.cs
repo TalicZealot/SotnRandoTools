@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 //using BizHawk.Bizware.Graphics;
 //using BizHawk.Bizware.Graphics.Controls;
@@ -102,9 +103,10 @@ namespace SotnRandoTools
 			trackerRendererGDI = new TrackerRendererGDI(formGraphics, toolConfig);
 			tracker = new Tracker(trackerRendererGDI, toolConfig, watchlistService, sotnApi, notificationService);
 
-#if WIN
-			this.Icon = SotnRandoTools.Properties.Resources.Icon;
-#endif
+			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+			{
+				this.Icon = SotnRandoTools.Properties.Resources.Icon;
+			}
 		}
 
 		private void TrackerForm_Paint(object sender, PaintEventArgs e)

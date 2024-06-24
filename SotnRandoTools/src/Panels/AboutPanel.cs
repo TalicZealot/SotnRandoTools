@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using SotnRandoTools.Constants;
 using SotnRandoTools.Utils;
@@ -46,13 +47,15 @@ namespace SotnRandoTools
 
 		private void updateButton_Click(object sender, EventArgs e)
 		{
-#if WIN
-			//handled in main form
-			if (this.UpdateButton_Click != null)
-				this.UpdateButton_Click(this, e);
-#else
-			Process.Start(Paths.LatestReleaseUrl);
-#endif
+			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+			{
+				if (this.UpdateButton_Click != null)
+					this.UpdateButton_Click(this, e);
+			}
+			else
+			{
+				Process.Start(Paths.LatestReleaseUrl);
+			}
 		}
 
 		private void sotnApiLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

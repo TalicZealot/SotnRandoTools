@@ -45,7 +45,7 @@ BizHawk
 ```
 
 ## Installation Linux
-When playing on Linux get SotnRandoToolsLinux-x.x.x.zip and install as described above, but after that copy the contents of `BizHawk/ExternalTools/SotnRandoTools/dll/` to `BizHawk/ExternalTools/` and `BizHawk/dll/`.
+When playing on Linux install as described above, but after that copy the contents of `BizHawk/ExternalTools/SotnRandoTools/dll/` to `BizHawk/ExternalTools/` and `BizHawk/dll/`.
 
 ## Usage
 After launching the game in BizHawk open through ```Tools > Extarnal Tool > Symphony of the Night Randomizer Tools```
