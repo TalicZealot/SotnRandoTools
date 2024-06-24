@@ -11,7 +11,7 @@
 		<OutputType>Library</OutputType>
 		<EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
 		<AnalysisLevel>5.0</AnalysisLevel>
-		<Version>1.7.1</Version>
+		<Version>1.7.2</Version>
 		<Description>A collection of tools to enhance the experience of playing the SotN randomizer.</Description>
 		<Copyright />
 		<PackageProjectUrl>https://taliczealot.github.io/#/projects/sotnrandotools</PackageProjectUrl>
@@ -22,11 +22,20 @@
 		<Optimize>True</Optimize>
 		<DebugType>portable</DebugType>
 	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+	  <Optimize>True</Optimize>
+	  <DebugType>portable</DebugType>
+	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<Optimize>True</Optimize>
 		<DebugType>portable</DebugType>
-		<DefineConstants>$(DefineConstants);WIN</DefineConstants>
 		<DefineConstants>$(DefineConstants);GDI</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+	  <Optimize>True</Optimize>
+	  <DebugType>portable</DebugType>
+	  <DefineConstants>$(DefineConstants);WIN</DefineConstants>
+	  <DefineConstants>$(DefineConstants);GDI</DefineConstants>
 	</PropertyGroup>
 	<ItemGroup>
 	  <Compile Remove="RandoTracker\TrackerRendererOpenGL.cs" />
@@ -37,17 +46,6 @@
 	</ItemGroup>
 	<ItemGroup>
 		<AdditionalFiles Include=".stylecop.json" />
-	</ItemGroup>
-	<ItemGroup Condition="$(DefineConstants.Contains('WIN'))">
-		<COMReference Include="WMPLib">
-			<VersionMinor>0</VersionMinor>
-			<VersionMajor>1</VersionMajor>
-			<Guid>6bf52a50-394a-11d3-b153-00c04f79faa6</Guid>
-			<Lcid>0</Lcid>
-			<WrapperTool>tlbimp</WrapperTool>
-			<Isolated>false</Isolated>
-			<EmbedInteropTypes>true</EmbedInteropTypes>
-		</COMReference>
 	</ItemGroup>
 	<ItemGroup>
 		<EmbeddedResource Include="Resources\BizAlucard.png" />

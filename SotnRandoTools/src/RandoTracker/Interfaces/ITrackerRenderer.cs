@@ -12,6 +12,6 @@ namespace SotnRandoTools.RandoTracker
 		void CalculateGrid(int width, int height);
 		void Render();
 		void ChangeGraphics(IGraphics formGraphics);
-		void InitializeItems(List<Models.TrackerRelic> relics, List<Item> progressionItems, List<Item> thrustSwords);
+		void InitializeItems(Models.TrackerRelic[] relics, Item[] progressionItems, Item[] thrustSwords);
 	}
 }

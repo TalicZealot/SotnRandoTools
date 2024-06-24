@@ -4,10 +4,14 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Media;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Media;
 using BizHawk.Client.Common;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Constants;
+using Color = System.Drawing.Color;
 
 namespace SotnRandoTools.Services
 {
@@ -18,7 +22,6 @@ namespace SotnRandoTools.Services
 		private const int MessageDurationFast = 60;
 		private const int MapOffsetX = 16;
 		private const int MapOffsetY = 20;
-		private Color WallColor = Color.FromArgb(192, 192, 192);
 
 		private readonly IGuiApi guiApi;
 		private readonly IToolConfig toolConfig;
@@ -26,9 +29,7 @@ namespace SotnRandoTools.Services
 
 		private int scale;
 		private Image textbox;
-#if WIN
-		private System.Windows.Media.MediaPlayer audioPlayer = new();
-#endif
+		private MediaPlayer audioPlayer = new();
 		private Queue<string> messageQueue = new();
 		private int messageFrames = 0;
 		private bool updated = false;
@@ -42,9 +43,8 @@ namespace SotnRandoTools.Services
 			overlaySocketServer = new OverlaySocketServer(toolConfig);
 			scale = clientAPI.GetWindowSize();
 			ResizeImages();
-#if WIN
+
 			audioPlayer.Volume = (double) toolConfig.Coop.Volume / 10F;
-#endif
 		}
 
 		public double Volume
@@ -60,7 +60,7 @@ namespace SotnRandoTools.Services
 		public void PlayAlert(string url)
 		{
 			if (String.IsNullOrEmpty(url)) throw new ArgumentNullException(nameof(url));
-#if WIN
+
 			try
 			{
 				audioPlayer.Dispatcher.Invoke(() =>
@@ -76,7 +76,6 @@ namespace SotnRandoTools.Services
 			{
 				Console.WriteLine(e.Message);
 			}
-#endif
 		}
 
 		public void AddMessage(string message)

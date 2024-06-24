@@ -182,7 +182,19 @@ namespace SotnRandoTools
 
 		private void openLayoutDialog_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
 		{
-			toolConfig.Tracker.LoadOverlayLayout(openLayoutDialog.FileName);
+			try
+			{
+				toolConfig.Tracker.LoadOverlayLayout(openLayoutDialog.FileName);
+			}
+			catch (Exception)
+			{
+				string message = "Unsupported or outdated file format!";
+				string caption = "Unsupported or outdated file format!";
+				MessageBoxButtons buttons = MessageBoxButtons.OK;
+				DialogResult result;
+
+				result = MessageBox.Show(message, caption, buttons);
+			}
 		}
 
 		private void saveLayoutDialog_FileOk(object sender, System.ComponentModel.CancelEventArgs e)

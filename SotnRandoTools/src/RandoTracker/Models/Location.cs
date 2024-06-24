@@ -6,8 +6,8 @@ namespace SotnRandoTools.RandoTracker.Models
 	{
 		public Location()
 		{
-			Locks = new List<string[]>();
-			OutOfLogicLocks = new List<string[]>();
+			Locks = new List<int[]>();
+			OutOfLogicLocks = new List<int[]>();
 			Rooms = new List<Room>();
 			WatchIndecies = new List<int>();
 			AvailabilityColor = MapColor.Unavailable;
@@ -30,8 +30,8 @@ namespace SotnRandoTools.RandoTracker.Models
 		public bool Visited { get; set; }
 		public int X { get; set; }
 		public int Y { get; set; }
-		public List<string[]>? Locks { get; set; }
-		public List<string[]>? OutOfLogicLocks { get; set; }
+		public List<int[]>? Locks { get; set; }
+		public List<int[]>? OutOfLogicLocks { get; set; }
 		public List<int> WatchIndecies { get; set; }
 		public List<Room>? Rooms { get; set; }
 	}

@@ -360,7 +360,7 @@ namespace SotnRandoTools.RandoTracker
 					new Room { WatchIndex = 81, Values = new int[] { 0x10 }},
 			}},
 		};
-		private readonly List<TrackerRelic> relics = new List<TrackerRelic>
+		private readonly TrackerRelic[] relics = new TrackerRelic[]
 		{
 				new TrackerRelic { Name = "SoulOfBat", Progression = true},
 				new TrackerRelic { Name = "FireOfBat", Progression = false},
@@ -393,14 +393,14 @@ namespace SotnRandoTools.RandoTracker
 				new TrackerRelic { Name = "RingOfVlad", Progression = true},
 				new TrackerRelic { Name = "EyeOfVlad", Progression = true}
 		};
-		private readonly List<Item> progressionItems = new List<Item>
+		private readonly Item[] progressionItems = new Item[]
 		{
 			new Item { Name = "GoldRing", Value = 72 },
 			new Item { Name = "SilverRing", Value = 73 },
 			new Item { Name = "SpikeBreaker", Value = 14 },
 			new Item { Name = "HolyGlasses", Value = 34 }
 		};
-		private readonly List<Item> thrustSwords = new List<Item>
+		private readonly Item[] thrustSwords = new Item[]
 		{
 			new Item { Name = "Estoc", Value = 95 },
 			new Item { Name = "Claymore", Value = 98 },
@@ -447,14 +447,6 @@ namespace SotnRandoTools.RandoTracker
 			{ "silverring", 1 },
 			{ "spikebreaker", 2 },
 			{ "holyglasses", 3 },
-		};
-		private readonly Dictionary<string, int> swordToIndex = new Dictionary<string, int>
-		{
-			{ "estoc", 0 },
-			{ "claymore", 1 },
-			{ "flamberge", 2 },
-			{ "zweihander", 3 },
-			{ "obsidiansword", 4 },
 		};
 		private readonly HashSet<string> VanillaPresets = new HashSet<string>
 		{
@@ -732,6 +724,7 @@ namespace SotnRandoTools.RandoTracker
 			foreach (ExtensionLocation location in extension.Locations)
 			{
 				Location? customLocation = locations.Where(x => x.Name == location.Name).FirstOrDefault();
+				int locationIndex = 0;
 
 				if (customLocation is null)
 				{
@@ -743,6 +736,8 @@ namespace SotnRandoTools.RandoTracker
 						SecondCastle = location.SecondCastle,
 						CustomExtension = true
 					};
+					locations.Add(customLocation);
+					locationIndex = locations.Count - 1;
 				}
 				else
 				{
@@ -756,7 +751,7 @@ namespace SotnRandoTools.RandoTracker
 					{
 						customLocation.CustomExtension = true;
 					}
-					continue;
+					locationIndex = locations.IndexOf(customLocation);
 				}
 
 				int roomCounter = 0;
@@ -774,9 +769,8 @@ namespace SotnRandoTools.RandoTracker
 					customLocation.WatchIndecies.Add(watchlistService.SafeLocationWatches.Count - 1);
 					customLocation.Rooms.Add(customRoom);
 					watchToRoom[watchlistService.SafeLocationWatches.Count - 1] = roomCounter - 1;
-					watchToLocation[watchlistService.SafeLocationWatches.Count - 1] = locations.Count;
+					watchToLocation[watchlistService.SafeLocationWatches.Count - 1] = locationIndex;
 				}
-				locations.Add(customLocation);
 			}
 			return true;
 		}
@@ -860,13 +854,34 @@ namespace SotnRandoTools.RandoTracker
 							}
 						}
 					}
+
+					int[] mappedLockSet = new int[newLockSet.Length];
+
+					for (int i = 0; i < newLockSet.Length; i++)
+					{
+						if (relicToIndex.ContainsKey(newLockSet[i]))
+						{
+							mappedLockSet[i] = relicToIndex[newLockSet[i]];
+
+						}
+						else if (itemToIndex.ContainsKey(newLockSet[i]))
+						{
+							mappedLockSet[i] = 100 + itemToIndex[newLockSet[i]];
+
+						}
+						else if (newLockSet[i] == "thrustsword")
+						{
+							mappedLockSet[i] = 200;
+						}
+					}
+
 					if (outOfLogic)
 					{
-						trackerLocation.OutOfLogicLocks.Add(newLockSet);
+						trackerLocation.OutOfLogicLocks.Add(mappedLockSet);
 					}
 					else
 					{
-						trackerLocation.Locks.Add(newLockSet);
+						trackerLocation.Locks.Add(mappedLockSet);
 					}
 				}
 			}
@@ -896,7 +911,27 @@ namespace SotnRandoTools.RandoTracker
 						}
 					}
 
-					trackerLocation.OutOfLogicLocks.Add(newLockSet);
+					int[] mappedLockSet = new int[newLockSet.Length];
+
+					for (int i = 0; i < newLockSet.Length; i++)
+					{
+						if (relicToIndex.ContainsKey(newLockSet[i]))
+						{
+							mappedLockSet[i] = relicToIndex[newLockSet[i]];
+
+						}
+						else if (itemToIndex.ContainsKey(newLockSet[i]))
+						{
+							mappedLockSet[i] = 100 + itemToIndex[newLockSet[i]];
+
+						}
+						else if (newLockSet[i] == "thrustsword")
+						{
+							mappedLockSet[i] = 200;
+						}
+					}
+
+					trackerLocation.OutOfLogicLocks.Add(mappedLockSet);
 				}
 			}
 
@@ -1040,7 +1075,7 @@ namespace SotnRandoTools.RandoTracker
 			}
 			watchlistService.ProgressionItemWatches.ClearChangeCounts();
 
-			for (int i = 0; i < progressionItems.Count; i++)
+			for (int i = 0; i < progressionItems.Length; i++)
 			{
 				switch (i)
 				{
@@ -1107,7 +1142,7 @@ namespace SotnRandoTools.RandoTracker
 			}
 			watchlistService.ThrustSwordWatches.ClearChangeCounts();
 
-			for (int i = 0; i < thrustSwords.Count; i++)
+			for (int i = 0; i < thrustSwords.Length; i++)
 			{
 				thrustSwords[i].Equipped = (sotnApi.AlucardApi.RightHand == thrustSwords[i].Value);
 
@@ -1410,25 +1445,27 @@ namespace SotnRandoTools.RandoTracker
 			}
 		}
 
-		private bool TrackedObjectStatus(string name)
+		private bool TrackedObjectStatus(int index)
 		{
-			if (relicToIndex.ContainsKey(name))
+			if (index == 200)
 			{
-				TrackerRelic relic = relics[relicToIndex[name]];
+				for (int i = 0; i < thrustSwords.Length; i++)
+				{
+					if (thrustSwords[i].Collected)
+					{
+						return true;
+					}
+				}
+			}
+			else if (index < 100)
+			{
+				TrackerRelic relic = relics[index];
 				return relic.Collected;
 			}
-			if (name == "holyglasses" && secondCastle)
+			else
 			{
-				return true;
-			}
-			if (itemToIndex.ContainsKey(name))
-			{
-				Item progressionItem = progressionItems[itemToIndex[name]];
+				Item progressionItem = progressionItems[index - 100];
 				return progressionItem.Status;
-			}
-			if (name == "thrustsword" && swordToIndex.ContainsKey(name))
-			{
-				return true;
 			}
 
 			return false;
@@ -1445,13 +1482,13 @@ namespace SotnRandoTools.RandoTracker
 		private int EncodeItems()
 		{
 			int itemsNumber = 0;
-			for (int i = 0; i < progressionItems.Count + 1; i++)
+			for (int i = 0; i < progressionItems.Length + 1; i++)
 			{
-				if (i < progressionItems.Count && progressionItems[i].Status)
+				if (i < progressionItems.Length && progressionItems[i].Status)
 				{
 					itemsNumber |= (int) Math.Pow(2, i);
 				}
-				else if (i == progressionItems.Count)
+				else if (i == progressionItems.Length)
 				{
 					foreach (var sword in thrustSwords)
 					{
@@ -1470,7 +1507,7 @@ namespace SotnRandoTools.RandoTracker
 		private int EncodeRelics()
 		{
 			int relicsNumber = 0;
-			for (int i = 0; i < relics.Count; i++)
+			for (int i = 0; i < relics.Length; i++)
 			{
 				if (relics[i].Collected)
 				{
@@ -1557,7 +1594,7 @@ namespace SotnRandoTools.RandoTracker
 			}
 			replayPath = Paths.ReplaysPath + replayPath + ".sotnr";
 
-			byte[] replayBytes = new byte[2 + (replayLenght * 4) + ((relics.Count + progressionItems.Count + 1) * 4)];
+			byte[] replayBytes = new byte[2 + (replayLenght * 4) + ((relics.Length + progressionItems.Length + 1) * 4)];
 
 			int replayIndex = 0;
 			byte[] finalTimeSecondsBytes = BitConverter.GetBytes((ushort) finalTime.TotalSeconds);

@@ -92,7 +92,7 @@ namespace SotnRandoTools.RandoTracker.Tests.TrackerTests
             mockedToolConfig.Tracker.UseOverlay = false;
             mockedToolConfig.Tracker.EnableAutosplitter = false;
             mockedGraphicsEngine
-                .When(g => g.InitializeItems(Arg.Any<List<Models.TrackerRelic>>(), Arg.Any<List<Models.Item>>(), Arg.Any<List<Models.Item>>()))
+                .When(g => g.InitializeItems(Arg.Any<Models.TrackerRelic[]>(), Arg.Any<Models.Item[]>(), Arg.Any< Models.Item[]>()))
                 .Do(x => { });
             mockedGraphicsEngine
                 .When(g => g.CalculateGrid(Arg.Any<int>(), Arg.Any<int>()))

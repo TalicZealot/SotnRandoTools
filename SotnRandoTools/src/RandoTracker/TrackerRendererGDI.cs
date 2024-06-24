@@ -26,9 +26,9 @@ namespace SotnRandoTools.RandoTracker
 		private IGraphics formGraphics;
 		private readonly IToolConfig toolConfig;
 
-		private List<TrackerRelic>? relics;
-		private List<Item>? progressionItems;
-		private List<Item>? thrustSwords;
+		private TrackerRelic[]? relics;
+		private Item[]? progressionItems;
+		private Item[]? thrustSwords;
 
 		private Bitmap texture;
 		private Bitmap greyscaleTexture;
@@ -51,7 +51,7 @@ namespace SotnRandoTools.RandoTracker
 		public bool Refreshed { get; set; }
 		public string SeedInfo { get; set; }
 
-		public void InitializeItems(List<TrackerRelic> relics, List<Item> progressionItems, List<Item> thrustSwords)
+		public void InitializeItems(TrackerRelic[] relics, Item[] progressionItems, Item[] thrustSwords)
 		{
 			if (relics is null) throw new ArgumentNullException(nameof(relics));
 			if (progressionItems is null) throw new ArgumentNullException(nameof(progressionItems));
@@ -207,7 +207,7 @@ namespace SotnRandoTools.RandoTracker
 				normalRelicCount++;
 			}
 			Item? thrustSword = null;
-			for (int i = 0; i < thrustSwords.Count; i++)
+			for (int i = 0; i < thrustSwords.Length; i++)
 			{
 				if (thrustSwords[i].Status)
 				{
@@ -219,13 +219,13 @@ namespace SotnRandoTools.RandoTracker
 
 			if (vladProgression)
 			{
-				for (int i = 25; i < relics.Count; i++)
+				for (int i = 25; i < relics.Length; i++)
 				{
 					formGraphics.DrawImage(relics[i].Collected ? texture : greyscaleTexture, vladRelicSlots[i - 25], 20 * i, 0, ImageSize, ImageSize, GraphicsUnit.Pixel);
 				}
 			}
 
-			for (int i = 0; i < progressionItems.Count; i++)
+			for (int i = 0; i < progressionItems.Length; i++)
 			{
 				formGraphics.DrawImage(progressionItems[i].Status ? texture : greyscaleTexture, progressionItemSlots[i], 600 + 20 * i, 0, ImageSize, ImageSize, GraphicsUnit.Pixel);
 			}
@@ -252,7 +252,7 @@ namespace SotnRandoTools.RandoTracker
 			if (vladProgression)
 			{
 				int vladRelicCount = 0;
-				for (int i = 25; i < relics.Count; i++)
+				for (int i = 25; i < relics.Length; i++)
 				{
 					if (relics[i].Collected)
 					{
@@ -263,7 +263,7 @@ namespace SotnRandoTools.RandoTracker
 			}
 
 			int progressionItemCount = 0;
-			for (int i = 0; i < progressionItems.Count; i++)
+			for (int i = 0; i < progressionItems.Length; i++)
 			{
 				if (progressionItems[i].Status)
 				{

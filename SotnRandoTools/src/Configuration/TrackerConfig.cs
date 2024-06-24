@@ -67,11 +67,6 @@ namespace SotnRandoTools.Configuration
 			else
 			{
 				return TrackerConfig.GetDefaultOverlay();
-				//throw new Exception(
-				//	string.Format(
-				//		"Unexpected token parsing binary. "
-				//		+ "Expected StartArray, got {0}.",
-				//		reader.TokenType));
 			}
 		}
 
@@ -186,7 +181,6 @@ namespace SotnRandoTools.Configuration
 			if (File.Exists(path))
 			{
 				string layoutJson = File.ReadAllText(path);
-
 				byte[] layout = JsonConvert.DeserializeObject<byte[]>(layoutJson,
 					new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, MissingMemberHandling = MissingMemberHandling.Ignore });
 

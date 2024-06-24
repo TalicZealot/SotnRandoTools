@@ -16,9 +16,9 @@ namespace SotnRandoTools.RandoTracker.Tests.TrackerRendererGDITests
             //Arrange
             var mockedFormGraphics = Substitute.For<IGraphics>();
             var mockedToolConfig = Substitute.For<IToolConfig>();
-            List<TrackerRelic> testRelics = new List<TrackerRelic>();
-            List<Item> testProgressionItems = new List<Item>();
-            List<Item> testThrustSwords = new List<Item>();
+            TrackerRelic[] testRelics = new TrackerRelic[1];
+            Item[] testProgressionItems = new Item[1];
+            Item[] testThrustSwords = new Item[1];
             //Act
             TrackerRendererGDI trackerGraphicsEngine = new TrackerRendererGDI(mockedFormGraphics, mockedToolConfig);
             //Assert
@@ -31,9 +31,9 @@ namespace SotnRandoTools.RandoTracker.Tests.TrackerRendererGDITests
             //Arrange
             var mockedFormGraphics = Substitute.For<IGraphics>();
             var mockedToolConfig = Substitute.For<IToolConfig>();
-            List<TrackerRelic> testRelics = new List<TrackerRelic>();
-            List<Item> testProgressionItems = new List<Item>();
-            List<Item> testThrustSwords = new List<Item>();
+            TrackerRelic[] testRelics = new TrackerRelic[1];
+            Item[] testProgressionItems = new Item[1];
+            Item[] testThrustSwords = new Item[1];
             //Act
             TrackerRendererGDI trackerGraphicsEngine = new TrackerRendererGDI(mockedFormGraphics, mockedToolConfig);
             //Assert
@@ -46,9 +46,9 @@ namespace SotnRandoTools.RandoTracker.Tests.TrackerRendererGDITests
             //Arrange
             var mockedFormGraphics = Substitute.For<IGraphics>();
             var mockedToolConfig = Substitute.For<IToolConfig>();
-            List<TrackerRelic> testRelics = new List<TrackerRelic>();
-            List<Item> testProgressionItems = new List<Item>();
-            List<Item> testThrustSwords = new List<Item>();
+            TrackerRelic[] testRelics = new TrackerRelic[1];
+            Item[] testProgressionItems = new Item[1];
+            Item[] testThrustSwords = new Item[1];
             //Act
             TrackerRendererGDI trackerGraphicsEngine = new TrackerRendererGDI(mockedFormGraphics, mockedToolConfig);
             //Assert
