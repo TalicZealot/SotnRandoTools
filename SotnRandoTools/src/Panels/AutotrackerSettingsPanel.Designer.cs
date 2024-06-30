@@ -38,8 +38,6 @@ namespace SotnRandoTools
             this.layoutGroup = new System.Windows.Forms.GroupBox();
             this.radioGrid = new System.Windows.Forms.RadioButton();
             this.radioCollected = new System.Windows.Forms.RadioButton();
-            this.windowGroup = new System.Windows.Forms.GroupBox();
-            this.alwaysOnTopCheckBox = new System.Windows.Forms.CheckBox();
             this.optionsGroup = new System.Windows.Forms.GroupBox();
             this.stereoCheckBox = new System.Windows.Forms.CheckBox();
             this.muteCheckBox = new System.Windows.Forms.CheckBox();
@@ -48,6 +46,7 @@ namespace SotnRandoTools
             this.replaysCheckBox = new System.Windows.Forms.CheckBox();
             this.locationsCheckbox = new System.Windows.Forms.CheckBox();
             this.customSeedGroup = new System.Windows.Forms.GroupBox();
+            this.customExtension = new System.Windows.Forms.TextBox();
             this.customLocationsCustomExtensionRadio = new System.Windows.Forms.RadioButton();
             this.customLocationsSpreadRadio = new System.Windows.Forms.RadioButton();
             this.customLocationsClassicRadio = new System.Windows.Forms.RadioButton();
@@ -61,10 +60,8 @@ namespace SotnRandoTools
             this.saveLayoutButton = new System.Windows.Forms.Button();
             this.openLayoutDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveLayoutDialog = new System.Windows.Forms.SaveFileDialog();
-            this.customExtension = new System.Windows.Forms.TextBox();
             this.relicDisplayGroup.SuspendLayout();
             this.layoutGroup.SuspendLayout();
-            this.windowGroup.SuspendLayout();
             this.optionsGroup.SuspendLayout();
             this.customSeedGroup.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -177,28 +174,6 @@ namespace SotnRandoTools
             this.radioCollected.UseVisualStyleBackColor = true;
             this.radioCollected.CheckedChanged += new System.EventHandler(this.radioCollected_CheckedChanged);
             // 
-            // windowGroup
-            // 
-            this.windowGroup.Controls.Add(this.alwaysOnTopCheckBox);
-            this.windowGroup.ForeColor = System.Drawing.Color.White;
-            this.windowGroup.Location = new System.Drawing.Point(6, 224);
-            this.windowGroup.Name = "windowGroup";
-            this.windowGroup.Size = new System.Drawing.Size(182, 44);
-            this.windowGroup.TabIndex = 5;
-            this.windowGroup.TabStop = false;
-            this.windowGroup.Text = "Window";
-            // 
-            // alwaysOnTopCheckBox
-            // 
-            this.alwaysOnTopCheckBox.AutoSize = true;
-            this.alwaysOnTopCheckBox.Location = new System.Drawing.Point(6, 20);
-            this.alwaysOnTopCheckBox.Name = "alwaysOnTopCheckBox";
-            this.alwaysOnTopCheckBox.Size = new System.Drawing.Size(94, 17);
-            this.alwaysOnTopCheckBox.TabIndex = 0;
-            this.alwaysOnTopCheckBox.Text = "Always on top";
-            this.alwaysOnTopCheckBox.UseVisualStyleBackColor = true;
-            this.alwaysOnTopCheckBox.CheckedChanged += new System.EventHandler(this.alwaysOnTopCheckBox_CheckedChanged);
-            // 
             // optionsGroup
             // 
             this.optionsGroup.Controls.Add(this.stereoCheckBox);
@@ -296,6 +271,14 @@ namespace SotnRandoTools
             this.customSeedGroup.TabIndex = 7;
             this.customSeedGroup.TabStop = false;
             this.customSeedGroup.Text = "Custom Location Extension";
+            // 
+            // customExtension
+            // 
+            this.customExtension.Location = new System.Drawing.Point(6, 115);
+            this.customExtension.Name = "customExtension";
+            this.customExtension.Size = new System.Drawing.Size(170, 21);
+            this.customExtension.TabIndex = 6;
+            this.customExtension.TextChanged += new System.EventHandler(this.customExtension_TextChanged);
             // 
             // customLocationsCustomExtensionRadio
             // 
@@ -449,14 +432,6 @@ namespace SotnRandoTools
             this.saveLayoutDialog.Filter = "layout config files|*.ini";
             this.saveLayoutDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.saveLayoutDialog_FileOk);
             // 
-            // customExtension
-            // 
-            this.customExtension.Location = new System.Drawing.Point(6, 115);
-            this.customExtension.Name = "customExtension";
-            this.customExtension.Size = new System.Drawing.Size(170, 21);
-            this.customExtension.TabIndex = 6;
-            this.customExtension.TextChanged += new System.EventHandler(this.customExtension_TextChanged);
-            // 
             // AutotrackerSettingsPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -467,7 +442,6 @@ namespace SotnRandoTools
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.customSeedGroup);
             this.Controls.Add(this.optionsGroup);
-            this.Controls.Add(this.windowGroup);
             this.Controls.Add(this.layoutGroup);
             this.Controls.Add(this.relicDisplayGroup);
             this.Controls.Add(this.saveButton);
@@ -482,8 +456,6 @@ namespace SotnRandoTools
             this.relicDisplayGroup.PerformLayout();
             this.layoutGroup.ResumeLayout(false);
             this.layoutGroup.PerformLayout();
-            this.windowGroup.ResumeLayout(false);
-            this.windowGroup.PerformLayout();
             this.optionsGroup.ResumeLayout(false);
             this.optionsGroup.PerformLayout();
             this.customSeedGroup.ResumeLayout(false);
@@ -507,8 +479,6 @@ namespace SotnRandoTools
         private System.Windows.Forms.GroupBox layoutGroup;
         private System.Windows.Forms.RadioButton radioGrid;
         private System.Windows.Forms.RadioButton radioCollected;
-        private System.Windows.Forms.GroupBox windowGroup;
-        private System.Windows.Forms.CheckBox alwaysOnTopCheckBox;
 		private System.Windows.Forms.GroupBox optionsGroup;
 		private System.Windows.Forms.CheckBox locationsCheckbox;
 		private System.Windows.Forms.CheckBox replaysCheckBox;

@@ -25,6 +25,10 @@
 		public const string ImagesPath = "./ExternalTools/SotnRandoTools/Images/";
 		public const string CombinedTexture = "./ExternalTools/SotnRandoTools/Images/texture.png";
 		public const string TextboxImage = "./ExternalTools/SotnRandoTools/Images/SotnTextBox.png";
+		public const string BizAlucardIcon = "./ExternalTools/SotnRandoTools/BizAlucard.ico";
+		public const string FontAtlas = "./ExternalTools/SotnRandoTools/Images/sotn-font.png";
+		public const string VertexShader = "./ExternalTools/SotnRandoTools/Shaders/vert.glsl";
+		public const string FragmentShader = "./ExternalTools/SotnRandoTools/Shaders/frag.glsl";
 
 		public const string ReplaysPath = "./ExternalTools/SotnRandoTools/Replays/";
 		public const string OverlayPath = @"\ExternalTools\SotnRandoTools\TrackerOverlay\";

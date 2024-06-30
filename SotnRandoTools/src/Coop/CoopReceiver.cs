@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Reflection;
-using BizHawk.Emulation.Common;
 using SotnApi.Constants.Values.Alucard;
 using SotnApi.Constants.Values.Alucard.Enums;
 using SotnApi.Constants.Values.Game;
@@ -53,7 +51,7 @@ namespace SotnRandoTools.Coop
 						watchlistService.UpdateWatchlist(watchlistService.CoopRelicWatches);
 						watchlistService.CoopRelicWatches.ClearChangeCounts();
 						notificationService.AddMessage(SotnApi.Constants.Values.Alucard.Equipment.Relics[indexByte]);
-						notificationService.PlayAlert(Paths.ItemPickupSound);
+						notificationService.PlayAlert();
 					}
 					break;
 				case MessageType.Location:
@@ -65,7 +63,7 @@ namespace SotnRandoTools.Coop
 				case MessageType.Item:
 					sotnApi.AlucardApi.GrantItemByName(Equipment.Items[index]);
 					notificationService.AddMessage(Equipment.Items[index]);
-					notificationService.PlayAlert(Paths.ItemPickupSound);
+					notificationService.PlayAlert();
 					Console.WriteLine($"Received item: {Equipment.Items[index]}");
 					break;
 				case MessageType.WarpFirstCastle:

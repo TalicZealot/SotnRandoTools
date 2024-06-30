@@ -22,7 +22,6 @@ namespace SotnRandoTools.RandoTracker
 		private const string DefaultSeedInfo = "seed(preset)";
 		private const long DraculaEntityAddress = 0x076e98;
 		private const int AutosplitterReconnectCooldown = 120;
-		private readonly ITrackerRenderer trackerRenderer;
 		private readonly IToolConfig toolConfig;
 		private readonly IWatchlistService watchlistService;
 		private readonly ISotnApi sotnApi;
@@ -360,7 +359,7 @@ namespace SotnRandoTools.RandoTracker
 					new Room { WatchIndex = 81, Values = new int[] { 0x10 }},
 			}},
 		};
-		private readonly TrackerRelic[] relics = new TrackerRelic[]
+		public readonly TrackerRelic[] relics = new TrackerRelic[]
 		{
 				new TrackerRelic { Name = "SoulOfBat", Progression = true},
 				new TrackerRelic { Name = "FireOfBat", Progression = false},
@@ -393,14 +392,14 @@ namespace SotnRandoTools.RandoTracker
 				new TrackerRelic { Name = "RingOfVlad", Progression = true},
 				new TrackerRelic { Name = "EyeOfVlad", Progression = true}
 		};
-		private readonly Item[] progressionItems = new Item[]
+		public readonly Item[] progressionItems = new Item[]
 		{
 			new Item { Name = "GoldRing", Value = 72 },
 			new Item { Name = "SilverRing", Value = 73 },
 			new Item { Name = "SpikeBreaker", Value = 14 },
 			new Item { Name = "HolyGlasses", Value = 34 }
 		};
-		private readonly Item[] thrustSwords = new Item[]
+		public readonly Item[] thrustSwords = new Item[]
 		{
 			new Item { Name = "Estoc", Value = 95 },
 			new Item { Name = "Claymore", Value = 98 },
@@ -502,9 +501,8 @@ namespace SotnRandoTools.RandoTracker
 		private TimeSpan finalTime;
 		private Stopwatch stopWatch = new Stopwatch();
 
-		public Tracker(ITrackerRenderer trackerRenderer, IToolConfig toolConfig, IWatchlistService watchlistService, ISotnApi sotnApi, INotificationService notificationService)
+		public Tracker(IToolConfig toolConfig, IWatchlistService watchlistService, ISotnApi sotnApi, INotificationService notificationService)
 		{
-			this.trackerRenderer = trackerRenderer ?? throw new ArgumentNullException(nameof(trackerRenderer));
 			this.toolConfig = toolConfig ?? throw new ArgumentNullException(nameof(toolConfig));
 			this.watchlistService = watchlistService ?? throw new ArgumentNullException(nameof(watchlistService));
 			this.sotnApi = sotnApi ?? throw new ArgumentNullException(nameof(sotnApi));
@@ -519,8 +517,6 @@ namespace SotnRandoTools.RandoTracker
 				autosplitter = new();
 			}
 
-			trackerRenderer.InitializeItems(relics, progressionItems, thrustSwords);
-			trackerRenderer.CalculateGrid(toolConfig.Tracker.Width, toolConfig.Tracker.Height);
 			if (toolConfig.Tracker.Locations)
 			{
 				InitializeWatchMaps();
@@ -528,8 +524,6 @@ namespace SotnRandoTools.RandoTracker
 				CheckReachability();
 			}
 			this.SeedInfo = DefaultSeedInfo;
-			trackerRenderer.SeedInfo = SeedInfo;
-			trackerRenderer.Render();
 			AllocateReplay();
 		}
 
@@ -578,7 +572,6 @@ namespace SotnRandoTools.RandoTracker
 				if (objectChanges)
 				{
 					UpdateOverlay();
-					trackerRenderer.Render();
 					if (toolConfig.Tracker.Locations)
 					{
 						CheckReachability();
@@ -609,7 +602,6 @@ namespace SotnRandoTools.RandoTracker
 				if (!restarted)
 				{
 					ResetToDefaults();
-					trackerRenderer.Render();
 					restarted = true;
 				}
 			}
@@ -940,7 +932,7 @@ namespace SotnRandoTools.RandoTracker
 				var relic = relics.Where(r => r.Name.Replace(" ", String.Empty).ToLower() == preset.ProgressionRelics[i].ToLower()).FirstOrDefault();
 				relic.Progression = true;
 			}
-			trackerRenderer.SetProgression();
+			//trackerRenderer.SetProgression();
 		}
 
 		private void ResetToDefaults()
@@ -975,7 +967,6 @@ namespace SotnRandoTools.RandoTracker
 			if (SeedInfo == DefaultSeedInfo && sotnApi.GameApi.Status == Status.MainMenu)
 			{
 				GetSeedData();
-				trackerRenderer.Render();
 			}
 		}
 
@@ -1170,8 +1161,6 @@ namespace SotnRandoTools.RandoTracker
 				preset = "custom";
 			}
 			SeedInfo = seedName + "(" + preset + ")";
-			trackerRenderer.SeedInfo = SeedInfo;
-			trackerRenderer.CalculateGrid(toolConfig.Tracker.Width, toolConfig.Tracker.Height);
 			if (preset == "custom")
 			{
 				switch (toolConfig.Tracker.CustomExtension)
@@ -1203,14 +1192,11 @@ namespace SotnRandoTools.RandoTracker
 
 		private void SetEquipmentProgression()
 		{
-			//Set Cube of Zoe, Demon card and Nose Devil to progression
+			//Set Cube of Zoe, Holy Symbol, Demon card and Nose Devil to progression
 			relics[10].Progression = true;
 			relics[14].Progression = true;
 			relics[21].Progression = true;
 			relics[24].Progression = true;
-			trackerRenderer.SetProgression();
-			trackerRenderer.CalculateGrid(toolConfig.Tracker.Width, toolConfig.Tracker.Height);
-			trackerRenderer.Render();
 		}
 
 		private void SetMapLocations()
@@ -1327,11 +1313,10 @@ namespace SotnRandoTools.RandoTracker
 					y += 1;
 				}
 			}
-			if (!sotnApi.MapApi.RoomIsRendered(x, y))
+			if (!sotnApi.MapApi.RoomIsRendered(x, y, (uint) uncheckedLocation.AvailabilityColor))
 			{
 				return false;
 			}
-
 
 			return true;
 		}

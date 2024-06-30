@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Media;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Media;
@@ -29,12 +29,12 @@ namespace SotnRandoTools.Services
 
 		private int scale;
 		private Image textbox;
-		private MediaPlayer audioPlayer = new();
 		private Queue<string> messageQueue = new();
 		private int messageFrames = 0;
 		private bool updated = false;
+		WavPlayer wvplr;
 
-		public NotificationService(IToolConfig toolConfig, IGuiApi guiApi, IEmuClientApi clientAPI)
+		public NotificationService(IToolConfig toolConfig, IGuiApi guiApi, IEmuClientApi clientAPI, Config globalConfig)
 		{
 			this.guiApi = guiApi ?? throw new ArgumentNullException(nameof(guiApi));
 			this.toolConfig = toolConfig ?? throw new ArgumentNullException(nameof(toolConfig));
@@ -43,39 +43,20 @@ namespace SotnRandoTools.Services
 			overlaySocketServer = new OverlaySocketServer(toolConfig);
 			scale = clientAPI.GetWindowSize();
 			ResizeImages();
-
-			audioPlayer.Volume = (double) toolConfig.Coop.Volume / 10F;
+			wvplr = new((float)(toolConfig.Coop.Volume / 10f), globalConfig);
 		}
 
-		public double Volume
+		public float Volume
 		{
 			set
 			{
-#if WIN
-				audioPlayer.Volume = value;
-#endif
+				wvplr.SetVolume(value);
 			}
 		}
 
-		public void PlayAlert(string url)
+		public void PlayAlert()
 		{
-			if (String.IsNullOrEmpty(url)) throw new ArgumentNullException(nameof(url));
-
-			try
-			{
-				audioPlayer.Dispatcher.Invoke(() =>
-				{
-					audioPlayer.Open(new Uri(url, UriKind.Relative));
-				});
-				audioPlayer.Dispatcher.Invoke(() =>
-				{
-					audioPlayer.Play();
-				});
-			}
-			catch (Exception e)
-			{
-				Console.WriteLine(e.Message);
-			}
+			Task.Run(() => { wvplr.Play().ConfigureAwait(false); });
 		}
 
 		public void AddMessage(string message)

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using SotnRandoTools.RandoTracker.Interfaces;
+﻿using SotnRandoTools.RandoTracker.Interfaces;
 using SotnRandoTools.RandoTracker.Models;
 
 namespace SotnRandoTools.RandoTracker

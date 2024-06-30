@@ -29,6 +29,11 @@ body {
     width: 100%;
     height: 100%;
     image-rendering: pixelated;
+    clip-path: rect(0px, 0px, 14px, 14px);
+}
+
+#SoulOfBat {
+    clip-path: rect(0px, 0px, 14px, 14px);
 }
 
 .uncollected {

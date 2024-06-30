@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using BizHawk.Client.Common;
 using BizHawk.Client.EmuHawk;
@@ -11,6 +12,7 @@ using Newtonsoft.Json;
 using SotnRandoTools.Configuration;
 using SotnRandoTools.Constants;
 using SotnRandoTools.Properties;
+using SotnRandoTools.RandoTracker;
 using SotnRandoTools.Services;
 
 namespace SotnRandoTools
@@ -62,7 +64,7 @@ namespace SotnRandoTools
 		private ToolConfig toolConfig;
 		private WatchlistService? watchlistService;
 		private NotificationService? notificationService;
-		private TrackerForm? trackerForm;
+		private TrackerWIndow? trackerWindow;
 		private CoopForm? coopForm;
 		private AutotrackerSettingsPanel? autotrackerSettingsPanel;
 		private CoopSettingsPanel? coopSettingsPanel;
@@ -135,19 +137,19 @@ namespace SotnRandoTools
 			autotrackerSelect.Image = Resources.Tracker;
 			coopSelect.Image = Resources.coop;
 			aboutButton.Image = Resources.VectorSimple;
-#if WIN
-			this.Icon = Resources.Icon;
-#endif
+			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+			{
+				this.Icon = new Icon(Paths.BizAlucardIcon);
+			}
 		}
 
 		public override bool AskSaveChanges() => true;
 
 		public override void Restart()
 		{
-			if (trackerForm is not null && !trackerForm.IsDisposed)
+			if (trackerWindow is not null)
 			{
-				trackerForm.Close();
-				trackerForm.Dispose();
+				trackerWindow.Dispose();
 			}
 			if (coopForm is not null && !coopForm.IsDisposed)
 			{
@@ -173,7 +175,7 @@ namespace SotnRandoTools
 			_maybeMemAPI.UseMemoryDomain(_memoryDomains.MainMemory.Name);
 			sotnApi = new SotnApi.Main.SotnApi(_maybeMemAPI);
 			watchlistService = new WatchlistService(_memoryDomains);
-			notificationService = new NotificationService(toolConfig, _maybeGuiAPI, _maybeClientAPI);
+			notificationService = new NotificationService(toolConfig, _maybeGuiAPI, _maybeClientAPI, GlobalConfig);
 			if (coopSettingsPanel is not null)
 			{
 				coopSettingsPanel.NotificationService = notificationService;
@@ -198,9 +200,9 @@ namespace SotnRandoTools
 			if (cooldown == Globals.UpdateCooldownFrames)
 			{
 				cooldown = 0;
-				if (trackerForm is not null)
+				if (trackerWindow is not null)
 				{
-					trackerForm.UpdateTracker();
+					trackerWindow.UpdateTracker();
 				}
 			}
 		}
@@ -208,10 +210,9 @@ namespace SotnRandoTools
 		private void ToolMainForm_FormClosing(object sender, FormClosingEventArgs e)
 		{
 			toolConfig.SaveConfig();
-			if (trackerForm != null)
+			if (trackerWindow is not null)
 			{
-				trackerForm.Close();
-				trackerForm.Dispose();
+				trackerWindow.Dispose();
 			}
 
 			if (coopForm != null)
@@ -226,6 +227,10 @@ namespace SotnRandoTools
 				notificationService = null;
 			}
 
+			if (trackerWindow is not null)
+			{
+				trackerWindow.Dispose();
+			}
 			sotnApi = null;
 			watchlistService = null;
 		}
@@ -234,13 +239,7 @@ namespace SotnRandoTools
 		{
 			if (sotnApi is not null && watchlistService is not null)
 			{
-				if (trackerForm is not null)
-				{
-					trackerForm.Close();
-					trackerForm.Dispose();
-				}
-				trackerForm = new TrackerForm(toolConfig, watchlistService, sotnApi, notificationService);
-				trackerForm.Show();
+				trackerWindow = new TrackerWIndow(toolConfig, watchlistService, sotnApi, notificationService);
 			}
 		}
 

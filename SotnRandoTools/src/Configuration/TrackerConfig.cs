@@ -121,7 +121,7 @@ namespace SotnRandoTools.Configuration
 			CustomLocationsCustom = false;
 			CustomExtension = "";
 			Width = 260;
-			Height = 490;
+			Height = 440;
 			Username = "";
 			OverlaySlots = new byte[]
 			{

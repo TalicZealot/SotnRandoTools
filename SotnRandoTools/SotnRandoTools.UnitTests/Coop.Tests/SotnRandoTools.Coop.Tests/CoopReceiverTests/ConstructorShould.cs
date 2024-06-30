@@ -46,7 +46,7 @@ namespace SotnRandoTools.Coop.Tests.CoopReceiverTests
             var mockedWatchlistService = Substitute.For<IWatchlistService>();
             var mockedCoopMessanger = Substitute.For<ICoopController>();
             //Act&Assert
-            Assert.Throws<ArgumentNullException>(() => new CoopReceiver(mockedToolConfig, mockedWatchlistService,  mockedSotnApi, null, mockedCoopMessanger));
+            Assert.Throws<ArgumentNullException>(() => new CoopReceiver(mockedToolConfig, mockedWatchlistService, mockedSotnApi, null, mockedCoopMessanger));
         }
 
         [Fact]

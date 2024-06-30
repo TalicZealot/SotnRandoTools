@@ -6,9 +6,9 @@ using System.Windows.Forms;
 using BizHawk.Client.Common;
 using SotnApi.Interfaces;
 using SotnRandoTools.Configuration.Interfaces;
+using SotnRandoTools.Constants;
 using SotnRandoTools.Coop;
 using SotnRandoTools.Coop.Enums;
-using SotnRandoTools.Coop.Interfaces;
 using SotnRandoTools.Coop.Models;
 using SotnRandoTools.Services;
 
@@ -186,7 +186,7 @@ namespace SotnRandoTools
 			ValidateAddress();
 			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 			{
-				this.Icon = SotnRandoTools.Properties.Resources.Icon;
+				this.Icon = new Icon(Paths.BizAlucardIcon);
 			}
 		}
 

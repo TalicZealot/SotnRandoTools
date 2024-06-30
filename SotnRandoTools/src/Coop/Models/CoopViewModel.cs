@@ -24,7 +24,7 @@ namespace SotnRandoTools.Coop.Models
 				}
 			}
 		}
-		public int Ping 
+		public int Ping
 		{
 			get
 			{

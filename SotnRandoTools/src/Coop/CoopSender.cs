@@ -1,7 +1,6 @@
 ﻿using System;
 using SotnApi.Interfaces;
 using SotnRandoTools.Configuration.Interfaces;
-using SotnRandoTools.Constants;
 using SotnRandoTools.Coop.Enums;
 using SotnRandoTools.Coop.Interfaces;
 using SotnRandoTools.Services;

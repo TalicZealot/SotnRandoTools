@@ -15,9 +15,10 @@ namespace SotnRandoTools.Services.Tests.NotificationServiceTests
             var mockedToolConfig = Substitute.For<IToolConfig>();
             var mockedGuiApi = Substitute.For<IGuiApi>();
             var mockedEmuClientApi = Substitute.For<IEmuClientApi>();
+            var mockedGlobalConfig = Substitute.For<Config>();
             mockedToolConfig.Coop = new Configuration.CoopConfig();
             //Act&Assert
-            Assert.Throws<ArgumentNullException>(() => new NotificationService(null, mockedGuiApi, mockedEmuClientApi));
+            Assert.Throws<ArgumentNullException>(() => new NotificationService(null, mockedGuiApi, mockedEmuClientApi, mockedGlobalConfig));
         }
 
         [Fact]
@@ -27,9 +28,10 @@ namespace SotnRandoTools.Services.Tests.NotificationServiceTests
             var mockedToolConfig = Substitute.For<IToolConfig>();
             var mockedGuiApi = Substitute.For<IGuiApi>();
             var mockedEmuClientApi = Substitute.For<IEmuClientApi>();
+            var mockedGlobalConfig = Substitute.For<Config>();
             mockedToolConfig.Coop = new Configuration.CoopConfig();
             //Act&Assert
-            Assert.Throws<ArgumentNullException>(() => new NotificationService(mockedToolConfig, null, mockedEmuClientApi));
+            Assert.Throws<ArgumentNullException>(() => new NotificationService(mockedToolConfig, null, mockedEmuClientApi, mockedGlobalConfig));
         }
 
         [Fact]
@@ -39,9 +41,10 @@ namespace SotnRandoTools.Services.Tests.NotificationServiceTests
             var mockedToolConfig = Substitute.For<IToolConfig>();
             var mockedGuiApi = Substitute.For<IGuiApi>();
             var mockedEmuClientApi = Substitute.For<IEmuClientApi>();
+            var mockedGlobalConfig = Substitute.For<Config>();
             mockedToolConfig.Coop = new Configuration.CoopConfig();
             //Act&Assert
-            Assert.Throws<ArgumentNullException>(() => new NotificationService(mockedToolConfig, mockedGuiApi, null));
+            Assert.Throws<ArgumentNullException>(() => new NotificationService(mockedToolConfig, mockedGuiApi, null, mockedGlobalConfig));
         }
 
         [Fact]
@@ -51,9 +54,10 @@ namespace SotnRandoTools.Services.Tests.NotificationServiceTests
             var mockedToolConfig = Substitute.For<IToolConfig>();
             var mockedGuiApi = Substitute.For<IGuiApi>();
             var mockedEmuClientApi = Substitute.For<IEmuClientApi>();
+            var mockedGlobalConfig = Substitute.For<Config>();
             mockedToolConfig.Coop = new Configuration.CoopConfig();
             //Act
-            NotificationService notificationService = new NotificationService(mockedToolConfig, mockedGuiApi, mockedEmuClientApi);
+            NotificationService notificationService = new NotificationService(mockedToolConfig, mockedGuiApi, mockedEmuClientApi, mockedGlobalConfig);
             //Assert
             Assert.NotNull(notificationService);
         }

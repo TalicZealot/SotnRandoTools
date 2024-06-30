@@ -40,7 +40,7 @@ namespace SotnRandoTools
 			toolConfig.Coop.Volume = volumeBar.Value;
 			if (NotificationService is not null)
 			{
-				NotificationService.Volume = (double) volumeBar.Value / 10F;
+				NotificationService.Volume = (float) volumeBar.Value / 10F;
 			}
 		}
 	}

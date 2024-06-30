@@ -1,322 +1,633 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using BizHawk.Bizware.BizwareGL;
-using BizHawk.Bizware.Graphics.Controls;
+using System.IO;
+using OpenTK;
+using OpenTK.Graphics;
+using OpenTK.Graphics.OpenGL4;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Constants;
-using SotnRandoTools.RandoTracker.Interfaces;
-using SotnRandoTools.RandoTracker.Models;
 
 namespace SotnRandoTools.RandoTracker
 {
-	internal sealed class TrackerRendererOpenGL : ITrackerRenderer
+	internal sealed class Text : IDisposable
 	{
 		private const int TextPadding = 5;
-		private const int LabelOffset = 50;
-		private const int ImageSize = 14;
-		private const int CellPadding = 2;
-		private const int Columns = 8;
-		private const int SeedInfoFontSize = 19;
-		private const int CellSize = ImageSize + CellPadding;
-		private const double PixelPerfectSnapMargin = 0.18;
-		private readonly Color DefaultBackground = Color.FromArgb(17, 00, 17);
-		private int Width = 100;
-		private int Height = 100;
-
-		private readonly IToolConfig toolConfig;
-		private readonly IGuiRenderer guiRenderer;
-		private readonly GraphicsControl graphicsControl;
-
-		private List<TrackerRelic>? relics;
-		private List<Item>? progressionItems;
-		private List<Item>? thrustSwords;
-
-		private Texture2d texture;
-		private Texture2d greyscaleTexture;
-		private Texture2d infoTexture;
-		private Bitmap seedInfoBitmap;
-		private readonly SolidBrush textBrush = new SolidBrush(Color.White);
-
-		private List<Rectangle> relicSlots = new List<Rectangle>();
-		private List<Rectangle> vladRelicSlots = new List<Rectangle>();
-		private List<Rectangle> progressionItemSlots = new List<Rectangle>();
-
-		private bool initialized = false;
-		private float scale = 1;
-		private int progressionRelics = 0;
-		private bool vladProgression = true;
-		private string seedInfo = "seed(preset)";
-
-		public TrackerRendererOpenGL(IToolConfig toolConfig, IGuiRenderer guiRenderer, GraphicsControl graphicsControl)
+		private int vertexBuffer;
+		private int vertexArrayObject;
+		private int textIndexBuffer;
+		private int windowWidth = 0;
+		private int windowHeight = 0;
+		private float scale = 0;
+		private int collectedUniform;
+		private const int glyphWidth = 6;
+		private const int glyphHeight = 8;
+		private const float textureItemWidth = 6f / 540f;
+		private List<float> vertices = new();
+		private uint[] indices;
+		public string text;
+		public Text(string text, int windowWidth, int windowHeight, int collectedUniform)
 		{
-			this.toolConfig = toolConfig ?? throw new ArgumentNullException(nameof(toolConfig));
-			this.guiRenderer = guiRenderer ?? throw new ArgumentNullException(nameof(guiRenderer));
-			this.graphicsControl = graphicsControl ?? throw new ArgumentNullException(nameof(graphicsControl));
-			LoadImages();
+			this.collectedUniform = collectedUniform;
+			this.text = text;
+			this.windowWidth = windowWidth;
+			this.windowHeight = windowHeight;
+			float rawScale = (float) (windowWidth - (TextPadding * 2)) / (float) ((text.Length) * (glyphWidth + 1));
+			scale = (float) Math.Floor((double) rawScale);
+
+			if (scale < 2)
+			{
+				scale = rawScale;
+			}
+
+			if (scale > 4)
+			{
+				scale = 4;
+			}
+
+			indices = new uint[text.Length * 6];
+
+			int ind = 0;
+			for (int i = 0; i < text.Length; i++)
+			{
+				indices[ind++] = (uint) (0 + (i * 4));
+				indices[ind++] = (uint) (1 + (i * 4));
+				indices[ind++] = (uint) (2 + (i * 4));
+				indices[ind++] = (uint) (2 + (i * 4));
+				indices[ind++] = (uint) (3 + (i * 4));
+				indices[ind++] = (uint) (0 + (i * 4));
+			}
+
+			float xpos = TextPadding;
+			float ypos = windowHeight - (TextPadding + (glyphHeight * scale));
+			for (int i = 0; i < text.Length; i++)
+			{
+				float textureCoordsX = ((byte) text[i] - 33) * textureItemWidth;
+				if (text[i] < '!' || text[i] > 'z')
+				{
+					textureCoordsX = ('?' - 33) * textureItemWidth;
+				}
+				//Vert1
+				vertices.Add(xpos);
+				vertices.Add(ypos + (glyphHeight * scale));
+
+				vertices.Add(textureCoordsX);
+				vertices.Add(1.0f);
+
+				vertices.Add(35.0f);
+				//Vert2
+				vertices.Add(xpos + (glyphWidth * scale));
+				vertices.Add(ypos + (glyphHeight * scale));
+
+				vertices.Add(textureCoordsX + textureItemWidth);
+				vertices.Add(1.0f);
+
+				vertices.Add(35.0f);
+				//Vert3
+				vertices.Add(xpos + (glyphWidth * scale));
+				vertices.Add(ypos);
+
+				vertices.Add(textureCoordsX + textureItemWidth);
+				vertices.Add(0.0f);
+
+				vertices.Add(35.0f);
+				//Vert4
+				vertices.Add(xpos);
+				vertices.Add(ypos);
+
+				vertices.Add(textureCoordsX);
+				vertices.Add(0.0f);
+
+				vertices.Add(35.0f);
+
+				xpos += scale * (glyphWidth + 1);
+			}
+
+			vertexArrayObject = GL.GenVertexArray();
+			GL.BindVertexArray(vertexArrayObject);
+
+			vertexBuffer = GL.GenBuffer();
+			GL.BindBuffer(BufferTarget.ArrayBuffer, vertexBuffer);
+			GL.BufferData(BufferTarget.ArrayBuffer, vertices.Count * sizeof(float), vertices.ToArray(), BufferUsageHint.StaticDraw);
+
+			GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
+			GL.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 2 * sizeof(float));
+			GL.VertexAttribPointer(2, 1, VertexAttribPointerType.Float, false, 5 * sizeof(float), 4 * sizeof(float));
+			GL.EnableVertexAttribArray(0);
+			GL.EnableVertexAttribArray(1);
+			GL.EnableVertexAttribArray(2);
+
+			textIndexBuffer = GL.GenBuffer();
+			GL.BindBuffer(BufferTarget.ElementArrayBuffer, textIndexBuffer);
+			GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw);
 		}
 
-		public bool Refreshed { get; set; }
-		public string SeedInfo
+		public void Draw()
 		{
-			get
-			{
-				return seedInfo;
-			}
-			set
-			{
-				seedInfo = value;
-				GetSeedInfo();
-			}
+			GL.BindVertexArray(vertexArrayObject);
+			GL.BindBuffer(BufferTarget.ElementArrayBuffer, textIndexBuffer);
+			GL.DrawElements(PrimitiveType.Triangles, indices.Length, DrawElementsType.UnsignedInt, 0);
 		}
-
-		public void InitializeItems(List<TrackerRelic> relics, List<Item> progressionItems, List<Item> thrustSwords)
+		public void Dispose()
 		{
-			if (relics is null) throw new ArgumentNullException(nameof(relics));
-			if (progressionItems is null) throw new ArgumentNullException(nameof(progressionItems));
-			if (thrustSwords is null) throw new ArgumentNullException(nameof(thrustSwords));
-			this.relics = relics;
-			this.progressionItems = progressionItems;
-			this.thrustSwords = thrustSwords;
-
-			foreach (var relic in relics)
-			{
-				if (relic.Progression)
-				{
-					progressionRelics++;
-				}
-			}
-
-			vladProgression = relics[25].Progression;
-
-			initialized = true;
+			GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+			GL.DeleteBuffer(vertexBuffer);
+			GL.BindVertexArray(0);
+			GL.DeleteVertexArray(vertexArrayObject);
 		}
+	}
+	internal sealed class Sprites : IDisposable
+	{
+		private int vertexBuffer;
+		private int vertexArrayObject;
+		private int indexBuffer;
+		private int collectedUniform;
+		private const int itemSize = 14;
+		private const float textureItemWidth = 1f / 7f;
+		private const float textureItemHeight = 0.2f;
+		private List<float> vertices = new();
+		private uint[] indices;
+		private float scale;
+		private Vector2[] relicSlots;
+		private int columns;
 
-		public void SetProgression()
+		public Sprites(float scale, Vector2[] relicSlots, Tracker tracker, int columns, bool grid)
 		{
-			progressionRelics = 0;
+			this.scale = scale;
+			this.relicSlots = relicSlots;
+			this.columns = columns;
 
-			foreach (var relic in relics)
+			indices = new uint[35 * 6];
+
+			int ind = 0;
+			for (int i = 0; i < 35; i++)
 			{
-				if (relic.Progression)
+				indices[ind++] = (uint) (0 + (i * 4));
+				indices[ind++] = (uint) (1 + (i * 4));
+				indices[ind++] = (uint) (2 + (i * 4));
+				indices[ind++] = (uint) (2 + (i * 4));
+				indices[ind++] = (uint) (3 + (i * 4));
+				indices[ind++] = (uint) (0 + (i * 4));
+			}
+
+			int itemCount = 0;
+			for (int i = 0; i < 25; i++)
+			{
+				if (!grid && !tracker.relics[i].Collected)
 				{
-					progressionRelics++;
+					continue;
 				}
+				AddQuad(itemCount, i);
+				itemCount++;
 			}
-			vladProgression = relics[25].Progression;
-		}
-
-		public void CalculateGrid(int width, int height)
-		{
-			this.Width = width;
-			this.Height = height;
-
-			int adjustedColumns = (int) (Columns * (((float) width / (float) height)));
-			if (adjustedColumns < 5)
+			int remainder = itemCount % columns;
+			if (remainder != 0)
 			{
-				adjustedColumns = 5;
+				itemCount += columns - remainder;
 			}
-
-			int relicCount = 25;
-			if (toolConfig.Tracker.ProgressionRelicsOnly)
-			{
-				relicCount = progressionRelics - 5;
-			}
-
-			int normalRelicRows = (int) Math.Ceiling((float) (relicCount + 1) / (float) adjustedColumns);
-
-			float cellsPerColumn = (float) (height - (LabelOffset * 2)) / ((CellSize * (2 + normalRelicRows)));
-			float cellsPerRow = (float) (width - (CellPadding * 5)) / ((CellSize * adjustedColumns));
-			scale = cellsPerColumn <= cellsPerRow ? cellsPerColumn : cellsPerRow;
-
-			double roundedScale = Math.Floor(scale);
-
-			if (scale - roundedScale < PixelPerfectSnapMargin)
-			{
-				scale = (float) roundedScale;
-			}
-
-			relicSlots = new List<Rectangle>();
-			vladRelicSlots = new List<Rectangle>();
-			progressionItemSlots = new List<Rectangle>();
-
-			int row = 0;
-			int col = 0;
-
-			for (int i = 0; i < relicCount + 1; i++)
-			{
-				if (col == adjustedColumns)
-				{
-					row++;
-					col = 0;
-				}
-				relicSlots.Add(new Rectangle((int) (CellPadding + (col * (ImageSize + CellPadding) * scale)), LabelOffset + (int) (row * (ImageSize + CellPadding) * scale), (int) (ImageSize * scale), (int) (ImageSize * scale)));
-				col++;
-			}
-
-			if (vladProgression)
-			{
-				row++;
-				col = 0;
-				for (int i = 0; i < 6; i++)
-				{
-					vladRelicSlots.Add(new Rectangle((int) (CellPadding + (col * (ImageSize + CellPadding) * scale)), LabelOffset + (int) (row * (ImageSize + CellPadding) * scale), (int) (ImageSize * scale), (int) (ImageSize * scale)));
-					col++;
-				}
-			}
-
-			row++;
-			col = 0;
 			for (int i = 0; i < 5; i++)
 			{
-				progressionItemSlots.Add(new Rectangle((int) (CellPadding + (col * (ImageSize + CellPadding) * scale)), LabelOffset + (int) (row * (ImageSize + CellPadding) * scale), (int) (ImageSize * scale), (int) (ImageSize * scale)));
-				col++;
+				if (!grid && !tracker.relics[25 + i].Collected)
+				{
+					continue;
+				}
+				AddQuad(itemCount, 25 + i);
+				itemCount++;
 			}
-			GetSeedInfo();
-		}
+			remainder = itemCount % columns;
+			if (remainder != 0)
+			{
+				itemCount += columns - remainder;
+			}
+			for (int i = 0; i < 4; i++)
+			{
+				if (!grid && !tracker.progressionItems[i].Collected)
+				{
+					continue;
+				}
+				AddQuad(itemCount, 30 + i);
+				itemCount++;
+			}
+			bool swordCollected = false;
+			for (int i = 0; i < tracker.thrustSwords.Length; i++)
+			{
+				if (tracker.thrustSwords[i].Collected)
+				{
+					swordCollected = true;
+					break;
+				}
+			}
+			if (grid || swordCollected)
+			{
+				AddQuad(itemCount, 34);
+			}
 
-		public void Render()
-		{
-			if (!initialized)
+			if (vertices.Count == 0)
 			{
 				return;
 			}
 
-			graphicsControl.Begin();
-			guiRenderer.Begin(Width, Height);
-			guiRenderer.EnableBlending();
-			guiRenderer.Owner.ClearColor(DefaultBackground);
-			if (toolConfig.Tracker.GridLayout)
+			vertexArrayObject = GL.GenVertexArray();
+			GL.BindVertexArray(vertexArrayObject);
+
+			vertexBuffer = GL.GenBuffer();
+			GL.BindBuffer(BufferTarget.ArrayBuffer, vertexBuffer);
+			GL.BufferData(BufferTarget.ArrayBuffer, vertices.Count * sizeof(float), vertices.ToArray(), BufferUsageHint.StaticDraw);
+
+			GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
+			GL.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 2 * sizeof(float));
+			GL.VertexAttribPointer(2, 1, VertexAttribPointerType.Float, false, 5 * sizeof(float), 4 * sizeof(float));
+			GL.EnableVertexAttribArray(0);
+			GL.EnableVertexAttribArray(1);
+			GL.EnableVertexAttribArray(2);
+
+			indexBuffer = GL.GenBuffer();
+			GL.BindBuffer(BufferTarget.ElementArrayBuffer, indexBuffer);
+			GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw);
+		}
+		public void Draw()
+		{
+			if (vertices.Count == 0)
 			{
-				GridRender();
+				return;
 			}
-			else
+			GL.BindVertexArray(vertexArrayObject);
+			GL.BindBuffer(BufferTarget.ElementArrayBuffer, indexBuffer);
+			GL.DrawElements(PrimitiveType.Triangles, indices.Length, DrawElementsType.UnsignedInt, 0);
+		}
+		public void Dispose()
+		{
+			if (vertices.Count == 0)
 			{
-				CollectedRender();
+				return;
 			}
-			GetSeedInfo();
-			guiRenderer.Draw(infoTexture, 0, 0);
-			guiRenderer.End();
-			graphicsControl.SwapBuffers();
+			GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+			GL.DeleteBuffer(vertexBuffer);
+			GL.BindVertexArray(0);
+			GL.DeleteVertexArray(vertexArrayObject);
+		}
+		private void AddQuad(int itemCount, int i)
+		{
+			int row = i / 7;
+			int col = i % 7;
+			//Vert1
+			vertices.Add(relicSlots[itemCount].X);
+			vertices.Add(relicSlots[itemCount].Y + (itemSize * scale));
+
+			vertices.Add(textureItemWidth * col);
+			vertices.Add(textureItemHeight * (row + 1));
+
+			vertices.Add(i);
+			//Vert2
+			vertices.Add(relicSlots[itemCount].X + (itemSize * scale));
+			vertices.Add(relicSlots[itemCount].Y + (itemSize * scale));
+
+			vertices.Add(textureItemWidth * (col + 1));
+			vertices.Add(textureItemHeight * (row + 1));
+
+			vertices.Add(i);
+			//Vert3
+			vertices.Add(relicSlots[itemCount].X + (itemSize * scale));
+			vertices.Add(relicSlots[itemCount].Y);
+
+			vertices.Add(textureItemWidth * (col + 1));
+			vertices.Add(textureItemHeight * row);
+
+			vertices.Add(i);
+			//Vert4
+			vertices.Add(relicSlots[itemCount].X);
+			vertices.Add(relicSlots[itemCount].Y);
+
+			vertices.Add(textureItemWidth * col);
+			vertices.Add(textureItemHeight * row);
+
+			vertices.Add(i);
+		}
+	}
+	internal sealed class TrackerRendererOpenGL : GameWindow
+	{
+		private const int LabelOffset = 37;
+		private const int ItemSize = 14;
+		private const int CellPadding = 2;
+		private const double PixelPerfectSnapMargin = 0.22;
+
+		private readonly Tracker tracker;
+		private readonly IToolConfig toolConfig;
+		private int shaderProgram;
+		private int texture;
+		private int font;
+		private Color clear = Color.FromArgb(17, 0, 17);
+		private int collectedUniform;
+		private int gridUniform;
+		private int uTextureUniform;
+		private Sprites sprites;
+		private Text seedInfo;
+		private int columns = 5;
+		private Vector2[] relicSlots = new Vector2[120];
+		private List<Vector2> vladRelicSlots;
+		private List<Vector2> progressionItemSlots;
+		private float[] collected = new float[36];
+
+		public TrackerRendererOpenGL(IToolConfig toolConfig, Tracker tracker)
+			: base(toolConfig.Tracker.Width, toolConfig.Tracker.Height, GraphicsMode.Default, "Autotracker")
+		{
+			this.toolConfig = toolConfig;
+			this.X = toolConfig.Tracker.Location.X;
+			this.Y = toolConfig.Tracker.Location.Y;
+			CalculateGrid(toolConfig.Tracker.Width, toolConfig.Tracker.Height);
+			//this.Icon = new Icon(Paths.BizAlucardIcon);
+			this.WindowBorder = OpenTK.WindowBorder.Resizable;
+			this.TargetRenderFrequency = 60d;
+			this.TargetUpdateFrequency = 60d;
+			this.tracker = tracker;
+
+			for (int i = 0; i < collected.Length; i++)
+			{
+				collected[i] = 0.0f;
+			}
+			collected[35] = 2.0f;
 		}
 
-		private void GetSeedInfo()
+		public float Scale { get; set; }
+
+		private int LoadTexture(string path)
 		{
-			seedInfoBitmap = new Bitmap(toolConfig.Tracker.Width - (TextPadding * 3), LabelOffset);
-			Graphics graphics = Graphics.FromImage(seedInfoBitmap);
-			int fontSize = SeedInfoFontSize;
-			Font infoFont = new Font("Tahoma", fontSize);
-			while (graphics.MeasureString(SeedInfo, infoFont).Width > (toolConfig.Tracker.Width - (TextPadding * 3)))
+			int textureId = GL.GenTexture();
+			GL.BindTexture(TextureTarget.Texture2D, textureId);
+			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int) TextureWrapMode.ClampToEdge);
+			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int) TextureWrapMode.ClampToEdge);
+			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int) TextureMinFilter.Nearest);
+			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int) TextureMagFilter.Nearest);
+
+			using (var image = new Bitmap(path))
 			{
-				fontSize--;
-				infoFont = new Font("Tahoma", fontSize);
+				image.RotateFlip(RotateFlipType.Rotate180FlipX);
+				var data = image.LockBits(
+					new Rectangle(0, 0, image.Width, image.Height),
+					System.Drawing.Imaging.ImageLockMode.ReadOnly,
+					System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+
+				GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, data.Width, data.Height, 0,
+					OpenTK.Graphics.OpenGL4.PixelFormat.Bgra, PixelType.UnsignedByte, data.Scan0);
+
+				image.UnlockBits(data);
 			}
-			graphics.DrawString(SeedInfo, infoFont, textBrush, TextPadding, TextPadding);
-			infoTexture = guiRenderer.Owner.LoadTexture(seedInfoBitmap);
+
+			GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+			return textureId;
 		}
 
-		private void GridRender()
+		protected override void OnLoad(EventArgs e)
 		{
-			int normalRelicCount = 0;
-			int slotWidth = relicSlots[0].Width;
-			int slotHeight = relicSlots[0].Height;
-			float offset = 14 / texture.Width;
-			float itemsOffset = 600 / texture.Width;
-			for (int i = 0; i < 25; i++)
+			base.OnLoad(e);
+
+			GL.ClearColor(clear);
+
+			int vertexShader = GL.CreateShader(ShaderType.VertexShader);
+			GL.ShaderSource(vertexShader, File.ReadAllText(Paths.VertexShader));
+			GL.CompileShader(vertexShader);
+
+			unsafe
 			{
-				if (toolConfig.Tracker.ProgressionRelicsOnly && !relics[i].Progression)
-				{
-					continue;
-				}
-				guiRenderer.DrawSubrect(relics[i].Collected ? texture : greyscaleTexture, relicSlots[normalRelicCount].Location.X, relicSlots[normalRelicCount].Location.Y, slotWidth, slotHeight, 20 * i / texture.Width, 0, (20 * i / texture.Width) + offset, 1);
-				normalRelicCount++;
+				int status;
+				GL.GetShader(vertexShader, ShaderParameter.CompileStatus, &status);
+				Console.WriteLine(status);
 			}
-			var thrustSword = thrustSwords.Where(x => x.Status).FirstOrDefault();
-			guiRenderer.DrawSubrect(thrustSword is not null ? texture : greyscaleTexture, relicSlots[normalRelicCount].Location.X, relicSlots[normalRelicCount].Location.Y, slotWidth, slotHeight, 680 / texture.Width, 0, 694 / texture.Width, 1);
+			string infoLog = GL.GetShaderInfoLog(vertexShader);
+			Console.WriteLine(infoLog);
 
+			int fragmentShader = GL.CreateShader(ShaderType.FragmentShader);
+			GL.ShaderSource(fragmentShader, File.ReadAllText(Paths.FragmentShader));
+			GL.CompileShader(fragmentShader);
 
-			if (vladProgression)
+			shaderProgram = GL.CreateProgram();
+			GL.AttachShader(shaderProgram, vertexShader);
+			GL.AttachShader(shaderProgram, fragmentShader);
+			GL.LinkProgram(shaderProgram);
+
+			unsafe
 			{
-				for (int i = 25; i < relics.Count; i++)
-				{
-					guiRenderer.DrawSubrect(relics[i].Collected ? texture : greyscaleTexture, vladRelicSlots[i - 25].Location.X, vladRelicSlots[i - 25].Location.Y, slotWidth, slotHeight, 20 * i / texture.Width, 0, (20 * i / texture.Width) + offset, 1);
-				}
+				int status;
+				GL.GetProgram(shaderProgram, GetProgramParameterName.LinkStatus, &status);
+				Console.WriteLine(status);
 			}
+			infoLog = GL.GetProgramInfoLog(shaderProgram);
+			Console.WriteLine(infoLog);
 
-			for (int i = 0; i < progressionItems.Count; i++)
+			GL.DeleteShader(vertexShader);
+			GL.DeleteShader(fragmentShader);
+
+			int[] viewportData = new int[4];
+			GL.GetInteger(GetPName.Viewport, viewportData);
+			GL.UseProgram(shaderProgram);
+			GL.Uniform2(GL.GetUniformLocation(shaderProgram, "viewportSize"), (float) viewportData[2], (float) viewportData[3]);
+			collectedUniform = GL.GetUniformLocation(shaderProgram, "collected");
+			gridUniform = GL.GetUniformLocation(shaderProgram, "grid");
+			uTextureUniform = GL.GetUniformLocation(shaderProgram, "uTexture");
+			GL.Uniform1(gridUniform, 1);
+
+			GL.UseProgram(shaderProgram);
+			texture = LoadTexture(Paths.CombinedTexture);
+			font = LoadTexture(Paths.FontAtlas);
+			GL.ActiveTexture(TextureUnit.Texture0);
+			GL.BindTexture(TextureTarget.Texture2D, texture);
+			GL.ActiveTexture(TextureUnit.Texture1);
+			GL.BindTexture(TextureTarget.Texture2D, font);
+			int[] textures = new int[2];
+			textures[0] = 0;
+			textures[1] = 1;
+			GL.Uniform1(uTextureUniform, 2, textures);
+
+			GL.Enable(EnableCap.Blend);
+			GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+			GL.UseProgram(shaderProgram);
+
+			CheckForErrors();
+		}
+
+		private void CheckForErrors()
+		{
+			ErrorCode error = GL.GetError();
+			while (error != ErrorCode.NoError)
 			{
-				guiRenderer.DrawSubrect(progressionItems[i].Status ? texture : greyscaleTexture, progressionItemSlots[i].Location.X, progressionItemSlots[i].Location.Y, slotWidth, slotHeight, (20 * i / texture.Width) + itemsOffset, 0, (20 * i / texture.Width) + itemsOffset + offset, 1);
+				Console.WriteLine(error.ToString());
+				error = GL.GetError();
 			}
 		}
 
-		private void CollectedRender()
+		protected override void OnUpdateFrame(FrameEventArgs e)
 		{
-			int normalRelicCount = 0;
-			int slotWidth = relicSlots[0].Width;
-			int slotHeight = relicSlots[0].Height;
-			float offset = 14 / texture.Width;
-			float itemsOffset = 600 / texture.Width;
-			for (int i = 0; i < 25; i++)
+			base.OnUpdateFrame(e);
+
+			bool changes = false;
+			for (int i = 0; i < tracker.relics.Length; i++)
 			{
-				if (relics[i].Collected && ((toolConfig.Tracker.ProgressionRelicsOnly && relics[i].Progression) || !toolConfig.Tracker.ProgressionRelicsOnly))
+				if (collected[i] == 0.0f && tracker.relics[i].Collected)
 				{
-					guiRenderer.DrawSubrect(texture, relicSlots[normalRelicCount].Location.X, relicSlots[normalRelicCount].Location.Y, slotWidth, slotHeight, 20 * i / texture.Width, 0, (20 * i / texture.Width) + offset, 1);
-					normalRelicCount++;
+					changes = true;
+					collected[i] = 0.1f;
+				}
+				if (collected[i] != 0.0f && !tracker.relics[i].Collected)
+				{
+					changes = true;
+					collected[i] = 0.0f;
 				}
 			}
-			var thrustSword = thrustSwords.Where(x => x.Status).FirstOrDefault();
-			if (thrustSword != null)
+			for (int i = 0; i < tracker.progressionItems.Length; i++)
 			{
-				guiRenderer.DrawSubrect(texture, relicSlots[normalRelicCount].Location.X, relicSlots[normalRelicCount].Location.Y, slotWidth, slotHeight, 680 / texture.Width, 0, 694 / texture.Width, 1);
+				if (collected[30 + i] == 0.0f && tracker.progressionItems[i].Collected)
+				{
+					changes = true;
+					collected[30 + i] = 0.1f;
+				}
+				if (collected[30 + i] != 0.0f && !tracker.progressionItems[i].Collected)
+				{
+					changes = true;
+					collected[30 + i] = 0.0f;
+				}
+			}
+			bool swordCollected = false;
+			for (int i = 0; i < tracker.thrustSwords.Length; i++)
+			{
+				if (tracker.thrustSwords[i].Collected)
+				{
+					changes = true;
+					swordCollected = true;
+					break;
+				}
+			}
+			if (collected[34] == 0.0f && swordCollected)
+			{
+				collected[34] = 0.1f;
+			}
+			if (collected[34] != 0.0f && !swordCollected)
+			{
+				collected[34] = 0.0f;
 			}
 
-			if (vladProgression)
+			for (int i = 0; i < collected.Length; i++)
 			{
-				int vladRelicCount = 0;
-				for (int i = 25; i < relics.Count; i++)
+				if (collected[i] > 0.0f && collected[i] < 1.73322f)
 				{
-					if (relics[i].Collected)
-					{
-						guiRenderer.DrawSubrect(texture, vladRelicSlots[vladRelicCount].Location.X, vladRelicSlots[vladRelicCount].Location.Y, slotWidth, slotHeight, 20 * i / texture.Width, 0, (20 * i / texture.Width) + offset, 1);
-						vladRelicCount++;
-					}
+					collected[i] += 0.01014f;
 				}
 			}
 
-			int progressionItemCount = 0;
-			for (int i = 0; i < progressionItems.Count; i++)
+			if (seedInfo.text != tracker.SeedInfo)
 			{
-				if (progressionItems[i].Status)
-				{
-					guiRenderer.DrawSubrect(texture, progressionItemSlots[progressionItemCount].Location.X, progressionItemSlots[progressionItemCount].Location.Y, slotWidth, slotHeight, (20 * i / texture.Width) + itemsOffset, 0, (20 * i / texture.Width) + itemsOffset + offset, 1);
-					progressionItemCount++;
-				}
+				seedInfo.Dispose();
+				seedInfo = new Text(tracker.SeedInfo, Width, Height, collectedUniform);
+			}
+
+			if (changes || !toolConfig.Tracker.GridLayout)
+			{
+				sprites = new Sprites(Scale, relicSlots, tracker, columns, toolConfig.Tracker.GridLayout);
 			}
 		}
 
-		private void LoadImages()
+		protected override void OnRenderFrame(FrameEventArgs e)
 		{
-			Bitmap textureBitmap = new Bitmap(Paths.CombinedTexture);
-			Bitmap greyscaleTextureBitmap = new Bitmap(Paths.CombinedTexture);
-			for (int i = 0; i < greyscaleTextureBitmap.Width; i++)
-			{
-				for (int j = 0; j < greyscaleTextureBitmap.Height; j++)
-				{
-					Color pixelColor = greyscaleTextureBitmap.GetPixel(i, j);
-					int grayScale = (int) ((pixelColor.R * 0.1) + (pixelColor.G * 0.3) + (pixelColor.B * 0.1));
-					Color adjusted = Color.FromArgb(pixelColor.A, grayScale, grayScale, grayScale);
-					greyscaleTextureBitmap.SetPixel(i, j, adjusted);
-				}
-			}
-
-			texture = guiRenderer.Owner.LoadTexture(textureBitmap);
-			greyscaleTexture = guiRenderer.Owner.LoadTexture(greyscaleTextureBitmap);
+			base.OnRenderFrame(e);
+			GL.Clear(ClearBufferMask.ColorBufferBit);
+			GL.Uniform1(collectedUniform, collected.Length, collected);
+			sprites.Draw();
+			seedInfo.Draw();
+			SwapBuffers();
 		}
 
-		public void ChangeGraphics(IGraphics formGraphics)
+		protected override void OnResize(EventArgs e)
 		{
-			return;
+			base.OnResize(e);
+
+			if (Width > 1500 || Height > 1500 || Width < 200 || Height < 200)
+			{
+				Width = toolConfig.Tracker.Width;
+				Height = toolConfig.Tracker.Height;
+			}
+
+			GL.Viewport(0, 0, Width, Height);
+
+			int[] viewportData = new int[4];
+			GL.GetInteger(GetPName.Viewport, viewportData);
+			GL.UseProgram(shaderProgram);
+			int viewportSizeUniform = GL.GetUniformLocation(shaderProgram, "viewportSize");
+			GL.Uniform2(viewportSizeUniform, (float) viewportData[2], (float) viewportData[3]);
+
+			CalculateGrid(Width, Height);
+			ClearSprites();
+			seedInfo = new Text(tracker.SeedInfo, this.Width, this.Height, collectedUniform);
+			sprites = new Sprites(Scale, relicSlots, tracker, columns, toolConfig.Tracker.GridLayout);
+		}
+
+		private void ClearSprites()
+		{
+			if (sprites != null)
+			{
+				sprites.Dispose();
+			}
+			if (seedInfo != null)
+			{
+				seedInfo.Dispose();
+			}
+		}
+
+		protected override void OnUnload(EventArgs e)
+		{
+			ClearSprites();
+
+			GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
+
+			GL.UseProgram(0);
+			GL.DeleteProgram(shaderProgram);
+
+			GL.DeleteTexture(texture);
+			GL.DeleteTexture(font);
+
+			base.OnUnload(e);
+		}
+
+		public void CalculateGrid(int width, int height)
+		{
+			columns = (int) (8 * (((float) width / (float) height)));
+			if (columns < 5)
+			{
+				columns = 5;
+			}
+
+			int relicCount = 25;
+
+			int normalRelicRows = (int) Math.Ceiling((float) (relicCount) / (float) columns);
+
+			int cellSize = ItemSize + CellPadding;
+			float cellsPerColumn = (float) (height - (LabelOffset + CellPadding)) / ((cellSize * (2 + normalRelicRows)));
+			float cellsPerRow = (float) (width - (CellPadding * 5)) / ((cellSize * columns));
+			Scale = (float) Math.Round((cellsPerColumn <= cellsPerRow ? cellsPerColumn : cellsPerRow), 2);
+
+			double roundedScale = Math.Floor(Scale);
+
+			if (Scale - roundedScale < PixelPerfectSnapMargin)
+			{
+				Scale = (float) roundedScale;
+			}
+
+			vladRelicSlots = new List<Vector2>();
+			progressionItemSlots = new List<Vector2>();
+
+
+			int row = 0;
+			int col = 0;
+			int totalCells = columns * (normalRelicRows + 2);
+
+			for (int i = 0; i < totalCells; i++)
+			{
+				if (col == columns)
+				{
+					row++;
+					col = 0;
+				}
+				relicSlots[i] = new Vector2(CellPadding + (col * (ItemSize + CellPadding) * Scale), this.Height - (LabelOffset + (ItemSize + CellPadding) * Scale) - (row * (ItemSize + CellPadding) * Scale));
+				col++;
+			}
 		}
 	}
 }
