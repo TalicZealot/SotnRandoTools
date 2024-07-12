@@ -35,9 +35,9 @@ namespace SotnRandoTools.RandoTracker
 			float rawScale = (float) (windowWidth - (TextPadding * 2)) / (float) ((text.Length) * (glyphWidth + 1));
 			scale = (float) Math.Floor((double) rawScale);
 
-			if (scale < 1)
+			if (rawScale < 1)
 			{
-				scale = rawScale;
+				scale = 1;
 			}
 
 			if (scale > 4)
