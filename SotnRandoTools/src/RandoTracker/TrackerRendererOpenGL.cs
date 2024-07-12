@@ -35,7 +35,7 @@ namespace SotnRandoTools.RandoTracker
 			float rawScale = (float) (windowWidth - (TextPadding * 2)) / (float) ((text.Length) * (glyphWidth + 1));
 			scale = (float) Math.Floor((double) rawScale);
 
-			if (scale < 2)
+			if (scale < 1)
 			{
 				scale = rawScale;
 			}
@@ -335,7 +335,7 @@ namespace SotnRandoTools.RandoTracker
 			this.X = toolConfig.Tracker.Location.X;
 			this.Y = toolConfig.Tracker.Location.Y;
 			CalculateGrid(toolConfig.Tracker.Width, toolConfig.Tracker.Height);
-			//this.Icon = new Icon(Paths.BizAlucardIcon);
+			this.Icon = new Icon(Paths.BizAlucardIcon);
 			this.WindowBorder = OpenTK.WindowBorder.Resizable;
 			this.TargetRenderFrequency = 60d;
 			this.TargetUpdateFrequency = 60d;
@@ -475,12 +475,12 @@ namespace SotnRandoTools.RandoTracker
 			}
 			for (int i = 0; i < tracker.progressionItems.Length; i++)
 			{
-				if (collected[30 + i] == 0.0f && tracker.progressionItems[i].Collected)
+				if (collected[30 + i] == 0.0f && (tracker.progressionItems[i].Collected || tracker.progressionItems[i].Equipped))
 				{
 					changes = true;
 					collected[30 + i] = 0.1f;
 				}
-				if (collected[30 + i] != 0.0f && !tracker.progressionItems[i].Collected)
+				if (collected[30 + i] != 0.0f && !tracker.progressionItems[i].Collected && !tracker.progressionItems[i].Equipped)
 				{
 					changes = true;
 					collected[30 + i] = 0.0f;
@@ -489,7 +489,7 @@ namespace SotnRandoTools.RandoTracker
 			bool swordCollected = false;
 			for (int i = 0; i < tracker.thrustSwords.Length; i++)
 			{
-				if (tracker.thrustSwords[i].Collected)
+				if (tracker.thrustSwords[i].Collected || tracker.thrustSwords[i].Equipped)
 				{
 					changes = true;
 					swordCollected = true;
