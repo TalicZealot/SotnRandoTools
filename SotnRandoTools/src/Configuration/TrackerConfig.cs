@@ -50,7 +50,7 @@ namespace SotnRandoTools.Configuration
 							byteList.Add(Convert.ToByte(reader.Value));
 							break;
 						case JsonToken.EndArray:
-							return TrackerConfig.GetDefaultOverlay();
+							return byteList.ToArray();
 						case JsonToken.Comment:
 							// skip
 							break;

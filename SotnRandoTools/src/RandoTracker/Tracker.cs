@@ -1249,6 +1249,7 @@ namespace SotnRandoTools.RandoTracker
 			}
 		}
 
+		//TODO: portal spell discovery
 		private void ColorMapRoom(int locationIndex, uint color, bool secondCastle)
 		{
 			uint x = (uint) locations[locationIndex].X;
