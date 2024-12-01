@@ -37,6 +37,8 @@ namespace SotnRandoTools
             this.portTextBox = new System.Windows.Forms.TextBox();
             this.volumeBox = new System.Windows.Forms.GroupBox();
             this.volumeBar = new System.Windows.Forms.TrackBar();
+            this.sendBindLabel = new System.Windows.Forms.Label();
+            this.sendComboBox = new System.Windows.Forms.ComboBox();
             this.optionsBox.SuspendLayout();
             this.volumeBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.volumeBar)).BeginInit();
@@ -78,6 +80,8 @@ namespace SotnRandoTools
             // 
             // optionsBox
             // 
+            this.optionsBox.Controls.Add(this.sendComboBox);
+            this.optionsBox.Controls.Add(this.sendBindLabel);
             this.optionsBox.Controls.Add(this.portLabel);
             this.optionsBox.Controls.Add(this.portTextBox);
             this.optionsBox.ForeColor = System.Drawing.Color.White;
@@ -124,6 +128,31 @@ namespace SotnRandoTools
             this.volumeBar.TabIndex = 0;
             this.volumeBar.Scroll += new System.EventHandler(this.volumeBar_Scroll);
             // 
+            // sendBindLabel
+            // 
+            this.sendBindLabel.AutoSize = true;
+            this.sendBindLabel.Location = new System.Drawing.Point(6, 64);
+            this.sendBindLabel.Name = "sendBindLabel";
+            this.sendBindLabel.Size = new System.Drawing.Size(70, 13);
+            this.sendBindLabel.TabIndex = 2;
+            this.sendBindLabel.Text = "Send button:";
+            // 
+            // sendComboBox
+            // 
+            this.sendComboBox.CausesValidation = false;
+            this.sendComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.sendComboBox.FormattingEnabled = true;
+            this.sendComboBox.Items.AddRange(new object[] {
+            "Select",
+            "Triangle",
+            "L3",
+            "R3"});
+            this.sendComboBox.Location = new System.Drawing.Point(91, 64);
+            this.sendComboBox.Name = "sendComboBox";
+            this.sendComboBox.Size = new System.Drawing.Size(121, 21);
+            this.sendComboBox.TabIndex = 3;
+            this.sendComboBox.SelectedIndexChanged += new System.EventHandler(this.sendComboBox_SelectedIndexChanged);
+            // 
             // CoopSettingsPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -159,5 +188,7 @@ namespace SotnRandoTools
 		private System.Windows.Forms.TextBox portTextBox;
         private System.Windows.Forms.GroupBox volumeBox;
         private System.Windows.Forms.TrackBar volumeBar;
-    }
+		private System.Windows.Forms.ComboBox sendComboBox;
+		private System.Windows.Forms.Label sendBindLabel;
+	}
 }

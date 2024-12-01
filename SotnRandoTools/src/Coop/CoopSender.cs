@@ -13,11 +13,12 @@ namespace SotnRandoTools.Coop
 		private readonly ISotnApi sotnApi;
 		private readonly IWatchlistService watchlistService;
 		private readonly ICoopController coopController;
-		private bool selectPressedFrame1 = false;
-		private bool selectPressedFrame2 = false;
-		private bool selectPressed = false;
+		private bool sendPressedFrame1 = false;
+		private bool sendPressedFrame2 = false;
+		private bool sendPressed = false;
 		private bool inGame = false;
 		private bool gameStarted = false;
+		private ushort[] sendButton = new ushort[4] { SotnApi.Constants.Values.Game.Controller.Select, SotnApi.Constants.Values.Game.Controller.Triangle, SotnApi.Constants.Values.Game.Controller.L3, SotnApi.Constants.Values.Game.Controller.R3 };
 
 		public CoopSender(IToolConfig toolConfig, IWatchlistService watchlistService, ISotnApi sotnApi, ICoopController coopController)
 		{
@@ -48,7 +49,7 @@ namespace SotnRandoTools.Coop
 			{
 				return;
 			}
-			CheckSelectButton();
+			CheckSendButton();
 			SendRelics();
 			SendItem();
 			SendLocations();
@@ -56,36 +57,36 @@ namespace SotnRandoTools.Coop
 			CheckSynchRequest();
 		}
 
-		private void CheckSelectButton()
+		private void CheckSendButton()
 		{
-			selectPressedFrame1 = selectPressedFrame2;
-			if ((sotnApi.GameApi.InputFlags & SotnApi.Constants.Values.Game.Controller.Select) == SotnApi.Constants.Values.Game.Controller.Select)
+			sendPressedFrame1 = sendPressedFrame2;
+			if ((sotnApi.GameApi.InputFlags & sendButton[toolConfig.Coop.SendButton]) == sendButton[toolConfig.Coop.SendButton])
 			{
-				selectPressedFrame2 = true;
+				sendPressedFrame2 = true;
 			}
 			else
 			{
-				selectPressedFrame2 = false;
+				sendPressedFrame2 = false;
 			}
 
-			if (selectPressedFrame2 && !selectPressedFrame1)
+			if (sendPressedFrame2 && !sendPressedFrame1)
 			{
-				selectPressed = true;
+				sendPressed = true;
 			}
 			else
 			{
-				selectPressed = false;
+				sendPressed = false;
 			}
 		}
 
 		private void SendItem()
 		{
-			if (!sotnApi.GameApi.EquipMenuOpen() || !sotnApi.GameApi.IsInMenu() || !selectPressed)
+			if (!sotnApi.GameApi.EquipMenuOpen() || !sotnApi.GameApi.IsInMenu() || !sendPressed)
 			{
 				return;
 			}
 
-			selectPressed = true;
+			sendPressed = true;
 			int item = sotnApi.AlucardApi.GetSelectedItem();
 			if (item != -1 && sotnApi.AlucardApi.HasItemInInventory(item))
 			{
@@ -179,7 +180,7 @@ namespace SotnRandoTools.Coop
 
 		private void CheckSynchRequest()
 		{
-			if (!sotnApi.GameApi.RelicMenuOpen() || !sotnApi.GameApi.IsInMenu() || !selectPressed)
+			if (!sotnApi.GameApi.RelicMenuOpen() || !sotnApi.GameApi.IsInMenu() || !sendPressed)
 			{
 				return;
 			}

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using SotnRandoTools.Configuration;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Services;
 
@@ -23,6 +24,7 @@ namespace SotnRandoTools
 		{
 			portTextBox.Text = toolConfig.Coop.DefaultPort.ToString();
 			volumeBar.Value = toolConfig.Coop.Volume;
+			sendComboBox.SelectedIndex = toolConfig.Coop.SendButton;
 		}
 
 		private void saveButton_Click(object sender, EventArgs e)
@@ -42,6 +44,11 @@ namespace SotnRandoTools
 			{
 				NotificationService.Volume = (float) volumeBar.Value / 10F;
 			}
+		}
+
+		private void sendComboBox_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			toolConfig.Coop.SendButton = sendComboBox.SelectedIndex;
 		}
 	}
 }

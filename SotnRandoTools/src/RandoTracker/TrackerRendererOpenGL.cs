@@ -335,7 +335,13 @@ namespace SotnRandoTools.RandoTracker
 			this.X = toolConfig.Tracker.Location.X;
 			this.Y = toolConfig.Tracker.Location.Y;
 			CalculateGrid(toolConfig.Tracker.Width, toolConfig.Tracker.Height);
-			this.Icon = new Icon(Paths.BizAlucardIcon);
+			try
+			{
+				this.Icon = new Icon(Paths.BizAlucardIcon);
+			}
+			catch (Exception)
+			{
+			}
 			this.WindowBorder = OpenTK.WindowBorder.Resizable;
 			this.TargetRenderFrequency = 60d;
 			this.TargetUpdateFrequency = 60d;
