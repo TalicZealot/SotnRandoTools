@@ -10,6 +10,7 @@ using SotnRandoTools.Constants;
 using SotnRandoTools.Coop;
 using SotnRandoTools.Coop.Enums;
 using SotnRandoTools.Coop.Models;
+using SotnRandoTools.RandoTracker.Interfaces;
 using SotnRandoTools.Services;
 
 namespace SotnRandoTools
@@ -23,17 +24,16 @@ namespace SotnRandoTools
 		private bool addressValidated = false;
 		private Color BaseBackground = Color.FromArgb(17, 0, 17);
 
-		public CoopForm(IToolConfig toolConfig, IWatchlistService watchlistService, ISotnApi sotnApi, IJoypadApi joypadApi, INotificationService notificationService)
+		public CoopForm(IToolConfig toolConfig, ISotnApi sotnApi, IJoypadApi joypadApi, INotificationService notificationService, ILocationTracker locationTracker)
 		{
 			if (toolConfig is null) throw new ArgumentNullException(nameof(toolConfig));
-			if (watchlistService is null) throw new ArgumentNullException(nameof(watchlistService));
 			if (sotnApi is null) throw new ArgumentNullException(nameof(sotnApi));
 			if (joypadApi is null) throw new ArgumentNullException(nameof(joypadApi));
 			if (notificationService is null) throw new ArgumentNullException(nameof(notificationService));
 			this.toolConfig = toolConfig;
 			this.notificationService = notificationService;
 
-			this.coopController = new CoopController(toolConfig, watchlistService, sotnApi, coopViewModel, notificationService);
+			this.coopController = new CoopController(toolConfig, sotnApi, coopViewModel, notificationService, locationTracker);
 			InitializeComponent();
 			SuspendLayout();
 			ResumeLayout();

@@ -4,10 +4,8 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Media;
 using BizHawk.Client.Common;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Constants;
@@ -43,7 +41,7 @@ namespace SotnRandoTools.Services
 			overlaySocketServer = new OverlaySocketServer(toolConfig);
 			scale = clientAPI.GetWindowSize();
 			ResizeImages();
-			wvplr = new((float)(toolConfig.Coop.Volume / 10f), globalConfig);
+			wvplr = new((float) (toolConfig.Coop.Volume / 10f), globalConfig);
 		}
 
 		public float Volume

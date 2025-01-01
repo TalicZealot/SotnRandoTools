@@ -8,7 +8,7 @@ namespace SotnRandoTools.RandoTracker.Models
 		[JsonProperty("address")]
 		public string Address { get; set; }
 		[JsonProperty("values")]
-		public string[] Values { get; set; }
+		public string Values { get; set; }
 	}
 	internal sealed class ExtensionLocation
 	{
@@ -26,8 +26,8 @@ namespace SotnRandoTools.RandoTracker.Models
 	internal sealed class Extension
 	{
 		[JsonProperty("extends")]
-		public string Extends { get; set; } = "classic";
-		[JsonProperty("customLocations")]
+		public string Extends { get; set; } = string.Empty;
+		[JsonProperty("locations")]
 		public List<ExtensionLocation> Locations { get; set; } = new List<ExtensionLocation>();
 	}
 }

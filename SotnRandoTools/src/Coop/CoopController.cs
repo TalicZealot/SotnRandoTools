@@ -6,6 +6,8 @@ using SotnRandoTools.Constants;
 using SotnRandoTools.Coop.Enums;
 using SotnRandoTools.Coop.Interfaces;
 using SotnRandoTools.Coop.Models;
+using SotnRandoTools.RandoTracker.Interfaces;
+using SotnRandoTools.RandoTracker.Models;
 using SotnRandoTools.Services;
 
 namespace SotnRandoTools.Coop
@@ -15,20 +17,38 @@ namespace SotnRandoTools.Coop
 		private readonly CoopReceiver coopReceiver;
 		private readonly CoopSender coopSender;
 		private readonly ICoopViewModel coopViewModel;
+		private readonly ISotnApi sotnApi;
 		private CoopNetworking? socket;
+		private CoopState coopState;
 
-		public CoopController(IToolConfig toolConfig, IWatchlistService watchlistService, ISotnApi sotnApi, ICoopViewModel coopViewModel, INotificationService notificationService)
+		public CoopController(IToolConfig toolConfig, ISotnApi sotnApi, ICoopViewModel coopViewModel, INotificationService notificationService, ILocationTracker locationTracker)
 		{
 			this.coopViewModel = coopViewModel ?? throw new ArgumentNullException(nameof(coopViewModel));
-			coopSender = new CoopSender(toolConfig, watchlistService, sotnApi, this);
-			coopReceiver = new CoopReceiver(toolConfig, watchlistService, sotnApi, notificationService, this);
+			this.sotnApi = sotnApi ?? throw new ArgumentNullException(nameof(sotnApi));
+			coopSender = new CoopSender(toolConfig, sotnApi, this);
+			coopReceiver = new CoopReceiver(toolConfig, sotnApi, notificationService, this);
+			coopState = new CoopState(sotnApi, locationTracker);
 		}
+
+		public CoopState CoopState
+		{
+			get
+			{
+				return coopState;
+			} 
+		}
+
+		public bool SynchRequested { get; set; }
 
 		public void Update()
 		{
 			if (socket == null)
 			{
 				return;
+			}
+			if (sotnApi.GameApi.InAlucardMode())
+			{
+				coopState.Update();
 			}
 			coopSender.Update();
 			coopReceiver.Update();
@@ -97,6 +117,7 @@ namespace SotnRandoTools.Coop
 			}
 		}
 
+		//TODO: investigate send queue
 		public void SendData(byte[] data)
 		{
 			System.Diagnostics.Debug.Assert(data != null);

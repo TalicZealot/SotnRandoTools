@@ -60,6 +60,7 @@ namespace SotnRandoTools
             this.saveLayoutButton = new System.Windows.Forms.Button();
             this.openLayoutDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveLayoutDialog = new System.Windows.Forms.SaveFileDialog();
+            this.alwaysOpTopCheckbox = new System.Windows.Forms.CheckBox();
             this.relicDisplayGroup.SuspendLayout();
             this.layoutGroup.SuspendLayout();
             this.optionsGroup.SuspendLayout();
@@ -176,6 +177,7 @@ namespace SotnRandoTools
             // 
             // optionsGroup
             // 
+            this.optionsGroup.Controls.Add(this.alwaysOpTopCheckbox);
             this.optionsGroup.Controls.Add(this.stereoCheckBox);
             this.optionsGroup.Controls.Add(this.muteCheckBox);
             this.optionsGroup.Controls.Add(this.autosplitterCheckBox);
@@ -185,7 +187,7 @@ namespace SotnRandoTools
             this.optionsGroup.ForeColor = System.Drawing.Color.White;
             this.optionsGroup.Location = new System.Drawing.Point(206, 56);
             this.optionsGroup.Name = "optionsGroup";
-            this.optionsGroup.Size = new System.Drawing.Size(182, 162);
+            this.optionsGroup.Size = new System.Drawing.Size(182, 196);
             this.optionsGroup.TabIndex = 6;
             this.optionsGroup.TabStop = false;
             this.optionsGroup.Text = "Options";
@@ -265,16 +267,16 @@ namespace SotnRandoTools
             this.customSeedGroup.Controls.Add(this.customLocationsEquipmentRadio);
             this.customSeedGroup.Controls.Add(this.customLocationsGuardedRadio);
             this.customSeedGroup.ForeColor = System.Drawing.Color.White;
-            this.customSeedGroup.Location = new System.Drawing.Point(206, 224);
+            this.customSeedGroup.Location = new System.Drawing.Point(206, 258);
             this.customSeedGroup.Name = "customSeedGroup";
-            this.customSeedGroup.Size = new System.Drawing.Size(182, 150);
+            this.customSeedGroup.Size = new System.Drawing.Size(182, 116);
             this.customSeedGroup.TabIndex = 7;
             this.customSeedGroup.TabStop = false;
             this.customSeedGroup.Text = "Custom Location Extension";
             // 
             // customExtension
             // 
-            this.customExtension.Location = new System.Drawing.Point(6, 115);
+            this.customExtension.Location = new System.Drawing.Point(6, 87);
             this.customExtension.Name = "customExtension";
             this.customExtension.Size = new System.Drawing.Size(170, 21);
             this.customExtension.TabIndex = 6;
@@ -283,7 +285,7 @@ namespace SotnRandoTools
             // customLocationsCustomExtensionRadio
             // 
             this.customLocationsCustomExtensionRadio.AutoSize = true;
-            this.customLocationsCustomExtensionRadio.Location = new System.Drawing.Point(6, 92);
+            this.customLocationsCustomExtensionRadio.Location = new System.Drawing.Point(6, 64);
             this.customLocationsCustomExtensionRadio.Name = "customLocationsCustomExtensionRadio";
             this.customLocationsCustomExtensionRadio.Size = new System.Drawing.Size(61, 17);
             this.customLocationsCustomExtensionRadio.TabIndex = 5;
@@ -432,6 +434,17 @@ namespace SotnRandoTools
             this.saveLayoutDialog.Filter = "layout config files|*.ini";
             this.saveLayoutDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.saveLayoutDialog_FileOk);
             // 
+            // alwaysOpTopCheckbox
+            // 
+            this.alwaysOpTopCheckbox.AutoSize = true;
+            this.alwaysOpTopCheckbox.Location = new System.Drawing.Point(6, 157);
+            this.alwaysOpTopCheckbox.Name = "alwaysOpTopCheckbox";
+            this.alwaysOpTopCheckbox.Size = new System.Drawing.Size(94, 17);
+            this.alwaysOpTopCheckbox.TabIndex = 6;
+            this.alwaysOpTopCheckbox.Text = "Always on top";
+            this.alwaysOpTopCheckbox.UseVisualStyleBackColor = true;
+            this.alwaysOpTopCheckbox.CheckedChanged += new System.EventHandler(this.alwaysOpTopCheckbox_CheckedChanged);
+            // 
             // AutotrackerSettingsPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -501,5 +514,6 @@ namespace SotnRandoTools
 		private System.Windows.Forms.SaveFileDialog saveLayoutDialog;
 		private System.Windows.Forms.RadioButton customLocationsCustomExtensionRadio;
 		private System.Windows.Forms.TextBox customExtension;
+		private System.Windows.Forms.CheckBox alwaysOpTopCheckbox;
 	}
 }

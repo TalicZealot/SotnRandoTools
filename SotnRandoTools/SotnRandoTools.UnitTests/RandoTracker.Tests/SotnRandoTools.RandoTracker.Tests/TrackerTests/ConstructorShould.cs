@@ -1,9 +1,9 @@
-﻿using NSubstitute;
+﻿using System;
+using NSubstitute;
 using SotnApi.Interfaces;
 using SotnRandoTools.Configuration;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Services;
-using System;
 using Xunit;
 
 namespace SotnRandoTools.RandoTracker.Tests.TrackerTests
@@ -15,23 +15,10 @@ namespace SotnRandoTools.RandoTracker.Tests.TrackerTests
         {
             //Arrange
             var mockedToolConfig = Substitute.For<IToolConfig>();
-            var mockedwatchlistService = Substitute.For<IWatchlistService>();
             var mockedSotnApi = Substitute.For<ISotnApi>();
             var mockedNotificationService = Substitute.For<INotificationService>();
             //Act&Assert
-            Assert.Throws<ArgumentNullException>(() => new Tracker(null, mockedwatchlistService, mockedSotnApi, mockedNotificationService));
-        }
-
-        [Fact]
-        public void ThrowArgumentNullException_WhenWatchlistServiceIsNull()
-        {
-            //Arrange
-            var mockedToolConfig = Substitute.For<IToolConfig>();
-            var mockedwatchlistService = Substitute.For<IWatchlistService>();
-            var mockedSotnApi = Substitute.For<ISotnApi>();
-            var mockedNotificationService = Substitute.For<INotificationService>();
-            //Act&Assert
-            Assert.Throws<ArgumentNullException>(() => new Tracker(mockedToolConfig, null, mockedSotnApi, mockedNotificationService));
+            Assert.Throws<ArgumentNullException>(() => new Tracker(null, mockedSotnApi, mockedNotificationService));
         }
 
         [Fact]
@@ -39,11 +26,10 @@ namespace SotnRandoTools.RandoTracker.Tests.TrackerTests
         {
             //Arrange
             var mockedToolConfig = Substitute.For<IToolConfig>();
-            var mockedwatchlistService = Substitute.For<IWatchlistService>();
             var mockedSotnApi = Substitute.For<ISotnApi>();
             var mockedNotificationService = Substitute.For<INotificationService>();
             //Act&Assert
-            Assert.Throws<ArgumentNullException>(() => new Tracker(mockedToolConfig, mockedwatchlistService, null, mockedNotificationService));
+            Assert.Throws<ArgumentNullException>(() => new Tracker(mockedToolConfig, null, mockedNotificationService));
         }
 
         [Fact]
@@ -51,11 +37,10 @@ namespace SotnRandoTools.RandoTracker.Tests.TrackerTests
         {
             //Arrange
             var mockedToolConfig = Substitute.For<IToolConfig>();
-            var mockedwatchlistService = Substitute.For<IWatchlistService>();
             var mockedSotnApi = Substitute.For<ISotnApi>();
             var mockedNotificationService = Substitute.For<INotificationService>();
             //Act&Assert
-            Assert.Throws<ArgumentNullException>(() => new Tracker(mockedToolConfig, mockedwatchlistService, mockedSotnApi, null));
+            Assert.Throws<ArgumentNullException>(() => new Tracker(mockedToolConfig, mockedSotnApi, null));
         }
 
         [Fact]
@@ -63,7 +48,6 @@ namespace SotnRandoTools.RandoTracker.Tests.TrackerTests
         {
             //Arrange
             var mockedToolConfig = Substitute.For<IToolConfig>();
-            var mockedwatchlistService = Substitute.For<IWatchlistService>();
             var mockedSotnApi = Substitute.For<ISotnApi>();
             var mockedNotificationService = Substitute.For<INotificationService>();
             mockedToolConfig.Tracker = new TrackerConfig();
@@ -71,7 +55,7 @@ namespace SotnRandoTools.RandoTracker.Tests.TrackerTests
             mockedToolConfig.Tracker.UseOverlay = false;
             mockedToolConfig.Tracker.EnableAutosplitter = false;
             //Act
-            Tracker tracker = new Tracker(mockedToolConfig, mockedwatchlistService, mockedSotnApi, mockedNotificationService);
+            Tracker tracker = new Tracker(mockedToolConfig, mockedSotnApi, mockedNotificationService);
             //Assert
             Assert.NotNull(tracker);
         }

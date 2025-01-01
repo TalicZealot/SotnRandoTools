@@ -9,28 +9,33 @@ namespace SotnRandoTools.RandoTracker
 	internal class TrackerWIndow : IDisposable
 	{
 		private readonly IToolConfig toolConfig;
-		private readonly IWatchlistService watchlistService;
 		private readonly ISotnApi sotnApi;
 		private readonly INotificationService notificationService;
 		private TrackerRendererOpenGL renderer;
 		private Thread renderThread;
-		private readonly Tracker tracker;
-		private bool started = false;
+		private Tracker? tracker;
+		private bool disposed = false;
 
-		public TrackerWIndow(IToolConfig toolConfig, IWatchlistService watchlistService, ISotnApi sotnApi, INotificationService notificationService)
+		public TrackerWIndow(IToolConfig toolConfig, ISotnApi sotnApi, INotificationService notificationService)
 		{
 			if (toolConfig is null) throw new ArgumentNullException(nameof(toolConfig));
-			if (watchlistService is null) throw new ArgumentNullException(nameof(watchlistService));
 			if (sotnApi is null) throw new ArgumentNullException(nameof(sotnApi));
 			if (notificationService is null) throw new ArgumentNullException(nameof(notificationService));
 			this.toolConfig = toolConfig;
-			this.watchlistService = watchlistService;
 			this.sotnApi = sotnApi;
 			this.notificationService = notificationService;
 
-			tracker = new Tracker(toolConfig, watchlistService, sotnApi, notificationService);
+			tracker = new Tracker(toolConfig, sotnApi, notificationService);
 			renderThread = new Thread(Run);
 			renderThread.Start();
+		}
+
+		public Tracker Tracker
+		{
+			get
+			{
+				return tracker;
+			}
 		}
 
 		public void Run()
@@ -41,11 +46,21 @@ namespace SotnRandoTools.RandoTracker
 
 		public void Dispose()
 		{
+			if (disposed) return;
 			if (renderer != null)
 			{
 				renderer.Dispose();
 			}
 			renderThread.Abort();
+
+			if (toolConfig.Tracker.SaveReplays)
+			{
+				tracker.SaveReplay();
+			}
+			notificationService.StopOverlayServer();
+			tracker.CloseAutosplitter();
+			tracker = null;
+			disposed = true;
 		}
 
 		public void UpdateTracker()

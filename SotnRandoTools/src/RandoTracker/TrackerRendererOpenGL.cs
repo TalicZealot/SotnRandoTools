@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Runtime.InteropServices;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
+using SotnApi.Constants.Addresses;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Constants;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace SotnRandoTools.RandoTracker
 {
@@ -151,7 +154,7 @@ namespace SotnRandoTools.RandoTracker
 		private Vector2[] relicSlots;
 		private int columns;
 
-		public Sprites(float scale, Vector2[] relicSlots, Tracker tracker, int columns, bool grid)
+		public Sprites(float scale, Vector2[] relicSlots, Tracker tracker, int columns, bool grid, bool progression)
 		{
 			this.scale = scale;
 			this.relicSlots = relicSlots;
@@ -173,7 +176,7 @@ namespace SotnRandoTools.RandoTracker
 			int itemCount = 0;
 			for (int i = 0; i < 25; i++)
 			{
-				if (!grid && !tracker.relics[i].Collected)
+				if ((!grid && !tracker.relics[i].Collected) || (progression && !tracker.relics[i].Progression))
 				{
 					continue;
 				}
@@ -311,6 +314,12 @@ namespace SotnRandoTools.RandoTracker
 		private const int CellPadding = 2;
 		private const double PixelPerfectSnapMargin = 0.22;
 
+		private static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
+		private const uint SWP_NOSIZE = 0x0001;
+		private const uint SWP_NOMOVE = 0x0002;
+		private const uint SWP_NOACTIVATE = 0x0010;
+		private const uint SWP_SHOWWINDOW = 0x0040;
+
 		private readonly Tracker tracker;
 		private readonly IToolConfig toolConfig;
 		private int shaderProgram;
@@ -332,9 +341,6 @@ namespace SotnRandoTools.RandoTracker
 			: base(toolConfig.Tracker.Width, toolConfig.Tracker.Height, GraphicsMode.Default, "Autotracker")
 		{
 			this.toolConfig = toolConfig;
-			this.X = toolConfig.Tracker.Location.X;
-			this.Y = toolConfig.Tracker.Location.Y;
-			CalculateGrid(toolConfig.Tracker.Width, toolConfig.Tracker.Height);
 			try
 			{
 				this.Icon = new Icon(Paths.BizAlucardIcon);
@@ -355,6 +361,9 @@ namespace SotnRandoTools.RandoTracker
 		}
 
 		public float Scale { get; set; }
+
+		[DllImport("user32.dll", SetLastError = true)]
+		private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
 
 		private int LoadTexture(string path)
 		{
@@ -385,6 +394,16 @@ namespace SotnRandoTools.RandoTracker
 
 		protected override void OnLoad(EventArgs e)
 		{
+			IntPtr handle = this.WindowInfo.Handle;
+			if (Environment.OSVersion.Platform == PlatformID.Win32NT && toolConfig.Tracker.AlwaysOnTop)
+			{
+				SetWindowPos(handle, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE | SWP_SHOWWINDOW);
+			}
+			this.X = toolConfig.Tracker.Location.X;
+			this.Y = toolConfig.Tracker.Location.Y;
+			this.Width = toolConfig.Tracker.Width;
+			this.Height = toolConfig.Tracker.Height;
+			CalculateGrid(toolConfig.Tracker.Width, toolConfig.Tracker.Height);
 			base.OnLoad(e);
 
 			GL.ClearColor(clear);
@@ -523,11 +542,14 @@ namespace SotnRandoTools.RandoTracker
 			{
 				seedInfo.Dispose();
 				seedInfo = new Text(tracker.SeedInfo, Width, Height, collectedUniform);
+				sprites.Dispose();
+				sprites = new Sprites(Scale, relicSlots, tracker, columns, toolConfig.Tracker.GridLayout, toolConfig.Tracker.ProgressionRelicsOnly);
 			}
 
 			if (changes || !toolConfig.Tracker.GridLayout)
 			{
-				sprites = new Sprites(Scale, relicSlots, tracker, columns, toolConfig.Tracker.GridLayout);
+				sprites.Dispose();
+				sprites = new Sprites(Scale, relicSlots, tracker, columns, toolConfig.Tracker.GridLayout, toolConfig.Tracker.ProgressionRelicsOnly);
 			}
 		}
 
@@ -561,8 +583,17 @@ namespace SotnRandoTools.RandoTracker
 
 			CalculateGrid(Width, Height);
 			ClearSprites();
+
+			if (sprites != null)
+			{
+				sprites.Dispose();
+			}
+			if (seedInfo != null)
+			{
+				seedInfo.Dispose();
+			}
 			seedInfo = new Text(tracker.SeedInfo, this.Width, this.Height, collectedUniform);
-			sprites = new Sprites(Scale, relicSlots, tracker, columns, toolConfig.Tracker.GridLayout);
+			sprites = new Sprites(Scale, relicSlots, tracker, columns, toolConfig.Tracker.GridLayout, toolConfig.Tracker.ProgressionRelicsOnly);
 		}
 
 		private void ClearSprites()
@@ -579,6 +610,13 @@ namespace SotnRandoTools.RandoTracker
 
 		protected override void OnUnload(EventArgs e)
 		{
+			toolConfig.Tracker.Width = Width;
+			toolConfig.Tracker.Height = Height;
+			Point location = new Point();
+			location.X = this.X;
+			location.Y = this.Y;
+			toolConfig.Tracker.Location = location;
+
 			ClearSprites();
 
 			GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);

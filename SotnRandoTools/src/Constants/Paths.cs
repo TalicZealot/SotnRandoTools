@@ -35,6 +35,7 @@
 		public const string ChangeLogPath = @"\ExternalTools\SotnRandoTools\ChangeLog.txt";
 
 		public const string PresetPath = "./ExternalTools/SotnRandoTools/Presets/";
+		public const string ExtensionPath = "./ExternalTools/SotnRandoTools/Extensions/";
 		public const string CasualPresetPath = "./ExternalTools/SotnRandoTools/Presets/casual.json";
 		public const string SpeedrunPresetPath = "./ExternalTools/SotnRandoTools/Presets/speedrun.json";
 		public const string BatMasterPresetPath = "./ExternalTools/SotnRandoTools/Presets/bat-master.json";

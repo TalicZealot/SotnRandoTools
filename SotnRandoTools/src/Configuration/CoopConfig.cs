@@ -12,7 +12,7 @@ namespace SotnRandoTools.Configuration
 		}
 
 		public Point Location { get; set; }
-		public int SendButton {  get; set; }
+		public int SendButton { get; set; }
 		public int DefaultPort { get; set; }
 		public int Volume { get; set; }
 	}

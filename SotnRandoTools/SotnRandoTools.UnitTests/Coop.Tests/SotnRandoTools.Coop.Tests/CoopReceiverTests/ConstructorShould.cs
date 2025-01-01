@@ -1,9 +1,10 @@
-﻿using NSubstitute;
+﻿using System;
+using NSubstitute;
 using SotnApi.Interfaces;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Coop.Interfaces;
+using SotnRandoTools.RandoTracker.Interfaces;
 using SotnRandoTools.Services;
-using System;
 using Xunit;
 
 namespace SotnRandoTools.Coop.Tests.CoopReceiverTests
@@ -17,10 +18,9 @@ namespace SotnRandoTools.Coop.Tests.CoopReceiverTests
             var mockedToolConfig = Substitute.For<IToolConfig>();
             var mockedSotnApi = Substitute.For<ISotnApi>();
             var mockedNotificationService = Substitute.For<INotificationService>();
-            var mockedWatchlistService = Substitute.For<IWatchlistService>();
             var mockedCoopMessanger = Substitute.For<ICoopController>();
             //Act&Assert
-            Assert.Throws<ArgumentNullException>(() => new CoopReceiver(null, mockedWatchlistService, mockedSotnApi, mockedNotificationService, mockedCoopMessanger));
+            Assert.Throws<ArgumentNullException>(() => new CoopReceiver(null, mockedSotnApi, mockedNotificationService, mockedCoopMessanger));
         }
 
         [Fact]
@@ -30,10 +30,9 @@ namespace SotnRandoTools.Coop.Tests.CoopReceiverTests
             var mockedToolConfig = Substitute.For<IToolConfig>();
             var mockedSotnApi = Substitute.For<ISotnApi>();
             var mockedNotificationService = Substitute.For<INotificationService>();
-            var mockedWatchlistService = Substitute.For<IWatchlistService>();
             var mockedCoopMessanger = Substitute.For<ICoopController>();
             //Act&Assert
-            Assert.Throws<ArgumentNullException>(() => new CoopReceiver(mockedToolConfig, mockedWatchlistService, null, mockedNotificationService, mockedCoopMessanger));
+            Assert.Throws<ArgumentNullException>(() => new CoopReceiver(mockedToolConfig, null, mockedNotificationService, mockedCoopMessanger));
         }
 
         [Fact]
@@ -43,23 +42,9 @@ namespace SotnRandoTools.Coop.Tests.CoopReceiverTests
             var mockedToolConfig = Substitute.For<IToolConfig>();
             var mockedSotnApi = Substitute.For<ISotnApi>();
             var mockedNotificationService = Substitute.For<INotificationService>();
-            var mockedWatchlistService = Substitute.For<IWatchlistService>();
             var mockedCoopMessanger = Substitute.For<ICoopController>();
             //Act&Assert
-            Assert.Throws<ArgumentNullException>(() => new CoopReceiver(mockedToolConfig, mockedWatchlistService, mockedSotnApi, null, mockedCoopMessanger));
-        }
-
-        [Fact]
-        public void ThrowArgumentNullException_WhenWatchlistServiceIsNull()
-        {
-            //Arrange
-            var mockedToolConfig = Substitute.For<IToolConfig>();
-            var mockedSotnApi = Substitute.For<ISotnApi>();
-            var mockedNotificationService = Substitute.For<INotificationService>();
-            var mockedWatchlistService = Substitute.For<IWatchlistService>();
-            var mockedCoopMessanger = Substitute.For<ICoopController>();
-            //Act&Assert
-            Assert.Throws<ArgumentNullException>(() => new CoopReceiver(mockedToolConfig, null, mockedSotnApi, mockedNotificationService, mockedCoopMessanger));
+            Assert.Throws<ArgumentNullException>(() => new CoopReceiver(mockedToolConfig, mockedSotnApi, null, mockedCoopMessanger));
         }
 
         [Fact]
@@ -69,10 +54,9 @@ namespace SotnRandoTools.Coop.Tests.CoopReceiverTests
             var mockedToolConfig = Substitute.For<IToolConfig>();
             var mockedSotnApi = Substitute.For<ISotnApi>();
             var mockedNotificationService = Substitute.For<INotificationService>();
-            var mockedWatchlistService = Substitute.For<IWatchlistService>();
             var mockedCoopMessanger = Substitute.For<ICoopController>();
             //Act&Assert
-            Assert.Throws<ArgumentNullException>(() => new CoopReceiver(mockedToolConfig, mockedWatchlistService, mockedSotnApi, mockedNotificationService, null));
+            Assert.Throws<ArgumentNullException>(() => new CoopReceiver(mockedToolConfig, mockedSotnApi, mockedNotificationService, null));
         }
 
         [Fact]
@@ -82,10 +66,9 @@ namespace SotnRandoTools.Coop.Tests.CoopReceiverTests
             var mockedToolConfig = Substitute.For<IToolConfig>();
             var mockedSotnApi = Substitute.For<ISotnApi>();
             var mockedNotificationService = Substitute.For<INotificationService>();
-            var mockedWatchlistService = Substitute.For<IWatchlistService>();
             var mockedCoopMessanger = Substitute.For<ICoopController>();
             //Act
-            CoopReceiver coopReceiver = new CoopReceiver(mockedToolConfig, mockedWatchlistService, mockedSotnApi, mockedNotificationService, mockedCoopMessanger);
+            CoopReceiver coopReceiver = new CoopReceiver(mockedToolConfig, mockedSotnApi, mockedNotificationService, mockedCoopMessanger);
             //Assert
             Assert.NotNull(coopReceiver);
         }

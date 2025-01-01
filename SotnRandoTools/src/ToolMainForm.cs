@@ -24,7 +24,7 @@ namespace SotnRandoTools
 			"SotnRandoTools/dll/SotnApi.dll",
 		})]
 	[ExternalToolEmbeddedIcon("SotnRandoTools.Resources.BizAlucard.png")]
-	[ExternalToolApplicability.SingleRom(CoreSystem.Playstation, "0DDCBC3D")]
+	[ExternalToolApplicability.SingleRom("PSX", "0DDCBC3D")]
 	public partial class ToolMainForm : ToolFormBase, IExternalToolForm
 	{
 		[RequiredService]
@@ -62,7 +62,6 @@ namespace SotnRandoTools
 
 		private SotnApi.Main.SotnApi? sotnApi;
 		private ToolConfig toolConfig;
-		private WatchlistService? watchlistService;
 		private NotificationService? notificationService;
 		private TrackerWIndow? trackerWindow;
 		private CoopForm? coopForm;
@@ -174,7 +173,6 @@ namespace SotnRandoTools
 
 			_maybeMemAPI.UseMemoryDomain(_memoryDomains.MainMemory.Name);
 			sotnApi = new SotnApi.Main.SotnApi(_maybeMemAPI);
-			watchlistService = new WatchlistService(_memoryDomains);
 			notificationService = new NotificationService(toolConfig, _maybeGuiAPI, _maybeClientAPI, GlobalConfig);
 			if (coopSettingsPanel is not null)
 			{
@@ -232,27 +230,36 @@ namespace SotnRandoTools
 				trackerWindow.Dispose();
 			}
 			sotnApi = null;
-			watchlistService = null;
 		}
 
 		private void autotrackerLaunch_Click(object sender, EventArgs e)
 		{
-			if (sotnApi is not null && watchlistService is not null)
+			if (sotnApi is null)
 			{
-				trackerWindow = new TrackerWIndow(toolConfig, watchlistService, sotnApi, notificationService);
+				return;
+			}
+			if (trackerWindow is not null)
+			{
+				trackerWindow.Dispose();
+				trackerWindow = null;
+				trackerWindow = new TrackerWIndow(toolConfig, sotnApi, notificationService);
+			}
+			else
+			{
+				trackerWindow = new TrackerWIndow(toolConfig, sotnApi, notificationService);
 			}
 		}
 
 		private void coopLaunch_Click(object sender, EventArgs e)
 		{
-			if (sotnApi is not null && watchlistService is not null && APIs.Joypad is not null)
+			if (sotnApi is not null && APIs.Joypad is not null)
 			{
 				if (coopForm is not null)
 				{
 					coopForm.Close();
 					coopForm.Dispose();
 				}
-				coopForm = new CoopForm(toolConfig, watchlistService, sotnApi, APIs.Joypad, notificationService);
+				coopForm = new CoopForm(toolConfig, sotnApi, APIs.Joypad, notificationService, trackerWindow.Tracker);
 				coopForm.Show();
 			}
 		}

@@ -1,9 +1,15 @@
 ﻿namespace SotnRandoTools.RandoTracker.Models
 {
-	internal class ReplayState
+	internal struct ReplayState
 	{
-		public byte X { get; set; }
-		public byte Y { get; set; }
-		public ushort Time { get; set; }
+		public ReplayState()
+		{
+			Time = 0;
+			X = 0;
+			Y = 0;
+		}
+		public byte X = 0;
+		public byte Y = 0;
+		public ushort Time = 0;
 	}
 }

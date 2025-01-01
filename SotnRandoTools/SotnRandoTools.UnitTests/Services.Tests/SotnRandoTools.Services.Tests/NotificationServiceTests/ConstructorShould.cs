@@ -1,7 +1,7 @@
-﻿using BizHawk.Client.Common;
+﻿using System;
+using BizHawk.Client.Common;
 using NSubstitute;
 using SotnRandoTools.Configuration.Interfaces;
-using System;
 using Xunit;
 
 namespace SotnRandoTools.Services.Tests.NotificationServiceTests

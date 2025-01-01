@@ -47,6 +47,7 @@ namespace SotnRandoTools
 			autosplitterCheckBox.Checked = toolConfig.Tracker.EnableAutosplitter;
 			muteCheckBox.Checked = toolConfig.Tracker.MuteMusic;
 			stereoCheckBox.Checked = toolConfig.Tracker.Stereo;
+			alwaysOpTopCheckbox.Checked = toolConfig.Tracker.AlwaysOnTop;
 
 			customExtension.Text = toolConfig.Tracker.CustomExtension;
 			customLocationsGuardedRadio.Checked = toolConfig.Tracker.CustomLocationsGuarded;
@@ -162,6 +163,11 @@ namespace SotnRandoTools
 		private void stereoCheckBox_CheckedChanged(object sender, EventArgs e)
 		{
 			toolConfig.Tracker.Stereo = stereoCheckBox.Checked;
+		}
+
+		private void alwaysOpTopCheckbox_CheckedChanged(object sender, EventArgs e)
+		{
+			toolConfig.Tracker.AlwaysOnTop = alwaysOpTopCheckbox.Checked;
 		}
 
 		private void loadLayoutButton_Click(object sender, EventArgs e)

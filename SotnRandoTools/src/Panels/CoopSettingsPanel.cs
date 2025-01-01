@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows.Forms;
-using SotnRandoTools.Configuration;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Services;
 

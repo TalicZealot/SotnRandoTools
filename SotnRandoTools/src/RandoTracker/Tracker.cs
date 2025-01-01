@@ -3,488 +3,170 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using BizHawk.Client.Common;
-using BizHawk.Emulation.Common;
 using Newtonsoft.Json;
+using SotnApi.Constants.Values.Alucard.Enums;
 using SotnApi.Constants.Values.Game;
 using SotnApi.Interfaces;
-using SotnApi.Models;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Constants;
+using SotnRandoTools.RandoTracker.Interfaces;
 using SotnRandoTools.RandoTracker.Models;
 using SotnRandoTools.Services;
 
 namespace SotnRandoTools.RandoTracker
 {
-	internal sealed class Tracker
+	internal sealed class Tracker : ILocationTracker
 	{
 		private const byte ReplayCooldown = 6;
 		private const string DefaultSeedInfo = "seed(preset)";
 		private const long DraculaEntityAddress = 0x076e98;
 		private const int AutosplitterReconnectCooldown = 120;
 		private readonly IToolConfig toolConfig;
-		private readonly IWatchlistService watchlistService;
 		private readonly ISotnApi sotnApi;
 		private readonly INotificationService notificationService;
 
-		private readonly List<Location> locations = new List<Location>
-		{
-			new Location { Name = "SoulOfBat", ClassicExtension = true, Y = 66, X = 192, WatchIndecies = new List<int>{0}, Rooms = new List<Room>{
-					new Room { WatchIndex = 0, Values = new int[] { 0x01 }},
-			}},
-			new Location { Name = "FireOfBat", ClassicExtension = true, Y = 26, X = 236, WatchIndecies = new List<int>{1}, Rooms = new List<Room>{
-					new Room { WatchIndex = 1, Values = new int[] { 0x01 }},
-			}},
-			new Location { Name = "EchoOfBat", ClassicExtension = true, Y = 46, X = 64, WatchIndecies = new List<int>{2}, Rooms = new List<Room>{
-					new Room { WatchIndex = 2, Values = new int[] { 0x04 }},
-			}},
-			new Location { Name = "SoulOfWolf", ClassicExtension = true, Y = 54, X = 244, WatchIndecies = new List<int>{3, 4}, Rooms = new List<Room>{
-					new Room { WatchIndex = 3, Values = new int[] { 0x10 }},
-					new Room { WatchIndex = 4, Values = new int[] { 0x10 }},
-			}},
-			new Location { Name = "PowerOfWolf", ClassicExtension = true, Y = 134, X = 8, WatchIndecies = new List<int>{5}, Rooms = new List<Room>{
-					new Room { WatchIndex = 5, Values = new int[] { 0x01, 0x04 }},
-			}},
-			new Location { Name = "SkillOfWolf", ClassicExtension = true, Y = 114, X = 60, WatchIndecies = new List<int>{6}, Rooms = new List<Room>{
-					new Room { WatchIndex = 6, Values = new int[] { 0x01 }},
-			}},
-			new Location { Name = "FormOfMist", ClassicExtension = true, Y = 70, X = 84, WatchIndecies = new List<int>{7}, Rooms = new List<Room>{
-					new Room { WatchIndex = 7, Values = new int[] { 0x04, 0x10 }},
-			}},
-			new Location { Name = "PowerOfMist", ClassicExtension = true, Y = 18, X = 124, WatchIndecies = new List<int>{8, 9, 10}, Rooms = new List<Room>{
-					new Room { WatchIndex = 8, Values = new int[] { 0x01 }},
-					new Room { WatchIndex = 9, Values = new int[] { 0x01 }},
-					new Room { WatchIndex = 10, Values = new int[] { 0x40 }},
-			}},
-			new Location { Name = "CubeOfZoe", ClassicExtension = true, Y = 126, X = 76, WatchIndecies = new List<int>{11}, Rooms = new List<Room>{
-					new Room { WatchIndex = 11, Values = new int[] { 0x01, 0x04 }},
-			}},
-			new Location { Name = "SpiritOrb", ClassicExtension = true, Y = 107, X = 100, WatchIndecies = new List<int>{12, 13}, Rooms = new List<Room>{
-					new Room { WatchIndex = 12, Values = new int[] { 0x10 }},
-					new Room { WatchIndex = 13, Values = new int[] { 0x04 }},
-			}},
-			new Location { Name = "GravityBoots", ClassicExtension = true, Y = 74, X = 136, WatchIndecies = new List<int>{14}, Rooms = new List<Room>{
-					new Room { WatchIndex = 14, Values = new int[] { 0x04 }},
-			}},
-			new Location { Name = "LeapStone", ClassicExtension = true, Y = 26, X = 124, WatchIndecies = new List<int>{15, 16}, Rooms = new List<Room>{
-					new Room { WatchIndex = 15, Values = new int[] { 0x01 }},
-					new Room { WatchIndex = 16, Values = new int[] { 0x01 }},
-			}},
-			new Location { Name = "HolySymbol", ClassicExtension = true, Y = 146, X = 220, WatchIndecies = new List<int>{17}, Rooms = new List<Room>{
-					new Room { WatchIndex = 17, Values = new int[] { 0x01 }},
-			}},
-			new Location { Name = "FaerieScroll", ClassicExtension = true, Y = 54, X = 236, WatchIndecies = new List<int>{18}, Rooms = new List<Room>{
-					new Room { WatchIndex = 18, Values = new int[] { 0x01 }},
-			}},
-			new Location { Name = "JewelOfOpen", ClassicExtension = true, Y = 62, X = 196, WatchIndecies = new List<int>{19}, Rooms = new List<Room>{
-					new Room { WatchIndex = 19, Values = new int[] { 0x10 }},
-			}},
-			new Location { Name = "MermanStatue", ClassicExtension = true, Y = 150, X = 32, WatchIndecies = new List<int>{20}, Rooms = new List<Room>{
-					new Room { WatchIndex = 20, Values = new int[] { 0x40 }},
-			}},
-			new Location { Name = "BatCard", ClassicExtension = true, Y = 90, X = 52, WatchIndecies = new List<int>{21}, Rooms = new List<Room>{
-					new Room { WatchIndex = 21, Values = new int[] { 0x10 }},
-			}},
-			new Location { Name = "GhostCard", ClassicExtension = true, Y = 10, X = 156, WatchIndecies = new List<int>{22}, Rooms = new List<Room>{
-					new Room { WatchIndex = 22, Values = new int[] { 0x01, 0x04 }},
-			}},
-			new Location { Name = "FaerieCard", ClassicExtension = true, Y = 54, X = 208, WatchIndecies = new List<int>{23}, Rooms = new List<Room>{
-					new Room { WatchIndex = 23, Values = new int[] { 0x40 }},
-			}},
-			new Location { Name = "DemonCard", ClassicExtension = true, Y = 158, X = 117, WatchIndecies = new List<int>{24}, Rooms = new List<Room>{
-					new Room { WatchIndex = 24, Values = new int[] { 0x10 }},
-			}},
-			new Location { Name = "SwordCard", ClassicExtension = true, Y = 54, X = 80, WatchIndecies = new List<int>{25}, Rooms = new List<Room>{
-					new Room { WatchIndex = 25, Values = new int[] { 0x40 }},
-			}},
-			new Location { Name = "CrystalCloak",  GuardedExtension = true,  SpreadExtension = true, Y = 134, X = 160, WatchIndecies = new List<int>{26}, Rooms = new List<Room>{
-					new Room { WatchIndex = 26, Values = new int[] { 0x40 }},
-			}},
-			new Location { Name = "Mormegil",  GuardedExtension = true, Y = 182, X = 68, WatchIndecies = new List<int>{27}, Rooms = new List<Room>{
-					new Room { WatchIndex = 27, Values = new int[] { 0x10 }},
-			}},
-			new Location { Name = "GoldRing", ClassicExtension = true, Y = 114, X = 180, WatchIndecies = new List<int>{28}, Rooms = new List<Room>{
-					new Room { WatchIndex = 28, Values = new int[] { 0x10 }},
-			}},
-			new Location { Name = "Spikebreaker", ClassicExtension = true, Y = 186, X = 164, WatchIndecies = new List<int>{29}, Rooms = new List<Room>{
-					new Room { WatchIndex = 29, Values = new int[] { 0x10 }},
-			}},
-			new Location { Name = "SilverRing", ClassicExtension = true, Y = 42, X = 32, WatchIndecies = new List<int>{30}, Rooms = new List<Room>{
-					new Room { WatchIndex = 30, Values = new int[] { 0x10 }},
-			}},
-			new Location { Name = "HolyGlasses", ClassicExtension = true, Y = 106, X = 128, WatchIndecies = new List<int>{31}, Rooms = new List<Room>{
-					new Room { WatchIndex = 31, Values = new int[] { 0x40 }},
-			}},
-			new Location { Name = "HeartOfVlad", ClassicExtension = true,  SecondCastle = true, Y = 165, X = 160, WatchIndecies = new List<int>{32, 33}, Rooms = new List<Room>{
-					new Room { WatchIndex = 32, Values = new int[] { 0x01 }},
-					new Room { WatchIndex = 33, Values = new int[] { 0x40 }},
-			}},
-			new Location { Name = "ToothOfVlad", ClassicExtension = true,  SecondCastle = true, Y = 125, X = 24, WatchIndecies = new List<int>{34}, Rooms = new List<Room>{
-					new Room { WatchIndex = 34, Values = new int[] { 0x10, 0x04 }},
-			}},
-			new Location { Name = "RibOfVlad", ClassicExtension = true,  SecondCastle = true, Y = 153, X = 176, WatchIndecies = new List<int>{35}, Rooms = new List<Room>{
-					new Room { WatchIndex = 35, Values = new int[] { 0x01 }},
-			}},
-			new Location { Name = "RingOfVlad", ClassicExtension = true,  SecondCastle = true, Y = 177, X = 92, WatchIndecies = new List<int>{36}, Rooms = new List<Room>{
-					new Room { WatchIndex = 36, Values = new int[] { 0x01 }},
-			}},
-			new Location { Name = "EyeOfVlad", ClassicExtension = true,  SecondCastle = true, Y = 57, X = 132, WatchIndecies = new List<int>{37}, Rooms = new List<Room>{
-					new Room { WatchIndex = 37, Values = new int[] { 0x10, 0x40 }},
-			}},
-			new Location { Name = "ForceOfEcho", ClassicExtension = true,  SecondCastle = true, Y = 53, X = 32, WatchIndecies = new List<int>{38}, Rooms = new List<Room>{
-					new Room { WatchIndex = 38, Values = new int[] { 0x40 }},
-			}},
-			new Location { Name = "GasCloud", ClassicExtension = true,  SecondCastle = true, Y = 17, X = 184, WatchIndecies = new List<int>{39}, Rooms = new List<Room>{
-					new Room { WatchIndex = 39, Values = new int[] { 0x04 }},
-			}},
-			new Location { Name = "RingOfArcana",  SecondCastle = true,  GuardedExtension = true,  SpreadExtension = true, Y = 109, X = 200, WatchIndecies = new List<int>{40}, Rooms = new List<Room>{
-					new Room { WatchIndex = 40, Values = new int[] { 0x04 }},
-			}},
-			new Location { Name = "DarkBlade",  SecondCastle = true,  GuardedExtension = true,  SpreadExtension = true, Y = 65, X = 92, WatchIndecies = new List<int>{41}, Rooms = new List<Room>{
-					new Room { WatchIndex = 41, Values = new int[] { 0x01 }},
-			}},
-			new Location { Name = "Trio",  SecondCastle = true,  GuardedExtension = true,  SpreadExtension = true, Y = 129, X = 172, WatchIndecies = new List<int>{42, 43}, Rooms = new List<Room>{
-					new Room { WatchIndex = 42, Values = new int[] { 0x40 }},
-					new Room { WatchIndex = 43, Values = new int[] { 0x01 }},
-			}},
-			new Location { Name = "Walk armor",  EquipmentExtension = true, Y = 183, X = 93, WatchIndecies = new List<int>{0}, Rooms = new List<Room>{
-					new Room { WatchIndex = 0, Values = new int[] { 0x01 }},
-			}},
-			new Location { Name = "Icebrand",  EquipmentExtension = true, Y = 183, X = 97, WatchIndecies = new List<int>{1}, Rooms = new List<Room>{
-					new Room { WatchIndex = 1, Values = new int[] { 0x40 }},
-			}},
-			new Location { Name = "Bloodstone",  EquipmentExtension = true, Y = 183, X = 113, WatchIndecies = new List<int>{3}, Rooms = new List<Room>{
-					new Room { WatchIndex = 3, Values = new int[] { 0x40 }},
-			}},
-			new Location { Name = "Combat knife",  EquipmentExtension = true, Y = 175, X = 125, WatchIndecies = new List<int>{4}, Rooms = new List<Room>{
-					new Room { WatchIndex = 4, Values = new int[] { 0x01 }},
-			}},
-			new Location { Name = "Ring of Ares",  EquipmentExtension = true, Y = 147, X = 149, WatchIndecies = new List<int>{5}, Rooms = new List<Room>{
-					new Room { WatchIndex = 5, Values = new int[] { 0x10 }},
-			}},
-			new Location { Name = "Knuckle duster",  EquipmentExtension = true, Y = 151, X = 161, WatchIndecies = new List<int>{6}, Rooms = new List<Room>{
-					new Room { WatchIndex = 6, Values = new int[] { 0x40 }},
-			}},
-			new Location { Name = "Caverns Onyx",  EquipmentExtension = true, Y = 147, X = 181, WatchIndecies = new List<int>{7}, Rooms = new List<Room>{
-					new Room { WatchIndex = 7, Values = new int[] { 0x10, 0x40 }},
-			}},
-			new Location { Name = "Bandanna",  EquipmentExtension = true, Y = 91, X = 141, WatchIndecies = new List<int>{11}, Rooms = new List<Room>{
-					new Room { WatchIndex = 11, Values = new int[] { 0x01 }},
-			}},
-			new Location { Name = "Nunchaku",  EquipmentExtension = true, Y = 133, X = 153, WatchIndecies = new List<int>{12}, Rooms = new List<Room>{
-					new Room { WatchIndex = 12, Values = new int[] { 0x04, 0x10 }},
-			}},
-			new Location { Name = "Secret Boots",  EquipmentExtension = true, Y = 139, X = 97, WatchIndecies = new List<int>{13, 14}, Rooms = new List<Room>{
-					new Room { WatchIndex = 13, Values = new int[] { 0x01 }},
-					new Room { WatchIndex = 14, Values = new int[] { 0x01 }},
-			}},
-			new Location { Name = "Holy mail",  EquipmentExtension = true, Y = 135, X = 21, WatchIndecies = new List<int>{16}, Rooms = new List<Room>{
-					new Room { WatchIndex = 16, Values = new int[] { 0x10 }},
-			}},
-			new Location { Name = "Jewel sword",  EquipmentExtension = true, Y = 147, X = 41, WatchIndecies = new List<int>{17}, Rooms = new List<Room>{
-					new Room { WatchIndex = 17, Values = new int[] { 0x04 }},
-			}},
-			new Location { Name = "Sunglasses",  EquipmentExtension = true, Y = 107, X = 65, WatchIndecies = new List<int>{20}, Rooms = new List<Room>{
-					new Room { WatchIndex = 20, Values = new int[] { 0x40 }},
-			}},
-			new Location { Name = "Basilard",  EquipmentExtension = true, Y = 119, X = 65, WatchIndecies = new List<int>{21}, Rooms = new List<Room>{
-					new Room { WatchIndex = 21, Values = new int[] { 0x40 }},
-			}},
-			new Location { Name = "Cloth cape",  EquipmentExtension = true, Y = 99, X = 41, WatchIndecies = new List<int>{22}, Rooms = new List<Room>{
-					new Room { WatchIndex = 22, Values = new int[] { 0x04 }},
-			}},
-			new Location { Name = "Mystic pendant",  EquipmentExtension = true, Y = 87, X = 15, WatchIndecies = new List<int>{23, 24}, Rooms = new List<Room>{
-					new Room { WatchIndex = 23, Values = new int[] { 0x40 }},
-					new Room { WatchIndex = 24, Values = new int[] { 0x40 }},
-			}},
-			new Location { Name = "Ankh of Life",  EquipmentExtension = true, Y = 79, X = 23, WatchIndecies = new List<int>{25}, Rooms = new List<Room>{
-					new Room { WatchIndex = 25, Values = new int[] { 0x04, 0x01 }},
-			}},
-			new Location { Name = "Morningstar",  EquipmentExtension = true, Y = 67, X = 33, WatchIndecies = new List<int>{26, 27}, Rooms = new List<Room>{
-					new Room { WatchIndex = 26, Values = new int[] { 0x10 }},
-					new Room { WatchIndex = 27, Values = new int[] { 0x10 }},
-			}},
-			new Location { Name = "Goggles",  EquipmentExtension = true, Y = 67, X = 41, WatchIndecies = new List<int>{28}, Rooms = new List<Room>{
-					new Room { WatchIndex = 28, Values = new int[] { 0x04 }},
-			}},
-			new Location { Name = "Silver plate",  EquipmentExtension = true, Y = 31, X = 59, WatchIndecies = new List<int>{29}, Rooms = new List<Room>{
-					new Room { WatchIndex = 29, Values = new int[] { 0x04, 0x01 }},
-			}},
-			new Location { Name = "Cutlass",  EquipmentExtension = true, Y = 23, X = 111, WatchIndecies = new List<int>{30, 31}, Rooms = new List<Room>{
-					new Room { WatchIndex = 30, Values = new int[] { 0x40 }},
-					new Room { WatchIndex = 31, Values = new int[] { 0x01 }},
-			}},
-			new Location { Name = "Platinum mail",  EquipmentExtension = true, Y = 7, X = 141, WatchIndecies = new List<int>{32}, Rooms = new List<Room>{
-					new Room { WatchIndex = 32, Values = new int[] { 0x01 }},
-			}},
-			new Location { Name = "Falchion",  EquipmentExtension = true, Y = 15, X = 157, WatchIndecies = new List<int>{33}, Rooms = new List<Room>{
-					new Room { WatchIndex = 33, Values = new int[] { 0x01 }},
-			}},
-			new Location { Name = "Gold plate",  EquipmentExtension = true, Y = 39, X = 197, WatchIndecies = new List<int>{34}, Rooms = new List<Room>{
-					new Room { WatchIndex = 34, Values = new int[] { 0x10 }},
-			}},
-			new Location { Name = "Bekatowa",  EquipmentExtension = true, Y = 39, X = 223, WatchIndecies = new List<int>{35, 36}, Rooms = new List<Room>{
-					new Room { WatchIndex = 35, Values = new int[] { 0x01, 0x04 }},
-					new Room { WatchIndex = 36, Values = new int[] { 0x01, 0x04 }},
-			}},
-			new Location { Name = "Gladius",  EquipmentExtension = true, Y = 75, X = 237, WatchIndecies = new List<int>{37}, Rooms = new List<Room>{
-					new Room { WatchIndex = 37, Values = new int[] { 0x01 }},
-			}},
-			new Location { Name = "Jewel knuckles",  EquipmentExtension = true, Y = 91, X = 237, WatchIndecies = new List<int>{38}, Rooms = new List<Room>{
-					new Room { WatchIndex = 38, Values = new int[] { 0x01 }},
-			}},
-			new Location { Name = "Bronze cuirass",  EquipmentExtension = true, Y = 67, X = 197, WatchIndecies = new List<int>{39}, Rooms = new List<Room>{
-					new Room { WatchIndex = 39, Values = new int[] { 0x10 }},
-			}},
-			new Location { Name = "Holy rod",  EquipmentExtension = true, Y = 55, X = 201, WatchIndecies = new List<int>{40}, Rooms = new List<Room>{
-					new Room { WatchIndex = 40, Values = new int[] { 0x04 }},
-			}},
-			new Location { Name = "Library Onyx",  EquipmentExtension = true, Y = 67, X = 186, WatchIndecies = new List<int>{41}, Rooms = new List<Room>{
-					new Room { WatchIndex = 41, Values = new int[] { 0x04 }},
-			}},
-			new Location { Name = "Alucart sword",  EquipmentExtension = true, Y = 83, X = 137, WatchIndecies = new List<int>{42}, Rooms = new List<Room>{
-					new Room { WatchIndex = 42, Values = new int[] { 0x04 }},
-			}},
-			new Location { Name = "Broadsword",  EquipmentExtension = true, Y = 71, X = 129, WatchIndecies = new List<int>{43}, Rooms = new List<Room>{
-					new Room { WatchIndex = 43, Values = new int[] { 0x40 }},
-			}},
-			new Location { Name = "Estoc",  EquipmentExtension = true, Y = 43, X = 121, WatchIndecies = new List<int>{44}, Rooms = new List<Room>{
-					new Room { WatchIndex = 44, Values = new int[] { 0x04 }},
-			}},
-			new Location { Name = "Olrox Garnet",  EquipmentExtension = true, Y = 55, X = 133, WatchIndecies = new List<int>{45}, Rooms = new List<Room>{
-					new Room { WatchIndex = 45, Values = new int[] { 0x10 }},
-			}},
-			new Location { Name = "Holy sword",  EquipmentExtension = true, Y = 63, X = 77, WatchIndecies = new List<int>{46}, Rooms = new List<Room>{
-					new Room { WatchIndex = 46, Values = new int[] { 0x01 }},
-			}},
-			new Location { Name = "Knight shield",  EquipmentExtension = true, Y = 71, X = 57, WatchIndecies = new List<int>{47}, Rooms = new List<Room>{
-					new Room { WatchIndex = 47, Values = new int[] { 0x01, 0x04 }},
-			}},
-			new Location { Name = "Shield rod",  EquipmentExtension = true, Y = 79, X = 53, WatchIndecies = new List<int>{48}, Rooms = new List<Room>{
-					new Room { WatchIndex = 48, Values = new int[] { 0x10 }},
-			}},
-			new Location { Name = "Blood cloak",  EquipmentExtension = true, Y = 79, X = 81, WatchIndecies = new List<int>{49}, Rooms = new List<Room>{
-					new Room { WatchIndex = 49, Values = new int[] { 0x40 }},
-			}},
-			new Location { Name = "Bastard sword",  SecondCastle = true,  EquipmentExtension = true, Y = 194, X = 121, WatchIndecies = new List<int>{50}, Rooms = new List<Room>{
-					new Room { WatchIndex = 50, Values = new int[] { 0x04 }},
-			}},
-			new Location { Name = "Royal cloak",  SecondCastle = true,  EquipmentExtension = true, Y = 194, X = 113, WatchIndecies = new List<int>{51}, Rooms = new List<Room>{
-					new Room { WatchIndex = 51, Values = new int[] { 0x40 }},
-			}},
-			new Location { Name = "Lightning mail",  SecondCastle = true,  EquipmentExtension = true, Y = 174, X = 97, WatchIndecies = new List<int>{52}, Rooms = new List<Room>{
-					new Room { WatchIndex = 52, Values = new int[] { 0x40 }},
-			}},
-			new Location { Name = "Sword of Dawn",  SecondCastle = true,  EquipmentExtension = true, Y = 174, X = 129, WatchIndecies = new List<int>{53, 54}, Rooms = new List<Room>{
-					new Room { WatchIndex = 53, Values = new int[] { 0x40 }},
-					new Room { WatchIndex = 54, Values = new int[] { 0x01 }},
-			}},
-			new Location { Name = "Moon rod",  SecondCastle = true,  EquipmentExtension = true, Y = 174, X = 85, WatchIndecies = new List<int>{55}, Rooms = new List<Room>{
-					new Room { WatchIndex = 55, Values = new int[] { 0x10 }},
-			}},
-			new Location { Name = "Sunstone",  SecondCastle = true,  EquipmentExtension = true, Y = 162, X = 57, WatchIndecies = new List<int>{56}, Rooms = new List<Room>{
-					new Room { WatchIndex = 56, Values = new int[] { 0x04 }},
-			}},
-			new Location { Name = "Luminus",  SecondCastle = true,  EquipmentExtension = true, Y = 165, X = 33, WatchIndecies = new List<int>{57}, Rooms = new List<Room>{
-					new Room { WatchIndex = 57, Values = new int[] { 0x10, 0x40 }},
-			}},
-			new Location { Name = "Dragon helm",  SecondCastle = true,  EquipmentExtension = true, Y = 174, X = 17, WatchIndecies = new List<int>{58}, Rooms = new List<Room>{
-					new Room { WatchIndex = 58, Values = new int[] { 0x40 }},
-			}},
-			new Location { Name = "Shotel",  SecondCastle = true,  EquipmentExtension = true, Y = 110, X = 17, WatchIndecies = new List<int>{59}, Rooms = new List<Room>{
-					new Room { WatchIndex = 59, Values = new int[] { 0x40 }},
-			}},
-			new Location { Name = "Badelaire",  SecondCastle = true,  EquipmentExtension = true, SpreadExtension = true, Y = 146, X = 53, WatchIndecies = new List<int>{60}, Rooms = new List<Room>{
-					new Room { WatchIndex = 60, Values = new int[] { 0x10 }},
-			}},
-			new Location { Name = "Staurolite",  SecondCastle = true,  EquipmentExtension = true, Y = 133, X = 61, WatchIndecies = new List<int>{62}, Rooms = new List<Room>{
-					new Room { WatchIndex = 62, Values = new int[] { 0x40 }},
-			}},
-			new Location { Name = "Forbidden Library Opal",  SecondCastle = true,  EquipmentExtension = true, SpreadExtension = true, Y = 138, X = 57, WatchIndecies = new List<int>{61}, Rooms = new List<Room>{
-					new Room { WatchIndex = 61, Values = new int[] { 0x04 }},
-			}},
-			new Location { Name = "Reverse Caverns Diamond",  SecondCastle = true,  EquipmentExtension = true, Y = 110, X = 113, WatchIndecies = new List<int>{63}, Rooms = new List<Room>{
-					new Room { WatchIndex = 63, Values = new int[] { 0x40 }},
-			}},
-			new Location { Name = "Reverse Caverns Opal",  SecondCastle = true,  EquipmentExtension = true, Y = 90, X = 101, WatchIndecies = new List<int>{64}, Rooms = new List<Room>{
-					new Room { WatchIndex = 64, Values = new int[] { 0x04 }},
-			}},
-			new Location { Name = "Reverse Caverns Garnet",  SecondCastle = true,  EquipmentExtension = true, Y = 70, X = 165, WatchIndecies = new List<int>{65}, Rooms = new List<Room>{
-					new Room {  WatchIndex = 65, Values = new int[] { 0x10 }},
-			}},
-			new Location { Name = "Osafune katana",  SecondCastle = true,  EquipmentExtension = true, Y = 50, X = 153, WatchIndecies = new List<int>{66}, Rooms = new List<Room>{
-					new Room { WatchIndex = 66, Values = new int[] { 0x04 }},
-			}},
-			new Location { Name = "Alucard shield",  SecondCastle = true,  EquipmentExtension = true, Y = 50, X = 221, WatchIndecies = new List<int>{67}, Rooms = new List<Room>{
-					new Room { WatchIndex = 67, Values = new int[] { 0x01 }},
-			}},
-			new Location { Name = "Alucard sword",  SecondCastle = true,  EquipmentExtension = true, Y = 42, X = 137, WatchIndecies = new List<int>{68}, Rooms = new List<Room>{
-					new Room { WatchIndex = 68, Values = new int[] { 0x04 }},
-			}},
-			new Location { Name = "Necklace of J",  SecondCastle = true,  EquipmentExtension = true, Y = 18, X = 157, WatchIndecies = new List<int>{69}, Rooms = new List<Room>{
-					new Room { WatchIndex = 69, Values = new int[] { 0x01 }},
-			}},
-			new Location { Name = "Floating Catacombs Diamond",  SecondCastle = true,  EquipmentExtension = true, Y = 18, X = 161, WatchIndecies = new List<int>{70}, Rooms = new List<Room>{
-					new Room { WatchIndex = 70, Values = new int[] { 0x40 }},
-			}},
-			new Location { Name = "Talwar",  SecondCastle = true,  EquipmentExtension = true, Y = 174, X = 177, WatchIndecies = new List<int>{71, 72}, Rooms = new List<Room>{
-					new Room { WatchIndex = 71, Values = new int[] { 0x01 }},
-					new Room { WatchIndex = 72, Values = new int[] { 0x40 }},
-			}},
-			new Location { Name = "Twilight cloak",  SecondCastle = true,  EquipmentExtension = true, Y = 158, X = 221, WatchIndecies = new List<int>{73}, Rooms = new List<Room>{
-					new Room { WatchIndex = 73, Values = new int[] { 0x04 }},
-			}},
-			new Location { Name = "Alucard Mail",  SecondCastle = true,  EquipmentExtension = true, Y = 146, X = 121, WatchIndecies = new List<int>{74}, Rooms = new List<Room>{
-					new Room { WatchIndex = 74, Values = new int[] { 0x04 }},
-			}},
-			new Location { Name = "Sword of Hador",  SecondCastle = true,  EquipmentExtension = true, Y = 130, X = 125, WatchIndecies = new List<int>{75}, Rooms = new List<Room>{
-					new Room { WatchIndex = 75, Values = new int[] { 0x01 }},
-			}},
-			new Location { Name = "Fury Plate",  SecondCastle = true,  EquipmentExtension = true, Y = 138, X = 177, WatchIndecies = new List<int>{76}, Rooms = new List<Room>{
-					new Room { WatchIndex = 76, Values = new int[] { 0x40 }},
-			}},
-			new Location { Name = "Gram",  SecondCastle = true,  EquipmentExtension = true, Y = 122, X = 173, WatchIndecies = new List<int>{77}, Rooms = new List<Room>{
-					new Room { WatchIndex = 77, Values = new int[] { 0x01 }},
-			}},
-			new Location { Name = "Goddess shield",  SecondCastle = true,  EquipmentExtension = true, Y = 94, X = 189, WatchIndecies = new List<int>{78}, Rooms = new List<Room>{
-					new Room { WatchIndex = 78, Values = new int[] { 0x01 }},
-			}},
-			new Location { Name = "Katana",  SecondCastle = true,  EquipmentExtension = true, Y = 74, X = 205, WatchIndecies = new List<int>{79}, Rooms = new List<Room>{
-					new Room { WatchIndex = 79, Values = new int[] { 0x01 }},
-			}},
-			new Location { Name = "Talisman",  SecondCastle = true,  EquipmentExtension = true, Y = 70, X = 173, WatchIndecies = new List<int>{80}, Rooms = new List<Room>{
-					new Room { WatchIndex = 80, Values = new int[] { 0x01 }},
-			}},
-			new Location { Name = "Beryl circlet",  SecondCastle = true,  EquipmentExtension = true, Y = 54, X = 213, WatchIndecies = new List<int>{81}, Rooms = new List<Room>{
-					new Room { WatchIndex = 81, Values = new int[] { 0x10 }},
-			}},
-		};
-		public readonly TrackerRelic[] relics = new TrackerRelic[]
-		{
-				new TrackerRelic { Name = "SoulOfBat", Progression = true},
-				new TrackerRelic { Name = "FireOfBat", Progression = false},
-				new TrackerRelic { Name = "EchoOfBat", Progression = true},
-				new TrackerRelic { Name = "ForceOfEcho", Progression = false},
-				new TrackerRelic { Name = "SoulOfWolf", Progression = true},
-				new TrackerRelic { Name = "PowerOfWolf", Progression = true},
-				new TrackerRelic { Name = "SkillOfWolf", Progression = true},
-				new TrackerRelic { Name = "FormOfMist", Progression = true},
-				new TrackerRelic { Name = "PowerOfMist", Progression = true},
-				new TrackerRelic { Name = "GasCloud", Progression = false},
-				new TrackerRelic { Name = "CubeOfZoe", Progression = false},
-				new TrackerRelic { Name = "SpiritOrb", Progression = false},
-				new TrackerRelic { Name = "GravityBoots", Progression = true},
-				new TrackerRelic { Name = "LeapStone", Progression = true},
-				new TrackerRelic { Name = "HolySymbol", Progression = false},
-				new TrackerRelic { Name = "FaerieScroll", Progression = false},
-				new TrackerRelic { Name = "JewelOfOpen", Progression = true},
-				new TrackerRelic { Name = "MermanStatue", Progression = true},
-				new TrackerRelic { Name = "BatCard", Progression = false},
-				new TrackerRelic { Name = "GhostCard", Progression = false},
-				new TrackerRelic { Name = "FaerieCard", Progression = false},
-				new TrackerRelic { Name = "DemonCard", Progression = false},
-				new TrackerRelic { Name = "SwordCard", Progression = false},
-				new TrackerRelic { Name = "SpriteCard" , Progression = false},
-				new TrackerRelic { Name = "NoseDevilCard", Progression = false},
-				new TrackerRelic { Name = "HeartOfVlad", Progression = true},
-				new TrackerRelic { Name = "ToothOfVlad", Progression = true},
-				new TrackerRelic { Name = "RibOfVlad", Progression = true},
-				new TrackerRelic { Name = "RingOfVlad", Progression = true},
-				new TrackerRelic { Name = "EyeOfVlad", Progression = true}
-		};
+		public readonly Locations locations = new Locations();
+		public readonly TrackerRelic[] relics = new TrackerRelic[30];
+		public readonly ushort[] relicCollectionTimes = new ushort[30];
 		public readonly Item[] progressionItems = new Item[]
 		{
-			new Item { Name = "GoldRing", Value = 72 },
-			new Item { Name = "SilverRing", Value = 73 },
-			new Item { Name = "SpikeBreaker", Value = 14 },
-			new Item { Name = "HolyGlasses", Value = 34 }
+			new Item {Value = 72, Index = (byte)SotnApi.Constants.Values.Alucard.Equipment.Items.IndexOf("Gold Ring")},
+			new Item {Value = 73, Index = (byte)SotnApi.Constants.Values.Alucard.Equipment.Items.IndexOf("Silver Ring")},
+			new Item {Value = 14, Index = (byte)SotnApi.Constants.Values.Alucard.Equipment.Items.IndexOf("Spike Breaker")},
+			new Item {Value = 34, Index = (byte)SotnApi.Constants.Values.Alucard.Equipment.Items.IndexOf("Holy glasses")}
 		};
 		public readonly Item[] thrustSwords = new Item[]
 		{
-			new Item { Name = "Estoc", Value = 95 },
-			new Item { Name = "Claymore", Value = 98 },
-			new Item { Name = "Flamberge", Value = 101 },
-			new Item { Name = "Zweihander", Value = 103 },
-			new Item { Name = "ObsidianSword", Value = 107 }
+			new Item {Value = 95, Index = (byte)SotnApi.Constants.Values.Alucard.Equipment.Items.IndexOf("Estoc")},
+			new Item {Value = 98, Index = (byte)SotnApi.Constants.Values.Alucard.Equipment.Items.IndexOf("Claymore")},
+			new Item {Value = 101, Index = (byte)SotnApi.Constants.Values.Alucard.Equipment.Items.IndexOf("Flamberge")},
+			new Item {Value = 103, Index = (byte)SotnApi.Constants.Values.Alucard.Equipment.Items.IndexOf("Zweihander")},
+			new Item {Value = 107, Index = (byte)SotnApi.Constants.Values.Alucard.Equipment.Items.IndexOf("ObsidianSword")}
 		};
-		private readonly Dictionary<string, int> relicToIndex = new Dictionary<string, int>
+		private readonly Dictionary<string, ulong> abilityToFlag = new Dictionary<string, ulong>
 		{
-			{ "soulofbat", 0 },
-			{ "fireofbat", 1 },
-			{ "echoofbat", 2 },
-			{ "forceofecho", 3 },
-			{ "soulofwolf", 4 },
-			{ "powerofwolf", 5 },
-			{ "skillofwolf", 6 },
-			{ "formofmist", 7 },
-			{ "powerofmist", 8 },
-			{ "gascloud", 9 },
-			{ "cubeofzoe", 10 },
-			{ "spiritorb", 11 },
-			{ "gravityboots", 12 },
-			{ "leapstone", 13 },
-			{ "holysymbol", 14 },
-			{ "faeriescroll", 15 },
-			{ "jewelofopen", 16 },
-			{ "mermanstatue", 17 },
-			{ "batcard", 18 },
-			{ "ghostcard", 19 },
-			{ "faeriecard", 20 },
-			{ "demoncard", 21 },
-			{ "swordcard", 22 },
-			{ "spritecard", 23 },
-			{ "nosedevilcard", 24 },
-			{ "heartofvlad", 25 },
-			{ "toothofvlad", 26 },
-			{ "ribofvlad", 27 },
-			{ "ringofvlad", 28 },
-			{ "eyeofvlad", 29 }
+			{ "Soul of Bat",    0b0000000000000000000000000000000000000000000000000000000000000001},
+			{ "Fire of Bat",    0b0000000000000000000000000000000000000000000000000000000000000010},
+			{ "Echo of Bat",    0b0000000000000000000000000000000000000000000000000000000000000100},
+			{ "Force of Echo",  0b0000000000000000000000000000000000000000000000000000000000001000},
+			{ "Soul of Wolf",   0b0000000000000000000000000000000000000000000000000000000000010000},
+			{ "Power of Wolf",  0b0000000000000000000000000000000000000000000000000000000000100000},
+			{ "Skill of Wolf",  0b0000000000000000000000000000000000000000000000000000000001000000},
+			{ "Form of Mist",   0b0000000000000000000000000000000000000000000000000000000010000000},
+			{ "Power of Mist",  0b0000000000000000000000000000000000000000000000000000000100000000},
+			{ "Gas Cloud",      0b0000000000000000000000000000000000000000000000000000001000000000},
+			{ "Cube of Zoe",    0b0000000000000000000000000000000000000000000000000000010000000000},
+			{ "Spirit Orb",     0b0000000000000000000000000000000000000000000000000000100000000000},
+			{ "Gravity Boots",  0b0000000000000000000000000000000000000000000000000001000000000000},
+			{ "Leap Stone",     0b0000000000000000000000000000000000000000000000000010000000000000},
+			{ "Holy Symbol",    0b0000000000000000000000000000000000000000000000000100000000000000},
+			{ "Faerie Scroll",  0b0000000000000000000000000000000000000000000000001000000000000000},
+			{ "Jewel of Open",  0b0000000000000000000000000000000000000000000000010000000000000000},
+			{ "Merman Statue",  0b0000000000000000000000000000000000000000000000100000000000000000},
+			{ "Bat Card",       0b0000000000000000000000000000000000000000000001000000000000000000},
+			{ "Ghost Card",     0b0000000000000000000000000000000000000000000010000000000000000000},
+			{ "Faerie Card",    0b0000000000000000000000000000000000000000000100000000000000000000},
+			{ "Demon Card",     0b0000000000000000000000000000000000000000001000000000000000000000},
+			{ "Sword Card",     0b0000000000000000000000000000000000000000010000000000000000000000},
+			{ "Sprite Card",    0b0000000000000000000000000000000000000000100000000000000000000000},
+			{ "Nosedevil Card", 0b0000000000000000000000000000000000000001000000000000000000000000},
+			{ "Heart of Vlad",  0b0000000000000000000000000000000000000010000000000000000000000000},
+			{ "Tooth of Vlad",  0b0000000000000000000000000000000000000100000000000000000000000000},
+			{ "Rib of Vlad",    0b0000000000000000000000000000000000001000000000000000000000000000},
+			{ "Ring of Vlad",   0b0000000000000000000000000000000000010000000000000000000000000000},
+			{ "Eye of Vlad",    0b0000000000000000000000000000000000100000000000000000000000000000},
+			{ "Gold ring",      0b0000000000000000000000000000000001000000000000000000000000000000},
+			{ "Silver ring",    0b0000000000000000000000000000000010000000000000000000000000000000},
+			{ "Spike Breaker",  0b0000000000000000000000000000000100000000000000000000000000000000},
+			{ "Holy glasses",   0b0000000000000000000000000000001000000000000000000000000000000000},
+			{ "Thrust sword",   0b0000000000000000000000000000010000000000000000000000000000000000}
 		};
-		private readonly Dictionary<string, int> itemToIndex = new Dictionary<string, int>
+		private readonly Dictionary<string, byte> abilityToIndex = new Dictionary<string, byte>
 		{
-			{ "goldring", 0 },
-			{ "silverring", 1 },
-			{ "spikebreaker", 2 },
-			{ "holyglasses", 3 },
+			{ "Soul of Bat",    0},
+			{ "Fire of Bat",    1},
+			{ "Echo of Bat",    2},
+			{ "Force of Echo",  3},
+			{ "Soul of Wolf",   4},
+			{ "Power of Wolf",  5},
+			{ "Skill of Wolf",  6},
+			{ "Form of Mist",   7},
+			{ "Power of Mist",  8},
+			{ "Gas Cloud",      9},
+			{ "Cube of Zoe",    10},
+			{ "Spirit Orb",     11},
+			{ "Gravity Boots",  12},
+			{ "Leap Stone",     13},
+			{ "Holy Symbol",    14},
+			{ "Faerie Scroll",  15},
+			{ "Jewel of Open",  16},
+			{ "Merman Statue",  17},
+			{ "Bat Card",       18},
+			{ "Ghost Card",     19},
+			{ "Faerie Card",    20},
+			{ "Demon Card",     21},
+			{ "Sword Card",     22},
+			{ "Sprite Card",    23},
+			{ "Nosedevil Card", 24},
+			{ "Heart of Vlad",  25},
+			{ "Tooth of Vlad",  26},
+			{ "Rib of Vlad",    27},
+			{ "Ring of Vlad",   28},
+			{ "Eye of Vlad",    29},
+			{ "Gold ring",      30},
+			{ "Silver ring",    31},
+			{ "Spike Breaker",  32},
+			{ "Holy glasses",   33},
+			{ "Thrust sword",   34}
 		};
-		private readonly HashSet<string> VanillaPresets = new HashSet<string>
+		private readonly ulong[] abilityFlags = new ulong[]
 		{
-			"adventure",
-			"bat-master",
-			"casual",
-			"empty-hand",
-			"expedition",
-			//"gem-farmer",
-			//"glitch",
-			"guarded-og",
-			"lycanthrope",
-			"nimble",
-			"og",
-			//"rat-race",
-			"safe",
-			"scavenger",
-			"speedrun",
-			"third-castle",
-			"warlock"
+			0b0000000000000000000000000000000000000000000000000000000000000001,
+			0b0000000000000000000000000000000000000000000000000000000000000010,
+			0b0000000000000000000000000000000000000000000000000000000000000100,
+			0b0000000000000000000000000000000000000000000000000000000000001000,
+			0b0000000000000000000000000000000000000000000000000000000000010000,
+			0b0000000000000000000000000000000000000000000000000000000000100000,
+			0b0000000000000000000000000000000000000000000000000000000001000000,
+			0b0000000000000000000000000000000000000000000000000000000010000000,
+			0b0000000000000000000000000000000000000000000000000000000100000000,
+			0b0000000000000000000000000000000000000000000000000000001000000000,
+			0b0000000000000000000000000000000000000000000000000000010000000000,
+			0b0000000000000000000000000000000000000000000000000000100000000000,
+			0b0000000000000000000000000000000000000000000000000001000000000000,
+			0b0000000000000000000000000000000000000000000000000010000000000000,
+			0b0000000000000000000000000000000000000000000000000100000000000000,
+			0b0000000000000000000000000000000000000000000000001000000000000000,
+			0b0000000000000000000000000000000000000000000000010000000000000000,
+			0b0000000000000000000000000000000000000000000000100000000000000000,
+			0b0000000000000000000000000000000000000000000001000000000000000000,
+			0b0000000000000000000000000000000000000000000010000000000000000000,
+			0b0000000000000000000000000000000000000000000100000000000000000000,
+			0b0000000000000000000000000000000000000000001000000000000000000000,
+			0b0000000000000000000000000000000000000000010000000000000000000000,
+			0b0000000000000000000000000000000000000000100000000000000000000000,
+			0b0000000000000000000000000000000000000001000000000000000000000000,
+			0b0000000000000000000000000000000000000010000000000000000000000000,
+			0b0000000000000000000000000000000000000100000000000000000000000000,
+			0b0000000000000000000000000000000000001000000000000000000000000000,
+			0b0000000000000000000000000000000000010000000000000000000000000000,
+			0b0000000000000000000000000000000000100000000000000000000000000000,
+			0b0000000000000000000000000000000001000000000000000000000000000000,
+			0b0000000000000000000000000000000010000000000000000000000000000000,
+			0b0000000000000000000000000000000100000000000000000000000000000000,
+			0b0000000000000000000000000000001000000000000000000000000000000000,
+			0b0000000000000000000000000000010000000000000000000000000000000000
 		};
-		private readonly int[] watchToLocation = new int[300];
-		private readonly int[] watchToLocationEquipment = new int[300];
-		private readonly int[] watchToRoom = new int[300];
-		private readonly int[] watchToRoomEquipment = new int[300];
+		private readonly Dictionary<string, ushort> locationToIndex = new Dictionary<string, ushort>();
 
 		private string preset = "";
 		private string seedName = "";
 		private uint roomCount = 2;
 		private bool inGame = false;
-		private bool classicExtension = true;
-		private bool guardedExtension = true;
-		private bool equipmentExtension = false;
-		private bool spreadExtension = false;
-		private bool customExtension = false;
 		private bool gameReset = true;
 		private bool secondCastle = false;
 		private bool restarted = false;
-		private List<ReplayState> replay = new(20000);
+		private ReplayState[] replay = new ReplayState[20000];
 		private int replayLenght = 0;
 		private ushort prologueTime = 0;
 		private Autosplitter autosplitter;
@@ -501,10 +183,9 @@ namespace SotnRandoTools.RandoTracker
 		private TimeSpan finalTime;
 		private Stopwatch stopWatch = new Stopwatch();
 
-		public Tracker(IToolConfig toolConfig, IWatchlistService watchlistService, ISotnApi sotnApi, INotificationService notificationService)
+		public Tracker(IToolConfig toolConfig, ISotnApi sotnApi, INotificationService notificationService)
 		{
 			this.toolConfig = toolConfig ?? throw new ArgumentNullException(nameof(toolConfig));
-			this.watchlistService = watchlistService ?? throw new ArgumentNullException(nameof(watchlistService));
 			this.sotnApi = sotnApi ?? throw new ArgumentNullException(nameof(sotnApi));
 			this.notificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
 
@@ -516,18 +197,17 @@ namespace SotnRandoTools.RandoTracker
 			{
 				autosplitter = new();
 			}
-
-			if (toolConfig.Tracker.Locations)
-			{
-				InitializeWatchMaps();
-				InitializeAllLocks();
-				CheckReachability();
-			}
 			this.SeedInfo = DefaultSeedInfo;
-			AllocateReplay();
 		}
 
 		public string SeedInfo { get; set; }
+		public Locations Locations
+		{
+			get
+			{
+				return this.locations;
+			}
+		}
 
 		public void Update()
 		{
@@ -559,7 +239,7 @@ namespace SotnRandoTools.RandoTracker
 				{
 					secondCastle = updatedSecondCastle;
 					CheckReachability();
-					SetMapLocations();
+					ColorAllLocations();
 				}
 				else if (updatedSecondCastle != secondCastle)
 				{
@@ -584,12 +264,12 @@ namespace SotnRandoTools.RandoTracker
 				}
 				if (gameReset && toolConfig.Tracker.Locations)
 				{
-					SetMapLocations();
+					ColorAllLocations();
 					gameReset = false;
 				}
 				if (!LocationsDrawn() && toolConfig.Tracker.Locations)
 				{
-					SetMapLocations();
+					ColorAllLocations();
 				}
 			}
 			else if (!inGame)
@@ -647,39 +327,7 @@ namespace SotnRandoTools.RandoTracker
 			}
 		}
 
-		private void InitializeWatchMaps()
-		{
-			for (int i = 0; i < 37; i++)
-			{
-				for (int j = 0; j < locations[i].WatchIndecies.Count; j++)
-				{
-					watchToLocation[locations[i].WatchIndecies[j]] = i;
-				}
-				for (int j = 0; j < locations[i].Rooms.Count; j++)
-				{
-					watchToRoom[locations[i].Rooms[j].WatchIndex] = j;
-				}
-			}
-			for (int i = 37; i < locations.Count; i++)
-			{
-				for (int j = 0; j < locations[i].WatchIndecies.Count; j++)
-				{
-					watchToLocationEquipment[locations[i].WatchIndecies[j]] = i;
-				}
-				for (int j = 0; j < locations[i].Rooms.Count; j++)
-				{
-					watchToRoomEquipment[locations[i].Rooms[j].WatchIndex] = j;
-				}
-			}
-		}
-
-		private void InitializeAllLocks()
-		{
-			LoadLocks(Paths.CasualPresetPath);
-			LoadLocks(Paths.SpeedrunPresetPath, true);
-		}
-
-		private bool LoadExtension(string extensionFilePath)
+		private unsafe bool LoadExtension(string extensionFilePath)
 		{
 			if (!File.Exists(extensionFilePath))
 			{
@@ -687,87 +335,27 @@ namespace SotnRandoTools.RandoTracker
 			}
 
 			Extension? extension = JsonConvert.DeserializeObject<Extension>(File.ReadAllText(extensionFilePath));
-			MemoryDomain domain = watchlistService.SafeLocationWatches[0].Domain;
-			customExtension = true;
-
-			switch (extension.Extends)
+			if (extension.Extends != String.Empty)
 			{
-				case "equipment":
-					equipmentExtension = true;
-					guardedExtension = true;
-					classicExtension = true;
-					SetEquipmentProgression();
-					break;
-				case "guarded":
-					classicExtension = true;
-					guardedExtension = true;
-					break;
-				case "spread":
-					spreadExtension = true;
-					classicExtension = true;
-					break;
-				case "classic":
-					classicExtension = true;
-					break;
-				default:
-					break;
+				LoadExtension(Paths.ExtensionPath + extension.Extends + ".json");
 			}
 
-			foreach (ExtensionLocation location in extension.Locations)
+			for (int i = 0; i < extension.Locations.Count; i++)
 			{
-				Location? customLocation = locations.Where(x => x.Name == location.Name).FirstOrDefault();
-				int locationIndex = 0;
+				locationToIndex.Add(extension.Locations[i].Name, (ushort) locations.stateCount);
+				locations.AddState(new LocationState { x = (byte) extension.Locations[i].X, y = (byte) extension.Locations[i].Y, SecondCastle = extension.Locations[i].SecondCastle, availabilityColor = MapColor.Available });
 
-				if (customLocation is null)
+				for (int j = 0; j < extension.Locations[i].Rooms.Count; j++)
 				{
-					customLocation = new Location
-					{
-						Name = location.Name,
-						X = location.X,
-						Y = location.Y,
-						SecondCastle = location.SecondCastle,
-						CustomExtension = true
-					};
-					locations.Add(customLocation);
-					locationIndex = locations.Count - 1;
-				}
-				else
-				{
-					if (customLocation.CustomExtension)
-					{
-						customLocation.X = location.X;
-						customLocation.Y = location.Y;
-						customLocation.SecondCastle = location.SecondCastle;
-					}
-					else
-					{
-						customLocation.CustomExtension = true;
-					}
-					locationIndex = locations.IndexOf(customLocation);
-				}
-
-				int roomCounter = 0;
-				foreach (var room in location.Rooms)
-				{
-					watchlistService.SafeLocationWatches.Add(Watch.GenerateWatch(domain, Convert.ToInt64(room.Address, 16), WatchSize.Byte, WatchDisplayType.Hex, false, location.Name + roomCounter));
-					roomCounter++;
-					List<int> values = new List<int>();
-					foreach (var value in room.Values)
-					{
-						values.Add(Convert.ToInt32(value.ToString(), 16));
-					}
-
-					Room customRoom = new Room { WatchIndex = watchlistService.SafeLocationWatches.Count - 1, Values = values.ToArray() };
-					customLocation.WatchIndecies.Add(watchlistService.SafeLocationWatches.Count - 1);
-					customLocation.Rooms.Add(customRoom);
-					watchToRoom[watchlistService.SafeLocationWatches.Count - 1] = roomCounter - 1;
-					watchToLocation[watchlistService.SafeLocationWatches.Count - 1] = locationIndex;
+					ushort index = (ushort) (Convert.ToInt64(extension.Locations[i].Rooms[j].Address, 16) - SotnApi.Constants.Addresses.Game.MapStart);
+					locations.AddRoom(new LocationRoom { roomIndex = index, stateIndex = (ushort) (locations.stateCount - 1), values = Convert.ToByte(extension.Locations[i].Rooms[j].Values, 16) });
 				}
 			}
+
 			return true;
 		}
 
-		private void LoadLocks(string presetFilePath, bool outOfLogic = false, bool overwriteLocks = false)
+		private void LoadParentPreset(string presetFilePath, Dictionary<string, LockLocation> uniqueLocks, Dictionary<string, LockLocation> uniqueAllowedLocks)
 		{
 			if (!File.Exists(presetFilePath))
 			{
@@ -775,187 +363,176 @@ namespace SotnRandoTools.RandoTracker
 			}
 
 			Preset? preset = JsonConvert.DeserializeObject<Preset>(File.ReadAllText(presetFilePath));
-			bool isVanilla = VanillaPresets.Contains(preset.Metadata.Id);
+			if (preset.Inherits != null)
+			{
+				LoadParentPreset(Paths.ExtensionPath + preset.Inherits + ".json", uniqueLocks, uniqueAllowedLocks);
+			}
+
+			for (int i = 0; i < preset.LockLocations.Count; i++)
+			{
+				if (!uniqueLocks.ContainsKey(preset.LockLocations[i].Name))
+				{
+					uniqueLocks.Add(preset.LockLocations[i].Name, preset.LockLocations[i]);
+					continue;
+				}
+				uniqueLocks[preset.LockLocations[i].Name] = preset.LockLocations[i];
+			}
+
+			for (int i = 0; i < preset.LockLocationsAllowed.Count; i++)
+			{
+				if (!uniqueAllowedLocks.ContainsKey(preset.LockLocationsAllowed[i].Name))
+				{
+					uniqueAllowedLocks.Add(preset.LockLocationsAllowed[i].Name, preset.LockLocationsAllowed[i]);
+					continue;
+				}
+				uniqueAllowedLocks[preset.LockLocationsAllowed[i].Name] = preset.LockLocationsAllowed[i];
+			}
+		}
+
+		private void LoadPreset(string presetFilePath)
+		{
+			if (!File.Exists(presetFilePath))
+			{
+				return;
+			}
+
+			Preset? preset = JsonConvert.DeserializeObject<Preset>(File.ReadAllText(presetFilePath));
+			Preset? speedrunPreset = JsonConvert.DeserializeObject<Preset>(File.ReadAllText(Paths.SpeedrunPresetPath));
 
 			if (preset.Metadata.Id == "glitch")
 			{
-				preset.RelicLocationsExtension = "equipment";
+				LoadExtension(Paths.ExtensionPath + "equipment.json");
 			}
 
-			switch (preset.RelicLocationsExtension)
+			if (preset.RelicLocationsExtension == "false")
 			{
-				case "equipment":
-					equipmentExtension = true;
-					guardedExtension = true;
-					classicExtension = true;
-					SetEquipmentProgression();
-					break;
-				case "spread":
-					spreadExtension = true;
-					classicExtension = true;
-					break;
-				case "false":
-					classicExtension = true;
-					guardedExtension = false;
-					break;
-				default:
-					if (!LoadExtension(Paths.PresetPath + preset.RelicLocationsExtension + ".json"))
-					{
-						guardedExtension = true;
-						classicExtension = true;
-					}
-					break;
+				LoadExtension(Paths.ExtensionPath + "classic.json");
+			}
+			else if (preset.RelicLocationsExtension == null)
+			{
+				LoadExtension(Paths.ExtensionPath + "guarded.json");
+			}
+			else
+			{
+				LoadExtension(Paths.ExtensionPath + preset.RelicLocationsExtension + ".json");
 			}
 
-			foreach (LockLocation location in preset.LockLocations)
+			Dictionary<string, LockLocation> uniqueLocks = new Dictionary<string, LockLocation>();
+			Dictionary<string, LockLocation> uniqueAllowedLocks = new Dictionary<string, LockLocation>();
+			for (int i = 0; i < speedrunPreset.LockLocations.Count; i++)
 			{
-				var trackerLocation = locations.Where(x => x.Name.Replace(" ", String.Empty).ToLower() == location.Name.Replace(" ", String.Empty).ToLower()).FirstOrDefault();
-
-				if (trackerLocation == null)
-				{
-					trackerLocation = new Location
-					{
-						Name = location.Name,
-						CustomExtension = true
-					};
-					locations.Add(trackerLocation);
-				}
-
-				if (overwriteLocks)
-				{
-					if (outOfLogic || !isVanilla)
-					{
-						trackerLocation.OutOfLogicLocks.Clear();
-					}
-					if (!outOfLogic)
-					{
-						trackerLocation.Locks.Clear();
-					}
-				}
-
-				foreach (string lockSet in location.Locks)
-				{
-					string[] newLockSet = lockSet.Replace(" ", String.Empty).ToLower().Split('+');
-					for (int i = 0; i < preset.Aliases.Count; i++)
-					{
-						for (int j = 0; j < newLockSet.Length; j++)
-						{
-							if (newLockSet[j] == preset.Aliases[i].Replaced.Replace(" ", String.Empty).ToLower())
-							{
-								newLockSet[j] = preset.Aliases[i].Relic.Replace(" ", String.Empty).ToLower();
-							}
-						}
-					}
-
-					int[] mappedLockSet = new int[newLockSet.Length];
-
-					for (int i = 0; i < newLockSet.Length; i++)
-					{
-						if (relicToIndex.ContainsKey(newLockSet[i]))
-						{
-							mappedLockSet[i] = relicToIndex[newLockSet[i]];
-
-						}
-						else if (itemToIndex.ContainsKey(newLockSet[i]))
-						{
-							mappedLockSet[i] = 100 + itemToIndex[newLockSet[i]];
-
-						}
-						else if (newLockSet[i] == "thrustsword")
-						{
-							mappedLockSet[i] = 200;
-						}
-					}
-
-					if (outOfLogic)
-					{
-						trackerLocation.OutOfLogicLocks.Add(mappedLockSet);
-					}
-					else
-					{
-						trackerLocation.Locks.Add(mappedLockSet);
-					}
-				}
+				uniqueAllowedLocks.Add(speedrunPreset.LockLocations[i].Name, speedrunPreset.LockLocations[i]);
 			}
-
-			foreach (LockLocation location in preset.LockLocationsAllowed)
+			if (preset.Inherits != null)
 			{
-				var trackerLocation = locations.Where(x => x.Name.Replace(" ", String.Empty).ToLower() == location.Name.Replace(" ", String.Empty).ToLower()).FirstOrDefault();
+				LoadParentPreset(Paths.PresetPath + preset.Inherits + ".json", uniqueLocks, uniqueAllowedLocks);
+			}
+			for (int i = 0; i < preset.LockLocations.Count; i++)
+			{
+				if (!uniqueLocks.ContainsKey(preset.LockLocations[i].Name))
+				{
+					uniqueLocks.Add(preset.LockLocations[i].Name, preset.LockLocations[i]);
+					continue;
+				}
+				uniqueLocks[preset.LockLocations[i].Name] = preset.LockLocations[i];
+			}
+			for (int i = 0; i < preset.LockLocationsAllowed.Count; i++)
+			{
+				if (!uniqueAllowedLocks.ContainsKey(preset.LockLocationsAllowed[i].Name))
+				{
+					uniqueAllowedLocks.Add(preset.LockLocationsAllowed[i].Name, preset.LockLocationsAllowed[i]);
+					continue;
+				}
+				uniqueAllowedLocks[preset.LockLocationsAllowed[i].Name] = preset.LockLocationsAllowed[i];
+			}
+			LockLocation[] finalLocks = uniqueLocks.Values.ToArray();
+			LockLocation[] finalLocksAllowed = uniqueAllowedLocks.Values.ToArray();
 
-				if (trackerLocation == null)
+			for (int i = 0; i < finalLocks.Length; i++)
+			{
+				string locationName = finalLocks[i].Name;
+				if (!locationToIndex.ContainsKey(locationName))
 				{
 					continue;
 				}
-
-				trackerLocation.OutOfLogicLocks.Clear();
-
-				foreach (string lockSet in location.Locks)
+				if (finalLocks[i].Locks.Count == 0)
 				{
-					string[] newLockSet = lockSet.Replace(" ", String.Empty).ToLower().Split('+');
-					for (int i = 0; i < preset.Aliases.Count; i++)
+					locations.states[locationToIndex[locationName]].availabilityColor = MapColor.Available;
+					LocationLock llock = new LocationLock();
+					llock.stateIndex = locationToIndex[locationName];
+					locations.AddLock(llock);
+					continue;
+				}
+				locations.states[locationToIndex[locationName]].availabilityColor = MapColor.Allowed;
+				for (int j = 0; j < finalLocks[i].Locks.Count; j++)
+				{
+					LocationLock llock = new LocationLock();
+					llock.stateIndex = locationToIndex[locationName];
+					string[] lockSet = finalLocks[i].Locks[j].Split(new[] { " + " }, StringSplitOptions.RemoveEmptyEntries);
+					for (int k = 0; k < lockSet.Length; k++)
 					{
-						for (int j = 0; j < newLockSet.Length; j++)
+						byte abilityIndex = abilityToIndex[lockSet[k]];
+						if (abilityIndex < relics.Length)
 						{
-							if (newLockSet[j] == preset.Aliases[i].Replaced.Replace(" ", String.Empty).ToLower())
-							{
-								newLockSet[j] = preset.Aliases[i].Relic.Replace(" ", String.Empty).ToLower();
-							}
+							relics[abilityIndex].Progression = true;
 						}
+						llock.flags |= abilityToFlag[lockSet[k]];
 					}
-
-					int[] mappedLockSet = new int[newLockSet.Length];
-
-					for (int i = 0; i < newLockSet.Length; i++)
-					{
-						if (relicToIndex.ContainsKey(newLockSet[i]))
-						{
-							mappedLockSet[i] = relicToIndex[newLockSet[i]];
-
-						}
-						else if (itemToIndex.ContainsKey(newLockSet[i]))
-						{
-							mappedLockSet[i] = 100 + itemToIndex[newLockSet[i]];
-
-						}
-						else if (newLockSet[i] == "thrustsword")
-						{
-							mappedLockSet[i] = 200;
-						}
-					}
-
-					trackerLocation.OutOfLogicLocks.Add(mappedLockSet);
+					locations.AddLock(llock);
 				}
 			}
 
-			for (int i = 0; i < preset.ProgressionRelics.Count; i++)
+			for (int i = 0; i < finalLocksAllowed.Length; i++)
 			{
-				var relic = relics.Where(r => r.Name.Replace(" ", String.Empty).ToLower() == preset.ProgressionRelics[i].ToLower()).FirstOrDefault();
-				relic.Progression = true;
+				string locationName = finalLocksAllowed[i].Name;
+				if (!locationToIndex.ContainsKey(locationName))
+				{
+					continue;
+				}
+				if (finalLocksAllowed[i].Locks.Count == 0)
+				{
+					locations.states[locationToIndex[locationName]].availabilityColor = MapColor.Allowed;
+					LocationLock llock = new LocationLock();
+					llock.stateIndex = locationToIndex[locationName];
+					locations.AddAllowedLock(llock);
+					continue;
+				}
+				locations.states[locationToIndex[locationName]].availabilityColor = MapColor.Unavailable;
+				for (int j = 0; j < finalLocksAllowed[i].Locks.Count; j++)
+				{
+					LocationLock llock = new LocationLock();
+					llock.stateIndex = locationToIndex[locationName];
+					string[] lockSet = finalLocksAllowed[i].Locks[j].Split(new[] { " + " }, StringSplitOptions.RemoveEmptyEntries);
+					for (int k = 0; k < lockSet.Length; k++)
+					{
+						byte abilityIndex = abilityToIndex[lockSet[k]];
+						if (abilityIndex < relics.Length)
+						{
+							relics[abilityIndex].Progression = true;
+						}
+						llock.flags |= abilityToFlag[lockSet[k]];
+					}
+					locations.AddAllowedLock(llock);
+				}
 			}
-			//trackerRenderer.SetProgression();
 		}
 
 		private void ResetToDefaults()
 		{
 			roomCount = 2;
-			foreach (var relic in relics)
+			for (int i = 0; i < relics.Length; i++)
 			{
-				relic.Collected = false;
+				relics[i].Collected = false;
 			}
-			foreach (var item in progressionItems)
+			for (int i = 0; i < progressionItems.Length; i++)
 			{
-				item.Status = false;
+				progressionItems[i].Status = false;
 			}
-			foreach (var sword in thrustSwords)
+			for (int i = 0; i < thrustSwords.Length; i++)
 			{
-				sword.Status = false;
+				thrustSwords[i].Status = false;
 			}
-			foreach (var location in locations)
-			{
-				location.Visited = false;
-				location.AvailabilityColor = MapColor.Unavailable;
-			}
-			PrepareMapLocations();
+			locations.Reset();
 			if (toolConfig.Tracker.Locations)
 			{
 				CheckReachability();
@@ -967,6 +544,7 @@ namespace SotnRandoTools.RandoTracker
 			if (SeedInfo == DefaultSeedInfo && sotnApi.GameApi.Status == Status.MainMenu)
 			{
 				GetSeedData();
+				sotnApi.GameApi.RemoveMapRevealCheck();
 			}
 		}
 
@@ -978,14 +556,30 @@ namespace SotnRandoTools.RandoTracker
 				roomCount = currentRooms;
 				return;
 			}
-			watchlistService.UpdateWatchlist(watchlistService.SafeLocationWatches);
-			CheckRooms(watchlistService.SafeLocationWatches);
-			watchlistService.SafeLocationWatches.ClearChangeCounts();
-			if (equipmentExtension || spreadExtension || customExtension)
+
+			for (int i = 0; i < locations.roomCount; i++)
 			{
-				watchlistService.UpdateWatchlist(watchlistService.EquipmentLocationWatches);
-				CheckRooms(watchlistService.EquipmentLocationWatches, true);
-				watchlistService.EquipmentLocationWatches.ClearChangeCounts();
+				if (locations.states[locations.rooms[i].stateIndex].Visited)
+				{
+					continue;
+				}
+				byte rmv = sotnApi.GameApi.GetRoomValue(locations.rooms[i].roomIndex);
+				if (locations.rooms[i].Checked(sotnApi.GameApi.GetRoomValue(locations.rooms[i].roomIndex)))
+				{
+					locations.states[locations.rooms[i].stateIndex].Visited = true;
+					uint x = locations.states[locations.rooms[i].stateIndex].x;
+					uint y = locations.states[locations.rooms[i].stateIndex].y;
+					if (x <= 0 || y <= 0)
+					{
+						return;
+					}
+					if (secondCastle)
+					{
+						x = 252 - x;
+						y = 199 - y;
+					}
+					sotnApi.MapApi.ClearMapRoom((byte) x, (byte) y, (byte) locations.states[locations.rooms[i].stateIndex].availabilityColor, (byte) MapColor.Border);
+				}
 			}
 
 			roomCount = currentRooms;
@@ -994,18 +588,11 @@ namespace SotnRandoTools.RandoTracker
 		private bool UpdateRelics()
 		{
 			int changes = 0;
-
-			watchlistService.UpdateWatchlist(watchlistService.RelicWatches);
-			for (int i = 0; i < watchlistService.RelicWatches.Count; i++)
+			for (int i = 0; i < relics.Length; i++)
 			{
-				if (watchlistService.RelicWatches[i].ChangeCount == 0)
+				if (sotnApi.AlucardApi.HasRelic((Relic) i))
 				{
-					continue;
-				}
-
-				if (watchlistService.RelicWatches[i].Value > 0)
-				{
-					if (relics[i].CollectedAt == 0)
+					if (relicCollectionTimes[i] == 0)
 					{
 						relics[i].X = currentMapX;
 						if (secondCastle)
@@ -1013,7 +600,7 @@ namespace SotnRandoTools.RandoTracker
 							relics[i].X += 100;
 						}
 						relics[i].Y = currentMapY;
-						relics[i].CollectedAt = (ushort) replayLenght;
+						relicCollectionTimes[i] = (ushort) replayLenght;
 					}
 					if (!relics[i].Collected)
 					{
@@ -1030,7 +617,6 @@ namespace SotnRandoTools.RandoTracker
 					}
 				}
 			}
-			watchlistService.RelicWatches.ClearChangeCounts();
 
 			return changes > 0;
 		}
@@ -1038,14 +624,9 @@ namespace SotnRandoTools.RandoTracker
 		private bool UpdateProgressionItems()
 		{
 			int changes = 0;
-			watchlistService.UpdateWatchlist(watchlistService.ProgressionItemWatches);
-			for (int i = 0; i < watchlistService.ProgressionItemWatches.Count; i++)
+			for (int i = 0; i < progressionItems.Length; i++)
 			{
-				if (watchlistService.ProgressionItemWatches[i].ChangeCount == 0)
-				{
-					continue;
-				}
-				if (watchlistService.ProgressionItemWatches[i].Value > 0)
+				if (sotnApi.AlucardApi.HasItemInInventory(progressionItems[i].Index))
 				{
 					if (progressionItems[i].CollectedAt == 0)
 					{
@@ -1064,7 +645,6 @@ namespace SotnRandoTools.RandoTracker
 					progressionItems[i].Collected = false;
 				}
 			}
-			watchlistService.ProgressionItemWatches.ClearChangeCounts();
 
 			for (int i = 0; i < progressionItems.Length; i++)
 			{
@@ -1103,15 +683,9 @@ namespace SotnRandoTools.RandoTracker
 		private bool UpdateThrustSwords()
 		{
 			int changes = 0;
-
-			watchlistService.UpdateWatchlist(watchlistService.ThrustSwordWatches);
-			for (int i = 0; i < watchlistService.ThrustSwordWatches.Count; i++)
+			for (int i = 0; i < thrustSwords.Length; i++)
 			{
-				if (watchlistService.ThrustSwordWatches[i].ChangeCount == 0)
-				{
-					continue;
-				}
-				if (watchlistService.ThrustSwordWatches[i].Value > 0)
+				if (sotnApi.AlucardApi.HasItemInInventory(thrustSwords[i].Index))
 				{
 					if (thrustSwords[i].CollectedAt == 0)
 					{
@@ -1131,7 +705,6 @@ namespace SotnRandoTools.RandoTracker
 					thrustSwords[i].Collected = false;
 				}
 			}
-			watchlistService.ThrustSwordWatches.ClearChangeCounts();
 
 			for (int i = 0; i < thrustSwords.Length; i++)
 			{
@@ -1160,100 +733,34 @@ namespace SotnRandoTools.RandoTracker
 			{
 				preset = "custom";
 			}
-			SeedInfo = seedName + "(" + preset + ")";
 			if (preset == "custom")
 			{
-				switch (toolConfig.Tracker.CustomExtension)
-				{
-					case "guarded":
-						guardedExtension = true;
-						break;
-					case "equipment":
-						equipmentExtension = true;
-						guardedExtension = true;
-						break;
-					case "spread":
-						spreadExtension = true;
-						break;
-					case "classic":
-						break;
-					default:
-						LoadExtension(Paths.PresetPath + toolConfig.Tracker.CustomExtension + ".json");
-						break;
-				}
+				LoadExtension(Paths.ExtensionPath + toolConfig.Tracker.CustomExtension + ".json");
 			}
 			else
 			{
-				LoadLocks(Paths.PresetPath + preset + ".json", false, true);
+				LoadPreset(Paths.PresetPath + preset + ".json");
 			}
+			SeedInfo = seedName + "(" + preset + ")";
 			SaveSeedInfo(SeedInfo);
-			PrepareMapLocations();
 		}
 
-		private void SetEquipmentProgression()
+		private void ColorAllLocations()
 		{
-			//Set Cube of Zoe, Holy Symbol, Demon card and Nose Devil to progression
-			relics[10].Progression = true;
-			relics[14].Progression = true;
-			relics[21].Progression = true;
-			relics[24].Progression = true;
-		}
-
-		private void SetMapLocations()
-		{
-			for (int i = 0; i < locations.Count; i++)
+			for (int i = 0; i < locations.stateCount; i++)
 			{
-				if (locations[i].X == 0 && locations[i].Y == 0)
+				if (!locations.states[i].Visited && locations.states[i].SecondCastle == secondCastle)
 				{
-					continue;
+					ColorMapRoom(i, (byte) locations.states[i].availabilityColor, locations.states[i].SecondCastle);
 				}
-				if (!locations[i].Visited && locations[i].SecondCastle == secondCastle)
-				{
-					ColorMapRoom(i, (uint) locations[i].AvailabilityColor, locations[i].SecondCastle);
-				}
-			}
-		}
-
-		private void PrepareMapLocations()
-		{
-			for (int i = 0; i < locations.Count; i++)
-			{
-				locations[i].Visited = true;
-				if ((locations[i].ClassicExtension && classicExtension) ||
-					(locations[i].GuardedExtension && guardedExtension) ||
-					(locations[i].EquipmentExtension && equipmentExtension) ||
-					(locations[i].SpreadExtension && spreadExtension) ||
-					(locations[i].CustomExtension && customExtension))
-				{
-					locations[i].Visited = false;
-				}
-			}
-		}
-
-		private void ClearMapLocation(int locationIndex)
-		{
-			ColorMapRoom(locationIndex, (uint) MapColor.Clear, locations[locationIndex].SecondCastle);
-			foreach (var room in locations[locationIndex].Rooms)
-			{
-				Watch roomWatch;
-				if (locations[locationIndex].EquipmentExtension)
-				{
-					roomWatch = watchlistService.EquipmentLocationWatches[room.WatchIndex];
-				}
-				else
-				{
-					roomWatch = watchlistService.SafeLocationWatches[room.WatchIndex];
-				}
-
-				sotnApi.GameApi.SetRoomToUnvisited(roomWatch.Address);
 			}
 		}
 
 		//TODO: portal spell discovery
-		private void ColorMapRoom(int locationIndex, uint color, bool secondCastle)
+		private void ColorMapRoom(int locationIndex, byte color, bool secondCastle)
 		{
-			uint x = (uint) locations[locationIndex].X;
-			uint y = (uint) locations[locationIndex].Y;
+			uint x = (uint) locations.states[locationIndex].x;
+			uint y = (uint) locations.states[locationIndex].y;
 			if (x <= 0 || y <= 0)
 			{
 				return;
@@ -1263,58 +770,53 @@ namespace SotnRandoTools.RandoTracker
 				x = 252 - x;
 				y = 199 - y;
 			}
-			uint borderColor = color > 0 ? (uint) MapColor.Border : 0;
 
-
-			if (locations[locationIndex].EquipmentExtension && spreadExtension == false)
+			if (locations.states[locationIndex].SmallIndicator)
 			{
 				if (secondCastle)
 				{
 					x += 2;
 					y += 1;
 				}
-				sotnApi.MapApi.ColorMapLocation(x, y, color);
+				sotnApi.MapApi.ColorMapLocation((byte) x, (byte) y, color);
 			}
 			else
 			{
-				sotnApi.MapApi.ColorMapRoom(x, y, color, borderColor);
+				sotnApi.MapApi.ColorMapRoom((byte) x, (byte) y, color, (byte) MapColor.Border);
 			}
 		}
 
 		private bool LocationsDrawn()
 		{
-			Location uncheckedLocation = locations[0];
+			int uncheckedLocationIndex = -1;
 
-			for (int i = 0; i < locations.Count; i++)
+			for (int i = 0; i < locations.stateCount; i++)
 			{
-				if (locations[i].X == 0 && locations[i].Y == 0)
+				if (!locations.states[i].Visited && locations.states[i].SecondCastle == secondCastle)
 				{
-					continue;
-				}
-				if (!locations[i].Visited && locations[i].SecondCastle == secondCastle)
-				{
-					uncheckedLocation = locations[i];
+					uncheckedLocationIndex = i;
+					break;
 				}
 			}
 
-			if (uncheckedLocation.Visited)
+			if (uncheckedLocationIndex == -1)
 			{
 				return true;
 			}
 
-			uint x = (uint) uncheckedLocation.X;
-			uint y = (uint) uncheckedLocation.Y;
+			uint x = (uint) locations.states[uncheckedLocationIndex].x;
+			uint y = (uint) locations.states[uncheckedLocationIndex].y;
 			if (secondCastle)
 			{
 				x = 252 - x;
 				y = 199 - y;
-				if (uncheckedLocation.EquipmentExtension)
+				if (locations.states[uncheckedLocationIndex].SmallIndicator)
 				{
 					x += 2;
 					y += 1;
 				}
 			}
-			if (!sotnApi.MapApi.RoomIsRendered(x, y, (uint) uncheckedLocation.AvailabilityColor))
+			if (!sotnApi.MapApi.RoomIsRendered((byte) x, (byte) y, (byte) locations.states[uncheckedLocationIndex].availabilityColor))
 			{
 				return false;
 			}
@@ -1322,139 +824,117 @@ namespace SotnRandoTools.RandoTracker
 			return true;
 		}
 
-		private void CheckRooms(WatchList watchlist, bool equipment = false)
+		private void CheckReachability()
 		{
-			for (int j = 0; j < watchlist.Count; j++)
+			for (int i = 0; i < locations.stateCount; i++)
 			{
-				Watch? watch = watchlist[j];
-				Location location = equipment ? locations[watchToLocationEquipment[j]] : locations[watchToLocation[j]];
-				Room room = equipment ? location.Rooms[watchToRoomEquipment[j]] : location.Rooms[watchToRoom[j]];
-
-				if (watch.ChangeCount == 0 || location.Visited || location.EquipmentExtension != equipment || watch.Value == 0)
+				locations.states[i].ReachabilityChanged = false;
+			}
+			for (int i = 0; i < locations.lockCount; i++)
+			{
+				bool unlock = true;
+				if (locations.states[locations.locks[i].stateIndex].Visited || locations.states[locations.locks[i].stateIndex].ReachabilityChanged)
 				{
 					continue;
 				}
-
-				foreach (int value in room.Values)
+				locations.states[locations.locks[i].stateIndex].availabilityColor = MapColor.Unavailable;
+				for (int j = 0; j < abilityFlags.Length; j++)
 				{
-					if ((watch.Value & value) == value)
+					if ((locations.locks[i].flags & abilityFlags[j]) == 0)
 					{
-						location.Visited = true;
-						Watch? coopWatch = null;
-						int watchIndex = 0;
-						for (int i = 0; i < watchlistService.CoopLocationWatches.Count; i++)
+						continue;
+					}
+					if (j < relics.Length)
+					{
+						if (!relics[j].Collected)
 						{
-							if (watchlistService.CoopLocationWatches[i].Notes == watch.Notes)
+							unlock = false;
+							break;
+						}
+					}
+					else if (j < (relics.Length + progressionItems.Length))
+					{
+						if (!(progressionItems[j - relics.Length].Collected || progressionItems[j - relics.Length].Equipped))
+						{
+							unlock = false;
+							break;
+						}
+					}
+					else
+					{
+						unlock = false;
+						for (int k = 0; k < thrustSwords.Length; k++)
+						{
+							if (thrustSwords[k].Collected || thrustSwords[k].Equipped)
 							{
-								coopWatch = watchlistService.CoopLocationWatches[i];
-								watchIndex = i;
+								unlock = true;
 								break;
 							}
 						}
-
-						if (coopWatch is not null && watchlistService.CoopLocationValues[watchIndex] == 0)
-						{
-							coopWatch.Update(PreviousType.LastFrame);
-							watchlistService.CoopLocationValues[watchIndex] = value;
-						}
-						ClearMapLocation(locations.IndexOf(location));
 					}
+				}
+				if (unlock)
+				{
+					locations.states[locations.locks[i].stateIndex].ReachabilityChanged = true;
+					locations.states[locations.locks[i].stateIndex].availabilityColor = MapColor.Available;
 				}
 			}
-		}
 
-		private void CheckReachability()
-		{
-			int changes = 0;
-
-			for (int j = 0; j < locations.Count; j++)
+			for (int i = 0; i < locations.stateCount; i++)
 			{
-				locations[j].AvailabilityColor = MapColor.Unavailable;
-
-				if (locations[j].Visited || ((locations[j].X == 0 && locations[j].Y == 0)))
+				locations.states[i].ReachabilityChanged = false;
+			}
+			for (int i = 0; i < locations.allowedLockCount; i++)
+			{
+				bool unlock = true;
+				if (locations.states[locations.allowedLocks[i].stateIndex].Visited 
+					|| locations.states[locations.allowedLocks[i].stateIndex].ReachabilityChanged 
+					|| locations.states[locations.allowedLocks[i].stateIndex].availabilityColor != MapColor.Unavailable)
 				{
 					continue;
 				}
-
-				if (locations[j].Locks.Count == 0)
+				for (int j = 0; j < abilityFlags.Length; j++)
 				{
-					locations[j].AvailabilityColor = MapColor.Available;
-					continue;
-				}
-				foreach (var lockSet in locations[j].Locks)
-				{
-					bool unlock = true;
-					for (int i = 0; i < lockSet.Length; i++)
+					if ((locations.allowedLocks[i].flags & abilityFlags[j]) == 0)
 					{
-						unlock = unlock && TrackedObjectStatus(lockSet[i]);
+						continue;
 					}
-					if (unlock)
+					if (j < relics.Length)
 					{
-						changes++;
-						locations[j].AvailabilityColor = MapColor.Available;
-						break;
-					}
-				}
-				if (locations[j].AvailabilityColor == MapColor.Available)
-				{
-					continue;
-				}
-				if (locations[j].OutOfLogicLocks.Count == 0)
-				{
-					locations[j].AvailabilityColor = MapColor.Allowed;
-					continue;
-				}
-				foreach (var lockSet in locations[j].OutOfLogicLocks)
-				{
-					bool unlock = true;
-					for (int i = 0; i < lockSet.Length; i++)
-					{
-						unlock = unlock && TrackedObjectStatus(lockSet[i]);
-					}
-					if (unlock)
-					{
-						changes++;
-						if (preset == "speedrun" || preset == "glitch")
+						if (!relics[j].Collected)
 						{
-							locations[j].AvailabilityColor = MapColor.Available;
+							unlock = false;
 							break;
 						}
-						locations[j].AvailabilityColor = MapColor.Allowed;
-						break;
 					}
-				}
-			}
-
-			if (changes > 0)
-			{
-				SetMapLocations();
-			}
-		}
-
-		private bool TrackedObjectStatus(int index)
-		{
-			if (index == 200)
-			{
-				for (int i = 0; i < thrustSwords.Length; i++)
-				{
-					if (thrustSwords[i].Collected)
+					else if (j < (relics.Length + progressionItems.Length))
 					{
-						return true;
+						if (!(progressionItems[j - relics.Length].Collected || progressionItems[j - relics.Length].Equipped))
+						{
+							unlock = false;
+							break;
+						}
+					}
+					else
+					{
+						unlock = false;
+						for (int k = 0; k < thrustSwords.Length; k++)
+						{
+							if (thrustSwords[k].Collected || thrustSwords[k].Equipped)
+							{
+								unlock = true;
+								break;
+							}
+						}
 					}
 				}
-			}
-			else if (index < 100)
-			{
-				TrackerRelic relic = relics[index];
-				return relic.Collected;
-			}
-			else
-			{
-				Item progressionItem = progressionItems[index - 100];
-				return progressionItem.Status;
+				if (unlock)
+				{
+					locations.states[locations.allowedLocks[i].stateIndex].availabilityColor = MapColor.Allowed;
+				}
 			}
 
-			return false;
+			ColorAllLocations();
 		}
 
 		private void UpdateOverlay()
@@ -1503,15 +983,6 @@ namespace SotnRandoTools.RandoTracker
 			return relicsNumber;
 		}
 
-		private void AllocateReplay()
-		{
-			replay.Add(new ReplayState());
-			for (int i = replay.Count; i < replay.Capacity; i++)
-			{
-				replay.Add(new ReplayState());
-			}
-		}
-
 		private void SaveReplayLine()
 		{
 			byte replayX = currentMapX;
@@ -1534,10 +1005,6 @@ namespace SotnRandoTools.RandoTracker
 			if ((inGame && (replayX > 1 && replayY > 0) && (replayX < 200 && replayY < 200) && !(replayY == 44 && replayX < 19 && !secondCastle)) && (replayLenght == 0 || (replay[replayLenght - 1].X != replayX || replay[replayLenght - 1].Y != replayY)))
 			{
 				replayLenght++;
-				if (replayLenght == replay.Capacity)
-				{
-					AllocateReplay();
-				}
 				replay[replayLenght - 1].X = (byte) (replayX + (secondCastle ? 100 : 0));
 				replay[replayLenght - 1].Y = replayY;
 			}
@@ -1589,44 +1056,51 @@ namespace SotnRandoTools.RandoTracker
 			replayBytes[replayIndex] = finalTimeSecondsBytes[1];
 			replayIndex++;
 
-			foreach (var relic in relics)
+			for (int i = 0; i < relics.Length; i++)
 			{
-				replayBytes[replayIndex] = relic.X;
+				replayBytes[replayIndex] = relics[i].X;
 				replayIndex++;
-				replayBytes[replayIndex] = relic.Y;
+				replayBytes[replayIndex] = relics[i].Y;
 				replayIndex++;
 
-				byte[] colletedBytes = BitConverter.GetBytes(relic.CollectedAt);
+				byte[] colletedBytes = BitConverter.GetBytes(relicCollectionTimes[i]);
 				replayBytes[replayIndex] = colletedBytes[0];
 				replayIndex++;
 				replayBytes[replayIndex] = colletedBytes[1];
 				replayIndex++;
 			}
 
-			foreach (var progressionItem in progressionItems)
+			for (int i = 0; i < progressionItems.Length; i++)
 			{
-				replayBytes[replayIndex] = progressionItem.X;
+				replayBytes[replayIndex] = progressionItems[i].X;
 				replayIndex++;
-				replayBytes[replayIndex] = progressionItem.Y;
+				replayBytes[replayIndex] = progressionItems[i].Y;
 				replayIndex++;
 
-				byte[] colletedBytes = BitConverter.GetBytes(progressionItem.CollectedAt);
+				byte[] colletedBytes = BitConverter.GetBytes(progressionItems[i].CollectedAt);
 				replayBytes[replayIndex] = colletedBytes[0];
 				replayIndex++;
 				replayBytes[replayIndex] = colletedBytes[1];
 				replayIndex++;
 			}
 
-			Item foundSword = thrustSwords.Where(s => s.CollectedAt > 0).FirstOrDefault();
-
-			if (foundSword != null)
+			int foundIndex = -1;
+			for (int i = 0; i < thrustSwords.Length; i++)
 			{
-				replayBytes[replayIndex] = foundSword.X;
+				if (thrustSwords[i].CollectedAt > 0)
+				{
+					foundIndex = i;
+				}
+			}
+
+			if (foundIndex > -1)
+			{
+				replayBytes[replayIndex] = thrustSwords[foundIndex].X;
 				replayIndex++;
-				replayBytes[replayIndex] = foundSword.Y;
+				replayBytes[replayIndex] = thrustSwords[foundIndex].Y;
 				replayIndex++;
 
-				byte[] colletedBytes = BitConverter.GetBytes(foundSword.CollectedAt);
+				byte[] colletedBytes = BitConverter.GetBytes(thrustSwords[foundIndex].CollectedAt);
 				replayBytes[replayIndex] = colletedBytes[0];
 				replayIndex++;
 				replayBytes[replayIndex] = colletedBytes[1];
@@ -1699,7 +1173,7 @@ namespace SotnRandoTools.RandoTracker
 		{
 			if (sotnApi.AlucardApi.MapX == 31 && sotnApi.AlucardApi.MapY == 30 && sotnApi.GameApi.Status == Status.InGame)
 			{
-				Entity boss = sotnApi.EntityApi.GetLiveEntity(DraculaEntityAddress);
+				var boss = sotnApi.EntityApi.GetLiveEntity(DraculaEntityAddress);
 				if (boss.Hp > 13 && boss.Hp < 10000 && boss.UpdateFunctionAddress != 0)
 				{
 					draculaSpawned = true;
@@ -1713,7 +1187,10 @@ namespace SotnRandoTools.RandoTracker
 					stopWatch.Stop();
 					finished = true;
 					finalTime = stopWatch.Elapsed;
-					SaveReplay();
+					if (toolConfig.Tracker.SaveReplays)
+					{
+						SaveReplay();
+					}
 				}
 			}
 			else
