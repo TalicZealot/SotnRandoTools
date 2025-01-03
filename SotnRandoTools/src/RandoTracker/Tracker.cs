@@ -416,6 +416,11 @@ namespace SotnRandoTools.RandoTracker
 			{
 				LoadExtension(Paths.ExtensionPath + preset.RelicLocationsExtension + ".json");
 			}
+			Dictionary<string, string> aliases = new Dictionary<string, string>();
+			for (int i = 0; i < preset.Aliases.Count; i++)
+			{
+				aliases.Add(preset.Aliases[i].Replaced, preset.Aliases[i].Relic);
+			}
 
 			Dictionary<string, LockLocation> uniqueLocks = new Dictionary<string, LockLocation>();
 			Dictionary<string, LockLocation> uniqueAllowedLocks = new Dictionary<string, LockLocation>();
@@ -471,12 +476,21 @@ namespace SotnRandoTools.RandoTracker
 					string[] lockSet = finalLocks[i].Locks[j].Split(new[] { " + " }, StringSplitOptions.RemoveEmptyEntries);
 					for (int k = 0; k < lockSet.Length; k++)
 					{
-						byte abilityIndex = abilityToIndex[lockSet[k]];
+						string ability;
+						if (!aliases.TryGetValue(lockSet[k], out ability))
+						{
+							ability = lockSet[k];
+						}
+						byte abilityIndex;
+						if (!abilityToIndex.TryGetValue(ability, out abilityIndex))
+						{
+							continue;
+						}
 						if (abilityIndex < relics.Length)
 						{
 							relics[abilityIndex].Progression = true;
 						}
-						llock.flags |= abilityToFlag[lockSet[k]];
+						llock.flags |= abilityToFlag[ability];
 					}
 					locations.AddLock(llock);
 				}
@@ -505,12 +519,21 @@ namespace SotnRandoTools.RandoTracker
 					string[] lockSet = finalLocksAllowed[i].Locks[j].Split(new[] { " + " }, StringSplitOptions.RemoveEmptyEntries);
 					for (int k = 0; k < lockSet.Length; k++)
 					{
-						byte abilityIndex = abilityToIndex[lockSet[k]];
+						string ability;
+						if (!aliases.TryGetValue(lockSet[k], out ability))
+						{
+							ability = lockSet[k];
+						}
+						byte abilityIndex;
+						if (!abilityToIndex.TryGetValue(ability, out abilityIndex))
+						{
+							continue;
+						}
 						if (abilityIndex < relics.Length)
 						{
 							relics[abilityIndex].Progression = true;
 						}
-						llock.flags |= abilityToFlag[lockSet[k]];
+						llock.flags |= abilityToFlag[ability];
 					}
 					locations.AddAllowedLock(llock);
 				}
