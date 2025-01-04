@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Windows.Media.Animation;
 using SotnApi.Constants.Values.Alucard.Enums;
 using SotnApi.Interfaces;
 using SotnApi.Main;
@@ -19,6 +21,10 @@ namespace SotnRandoTools.Coop
 		private bool sendPressed = false;
 		private bool inGame = false;
 		private bool gameStarted = false;
+		byte[] data2 = new byte[2];
+		byte[] data3 = new byte[3];
+		byte[] data5 = new byte[5];
+		byte[] data9 = new byte[9];
 		private ushort[] sendButton = new ushort[4] { SotnApi.Constants.Values.Game.Controller.Select, SotnApi.Constants.Values.Game.Controller.Triangle, SotnApi.Constants.Values.Game.Controller.L3, SotnApi.Constants.Values.Game.Controller.R3 };
 
 		public CoopSender(IToolConfig toolConfig, ISotnApi sotnApi, ICoopController coopController)
@@ -87,7 +93,7 @@ namespace SotnRandoTools.Coop
 			}
 		}
 
-		private void SendItem()
+		private unsafe void SendItem()
 		{
 			if (!sotnApi.GameApi.EquipMenuOpen() || !sotnApi.GameApi.IsInMenu() || !sendPressed)
 			{
@@ -95,18 +101,18 @@ namespace SotnRandoTools.Coop
 			}
 
 			sendPressed = true;
-			int item = sotnApi.AlucardApi.GetSelectedItem();
-			if (item != -1 && sotnApi.AlucardApi.HasItemInInventory(item))
+			short item = (short) sotnApi.AlucardApi.GetSelectedItem();
+			if (item == -1 || !sotnApi.AlucardApi.HasItemInInventory(item))
 			{
-				sotnApi.AlucardApi.TakeOneItem(item);
-				byte[] indexData = BitConverter.GetBytes(item);
-				byte[] data = new byte[3];
-				data[0] = (byte) MessageType.Item;
-				data[1] = indexData[0];
-				data[2] = indexData[1];
-
-				coopController.SendData(data);
+				return;
 			}
+			sotnApi.AlucardApi.TakeOneItem(item);
+			fixed (byte* buffer = data3)
+			{
+				buffer[0] = (byte) MessageType.Item;
+				*((short*) (buffer + 1)) = item;
+			}
+			coopController.SendData(data3);
 		}
 
 		private void SendRelics()
@@ -115,49 +121,47 @@ namespace SotnRandoTools.Coop
 			{
 				if (coopController.CoopState.relics[i].updated && coopController.CoopState.relics[i].status)
 				{
-					byte[] data = new byte[2];
-					data[0] = (byte) MessageType.Relic;
-					data[1] = (byte) i;
-					coopController.SendData(data);
+					data2[0] = (byte) MessageType.Relic;
+					data2[1] = (byte) i;
+					coopController.SendData(data2);
 				}
 			}
 		}
 
-		private void SendLocations()
+		private unsafe void SendLocations()
 		{
-			for (int i = 0; i < coopController.CoopState.locations.Length; i++)
+			for (ushort i = 0; i < coopController.CoopState.locations.Length; i++)
 			{
 				if (coopController.CoopState.locations[i].updated && coopController.CoopState.locations[i].status)
 				{
-					byte[] data = new byte[5];
-					byte[] roomIndex = BitConverter.GetBytes(coopController.CoopState.locations[i].roomIndex);
-					byte[] locationIndex = BitConverter.GetBytes((ushort)i);
-					data[0] = (byte) MessageType.Location;
-					data[1] = roomIndex[0];
-					data[2] = roomIndex[1];
-					data[3] = locationIndex[0];
-					data[4] = locationIndex[1];
-					coopController.SendData(data);
+					ushort roomIndex = coopController.CoopState.locations[i].roomIndex;
+					ushort locationIndex = i;
+					fixed (byte* buffer = data5)
+					{
+						buffer[0] = (byte) MessageType.Location;
+						*((ushort*) (buffer + 1)) = roomIndex;
+						*((ushort*) (buffer + 3)) = locationIndex;
+					}
+					coopController.SendData(data5);
 				}
 			}
 		}
 
 		private void SendWarps()
 		{
-			byte[] data = new byte[2];
 			if (coopController.CoopState.WarpsFirstCastle.updated)
 			{
-				data[0] = (byte) MessageType.WarpFirstCastle;
-				data[1] = coopController.CoopState.WarpsFirstCastle.difference;
-				coopController.SendData(data);
-				Console.WriteLine($"Sending first castle warp {coopController.CoopState.WarpsFirstCastle.difference}.");
+				data2[0] = (byte) MessageType.WarpFirstCastle;
+				data2[1] = coopController.CoopState.WarpsFirstCastle.difference;
+				coopController.SendData(data2);
+				//Console.WriteLine($"Sending first castle warp {coopController.CoopState.WarpsFirstCastle.difference}.");
 			}
 			if (coopController.CoopState.WarpsSecondCastle.updated)
 			{
-				data[0] = (byte) MessageType.WarpSecondCastle;
-				data[1] = coopController.CoopState.WarpsSecondCastle.difference;
-				coopController.SendData(data);
-				Console.WriteLine($"Sending first castle warp {coopController.CoopState.WarpsSecondCastle.difference}.");
+				data2[0] = (byte) MessageType.WarpSecondCastle;
+				data2[1] = coopController.CoopState.WarpsSecondCastle.difference;
+				coopController.SendData(data2);
+				//Console.WriteLine($"Sending first castle warp {coopController.CoopState.WarpsSecondCastle.difference}.");
 			}
 		}
 
@@ -167,10 +171,9 @@ namespace SotnRandoTools.Coop
 			{
 				if (coopController.CoopState.shortcuts[i].updated && coopController.CoopState.shortcuts[i].status)
 				{
-					byte[] data = new byte[2];
-					data[0] = (byte) MessageType.Shortcut;
-					data[1] = (byte) i;
-					coopController.SendData(data);
+					data2[0] = (byte) MessageType.Shortcut;
+					data2[1] = (byte) i;
+					coopController.SendData(data2);
 				}
 			}
 		}
@@ -187,31 +190,24 @@ namespace SotnRandoTools.Coop
 
 		private void SendSynchRequest()
 		{
-			byte[] data = new byte[1];
-			data[0] = (byte) MessageType.SynchRequest;
-			coopController.SendData(data);
+			data2[0] = (byte) MessageType.SynchRequest;
+			coopController.SendData(data2);
 			Console.WriteLine("Requested synch");
 		}
 
-		private void SendSynchAll()
+		private unsafe void SendSynchAll()
 		{
-			byte[] data = new byte[9];
-			data[0] = (byte) MessageType.SynchAll;
-			data[1] = coopController.CoopState.WarpsFirstCastle.value;
-			data[2] = coopController.CoopState.WarpsSecondCastle.value;
-			int shortcuts = 0;
-			for (int i = 0; i < coopController.CoopState.shortcuts.Length; i++)
+			data9[0] = (byte) MessageType.SynchAll;
+			data9[1] = coopController.CoopState.WarpsFirstCastle.value;
+			data9[2] = coopController.CoopState.WarpsSecondCastle.value;
+			ushort shortcuts = 0;
+			for (ushort i = 0; i < coopController.CoopState.shortcuts.Length; i++)
 			{
 				if (coopController.CoopState.shortcuts[i].status)
 				{
-					shortcuts |= (int) Math.Pow(2, i);
+					shortcuts |= (ushort) Math.Pow(2, i);
 				}
 			}
-			byte[] shortcutBytes = BitConverter.GetBytes((ushort) shortcuts);
-			data[3] = shortcutBytes[0];
-			data[4] = shortcutBytes[1];
-
-
 			int relicsNumber = 0;
 			for (int i = 0; i < coopController.CoopState.relics.Length; i++)
 			{
@@ -220,13 +216,13 @@ namespace SotnRandoTools.Coop
 					relicsNumber |= (int) Math.Pow(2, i);
 				}
 			}
-			byte[] relicsBytes = BitConverter.GetBytes(relicsNumber);
-			data[5] = relicsBytes[0];
-			data[6] = relicsBytes[1];
-			data[7] = relicsBytes[2];
-			data[8] = relicsBytes[3];
+			fixed (byte* buffer = data9)
+			{
+				*((ushort*) (buffer + 3)) = shortcuts;
+				*((int*) (buffer + 5)) = relicsNumber;
+			}
 
-			coopController.SendData(data);
+			coopController.SendData(data9);
 		}
 	}
 }
