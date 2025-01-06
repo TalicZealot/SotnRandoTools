@@ -27,6 +27,8 @@ namespace SotnRandoTools.RandoTracker.Models
 	{
 		[JsonProperty("extends")]
 		public string Extends { get; set; } = string.Empty;
+		[JsonProperty("smallIndicators")]
+		public bool SmallIndicators { get; set; } = false;
 		[JsonProperty("locations")]
 		public List<ExtensionLocation> Locations { get; set; } = new List<ExtensionLocation>();
 	}

@@ -343,7 +343,7 @@ namespace SotnRandoTools.RandoTracker
 			for (int i = 0; i < extension.Locations.Count; i++)
 			{
 				locationToIndex.Add(extension.Locations[i].Name, (ushort) locations.stateCount);
-				locations.AddState(new LocationState { x = (byte) extension.Locations[i].X, y = (byte) extension.Locations[i].Y, SecondCastle = extension.Locations[i].SecondCastle, availabilityColor = MapColor.Available });
+				locations.AddState(new LocationState { x = (byte) extension.Locations[i].X, y = (byte) extension.Locations[i].Y, SecondCastle = extension.Locations[i].SecondCastle, SmallIndicator = extension.SmallIndicators, availabilityColor = MapColor.Available });
 
 				for (int j = 0; j < extension.Locations[i].Rooms.Count; j++)
 				{

@@ -55,25 +55,25 @@ namespace SotnRandoTools.Coop
 					sotnApi.GameApi.SetRoomToVisited(SotnApi.Constants.Addresses.Game.MapStart + index);
 					coopController.CoopState.locations[index2].status = true;
 					sotnApi.AlucardApi.Rooms++;
-					Console.WriteLine($"Received location: {index}");
+					//Console.WriteLine($"Received location: {index}");
 					break;
 				case MessageType.Item:
 					sotnApi.AlucardApi.GrantItemByName(Equipment.Items[index]);
 					notificationService.AddMessage(Equipment.Items[index]);
 					notificationService.PlayAlert();
-					Console.WriteLine($"Received item: {Equipment.Items[index]}");
+					//Console.WriteLine($"Received item: {Equipment.Items[index]}");
 					break;
 				case MessageType.WarpFirstCastle:
 					sotnApi.AlucardApi.WarpsFirstCastle |= dataByte;
 					coopController.CoopState.WarpsFirstCastle.value = (byte) sotnApi.AlucardApi.WarpsFirstCastle;
 					notificationService.AddMessage($"Received warp: {(Warp) index}");
-					Console.WriteLine($"Received warp: {(Warp) index}");
+					//Console.WriteLine($"Received warp: {(Warp) index}");
 					break;
 				case MessageType.WarpSecondCastle:
 					sotnApi.AlucardApi.WarpsSecondCastle |= dataByte;
 					coopController.CoopState.WarpsSecondCastle.value = (byte) sotnApi.AlucardApi.WarpsSecondCastle;
 					notificationService.AddMessage($"Received warp: Inverted {(Warp) index}");
-					Console.WriteLine($"Received warp: Inverted {(Warp) index}");
+					//Console.WriteLine($"Received warp: Inverted {(Warp) index}");
 					break;
 				case MessageType.Shortcut:
 					if (index > Enum.GetNames(typeof(Shortcut)).Length - 1)
@@ -88,11 +88,11 @@ namespace SotnRandoTools.Coop
 					break;
 				case MessageType.SynchRequest:
 					coopController.SynchRequested = true;
-					Console.WriteLine($"Sending Synch");
+					//Console.WriteLine($"Sending Synch");
 					break;
 				case MessageType.SynchAll:
 					DecodeSynch(data);
-					Console.WriteLine($"Received relics, warps and shortcuts");
+					//Console.WriteLine($"Received relics, warps and shortcuts");
 					break;
 				default:
 					break;
@@ -163,11 +163,11 @@ namespace SotnRandoTools.Coop
 					sotnApi.AlucardApi.KeepStairs = true;
 					break;
 				default:
-					Console.WriteLine($"Shortcut {shortcut} not found!");
+					//Console.WriteLine($"Shortcut {shortcut} not found!");
 					return;
 			}
 			notificationService.AddMessage(Constants.CoOp.ShortcutNames[(int) shortcut]);
-			Console.WriteLine($"Received shortcut: {shortcut}");
+			//Console.WriteLine($"Received shortcut: {shortcut}");
 		}
 
 		private void DecodeShortcuts(int flags)
@@ -176,91 +176,91 @@ namespace SotnRandoTools.Coop
 			{
 				sotnApi.AlucardApi.OuterWallElevator = true;
 				coopController.CoopState.shortcuts[0].status = true;
-				Console.WriteLine($"Received shortcut: {ShortcutFlags.OuterWallElevator}");
+				//Console.WriteLine($"Received shortcut: {ShortcutFlags.OuterWallElevator}");
 			}
 			if ((flags & (int) ShortcutFlags.AlchemyElevator) == (int) ShortcutFlags.AlchemyElevator)
 			{
 				sotnApi.AlucardApi.AlchemyElevator = true;
 				coopController.CoopState.shortcuts[1].status = true;
-				Console.WriteLine($"Received shortcut: {ShortcutFlags.AlchemyElevator}");
+				//Console.WriteLine($"Received shortcut: {ShortcutFlags.AlchemyElevator}");
 			}
 			if ((flags & (int) ShortcutFlags.EntranceToMarble) == (int) ShortcutFlags.EntranceToMarble)
 			{
 				sotnApi.AlucardApi.EntranceToMarble = true;
 				coopController.CoopState.shortcuts[2].status = true;
-				Console.WriteLine($"Received shortcut: {ShortcutFlags.EntranceToMarble}");
+				//Console.WriteLine($"Received shortcut: {ShortcutFlags.EntranceToMarble}");
 			}
 			if ((flags & (int) ShortcutFlags.ChapelStatue) == (int) ShortcutFlags.ChapelStatue)
 			{
 				sotnApi.AlucardApi.ChapelStatue = true;
 				coopController.CoopState.shortcuts[3].status = true;
-				Console.WriteLine($"Received shortcut: {ShortcutFlags.ChapelStatue}");
+				//Console.WriteLine($"Received shortcut: {ShortcutFlags.ChapelStatue}");
 			}
 			if ((flags & (int) ShortcutFlags.ColosseumElevator) == (int) ShortcutFlags.ColosseumElevator)
 			{
 				sotnApi.AlucardApi.ColosseumElevator = true;
 				coopController.CoopState.shortcuts[4].status = true;
-				Console.WriteLine($"Received shortcut: {ShortcutFlags.ColosseumElevator}");
+				//Console.WriteLine($"Received shortcut: {ShortcutFlags.ColosseumElevator}");
 			}
 			if ((flags & (int) ShortcutFlags.ColosseumToChapel) == (int) ShortcutFlags.ColosseumToChapel)
 			{
 				sotnApi.AlucardApi.ColosseumToChapel = true;
 				coopController.CoopState.shortcuts[5].status = true;
-				Console.WriteLine($"Received shortcut: {ShortcutFlags.ColosseumToChapel}");
+				//Console.WriteLine($"Received shortcut: {ShortcutFlags.ColosseumToChapel}");
 			}
 			if ((flags & (int) ShortcutFlags.MarbleBlueDoor) == (int) ShortcutFlags.MarbleBlueDoor)
 			{
 				sotnApi.AlucardApi.MarbleBlueDoor = true;
 				coopController.CoopState.shortcuts[6].status = true;
-				Console.WriteLine($"Received shortcut: {ShortcutFlags.MarbleBlueDoor}");
+				//Console.WriteLine($"Received shortcut: {ShortcutFlags.MarbleBlueDoor}");
 			}
 			if ((flags & (int) ShortcutFlags.CavernsSwitchAndBridge) == (int) ShortcutFlags.CavernsSwitchAndBridge)
 			{
 				sotnApi.AlucardApi.CavernsSwitchAndBridge = true;
 				coopController.CoopState.shortcuts[7].status = true;
-				Console.WriteLine($"Received shortcut: {ShortcutFlags.CavernsSwitchAndBridge}");
+				//Console.WriteLine($"Received shortcut: {ShortcutFlags.CavernsSwitchAndBridge}");
 			}
 			if ((flags & (int) ShortcutFlags.EntranceToCaverns) == (int) ShortcutFlags.EntranceToCaverns)
 			{
 				sotnApi.AlucardApi.EntranceToCaverns = true;
 				coopController.CoopState.shortcuts[8].status = true;
-				Console.WriteLine($"Received shortcut: {ShortcutFlags.EntranceToCaverns}");
+				//Console.WriteLine($"Received shortcut: {ShortcutFlags.EntranceToCaverns}");
 			}
 			if ((flags & (int) ShortcutFlags.EntranceWarp) == (int) ShortcutFlags.EntranceWarp)
 			{
 				sotnApi.AlucardApi.EntranceWarp = true;
 				coopController.CoopState.shortcuts[9].status = true;
-				Console.WriteLine($"Received shortcut: {ShortcutFlags.EntranceWarp}");
+				//Console.WriteLine($"Received shortcut: {ShortcutFlags.EntranceWarp}");
 			}
 			if ((flags & (int) ShortcutFlags.FirstClockRoomDoor) == (int) ShortcutFlags.FirstClockRoomDoor)
 			{
 				sotnApi.AlucardApi.FirstClockRoomDoor = true;
 				coopController.CoopState.shortcuts[10].status = true;
-				Console.WriteLine($"Received shortcut: {ShortcutFlags.FirstClockRoomDoor}");
+				//Console.WriteLine($"Received shortcut: {ShortcutFlags.FirstClockRoomDoor}");
 			}
 			if ((flags & (int) ShortcutFlags.SecondClockRoomDoor) == (int) ShortcutFlags.SecondClockRoomDoor)
 			{
 				sotnApi.AlucardApi.SecondClockRoomDoor = true;
 				coopController.CoopState.shortcuts[11].status = true;
-				Console.WriteLine($"Received shortcut: {ShortcutFlags.SecondClockRoomDoor}");
+				//Console.WriteLine($"Received shortcut: {ShortcutFlags.SecondClockRoomDoor}");
 			}
 			if ((flags & (int) ShortcutFlags.FirstDemonButton) == (int) ShortcutFlags.FirstDemonButton)
 			{
 				sotnApi.AlucardApi.FirstDemonButton = true;
 				coopController.CoopState.shortcuts[12].status = true;
-				Console.WriteLine($"Received shortcut: {ShortcutFlags.FirstDemonButton}");
+				//Console.WriteLine($"Received shortcut: {ShortcutFlags.FirstDemonButton}");
 			}
 			if ((flags & (int) ShortcutFlags.SecondDemonButton) == (int) ShortcutFlags.SecondDemonButton)
 			{
 				sotnApi.AlucardApi.SecondDemonButton = true;
 				coopController.CoopState.shortcuts[13].status = true;
-				Console.WriteLine($"Received shortcut: {ShortcutFlags.SecondDemonButton}");
+				//Console.WriteLine($"Received shortcut: {ShortcutFlags.SecondDemonButton}");
 			}
 			if ((flags & (int) ShortcutFlags.KeepStairs) == (int) ShortcutFlags.KeepStairs)
 			{
 				sotnApi.AlucardApi.KeepStairs = true;
 				coopController.CoopState.shortcuts[14].status = true;
-				Console.WriteLine($"Received shortcut: {ShortcutFlags.KeepStairs}");
+				//Console.WriteLine($"Received shortcut: {ShortcutFlags.KeepStairs}");
 			}
 		}
 
