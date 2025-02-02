@@ -1,8 +1,6 @@
 ﻿using System;
 using SotnApi.Constants.Values.Alucard.Enums;
 using SotnApi.Interfaces;
-using SotnRandoTools.Coop.Enums;
-using SotnRandoTools.Coop.Interfaces;
 using SotnRandoTools.RandoTracker.Interfaces;
 
 namespace SotnRandoTools.Coop.Models
@@ -45,6 +43,7 @@ namespace SotnRandoTools.Coop.Models
 			this.locationTracker = locationTracker ?? throw new ArgumentNullException(nameof(locationTracker));
 			relics = new ObjectState[Enum.GetValues(typeof(SotnApi.Constants.Values.Alucard.Enums.Relic)).Length];
 			shortcuts = new ObjectState[Enum.GetValues(typeof(Enums.Shortcut)).Length];
+			locations = new LocationState[1];
 		}
 
 		public void Update()

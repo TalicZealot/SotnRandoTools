@@ -3,7 +3,6 @@ using NSubstitute;
 using SotnApi.Interfaces;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Coop.Interfaces;
-using SotnRandoTools.Services;
 using Xunit;
 
 namespace SotnRandoTools.Coop.Tests.CoopSenderTests

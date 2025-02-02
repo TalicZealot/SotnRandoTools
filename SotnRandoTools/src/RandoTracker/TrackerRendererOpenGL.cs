@@ -2,23 +2,22 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Runtime.InteropServices;
-using OpenTK;
-using OpenTK.Graphics;
-using OpenTK.Graphics.OpenGL4;
-using SotnApi.Constants.Addresses;
+using System.Numerics;
+using BizHawk.Common;
+using SDL2;
+using Silk.NET.OpenGL;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Constants;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using static SDL2.SDL;
 
 namespace SotnRandoTools.RandoTracker
 {
 	internal sealed class Text : IDisposable
 	{
 		private const int TextPadding = 5;
-		private int vertexBuffer;
-		private int vertexArrayObject;
-		private int textIndexBuffer;
+		private uint vertexBuffer;
+		private uint vertexArrayObject;
+		private uint textIndexBuffer;
 		private int windowWidth = 0;
 		private int windowHeight = 0;
 		private float scale = 0;
@@ -27,10 +26,14 @@ namespace SotnRandoTools.RandoTracker
 		private const int glyphHeight = 8;
 		private const float textureItemWidth = 6f / 540f;
 		private List<float> vertices = new();
+		private float[] verticeArray;
 		private uint[] indices;
 		public string text;
-		public Text(string text, int windowWidth, int windowHeight, int collectedUniform)
+		private GL Gl;
+
+		public unsafe Text(string text, int windowWidth, int windowHeight, int collectedUniform, GL gl)
 		{
+			Gl = gl;
 			this.collectedUniform = collectedUniform;
 			this.text = text;
 			this.windowWidth = windowWidth;
@@ -106,56 +109,66 @@ namespace SotnRandoTools.RandoTracker
 				xpos += scale * (glyphWidth + 1);
 			}
 
-			vertexArrayObject = GL.GenVertexArray();
-			GL.BindVertexArray(vertexArrayObject);
+			vertexArrayObject = Gl.GenVertexArray();
+			Gl.BindVertexArray(vertexArrayObject);
 
-			vertexBuffer = GL.GenBuffer();
-			GL.BindBuffer(BufferTarget.ArrayBuffer, vertexBuffer);
-			GL.BufferData(BufferTarget.ArrayBuffer, vertices.Count * sizeof(float), vertices.ToArray(), BufferUsageHint.StaticDraw);
+			vertexBuffer = Gl.GenBuffer();
+			Gl.BindBuffer(BufferTargetARB.ArrayBuffer, vertexBuffer);
+			verticeArray = vertices.ToArray();
+			fixed (void* buf = verticeArray)
+			{
+				Gl.BufferData(BufferTargetARB.ArrayBuffer, (uint) (vertices.Count * sizeof(float)), buf, BufferUsageARB.StaticDraw);
+			}
 
-			GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
-			GL.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 2 * sizeof(float));
-			GL.VertexAttribPointer(2, 1, VertexAttribPointerType.Float, false, 5 * sizeof(float), 4 * sizeof(float));
-			GL.EnableVertexAttribArray(0);
-			GL.EnableVertexAttribArray(1);
-			GL.EnableVertexAttribArray(2);
+			Gl.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
+			Gl.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 2 * sizeof(float));
+			Gl.VertexAttribPointer(2, 1, VertexAttribPointerType.Float, false, 5 * sizeof(float), 4 * sizeof(float));
+			Gl.EnableVertexAttribArray(0);
+			Gl.EnableVertexAttribArray(1);
+			Gl.EnableVertexAttribArray(2);
 
-			textIndexBuffer = GL.GenBuffer();
-			GL.BindBuffer(BufferTarget.ElementArrayBuffer, textIndexBuffer);
-			GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw);
+			textIndexBuffer = Gl.GenBuffer();
+			Gl.BindBuffer(BufferTargetARB.ElementArrayBuffer, textIndexBuffer);
+			fixed (void* buf = indices)
+			{
+				Gl.BufferData(BufferTargetARB.ElementArrayBuffer, (uint) (indices.Length * sizeof(uint)), buf, BufferUsageARB.StaticDraw);
+			}
 		}
 
-		public void Draw()
+		public unsafe void Draw()
 		{
-			GL.BindVertexArray(vertexArrayObject);
-			GL.BindBuffer(BufferTarget.ElementArrayBuffer, textIndexBuffer);
-			GL.DrawElements(PrimitiveType.Triangles, indices.Length, DrawElementsType.UnsignedInt, 0);
+			Gl.BindVertexArray(vertexArrayObject);
+			Gl.BindBuffer(BufferTargetARB.ElementArrayBuffer, textIndexBuffer);
+			Gl.DrawElements(PrimitiveType.Triangles, (uint) indices.Length, DrawElementsType.UnsignedInt, (void*) 0);
 		}
 		public void Dispose()
 		{
-			GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
-			GL.DeleteBuffer(vertexBuffer);
-			GL.BindVertexArray(0);
-			GL.DeleteVertexArray(vertexArrayObject);
+			Gl.BindBuffer(GLEnum.ArrayBuffer, 0);
+			Gl.DeleteBuffer(vertexBuffer);
+			Gl.BindVertexArray(0);
+			Gl.DeleteVertexArray(vertexArrayObject);
 		}
 	}
 	internal sealed class Sprites : IDisposable
 	{
-		private int vertexBuffer;
-		private int vertexArrayObject;
-		private int indexBuffer;
+		private uint vertexBuffer;
+		private uint vertexArrayObject;
+		private uint indexBuffer;
 		private int collectedUniform;
 		private const int itemSize = 14;
 		private const float textureItemWidth = 1f / 7f;
 		private const float textureItemHeight = 0.2f;
 		private List<float> vertices = new();
+		private float[] verticeArray;
 		private uint[] indices;
 		private float scale;
 		private Vector2[] relicSlots;
 		private int columns;
+		private GL Gl;
 
-		public Sprites(float scale, Vector2[] relicSlots, Tracker tracker, int columns, bool grid, bool progression)
+		public unsafe Sprites(float scale, Vector2[] relicSlots, Tracker tracker, int columns, bool grid, bool progression, GL gl)
 		{
+			Gl = gl;
 			this.scale = scale;
 			this.relicSlots = relicSlots;
 			this.columns = columns;
@@ -230,33 +243,40 @@ namespace SotnRandoTools.RandoTracker
 				return;
 			}
 
-			vertexArrayObject = GL.GenVertexArray();
-			GL.BindVertexArray(vertexArrayObject);
+			vertexArrayObject = Gl.GenVertexArray();
+			Gl.BindVertexArray(vertexArrayObject);
 
-			vertexBuffer = GL.GenBuffer();
-			GL.BindBuffer(BufferTarget.ArrayBuffer, vertexBuffer);
-			GL.BufferData(BufferTarget.ArrayBuffer, vertices.Count * sizeof(float), vertices.ToArray(), BufferUsageHint.StaticDraw);
+			vertexBuffer = Gl.GenBuffer();
+			Gl.BindBuffer(BufferTargetARB.ArrayBuffer, vertexBuffer);
+			verticeArray = vertices.ToArray();
+			fixed (void* buf = verticeArray)
+			{
+				Gl.BufferData(BufferTargetARB.ArrayBuffer, (uint) (vertices.Count * sizeof(float)), buf, BufferUsageARB.StaticDraw);
+			}
 
-			GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
-			GL.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 2 * sizeof(float));
-			GL.VertexAttribPointer(2, 1, VertexAttribPointerType.Float, false, 5 * sizeof(float), 4 * sizeof(float));
-			GL.EnableVertexAttribArray(0);
-			GL.EnableVertexAttribArray(1);
-			GL.EnableVertexAttribArray(2);
+			Gl.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
+			Gl.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 2 * sizeof(float));
+			Gl.VertexAttribPointer(2, 1, VertexAttribPointerType.Float, false, 5 * sizeof(float), 4 * sizeof(float));
+			Gl.EnableVertexAttribArray(0);
+			Gl.EnableVertexAttribArray(1);
+			Gl.EnableVertexAttribArray(2);
 
-			indexBuffer = GL.GenBuffer();
-			GL.BindBuffer(BufferTarget.ElementArrayBuffer, indexBuffer);
-			GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw);
+			indexBuffer = Gl.GenBuffer();
+			Gl.BindBuffer(BufferTargetARB.ElementArrayBuffer, indexBuffer);
+			fixed (void* buf = indices)
+			{
+				Gl.BufferData(BufferTargetARB.ElementArrayBuffer, (uint) (indices.Length * sizeof(uint)), buf, BufferUsageARB.StaticDraw);
+			}
 		}
-		public void Draw()
+		public unsafe void Draw()
 		{
 			if (vertices.Count == 0)
 			{
 				return;
 			}
-			GL.BindVertexArray(vertexArrayObject);
-			GL.BindBuffer(BufferTarget.ElementArrayBuffer, indexBuffer);
-			GL.DrawElements(PrimitiveType.Triangles, indices.Length, DrawElementsType.UnsignedInt, 0);
+			Gl.BindVertexArray(vertexArrayObject);
+			Gl.BindBuffer(BufferTargetARB.ElementArrayBuffer, indexBuffer);
+			Gl.DrawElements(PrimitiveType.Triangles, (uint) indices.Length, DrawElementsType.UnsignedInt, (void*) 0);
 		}
 		public void Dispose()
 		{
@@ -264,10 +284,10 @@ namespace SotnRandoTools.RandoTracker
 			{
 				return;
 			}
-			GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
-			GL.DeleteBuffer(vertexBuffer);
-			GL.BindVertexArray(0);
-			GL.DeleteVertexArray(vertexArrayObject);
+			Gl.BindBuffer(GLEnum.ArrayBuffer, 0);
+			Gl.DeleteBuffer(vertexBuffer);
+			Gl.BindVertexArray(0);
+			Gl.DeleteVertexArray(vertexArrayObject);
 		}
 		private void AddQuad(int itemCount, int i)
 		{
@@ -307,25 +327,19 @@ namespace SotnRandoTools.RandoTracker
 			vertices.Add(i);
 		}
 	}
-	internal sealed class TrackerRendererOpenGL : GameWindow
+	internal sealed class TrackerRendererOpenGL : IDisposable
 	{
 		private const int LabelOffset = 37;
 		private const int ItemSize = 14;
 		private const int CellPadding = 2;
 		private const double PixelPerfectSnapMargin = 0.22;
-
-		private static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
-		private const uint SWP_NOSIZE = 0x0001;
-		private const uint SWP_NOMOVE = 0x0002;
-		private const uint SWP_NOACTIVATE = 0x0010;
-		private const uint SWP_SHOWWINDOW = 0x0040;
+		private Color clear = Color.FromArgb(17, 0, 17);
 
 		private readonly Tracker tracker;
 		private readonly IToolConfig toolConfig;
-		private int shaderProgram;
-		private int texture;
-		private int font;
-		private Color clear = Color.FromArgb(17, 0, 17);
+		private uint shaderProgram;
+		private uint texture;
+		private uint font;
 		private int collectedUniform;
 		private int gridUniform;
 		private int uTextureUniform;
@@ -336,22 +350,60 @@ namespace SotnRandoTools.RandoTracker
 		private List<Vector2> vladRelicSlots;
 		private List<Vector2> progressionItemSlots;
 		private float[] collected = new float[36];
+		private GL Gl;
+		private IntPtr Glc;
+		private IntPtr window;
+		private bool closing = false;
+		private bool alwaysOnTop = false;
 
-		public TrackerRendererOpenGL(IToolConfig toolConfig, Tracker tracker)
-			: base(toolConfig.Tracker.Width, toolConfig.Tracker.Height, GraphicsMode.Default, "Autotracker")
+		public unsafe TrackerRendererOpenGL(IToolConfig toolConfig, Tracker tracker)
 		{
 			this.toolConfig = toolConfig;
-			try
-			{
-				this.Icon = new Icon(Paths.BizAlucardIcon);
-			}
-			catch (Exception)
-			{
-			}
-			this.WindowBorder = OpenTK.WindowBorder.Resizable;
-			this.TargetRenderFrequency = 60d;
-			this.TargetUpdateFrequency = 60d;
 			this.tracker = tracker;
+			this.X = toolConfig.Tracker.Location.X;
+			this.Y = toolConfig.Tracker.Location.Y;
+			this.Width = toolConfig.Tracker.Width;
+			this.Height = toolConfig.Tracker.Height;
+
+			if (SDL_Init(SDL_INIT_VIDEO) != 0)
+			{
+				throw new($"SDL failed to init, SDL error: {SDL_GetError()}");
+			}
+
+			SDL_WindowFlags flags = SDL_WindowFlags.SDL_WINDOW_OPENGL | SDL_WindowFlags.SDL_WINDOW_RESIZABLE | SDL_WindowFlags.SDL_WINDOW_SHOWN;
+
+			if (toolConfig.Tracker.AlwaysOnTop)
+			{
+				alwaysOnTop = true;
+				flags |= SDL_WindowFlags.SDL_WINDOW_ALWAYS_ON_TOP;
+			}
+
+			window = SDL_CreateWindow("Autotracker", X, Y, Width, Height, flags);
+			if (window == IntPtr.Zero)
+			{
+				throw new Exception($"Failed to create SDL window: {SDL.SDL_GetError()}");
+			}
+			SDL_SetWindowMinimumSize(window, 200, 220);
+			SDL_SetWindowMaximumSize(window, 1600, 1000);
+			Glc = SDL_GL_CreateContext(window);
+			if (Glc == IntPtr.Zero)
+			{
+				throw new($"Could not create GL Context! SDL Error: {SDL_GetError()}");
+			}
+			if (SDL_GL_MakeCurrent(window, Glc) != 0)
+			{
+				throw new($"Failed to set context to current! SDL error: {SDL_GetError()}");
+			}
+			Gl = GL.GetApi(SDL_GL_GetProcAddress);
+
+			SDL_SetEventFilter((IntPtr userdata, IntPtr e) =>
+			{
+				if (((SDL_Event*) e)->type is SDL_EventType.SDL_WINDOWEVENT or SDL_EventType.SDL_JOYDEVICEADDED or SDL_EventType.SDL_JOYDEVICEREMOVED)
+				{
+					return 1;
+				}
+				return 0;
+			}, IntPtr.Zero);
 
 			for (int i = 0; i < collected.Length; i++)
 			{
@@ -361,18 +413,36 @@ namespace SotnRandoTools.RandoTracker
 		}
 
 		public float Scale { get; set; }
+		public int Width { get; set; }
+		public int Height { get; set; }
+		public int X { get; set; }
+		public int Y { get; set; }
 
-		[DllImport("user32.dll", SetLastError = true)]
-		private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
-
-		private int LoadTexture(string path)
+		public void Run()
 		{
-			int textureId = GL.GenTexture();
-			GL.BindTexture(TextureTarget.Texture2D, textureId);
-			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int) TextureWrapMode.ClampToEdge);
-			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int) TextureWrapMode.ClampToEdge);
-			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int) TextureMinFilter.Nearest);
-			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int) TextureMagFilter.Nearest);
+			OnLoad();
+			OnResize();
+			while (!closing)
+			{
+				ProcessEvents();
+				Update();
+				Render();
+#if DEBUG
+				CheckForErrors();
+#endif
+				SDL_Delay(15);
+			}
+			OnUnload();
+		}
+
+		private unsafe uint LoadTexture(string path)
+		{
+			uint textureId = Gl.GenTexture();
+			Gl.BindTexture(TextureTarget.Texture2D, textureId);
+			Gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int) TextureWrapMode.ClampToEdge);
+			Gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int) TextureWrapMode.ClampToEdge);
+			Gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int) TextureMinFilter.Nearest);
+			Gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int) TextureMagFilter.Nearest);
 
 			using (var image = new Bitmap(path))
 			{
@@ -382,107 +452,142 @@ namespace SotnRandoTools.RandoTracker
 					System.Drawing.Imaging.ImageLockMode.ReadOnly,
 					System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
-				GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, data.Width, data.Height, 0,
-					OpenTK.Graphics.OpenGL4.PixelFormat.Bgra, PixelType.UnsignedByte, data.Scan0);
+				Gl.TexImage2D(TextureTarget.Texture2D, 0, InternalFormat.Rgba, (uint) image.Width, (uint) image.Height, 0, PixelFormat.Bgra, PixelType.UnsignedByte, data.Scan0.ToPointer());
 
 				image.UnlockBits(data);
 			}
 
-			GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+			Gl.GenerateMipmap(TextureTarget.Texture2D);
 			return textureId;
 		}
 
-		protected override void OnLoad(EventArgs e)
+		private void OnLoad()
 		{
-			IntPtr handle = this.WindowInfo.Handle;
-			if (Environment.OSVersion.Platform == PlatformID.Win32NT && toolConfig.Tracker.AlwaysOnTop)
-			{
-				SetWindowPos(handle, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE | SWP_SHOWWINDOW);
-			}
-			this.X = toolConfig.Tracker.Location.X;
-			this.Y = toolConfig.Tracker.Location.Y;
-			this.Width = toolConfig.Tracker.Width;
-			this.Height = toolConfig.Tracker.Height;
 			CalculateGrid(toolConfig.Tracker.Width, toolConfig.Tracker.Height);
-			base.OnLoad(e);
 
-			GL.ClearColor(clear);
+			Gl.ClearColor(clear);
 
-			int vertexShader = GL.CreateShader(ShaderType.VertexShader);
-			GL.ShaderSource(vertexShader, File.ReadAllText(Paths.VertexShader));
-			GL.CompileShader(vertexShader);
+			uint vertexShader = Gl.CreateShader(ShaderType.VertexShader);
+			Gl.ShaderSource(vertexShader, File.ReadAllText(Paths.VertexShader));
+			Gl.CompileShader(vertexShader);
 
-			unsafe
-			{
-				int status;
-				GL.GetShader(vertexShader, ShaderParameter.CompileStatus, &status);
-				Console.WriteLine(status);
-			}
-			string infoLog = GL.GetShaderInfoLog(vertexShader);
+			Gl.GetShader(vertexShader, ShaderParameterName.CompileStatus, out int vStatus);
+			if (vStatus != (int) GLEnum.True)
+				throw new Exception("Vertex shader failed to compile: " + Gl.GetShaderInfoLog(vertexShader));
+
+			string infoLog = Gl.GetShaderInfoLog(vertexShader);
 			Console.WriteLine(infoLog);
 
-			int fragmentShader = GL.CreateShader(ShaderType.FragmentShader);
-			GL.ShaderSource(fragmentShader, File.ReadAllText(Paths.FragmentShader));
-			GL.CompileShader(fragmentShader);
+			uint fragmentShader = Gl.CreateShader(ShaderType.FragmentShader);
+			Gl.ShaderSource(fragmentShader, File.ReadAllText(Paths.FragmentShader));
+			Gl.CompileShader(fragmentShader);
+			Gl.GetShader(fragmentShader, ShaderParameterName.CompileStatus, out int fStatus);
+			if (fStatus != (int) GLEnum.True)
+				throw new Exception("Fragment shader failed to compile: " + Gl.GetShaderInfoLog(fragmentShader));
 
-			shaderProgram = GL.CreateProgram();
-			GL.AttachShader(shaderProgram, vertexShader);
-			GL.AttachShader(shaderProgram, fragmentShader);
-			GL.LinkProgram(shaderProgram);
+			shaderProgram = Gl.CreateProgram();
+			Gl.AttachShader(shaderProgram, vertexShader);
+			Gl.AttachShader(shaderProgram, fragmentShader);
+			Gl.LinkProgram(shaderProgram);
 
-			unsafe
-			{
-				int status;
-				GL.GetProgram(shaderProgram, GetProgramParameterName.LinkStatus, &status);
-				Console.WriteLine(status);
-			}
-			infoLog = GL.GetProgramInfoLog(shaderProgram);
+			Gl.GetProgram(shaderProgram, ProgramPropertyARB.LinkStatus, out int lStatus);
+			if (lStatus != (int) GLEnum.True)
+				throw new Exception("Program failed to link: " + Gl.GetProgramInfoLog(shaderProgram));
+
+			infoLog = Gl.GetProgramInfoLog(shaderProgram);
 			Console.WriteLine(infoLog);
 
-			GL.DeleteShader(vertexShader);
-			GL.DeleteShader(fragmentShader);
+			Gl.DeleteShader(vertexShader);
+			Gl.DeleteShader(fragmentShader);
 
 			int[] viewportData = new int[4];
-			GL.GetInteger(GetPName.Viewport, viewportData);
-			GL.UseProgram(shaderProgram);
-			GL.Uniform2(GL.GetUniformLocation(shaderProgram, "viewportSize"), (float) viewportData[2], (float) viewportData[3]);
-			collectedUniform = GL.GetUniformLocation(shaderProgram, "collected");
-			gridUniform = GL.GetUniformLocation(shaderProgram, "grid");
-			uTextureUniform = GL.GetUniformLocation(shaderProgram, "uTexture");
-			GL.Uniform1(gridUniform, 1);
+			Gl.GetInteger(GetPName.Viewport, viewportData);
+			Gl.UseProgram(shaderProgram);
+			Gl.Uniform2(Gl.GetUniformLocation(shaderProgram, "viewportSize"), (float) viewportData[2], (float) viewportData[3]);
+			collectedUniform = Gl.GetUniformLocation(shaderProgram, "collected");
+			gridUniform = Gl.GetUniformLocation(shaderProgram, "grid");
+			uTextureUniform = Gl.GetUniformLocation(shaderProgram, "uTexture");
+			Gl.Uniform1(gridUniform, 1);
 
-			GL.UseProgram(shaderProgram);
+			Gl.UseProgram(shaderProgram);
 			texture = LoadTexture(Paths.CombinedTexture);
 			font = LoadTexture(Paths.FontAtlas);
-			GL.ActiveTexture(TextureUnit.Texture0);
-			GL.BindTexture(TextureTarget.Texture2D, texture);
-			GL.ActiveTexture(TextureUnit.Texture1);
-			GL.BindTexture(TextureTarget.Texture2D, font);
+			CheckForErrors();
+			Gl.ActiveTexture(TextureUnit.Texture0);
+			Gl.BindTexture(GLEnum.Texture2D, texture);
+			Gl.ActiveTexture(TextureUnit.Texture1);
+			Gl.BindTexture(TextureTarget.Texture2D, font);
 			int[] textures = new int[2];
 			textures[0] = 0;
 			textures[1] = 1;
-			GL.Uniform1(uTextureUniform, 2, textures);
+			Gl.Uniform1(uTextureUniform, 2, textures);
 
-			GL.Enable(EnableCap.Blend);
-			GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
-			GL.UseProgram(shaderProgram);
+			Gl.Enable(EnableCap.Blend);
+			Gl.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+			Gl.UseProgram(shaderProgram);
 
 			CheckForErrors();
 		}
 
-		private void CheckForErrors()
+		private void ProcessEvents()
 		{
-			ErrorCode error = GL.GetError();
-			while (error != ErrorCode.NoError)
+			var e = new SDL_Event[1];
+			while (true)
 			{
-				Console.WriteLine(error.ToString());
-				error = GL.GetError();
+				if (!OSTailoredCode.IsUnixHost)
+				{
+					while (WmImports.PeekMessageW(out var msg, IntPtr.Zero, 0, 0, WmImports.PM_REMOVE))
+					{
+						WmImports.TranslateMessage(ref msg);
+						WmImports.DispatchMessageW(ref msg);
+					}
+				}
+				if (SDL_PeepEvents(e, 1, SDL_eventaction.SDL_GETEVENT, SDL_EventType.SDL_WINDOWEVENT, SDL_EventType.SDL_WINDOWEVENT) != 1)
+				{
+					break;
+				}
+
+				switch (e[0].window.windowEvent)
+				{
+					case SDL_WindowEventID.SDL_WINDOWEVENT_MOVED:
+						X = e[0].window.data1;
+						Y = e[0].window.data2;
+						break;
+					case SDL_WindowEventID.SDL_WINDOWEVENT_RESIZED:
+						Width = e[0].window.data1;
+						Height = e[0].window.data2;
+						OnResize();
+						break;
+					case SDL_WindowEventID.SDL_WINDOWEVENT_CLOSE:
+						closing = true;
+						break;
+				}
 			}
 		}
 
-		protected override void OnUpdateFrame(FrameEventArgs e)
+		private void CheckForErrors()
 		{
-			base.OnUpdateFrame(e);
+			GLEnum error = Gl.GetError();
+			while (error != GLEnum.NoError)
+			{
+				Console.WriteLine(error.ToString());
+				error = Gl.GetError();
+			}
+			string sdlError = SDL_GetError();
+			while (sdlError != "")
+			{
+				Console.WriteLine(sdlError);
+				sdlError = SDL_GetError();
+			}
+		}
+
+		private void Update()
+		{
+			if (alwaysOnTop != toolConfig.Tracker.AlwaysOnTop)
+			{
+				alwaysOnTop = toolConfig.Tracker.AlwaysOnTop;
+				SDL_SetWindowAlwaysOnTop(window, alwaysOnTop ? SDL_bool.SDL_TRUE : SDL_bool.SDL_FALSE);
+			}
 
 			bool changes = false;
 			for (int i = 0; i < tracker.relics.Length; i++)
@@ -541,45 +646,37 @@ namespace SotnRandoTools.RandoTracker
 			if (seedInfo.text != tracker.SeedInfo)
 			{
 				seedInfo.Dispose();
-				seedInfo = new Text(tracker.SeedInfo, Width, Height, collectedUniform);
+				seedInfo = new Text(tracker.SeedInfo, Width, Height, collectedUniform, Gl);
 				sprites.Dispose();
-				sprites = new Sprites(Scale, relicSlots, tracker, columns, toolConfig.Tracker.GridLayout, toolConfig.Tracker.ProgressionRelicsOnly);
+				sprites = new Sprites(Scale, relicSlots, tracker, columns, toolConfig.Tracker.GridLayout, toolConfig.Tracker.ProgressionRelicsOnly, Gl);
 			}
 
 			if (changes || !toolConfig.Tracker.GridLayout)
 			{
 				sprites.Dispose();
-				sprites = new Sprites(Scale, relicSlots, tracker, columns, toolConfig.Tracker.GridLayout, toolConfig.Tracker.ProgressionRelicsOnly);
+				sprites = new Sprites(Scale, relicSlots, tracker, columns, toolConfig.Tracker.GridLayout, toolConfig.Tracker.ProgressionRelicsOnly, Gl);
 			}
 		}
 
-		protected override void OnRenderFrame(FrameEventArgs e)
+		private void Render()
 		{
-			base.OnRenderFrame(e);
-			GL.Clear(ClearBufferMask.ColorBufferBit);
-			GL.Uniform1(collectedUniform, collected.Length, collected);
+			Gl.Clear(ClearBufferMask.ColorBufferBit);
+			Gl.Uniform1(collectedUniform, collected);
 			sprites.Draw();
 			seedInfo.Draw();
-			SwapBuffers();
+			SDL_GL_SwapWindow(window);
 		}
 
-		protected override void OnResize(EventArgs e)
+		private void OnResize()
 		{
-			base.OnResize(e);
-
-			if (Width > 1500 || Height > 1500 || Width < 200 || Height < 200)
-			{
-				Width = toolConfig.Tracker.Width;
-				Height = toolConfig.Tracker.Height;
-			}
-
-			GL.Viewport(0, 0, Width, Height);
+			Size size = new Size(Width, Height);
+			Gl.Viewport(size);
 
 			int[] viewportData = new int[4];
-			GL.GetInteger(GetPName.Viewport, viewportData);
-			GL.UseProgram(shaderProgram);
-			int viewportSizeUniform = GL.GetUniformLocation(shaderProgram, "viewportSize");
-			GL.Uniform2(viewportSizeUniform, (float) viewportData[2], (float) viewportData[3]);
+			Gl.GetInteger(GetPName.Viewport, viewportData);
+			Gl.UseProgram(shaderProgram);
+			int viewportSizeUniform = Gl.GetUniformLocation(shaderProgram, "viewportSize");
+			Gl.Uniform2(viewportSizeUniform, (float) viewportData[2], (float) viewportData[3]);
 
 			CalculateGrid(Width, Height);
 			ClearSprites();
@@ -592,8 +689,9 @@ namespace SotnRandoTools.RandoTracker
 			{
 				seedInfo.Dispose();
 			}
-			seedInfo = new Text(tracker.SeedInfo, this.Width, this.Height, collectedUniform);
-			sprites = new Sprites(Scale, relicSlots, tracker, columns, toolConfig.Tracker.GridLayout, toolConfig.Tracker.ProgressionRelicsOnly);
+			seedInfo = new Text(tracker.SeedInfo, Width, Height, collectedUniform, Gl);
+			sprites = new Sprites(Scale, relicSlots, tracker, columns, toolConfig.Tracker.GridLayout, toolConfig.Tracker.ProgressionRelicsOnly, Gl);
+			CheckForErrors();
 		}
 
 		private void ClearSprites()
@@ -608,26 +706,24 @@ namespace SotnRandoTools.RandoTracker
 			}
 		}
 
-		protected override void OnUnload(EventArgs e)
+		private void OnUnload()
 		{
 			toolConfig.Tracker.Width = Width;
 			toolConfig.Tracker.Height = Height;
 			Point location = new Point();
-			location.X = this.X;
-			location.Y = this.Y;
+			location.X = X;
+			location.Y = Y;
 			toolConfig.Tracker.Location = location;
 
 			ClearSprites();
 
-			GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
+			Gl.BindBuffer(GLEnum.ElementArrayBuffer, 0);
 
-			GL.UseProgram(0);
-			GL.DeleteProgram(shaderProgram);
+			Gl.UseProgram(0);
+			Gl.DeleteProgram(shaderProgram);
 
-			GL.DeleteTexture(texture);
-			GL.DeleteTexture(font);
-
-			base.OnUnload(e);
+			Gl.DeleteTexture(texture);
+			Gl.DeleteTexture(font);
 		}
 
 		public void CalculateGrid(int width, int height)
@@ -669,9 +765,14 @@ namespace SotnRandoTools.RandoTracker
 					row++;
 					col = 0;
 				}
-				relicSlots[i] = new Vector2(CellPadding + (col * (ItemSize + CellPadding) * Scale), this.Height - (LabelOffset + (ItemSize + CellPadding) * Scale) - (row * (ItemSize + CellPadding) * Scale));
+				relicSlots[i] = new Vector2(CellPadding + (col * (ItemSize + CellPadding) * Scale), Height - (LabelOffset + (ItemSize + CellPadding) * Scale) - (row * (ItemSize + CellPadding) * Scale));
 				col++;
 			}
+		}
+
+		public void Dispose()
+		{
+			closing = true;
 		}
 	}
 }

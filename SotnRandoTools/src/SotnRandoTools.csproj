@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<LangVersion>11.0</LangVersion>
+		<LangVersion>12.0</LangVersion>
 		<Nullable>enable</Nullable>
 		<TargetFramework>net48</TargetFramework>
 		<Authors>TalicZealot</Authors>
@@ -11,16 +11,21 @@
 		<OutputType>Library</OutputType>
 		<EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
 		<AnalysisLevel>5.0</AnalysisLevel>
-		<Version>2.1.2</Version>
+		<Version>2.1.3</Version>
 		<Description>A collection of tools to enhance the experience of playing the SotN randomizer.</Description>
 		<Copyright />
 		<PackageProjectUrl>https://taliczealot.github.io/#/projects/sotnrandotools</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/TalicZealot/SotnRandoTools</RepositoryUrl>
 		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+		<Platforms>AnyCPU;x64</Platforms>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 		<Optimize>True</Optimize>
 		<DebugType>portable</DebugType>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+	  <Optimize>True</Optimize>
+	  <DebugType>portable</DebugType>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
 	  <Optimize>True</Optimize>
@@ -29,6 +34,10 @@
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<Optimize>True</Optimize>
 		<DebugType>portable</DebugType>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+	  <Optimize>True</Optimize>
+	  <DebugType>portable</DebugType>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
 	  <Optimize>True</Optimize>
@@ -50,19 +59,20 @@
 		<PackageReference Include="System.Drawing.Common" Version="6.0.0" />
 		<PackageReference Include="System.Net.Http" Version="4.3.4" />
 		<Reference Include="BizHawk.Common" HintPath="$(ProjectDir)../BizHawk/dll/BizHawk.Common.dll" />
-		<Reference Include="BizHawk.Bizware.BizwareGL" HintPath="$(ProjectDir)../BizHawk/dll/BizHawk.Bizware.BizwareGL.dll" />
-		<Reference Include="OpenTK">
-		  <HintPath>..\BizHawk\dll\OpenTK.dll</HintPath>
-		</Reference>
 		<Reference Include="PresentationCore, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
 		<Reference Include="SotnApi" HintPath="$(ProjectDir)../BizHawk/ExternalTools/SotnRandoTools/dll/SotnApi.dll" />
+		<Reference Include="Silk.NET.OpenAL" HintPath="$(ProjectDir)../BizHawk/dll/Silk.NET.OpenAL.dll" />
+		<Reference Include="Silk.NET.Core" HintPath="$(ProjectDir)../BizHawk/dll/Silk.NET.Core.dll" />
+		<Reference Include="Silk.NET.OpenGL" HintPath="$(ProjectDir)../BizHawk/dll/Silk.NET.OpenGL.dll" />
+		<Reference Include="Silk.NET.Maths" HintPath="$(ProjectDir)../BizHawk/dll/Silk.NET.Maths.dll" />
+		<Reference Include="SDL2-CS" HintPath="$(ProjectDir)../BizHawk/dll/SDL2-CS.dll" />
+		<Reference Include="System.Numerics.Vectors" HintPath="$(ProjectDir)../BizHawk/dll/System.Numerics.Vectors.dll" />
 		<Reference Include="System.Memory" HintPath="$(ProjectDir)../BizHawk/dll/System.Memory.dll" />
 		<Reference Include="System.Web, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
 		<Reference Include="System.Windows.Forms" />
 		<Reference Include="BizHawk.Client.Common" HintPath="$(ProjectDir)../BizHawk/dll/BizHawk.Client.Common.dll" />
 		<Reference Include="BizHawk.Emulation.Common" HintPath="$(ProjectDir)../BizHawk/dll/BizHawk.Emulation.Common.dll" />
 		<Reference Include="BizHawk.Client.EmuHawk" HintPath="$(ProjectDir)../BizHawk/EmuHawk.exe" />
-		<Reference Include="BizHawk.WinForms.Controls" HintPath="$(ProjectDir)../BizHawk/dll/BizHawk.WinForms.Controls.dll" />
 		<Reference Include="WindowsBase, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
 	</ItemGroup>
 	<ItemGroup>

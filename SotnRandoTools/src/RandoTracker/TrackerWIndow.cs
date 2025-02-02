@@ -27,6 +27,7 @@ namespace SotnRandoTools.RandoTracker
 
 			tracker = new Tracker(toolConfig, sotnApi, notificationService);
 			renderThread = new Thread(Run);
+			renderThread.Name = "Render Thread";
 			renderThread.Start();
 		}
 

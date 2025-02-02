@@ -21,10 +21,10 @@ namespace SotnRandoTools
 		Description = "A collection of tools to enhance the SotN randomizer experience.",
 		LoadAssemblyFiles = new[]
 		{
-			"SotnRandoTools/dll/SotnApi.dll",
+			"SotnRandoTools/dll/SotnApi.dll"
 		})]
 	[ExternalToolEmbeddedIcon("SotnRandoTools.Resources.BizAlucard.png")]
-	[ExternalToolApplicability.SingleRom("PSX", "0DDCBC3D")]
+	[ExternalToolApplicability.RomList(VSystemID.Raw.PSX, new string[] { "0DDCBC3D" })]
 	public partial class ToolMainForm : ToolFormBase, IExternalToolForm
 	{
 		[RequiredService]

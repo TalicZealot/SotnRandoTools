@@ -2,18 +2,19 @@
 using System.IO;
 using System.Threading.Tasks;
 using BizHawk.Client.Common;
-using OpenTK;
-using OpenTK.Audio.OpenAL;
+using Silk.NET.OpenAL;
 using SotnRandoTools.Constants;
 
 namespace SotnRandoTools.Services
 {
-	internal sealed class WavPlayer : IDisposable
+	internal unsafe sealed class WavPlayer : IDisposable
 	{
-		int buffer;
-		int source;
-		IntPtr device;
-		ContextHandle context;
+		private AL Al;
+		private ALContext Alc;
+		private uint buffer;
+		private uint source;
+		private Device* device;
+		private Context* context;
 
 		public static byte[] LoadWave(Stream stream, out int channels, out int bits, out int rate)
 		{
@@ -60,59 +61,56 @@ namespace SotnRandoTools.Services
 			}
 		}
 
-		public static ALFormat GetSoundFormat(int channels, int bits)
+		public unsafe WavPlayer(float volume)
 		{
-			switch (channels)
-			{
-				case 1: return bits == 8 ? ALFormat.Mono8 : ALFormat.Mono16;
-				case 2: return bits == 8 ? ALFormat.Stereo8 : ALFormat.Stereo16;
-				default: throw new NotSupportedException("The specified sound format is not supported.");
-			}
-		}
+			Alc = ALContext.GetApi();
+			Al = AL.GetApi();
+			device = Alc.OpenDevice("");
+			context = Alc.CreateContext(device, null);
+			Alc.MakeContextCurrent(context);
 
-		public WavPlayer(float volume, Config globalConfig)
-		{
-			if (globalConfig.SoundOutputMethod != ESoundOutputMethod.OpenAL)
-			{
-				device = Alc.OpenDevice(null);
-				context = Alc.CreateContext(device, (int[]) null);
-				Alc.MakeContextCurrent(context);
-			}
-
-			buffer = AL.GenBuffer();
-			source = AL.GenSource();
+			buffer = Al.GenBuffer();
+			source = Al.GenSource();
 
 			int channels, bits_per_sample, sample_rate;
 			byte[] sound_data = LoadWave(File.Open(Paths.ItemPickupSound, FileMode.Open), out channels, out bits_per_sample, out sample_rate);
-			AL.BufferData(buffer, GetSoundFormat(channels, bits_per_sample), sound_data, sound_data.Length, sample_rate);
 
-			AL.Source(source, ALSourcei.Buffer, buffer);
-			AL.Source(source, ALSourceb.Looping, false);
-			AL.Source(source, ALSourcef.Gain, volume);
+			fixed (void* d = sound_data)
+			{
+				Al.BufferData(buffer, BufferFormat.Stereo16, d, sound_data.Length, sample_rate);
+			}
+
+			Al.SetSourceProperty(source, SourceBoolean.Looping, false);
+			Al.SetSourceProperty(source, SourceFloat.Gain, volume);
+			Al.SetSourceProperty(source, SourceInteger.Buffer, buffer);
 		}
 
 		public async Task Play()
 		{
-			AL.SourcePlay(source);
+			Al.SourcePlay(source);
 
 			int state;
 			do
 			{
 				System.Threading.Thread.Sleep(250);
-				AL.GetSource(source, ALGetSourcei.SourceState, out state);
-			} while ((ALSourceState) state == ALSourceState.Playing);
+				Al.GetSourceProperty(source, GetSourceInteger.SourceState, out state);
+			} while ((SourceState) state == SourceState.Playing);
 		}
 
 		public void SetVolume(float volume)
 		{
-			AL.Source(source, ALSourcef.Gain, volume);
+			Al.SetSourceProperty(source, SourceFloat.Gain, volume);
 		}
 
 		public void Dispose()
 		{
-			AL.SourceStop(source);
-			AL.DeleteSource(source);
-			AL.DeleteBuffer(buffer);
+			Al.SourceStop(source);
+			Al.DeleteSource(source);
+			Al.DeleteBuffer(buffer);
+			Alc.DestroyContext(context);
+			Alc.CloseDevice(device);
+			Al.Dispose();
+			Alc.Dispose();
 		}
 	}
 }

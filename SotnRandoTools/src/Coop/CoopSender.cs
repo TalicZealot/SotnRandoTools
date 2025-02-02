@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Windows.Media.Animation;
-using SotnApi.Constants.Values.Alucard.Enums;
 using SotnApi.Interfaces;
-using SotnApi.Main;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Coop.Enums;
 using SotnRandoTools.Coop.Interfaces;
-using SotnRandoTools.Services;
 
 namespace SotnRandoTools.Coop
 {

@@ -20,7 +20,7 @@ easier it is to reproduce the bug.
 Open the Black Marble Gallery save on the attached virtual memory card and go
 right, then...
 
-# Additional context, screenshot or log file from /ExternalTools/SotnRandoTools/Logs/:
+# Additional context or screenshot:
 Add any other context about the problem here or post a screenshot if there is a visual bug.
 Note: The log file is named in the following format: dd-MM-yy hh-mm-ss
 If you are not sure which log is the correct one you can open it and search for `Randomizer seed information` and look for the correct seed.
@@ -29,7 +29,7 @@ If you are not sure which log is the correct one you can open it and search for 
 
 # BizHawk version:
 
-# Seed Information:
+# Seed Information or ppf:
 The best way to provide all the necessary seed information is to click the
 "Copy seed" button after randomizing then paste here. Alternatively, name the
 preset used and whether or not tournament mode was enabled. The seed and preset are also displayed by the tracker. Providing a ppf or a link to the discord message for a race is also sufficient.

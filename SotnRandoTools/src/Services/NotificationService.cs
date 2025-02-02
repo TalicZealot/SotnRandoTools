@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using BizHawk.Client.Common;
@@ -30,7 +31,7 @@ namespace SotnRandoTools.Services
 		private Queue<string> messageQueue = new();
 		private int messageFrames = 0;
 		private bool updated = false;
-		WavPlayer wvplr;
+		private WavPlayer wavPlayer;
 
 		public NotificationService(IToolConfig toolConfig, IGuiApi guiApi, IEmuClientApi clientAPI, Config globalConfig)
 		{
@@ -41,20 +42,26 @@ namespace SotnRandoTools.Services
 			overlaySocketServer = new OverlaySocketServer(toolConfig);
 			scale = clientAPI.GetWindowSize();
 			ResizeImages();
-			wvplr = new((float) (toolConfig.Coop.Volume / 10f), globalConfig);
+			wavPlayer = new WavPlayer((float) (toolConfig.Coop.Volume / 10f));
 		}
 
 		public float Volume
 		{
 			set
 			{
-				wvplr.SetVolume(value);
+				if (wavPlayer is not null)
+				{
+					wavPlayer.SetVolume(value);
+				}
 			}
 		}
 
 		public void PlayAlert()
 		{
-			Task.Run(() => { wvplr.Play().ConfigureAwait(false); });
+			if (wavPlayer is not null)
+			{
+				Task.Run(() => { wavPlayer.Play().ConfigureAwait(false); });
+			}
 		}
 
 		public void AddMessage(string message)
@@ -130,7 +137,7 @@ namespace SotnRandoTools.Services
 			float pixelScaleX = (float) screenWidth / (float) scaledBufferWidth;
 			float pixelScaleY = (float) screenHeight / (float) scaledBufferHeight;
 
-			guiApi.WithSurface(DisplaySurfaceID.Client, () =>
+			guiApi.WithSurface(DisplaySurfaceID.Client, (guiApi) =>
 			{
 				guiApi.ClearGraphics();
 				if (messageQueue.Count > 0)

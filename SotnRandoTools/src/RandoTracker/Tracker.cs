@@ -910,8 +910,8 @@ namespace SotnRandoTools.RandoTracker
 			for (int i = 0; i < locations.allowedLockCount; i++)
 			{
 				bool unlock = true;
-				if (locations.states[locations.allowedLocks[i].stateIndex].Visited 
-					|| locations.states[locations.allowedLocks[i].stateIndex].ReachabilityChanged 
+				if (locations.states[locations.allowedLocks[i].stateIndex].Visited
+					|| locations.states[locations.allowedLocks[i].stateIndex].ReachabilityChanged
 					|| locations.states[locations.allowedLocks[i].stateIndex].availabilityColor != MapColor.Unavailable)
 				{
 					continue;
