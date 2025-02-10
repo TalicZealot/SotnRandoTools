@@ -39,6 +39,7 @@ namespace SotnRandoTools
             this.radioGrid = new System.Windows.Forms.RadioButton();
             this.radioCollected = new System.Windows.Forms.RadioButton();
             this.optionsGroup = new System.Windows.Forms.GroupBox();
+            this.alwaysOpTopCheckbox = new System.Windows.Forms.CheckBox();
             this.stereoCheckBox = new System.Windows.Forms.CheckBox();
             this.muteCheckBox = new System.Windows.Forms.CheckBox();
             this.autosplitterCheckBox = new System.Windows.Forms.CheckBox();
@@ -46,12 +47,7 @@ namespace SotnRandoTools
             this.replaysCheckBox = new System.Windows.Forms.CheckBox();
             this.locationsCheckbox = new System.Windows.Forms.CheckBox();
             this.customSeedGroup = new System.Windows.Forms.GroupBox();
-            this.customExtension = new System.Windows.Forms.TextBox();
-            this.customLocationsCustomExtensionRadio = new System.Windows.Forms.RadioButton();
-            this.customLocationsSpreadRadio = new System.Windows.Forms.RadioButton();
-            this.customLocationsClassicRadio = new System.Windows.Forms.RadioButton();
-            this.customLocationsEquipmentRadio = new System.Windows.Forms.RadioButton();
-            this.customLocationsGuardedRadio = new System.Windows.Forms.RadioButton();
+            this.customExtensionCombo = new System.Windows.Forms.ComboBox();
             this.username = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.trackerDerfaultsButton = new System.Windows.Forms.Button();
@@ -60,7 +56,6 @@ namespace SotnRandoTools
             this.saveLayoutButton = new System.Windows.Forms.Button();
             this.openLayoutDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveLayoutDialog = new System.Windows.Forms.SaveFileDialog();
-            this.alwaysOpTopCheckbox = new System.Windows.Forms.CheckBox();
             this.relicDisplayGroup.SuspendLayout();
             this.layoutGroup.SuspendLayout();
             this.optionsGroup.SuspendLayout();
@@ -187,10 +182,21 @@ namespace SotnRandoTools
             this.optionsGroup.ForeColor = System.Drawing.Color.White;
             this.optionsGroup.Location = new System.Drawing.Point(206, 56);
             this.optionsGroup.Name = "optionsGroup";
-            this.optionsGroup.Size = new System.Drawing.Size(182, 196);
+            this.optionsGroup.Size = new System.Drawing.Size(182, 209);
             this.optionsGroup.TabIndex = 6;
             this.optionsGroup.TabStop = false;
             this.optionsGroup.Text = "Options";
+            // 
+            // alwaysOpTopCheckbox
+            // 
+            this.alwaysOpTopCheckbox.AutoSize = true;
+            this.alwaysOpTopCheckbox.Location = new System.Drawing.Point(6, 157);
+            this.alwaysOpTopCheckbox.Name = "alwaysOpTopCheckbox";
+            this.alwaysOpTopCheckbox.Size = new System.Drawing.Size(94, 17);
+            this.alwaysOpTopCheckbox.TabIndex = 6;
+            this.alwaysOpTopCheckbox.Text = "Always on top";
+            this.alwaysOpTopCheckbox.UseVisualStyleBackColor = true;
+            this.alwaysOpTopCheckbox.CheckedChanged += new System.EventHandler(this.alwaysOpTopCheckbox_CheckedChanged);
             // 
             // stereoCheckBox
             // 
@@ -260,87 +266,23 @@ namespace SotnRandoTools
             // 
             // customSeedGroup
             // 
-            this.customSeedGroup.Controls.Add(this.customExtension);
-            this.customSeedGroup.Controls.Add(this.customLocationsCustomExtensionRadio);
-            this.customSeedGroup.Controls.Add(this.customLocationsSpreadRadio);
-            this.customSeedGroup.Controls.Add(this.customLocationsClassicRadio);
-            this.customSeedGroup.Controls.Add(this.customLocationsEquipmentRadio);
-            this.customSeedGroup.Controls.Add(this.customLocationsGuardedRadio);
+            this.customSeedGroup.Controls.Add(this.customExtensionCombo);
             this.customSeedGroup.ForeColor = System.Drawing.Color.White;
-            this.customSeedGroup.Location = new System.Drawing.Point(206, 258);
+            this.customSeedGroup.Location = new System.Drawing.Point(206, 271);
             this.customSeedGroup.Name = "customSeedGroup";
-            this.customSeedGroup.Size = new System.Drawing.Size(182, 116);
+            this.customSeedGroup.Size = new System.Drawing.Size(182, 103);
             this.customSeedGroup.TabIndex = 7;
             this.customSeedGroup.TabStop = false;
             this.customSeedGroup.Text = "Custom Location Extension";
             // 
-            // customExtension
+            // customExtensionCombo
             // 
-            this.customExtension.Location = new System.Drawing.Point(6, 87);
-            this.customExtension.Name = "customExtension";
-            this.customExtension.Size = new System.Drawing.Size(170, 21);
-            this.customExtension.TabIndex = 6;
-            this.customExtension.TextChanged += new System.EventHandler(this.customExtension_TextChanged);
-            // 
-            // customLocationsCustomExtensionRadio
-            // 
-            this.customLocationsCustomExtensionRadio.AutoSize = true;
-            this.customLocationsCustomExtensionRadio.Location = new System.Drawing.Point(6, 64);
-            this.customLocationsCustomExtensionRadio.Name = "customLocationsCustomExtensionRadio";
-            this.customLocationsCustomExtensionRadio.Size = new System.Drawing.Size(61, 17);
-            this.customLocationsCustomExtensionRadio.TabIndex = 5;
-            this.customLocationsCustomExtensionRadio.TabStop = true;
-            this.customLocationsCustomExtensionRadio.Text = "Custom";
-            this.customLocationsCustomExtensionRadio.UseVisualStyleBackColor = true;
-            this.customLocationsCustomExtensionRadio.CheckedChanged += new System.EventHandler(this.customLocationsCustomExtensionRadio_CheckedChanged);
-            // 
-            // customLocationsSpreadRadio
-            // 
-            this.customLocationsSpreadRadio.AutoSize = true;
-            this.customLocationsSpreadRadio.Location = new System.Drawing.Point(98, 21);
-            this.customLocationsSpreadRadio.Name = "customLocationsSpreadRadio";
-            this.customLocationsSpreadRadio.Size = new System.Drawing.Size(59, 17);
-            this.customLocationsSpreadRadio.TabIndex = 4;
-            this.customLocationsSpreadRadio.TabStop = true;
-            this.customLocationsSpreadRadio.Text = "Spread";
-            this.customLocationsSpreadRadio.UseVisualStyleBackColor = true;
-            this.customLocationsSpreadRadio.CheckedChanged += new System.EventHandler(this.customLocationsSpreadRadio_CheckedChanged);
-            // 
-            // customLocationsClassicRadio
-            // 
-            this.customLocationsClassicRadio.AutoSize = true;
-            this.customLocationsClassicRadio.Location = new System.Drawing.Point(98, 44);
-            this.customLocationsClassicRadio.Name = "customLocationsClassicRadio";
-            this.customLocationsClassicRadio.Size = new System.Drawing.Size(57, 17);
-            this.customLocationsClassicRadio.TabIndex = 3;
-            this.customLocationsClassicRadio.TabStop = true;
-            this.customLocationsClassicRadio.Text = "Classic";
-            this.customLocationsClassicRadio.UseVisualStyleBackColor = true;
-            this.customLocationsClassicRadio.CheckedChanged += new System.EventHandler(this.customLocationsClassicRadio_CheckedChanged);
-            // 
-            // customLocationsEquipmentRadio
-            // 
-            this.customLocationsEquipmentRadio.AutoSize = true;
-            this.customLocationsEquipmentRadio.Location = new System.Drawing.Point(6, 43);
-            this.customLocationsEquipmentRadio.Name = "customLocationsEquipmentRadio";
-            this.customLocationsEquipmentRadio.Size = new System.Drawing.Size(75, 17);
-            this.customLocationsEquipmentRadio.TabIndex = 2;
-            this.customLocationsEquipmentRadio.TabStop = true;
-            this.customLocationsEquipmentRadio.Text = "Equipment";
-            this.customLocationsEquipmentRadio.UseVisualStyleBackColor = true;
-            this.customLocationsEquipmentRadio.CheckedChanged += new System.EventHandler(this.customLocationsEquipmentRadio_CheckedChanged);
-            // 
-            // customLocationsGuardedRadio
-            // 
-            this.customLocationsGuardedRadio.AutoSize = true;
-            this.customLocationsGuardedRadio.Location = new System.Drawing.Point(6, 20);
-            this.customLocationsGuardedRadio.Name = "customLocationsGuardedRadio";
-            this.customLocationsGuardedRadio.Size = new System.Drawing.Size(66, 17);
-            this.customLocationsGuardedRadio.TabIndex = 1;
-            this.customLocationsGuardedRadio.TabStop = true;
-            this.customLocationsGuardedRadio.Text = "Guarded";
-            this.customLocationsGuardedRadio.UseVisualStyleBackColor = true;
-            this.customLocationsGuardedRadio.CheckedChanged += new System.EventHandler(this.customLocationsGuardedRadio_CheckedChanged);
+            this.customExtensionCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.customExtensionCombo.Location = new System.Drawing.Point(6, 20);
+            this.customExtensionCombo.Name = "customExtensionCombo";
+            this.customExtensionCombo.Size = new System.Drawing.Size(170, 21);
+            this.customExtensionCombo.TabIndex = 0;
+            this.customExtensionCombo.SelectedIndexChanged += new System.EventHandler(this.customExtensionCombo_SelectedIndexChanged);
             // 
             // username
             // 
@@ -434,17 +376,6 @@ namespace SotnRandoTools
             this.saveLayoutDialog.Filter = "layout config files|*.ini";
             this.saveLayoutDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.saveLayoutDialog_FileOk);
             // 
-            // alwaysOpTopCheckbox
-            // 
-            this.alwaysOpTopCheckbox.AutoSize = true;
-            this.alwaysOpTopCheckbox.Location = new System.Drawing.Point(6, 157);
-            this.alwaysOpTopCheckbox.Name = "alwaysOpTopCheckbox";
-            this.alwaysOpTopCheckbox.Size = new System.Drawing.Size(94, 17);
-            this.alwaysOpTopCheckbox.TabIndex = 6;
-            this.alwaysOpTopCheckbox.Text = "Always on top";
-            this.alwaysOpTopCheckbox.UseVisualStyleBackColor = true;
-            this.alwaysOpTopCheckbox.CheckedChanged += new System.EventHandler(this.alwaysOpTopCheckbox_CheckedChanged);
-            // 
             // AutotrackerSettingsPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -472,7 +403,6 @@ namespace SotnRandoTools
             this.optionsGroup.ResumeLayout(false);
             this.optionsGroup.PerformLayout();
             this.customSeedGroup.ResumeLayout(false);
-            this.customSeedGroup.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
@@ -496,14 +426,10 @@ namespace SotnRandoTools
 		private System.Windows.Forms.CheckBox locationsCheckbox;
 		private System.Windows.Forms.CheckBox replaysCheckBox;
 		private System.Windows.Forms.GroupBox customSeedGroup;
-		private System.Windows.Forms.RadioButton customLocationsClassicRadio;
-		private System.Windows.Forms.RadioButton customLocationsEquipmentRadio;
-		private System.Windows.Forms.RadioButton customLocationsGuardedRadio;
 		private System.Windows.Forms.TextBox username;
 		private System.Windows.Forms.GroupBox groupBox1;
 		private System.Windows.Forms.CheckBox overlayCheckBox;
 		private System.Windows.Forms.CheckBox autosplitterCheckBox;
-		private System.Windows.Forms.RadioButton customLocationsSpreadRadio;
 		private System.Windows.Forms.Button trackerDerfaultsButton;
 		private System.Windows.Forms.CheckBox muteCheckBox;
 		private System.Windows.Forms.CheckBox stereoCheckBox;
@@ -512,8 +438,7 @@ namespace SotnRandoTools
 		private System.Windows.Forms.Button saveLayoutButton;
 		private System.Windows.Forms.OpenFileDialog openLayoutDialog;
 		private System.Windows.Forms.SaveFileDialog saveLayoutDialog;
-		private System.Windows.Forms.RadioButton customLocationsCustomExtensionRadio;
-		private System.Windows.Forms.TextBox customExtension;
 		private System.Windows.Forms.CheckBox alwaysOpTopCheckbox;
+		private System.Windows.Forms.ComboBox customExtensionCombo;
 	}
 }

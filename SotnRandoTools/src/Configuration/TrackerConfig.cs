@@ -93,11 +93,6 @@ namespace SotnRandoTools.Configuration
 		public string Username { get; set; }
 		[JsonConverter(typeof(ByteArrayConverter))]
 		public byte[] OverlaySlots { get; set; }
-		public bool CustomLocationsGuarded { get; set; }
-		public bool CustomLocationsEquipment { get; set; }
-		public bool CustomLocationsClassic { get; set; }
-		public bool CustomLocationsSpread { get; set; }
-		public bool CustomLocationsCustom { get; set; }
 		public string CustomExtension { get; set; }
 		public int Width { get; set; }
 		public int Height { get; set; }
@@ -114,11 +109,6 @@ namespace SotnRandoTools.Configuration
 			UseOverlay = false;
 			MuteMusic = false;
 			Stereo = true;
-			CustomLocationsGuarded = true;
-			CustomLocationsEquipment = false;
-			CustomLocationsClassic = false;
-			CustomLocationsSpread = false;
-			CustomLocationsCustom = false;
 			CustomExtension = "";
 			Width = 260;
 			Height = 440;

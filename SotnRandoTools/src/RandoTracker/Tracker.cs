@@ -756,7 +756,7 @@ namespace SotnRandoTools.RandoTracker
 			{
 				preset = "custom";
 			}
-			if (preset == "custom")
+			if (preset == "custom" || !File.Exists(Paths.PresetPath + preset + ".json"))
 			{
 				LoadExtension(Paths.ExtensionPath + toolConfig.Tracker.CustomExtension + ".json");
 			}

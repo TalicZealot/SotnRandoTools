@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Constants;
@@ -49,12 +51,17 @@ namespace SotnRandoTools
 			stereoCheckBox.Checked = toolConfig.Tracker.Stereo;
 			alwaysOpTopCheckbox.Checked = toolConfig.Tracker.AlwaysOnTop;
 
-			customExtension.Text = toolConfig.Tracker.CustomExtension;
-			customLocationsGuardedRadio.Checked = toolConfig.Tracker.CustomLocationsGuarded;
-			customLocationsEquipmentRadio.Checked = toolConfig.Tracker.CustomLocationsEquipment;
-			customLocationsClassicRadio.Checked = toolConfig.Tracker.CustomLocationsClassic;
-			customLocationsSpreadRadio.Checked = toolConfig.Tracker.CustomLocationsSpread;
-			customLocationsCustomExtensionRadio.Checked = toolConfig.Tracker.CustomLocationsCustom;
+			List<string> extensions = Directory.GetFiles(Paths.ExtensionPath).Select(file => Path.GetFileNameWithoutExtension(file)).ToList();
+			for (int i = 0; i < extensions.Count; i++)
+			{
+				customExtensionCombo.Items.Add(extensions[i]);
+			}
+			int extensionIndex = customExtensionCombo.Items.IndexOf(toolConfig.Tracker.CustomExtension);
+			if (extensionIndex < 0)
+			{
+				extensionIndex = 0;
+			}
+			customExtensionCombo.SelectedItem = customExtensionCombo.Items[extensionIndex];
 
 			username.Text = toolConfig.Tracker.Username;
 
@@ -103,41 +110,6 @@ namespace SotnRandoTools
 		private void replaysCheckBox_CheckedChanged(object sender, EventArgs e)
 		{
 			toolConfig.Tracker.SaveReplays = replaysCheckBox.Checked;
-		}
-
-		private void customLocationsGuardedRadio_CheckedChanged(object sender, EventArgs e)
-		{
-			toolConfig.Tracker.CustomLocationsGuarded = customLocationsGuardedRadio.Checked;
-			toolConfig.Tracker.CustomExtension = "guarded";
-		}
-
-		private void customLocationsEquipmentRadio_CheckedChanged(object sender, EventArgs e)
-		{
-			toolConfig.Tracker.CustomLocationsEquipment = customLocationsEquipmentRadio.Checked;
-			toolConfig.Tracker.CustomExtension = "equipment";
-		}
-
-		private void customLocationsClassicRadio_CheckedChanged(object sender, EventArgs e)
-		{
-			toolConfig.Tracker.CustomLocationsClassic = customLocationsClassicRadio.Checked;
-			toolConfig.Tracker.CustomExtension = "classic";
-		}
-
-		private void customLocationsSpreadRadio_CheckedChanged(object sender, EventArgs e)
-		{
-			toolConfig.Tracker.CustomLocationsSpread = customLocationsSpreadRadio.Checked;
-			toolConfig.Tracker.CustomExtension = "spread";
-		}
-
-		private void customLocationsCustomExtensionRadio_CheckedChanged(object sender, EventArgs e)
-		{
-			toolConfig.Tracker.CustomLocationsCustom = customLocationsCustomExtensionRadio.Checked;
-			toolConfig.Tracker.CustomExtension = customExtension.Text;
-		}
-
-		private void customExtension_TextChanged(object sender, EventArgs e)
-		{
-			toolConfig.Tracker.CustomExtension = customExtension.Text;
 		}
 
 		private void username_TextChanged(object sender, EventArgs e)
@@ -200,6 +172,11 @@ namespace SotnRandoTools
 		private void saveLayoutDialog_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
 		{
 			toolConfig.Tracker.SaveOverlayLayout(saveLayoutDialog.FileName);
+		}
+
+		private void customExtensionCombo_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			toolConfig.Tracker.CustomExtension = customExtensionCombo.SelectedItem.ToString();
 		}
 	}
 }
