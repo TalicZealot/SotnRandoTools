@@ -4,14 +4,17 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using SotnApi.Constants.Values.Alucard.Enums;
 using SotnApi.Constants.Values.Game;
+using SotnApi.Constants.Values.Game.Enums;
 using SotnApi.Interfaces;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Constants;
 using SotnRandoTools.RandoTracker.Interfaces;
 using SotnRandoTools.RandoTracker.Models;
 using SotnRandoTools.Services;
+using static BizHawk.Common.Shell32Imports.BROWSEINFOW;
 
 namespace SotnRandoTools.RandoTracker
 {
@@ -43,6 +46,12 @@ namespace SotnRandoTools.RandoTracker
 			new Item {Value = 103, Index = (byte)SotnApi.Constants.Values.Alucard.Equipment.Items.IndexOf("Zweihander")},
 			new Item {Value = 107, Index = (byte)SotnApi.Constants.Values.Alucard.Equipment.Items.IndexOf("ObsidianSword")}
 		};
+		public readonly bool[] timeAttacks = new bool[21];
+		public bool allBossesGoal = false;
+		private int relicsFlags;
+		private int itemsFlags;
+		private int bossesFlags;
+
 		private readonly Dictionary<string, ulong> abilityToFlag = new Dictionary<string, ulong>
 		{
 			{ "Soul of Bat",    0b0000000000000000000000000000000000000000000000000000000000000001},
@@ -249,6 +258,7 @@ namespace SotnRandoTools.RandoTracker
 				objectChanges = objectChanges || UpdateRelics();
 				objectChanges = objectChanges || UpdateProgressionItems();
 				objectChanges = objectChanges || UpdateThrustSwords();
+				objectChanges = objectChanges || UpdateTimeAttacks();
 				if (objectChanges)
 				{
 					UpdateOverlay();
@@ -629,6 +639,7 @@ namespace SotnRandoTools.RandoTracker
 					{
 						changes++;
 						relics[i].Collected = true;
+						relicsFlags |= (1 << i);
 					}
 				}
 				else
@@ -637,6 +648,7 @@ namespace SotnRandoTools.RandoTracker
 					{
 						changes++;
 						relics[i].Collected = false;
+						relicsFlags &= (byte) ~(1 << i);
 					}
 				}
 			}
@@ -662,10 +674,12 @@ namespace SotnRandoTools.RandoTracker
 						progressionItems[i].CollectedAt = (ushort) replayLenght;
 					}
 					progressionItems[i].Collected = true;
+					itemsFlags |= (1 << i);
 				}
 				else
 				{
 					progressionItems[i].Collected = false;
+					itemsFlags &= (byte) ~(1 << i);
 				}
 			}
 
@@ -745,6 +759,55 @@ namespace SotnRandoTools.RandoTracker
 				}
 			}
 
+			bool hasSword = false;
+
+			for (int i = 0; i < thrustSwords.Length; i++)
+			{
+				if (thrustSwords[i].Equipped || thrustSwords[i].Collected)
+				{
+					hasSword = true;
+				}
+			}
+
+			if (hasSword)
+			{
+				itemsFlags |= (1 << 4);
+			}
+			else
+			{
+				itemsFlags &= unchecked((byte) ~(1 << 4));
+			}
+
+
+			return changes > 0;
+		}
+
+		private bool UpdateTimeAttacks()
+		{
+			if (!allBossesGoal)
+			{
+				return false;
+			}
+
+			int changes = 0;
+			for (int i = 0; i < timeAttacks.Length - 2; i++)
+			{
+				bool state = sotnApi.GameApi.GetTimeAttack((Times) (i + 1)) > 0;
+				if ((!timeAttacks[i] && state) || (timeAttacks[i] && !state))
+				{
+					if (state)
+					{
+						bossesFlags |= (1 << i);
+					}
+					else
+					{
+						bossesFlags &= (byte) ~(1 << i);
+					}
+					changes++;
+				}
+				timeAttacks[i] = state;
+			}
+
 			return changes > 0;
 		}
 
@@ -766,6 +829,7 @@ namespace SotnRandoTools.RandoTracker
 			}
 			SeedInfo = seedName + "(" + preset + ")";
 			SaveSeedInfo(SeedInfo);
+			allBossesGoal = sotnApi.GameApi.AllBossesGoal;
 		}
 
 		private void ColorAllLocations()
@@ -964,46 +1028,8 @@ namespace SotnRandoTools.RandoTracker
 		{
 			if (toolConfig.Tracker.UseOverlay)
 			{
-				notificationService.UpdateTrackerOverlay(EncodeRelics(), EncodeItems());
+				notificationService.UpdateTrackerOverlay(relicsFlags, itemsFlags, bossesFlags);
 			}
-		}
-
-		private int EncodeItems()
-		{
-			int itemsNumber = 0;
-			for (int i = 0; i < progressionItems.Length + 1; i++)
-			{
-				if (i < progressionItems.Length && progressionItems[i].Status)
-				{
-					itemsNumber |= (int) Math.Pow(2, i);
-				}
-				else if (i == progressionItems.Length)
-				{
-					foreach (var sword in thrustSwords)
-					{
-						if (sword.Status)
-						{
-							itemsNumber |= (int) Math.Pow(2, i);
-							break;
-						}
-					}
-				}
-			}
-
-			return itemsNumber;
-		}
-
-		private int EncodeRelics()
-		{
-			int relicsNumber = 0;
-			for (int i = 0; i < relics.Length; i++)
-			{
-				if (relics[i].Collected)
-				{
-					relicsNumber |= (int) Math.Pow(2, i);
-				}
-			}
-			return relicsNumber;
 		}
 
 		private void SaveReplayLine()

@@ -80,7 +80,7 @@ namespace SotnRandoTools.RandoTracker
 				vertices.Add(textureCoordsX);
 				vertices.Add(1.0f);
 
-				vertices.Add(35.0f);
+				vertices.Add(100.0f);
 				//Vert2
 				vertices.Add(xpos + (glyphWidth * scale));
 				vertices.Add(ypos + (glyphHeight * scale));
@@ -88,7 +88,7 @@ namespace SotnRandoTools.RandoTracker
 				vertices.Add(textureCoordsX + textureItemWidth);
 				vertices.Add(1.0f);
 
-				vertices.Add(35.0f);
+				vertices.Add(100.0f);
 				//Vert3
 				vertices.Add(xpos + (glyphWidth * scale));
 				vertices.Add(ypos);
@@ -96,7 +96,7 @@ namespace SotnRandoTools.RandoTracker
 				vertices.Add(textureCoordsX + textureItemWidth);
 				vertices.Add(0.0f);
 
-				vertices.Add(35.0f);
+				vertices.Add(100.0f);
 				//Vert4
 				vertices.Add(xpos);
 				vertices.Add(ypos);
@@ -104,7 +104,7 @@ namespace SotnRandoTools.RandoTracker
 				vertices.Add(textureCoordsX);
 				vertices.Add(0.0f);
 
-				vertices.Add(35.0f);
+				vertices.Add(100.0f);
 
 				xpos += scale * (glyphWidth + 1);
 			}
@@ -157,7 +157,7 @@ namespace SotnRandoTools.RandoTracker
 		private int collectedUniform;
 		private const int itemSize = 14;
 		private const float textureItemWidth = 1f / 7f;
-		private const float textureItemHeight = 0.2f;
+		private const float textureItemHeight = 1f / 9f;
 		private List<float> vertices = new();
 		private float[] verticeArray;
 		private uint[] indices;
@@ -173,10 +173,16 @@ namespace SotnRandoTools.RandoTracker
 			this.relicSlots = relicSlots;
 			this.columns = columns;
 
-			indices = new uint[35 * 6];
+			int totalObjects = tracker.relics.Length + 5 ;
+			if (tracker.allBossesGoal)
+			{
+				totalObjects += tracker.timeAttacks.Length;
+			}
+
+			indices = new uint[totalObjects * 6];
 
 			int ind = 0;
-			for (int i = 0; i < 35; i++)
+			for (int i = 0; i < totalObjects; i++)
 			{
 				indices[ind++] = (uint) (0 + (i * 4));
 				indices[ind++] = (uint) (1 + (i * 4));
@@ -236,6 +242,24 @@ namespace SotnRandoTools.RandoTracker
 			if (grid || swordCollected)
 			{
 				AddQuad(itemCount, 34);
+				itemCount++;
+			}
+			if (tracker.allBossesGoal)
+			{
+				remainder = itemCount % columns;
+				if (remainder != 0)
+				{
+					itemCount += columns - remainder;
+				}
+				for (int i = 0; i < tracker.timeAttacks.Length; i++)
+				{
+					if (!grid && !tracker.timeAttacks[i])
+					{
+						continue;
+					}
+					AddQuad(itemCount, 35 + i);
+					itemCount++;
+				}
 			}
 
 			if (vertices.Count == 0)
@@ -347,9 +371,7 @@ namespace SotnRandoTools.RandoTracker
 		private Text seedInfo;
 		private int columns = 5;
 		private Vector2[] relicSlots = new Vector2[120];
-		private List<Vector2> vladRelicSlots;
-		private List<Vector2> progressionItemSlots;
-		private float[] collected = new float[36];
+		private float[] collected = new float[58];
 		private GL Gl;
 		private IntPtr Glc;
 		private IntPtr window;
@@ -409,7 +431,6 @@ namespace SotnRandoTools.RandoTracker
 			{
 				collected[i] = 0.0f;
 			}
-			collected[35] = 2.0f;
 		}
 
 		public float Scale { get; set; }
@@ -635,6 +656,23 @@ namespace SotnRandoTools.RandoTracker
 				collected[34] = 0.0f;
 			}
 
+			if (tracker.allBossesGoal)
+			{
+				for (int i = 0; i < tracker.timeAttacks.Length; i++)
+				{
+					if (collected[35 + i] == 0.0f && tracker.timeAttacks[i])
+					{
+						changes = true;
+						collected[35 + i] = 0.1f;
+					}
+					if (collected[35 + i] != 0.0f && !tracker.timeAttacks[i])
+					{
+						changes = true;
+						collected[35 + i] = 0.0f;
+					}
+				}
+			}
+
 			for (int i = 0; i < collected.Length; i++)
 			{
 				if (collected[i] > 0.0f && collected[i] < 1.73322f)
@@ -645,6 +683,10 @@ namespace SotnRandoTools.RandoTracker
 
 			if (seedInfo.text != tracker.SeedInfo)
 			{
+				if (tracker.allBossesGoal)
+				{
+					CalculateGrid(Width, Height);
+				}
 				seedInfo.Dispose();
 				seedInfo = new Text(tracker.SeedInfo, Width, Height, collectedUniform, Gl);
 				sprites.Dispose();
@@ -737,9 +779,15 @@ namespace SotnRandoTools.RandoTracker
 			int relicCount = 25;
 
 			int normalRelicRows = (int) Math.Ceiling((float) (relicCount) / (float) columns);
+			int bossRows = (int) Math.Ceiling((float) (tracker.timeAttacks.Length) / (float) columns);
+
+			if (!tracker.allBossesGoal)
+			{
+				bossRows = 0;
+			}
 
 			int cellSize = ItemSize + CellPadding;
-			float cellsPerColumn = (float) (height - (LabelOffset + CellPadding)) / ((cellSize * (2 + normalRelicRows)));
+			float cellsPerColumn = (float) (height - (LabelOffset + CellPadding)) / ((cellSize * (2 + normalRelicRows + bossRows)));
 			float cellsPerRow = (float) (width - (CellPadding * 5)) / ((cellSize * columns));
 			Scale = (float) Math.Round((cellsPerColumn <= cellsPerRow ? cellsPerColumn : cellsPerRow), 2);
 
@@ -750,13 +798,9 @@ namespace SotnRandoTools.RandoTracker
 				Scale = (float) roundedScale;
 			}
 
-			vladRelicSlots = new List<Vector2>();
-			progressionItemSlots = new List<Vector2>();
-
-
 			int row = 0;
 			int col = 0;
-			int totalCells = columns * (normalRelicRows + 2);
+			int totalCells = columns * (normalRelicRows + 2 + bossRows);
 
 			for (int i = 0; i < totalCells; i++)
 			{

@@ -1,113 +1,146 @@
 const mainContainer = document.getElementById('tracker');
 var socket;
 var slots;
-let relicIds = [
-    "blank",
-    "SoulOfBat",
-    "FireOfBat",
-    "EchoOfBat",
-    "ForceOfEcho",
-    "SoulOfWolf",
-    "PowerOfWolf",
-    "SkillOfWolf",
-    "FormOfMist",
-    "PowerOfMist",
-    "GasCloud",
-    "CubeOfZoe",
-    "SpiritOrb",
-    "GravityBoots",
-    "LeapStone",
-    "HolySymbol",
-    "FaerieScroll",
-    "JewelOfOpen",
-    "MermanStatue",
-    "BatCard",
-    "GhostCard",
-    "FaerieCard",
-    "DemonCard",
-    "SwordCard",
-    "SpriteCard",
-    "NoseDevilCard",
-    "HeartOfVlad",
-    "ToothOfVlad",
-    "RibOfVlad",
-    "RingOfVlad",
-    "EyeOfVlad",
-    "GoldRing",
-    "SilverRing",
-    "SpikeBreaker",
-    "HolyGlasses",
-    "Claymore"
-]
-let relicStates = [];
+let textureCoordinates = [
+    { col: 0, row: 8 },
+    { col: 1, row: 8 },
+    { col: 2, row: 8 },
+    { col: 3, row: 8 },
+    { col: 4, row: 8 },
+    { col: 5, row: 8 },
+    { col: 6, row: 8 },
+    { col: 0, row: 7 },
+    { col: 1, row: 7 },
+    { col: 2, row: 7 },
+    { col: 3, row: 7 },
+    { col: 4, row: 7 },
+    { col: 5, row: 7 },
+    { col: 6, row: 7 },
+    { col: 0, row: 6 },
+    { col: 1, row: 6 },
+    { col: 2, row: 6 },
+    { col: 3, row: 6 },
+    { col: 4, row: 6 },
+    { col: 5, row: 6 },
+    { col: 6, row: 6 },
+    { col: 0, row: 5 },
+    { col: 1, row: 5 },
+    { col: 2, row: 5 },
+    { col: 3, row: 5 },
+    { col: 4, row: 5 },
+    { col: 5, row: 5 },
+    { col: 6, row: 5 },
+    { col: 0, row: 4 },
+    { col: 1, row: 4 },
+    { col: 2, row: 4 },
+    { col: 3, row: 4 },
+    { col: 4, row: 4 },
+    { col: 5, row: 4 },
+    { col: 6, row: 4 },
+    { col: 0, row: 3 },
+    { col: 1, row: 3 },
+    { col: 2, row: 3 },
+    { col: 3, row: 3 },
+    { col: 4, row: 3 },
+    { col: 5, row: 3 },
+    { col: 6, row: 3 },
+    { col: 0, row: 2 },
+    { col: 1, row: 2 },
+    { col: 2, row: 2 },
+    { col: 3, row: 2 },
+    { col: 4, row: 2 },
+    { col: 5, row: 2 },
+    { col: 6, row: 2 },
+    { col: 0, row: 1 },
+    { col: 1, row: 1 },
+    { col: 2, row: 1 },
+    { col: 3, row: 1 },
+    { col: 4, row: 1 },
+    { col: 5, row: 1 },
+    { col: 6, row: 1 },
+    { col: 0, row: 0 },
+    { col: 1, row: 0 },
+    { col: 2, row: 0 },
+    { col: 3, row: 0 },
+    { col: 4, row: 0 },
+    { col: 5, row: 0 },
+    { col: 6, row: 0 }
+];
+let objectStates = [];
 var bitFlags = [];
 for (let i = 0; i < 30; i++) {
     bitFlags.push(Math.pow(2, i));
 }
 
-const draggables = document.querySelectorAll('.portlet');
+let draggables;
 
-draggables.forEach(draggable => {
-    draggable.addEventListener('dragstart', handleDragStart);
-    draggable.addEventListener('dragover', handleDragOver);
-    draggable.addEventListener('drop', handleDrop);
-});
+function initializeCells() {
+    let currentRow = null;
+    let cells = 0;
+    for (let i = 0; i < 13; i++) {
+        currentRow = document.createElement("div");
+        for (let j = 0; j < 15; j++) {
+            const slot = document.createElement("div");
+            slot.className = "slot";
+            slot.id = "cell" + cells;
+            slot.setAttribute("draggable", "true");
+            slot.setAttribute("data-index", cells);
+            slot.setAttribute("data-relic", -1);
+            currentRow.appendChild(slot);
+            cells++;
+        }
+        mainContainer.append(currentRow);
+    }
+
+    draggables = document.querySelectorAll('.slot');
+
+    draggables.forEach(draggable => {
+        draggable.addEventListener('dragstart', handleDragStart);
+        draggable.addEventListener('dragover', handleDragOver);
+        draggable.addEventListener('drop', handleDrop);
+    });
+}
 
 function insertItems() {
     const byteArray = new Uint8Array(slots);
     for (let i = 1; i < byteArray.length; i++) {
-        const cell = $("#cell" + (i - 1).toString());
-        cell.empty();
-        cell.attr("data-relic", byteArray[i]);
-        if (byteArray[i] > 0) {
-            cell.append(`<img class="relic uncollected" id="${relicIds[byteArray[i]]}" src="../Images/${relicIds[byteArray[i]]}.png" alt="" draggable="false">`);
+        const cell = document.getElementById("cell" + byteArray[i]);
+        if (!cell) {
+            break;
         }
+        cell.innerHTML = "";
+        cell.setAttribute("data-relic", i);
+        const col = textureCoordinates[i - 1].col;
+        const row = textureCoordinates[i - 1].row;
+        const trackedObject = document.createElement("div");
+        trackedObject.id = 'object' + i;
+        trackedObject.draggable = false;
+        trackedObject.className = "relic uncollected";
+        trackedObject.style.setProperty("--col", col);
+        trackedObject.style.setProperty("--row", row);
+        cell.appendChild(trackedObject);
     }
 }
 
-function updateStatus(relics, items) {
-    relicStates[1] = relics & bitFlags[0];
-    relicStates[2] = relics & bitFlags[1];
-    relicStates[3] = relics & bitFlags[2];
-    relicStates[4] = relics & bitFlags[3];
-    relicStates[5] = relics & bitFlags[4];
-    relicStates[6] = relics & bitFlags[5];
-    relicStates[7] = relics & bitFlags[6];
-    relicStates[8] = relics & bitFlags[7];
-    relicStates[9] = relics & bitFlags[8];
-    relicStates[10] = relics & bitFlags[9];
-    relicStates[11] = relics & bitFlags[10];
-    relicStates[12] = relics & bitFlags[11];
-    relicStates[13] = relics & bitFlags[12];
-    relicStates[14] = relics & bitFlags[13];
-    relicStates[15] = relics & bitFlags[14];
-    relicStates[16] = relics & bitFlags[15];
-    relicStates[17] = relics & bitFlags[16];
-    relicStates[18] = relics & bitFlags[17];
-    relicStates[19] = relics & bitFlags[18];
-    relicStates[20] = relics & bitFlags[19];
-    relicStates[21] = relics & bitFlags[20];
-    relicStates[22] = relics & bitFlags[21];
-    relicStates[23] = relics & bitFlags[22];
-    relicStates[24] = relics & bitFlags[23];
-    relicStates[25] = relics & bitFlags[24];
-    relicStates[26] = relics & bitFlags[25];
-    relicStates[27] = relics & bitFlags[26];
-    relicStates[28] = relics & bitFlags[27];
-    relicStates[29] = relics & bitFlags[28];
-    relicStates[30] = relics & bitFlags[29];
-    relicStates[31] = items & bitFlags[0];
-    relicStates[32] = items & bitFlags[1];
-    relicStates[33] = items & bitFlags[2];
-    relicStates[34] = items & bitFlags[3];
-    relicStates[35] = items & bitFlags[4];
+function updateStatus(relics, items, bosses) {
+    for (let i = 0; i < 30; i++) {
+        objectStates[i + 1] = relics & bitFlags[i];
+    }
 
-    for (let i = 1; i < relicIds.length; i++) {
-        let currentRelic = $('#' + relicIds[i]);
-        if (relicStates[i] && currentRelic.hasClass('uncollected')) {
-            currentRelic.removeClass('uncollected');
-        } else if (!relicStates[i] && !currentRelic.hasClass('uncollected')) {
-            currentRelic.addClass('uncollected');
+    for (let i = 0; i < 5; i++) {
+        objectStates[i + 31] = items & bitFlags[i];
+    }
+
+    for (let i = 0; i < 23; i++) {
+        objectStates[i + 36] = bosses & bitFlags[i];
+    }
+
+    for (let i = 1; i < objectStates.length; i++) {
+        let currentRelic = document.getElementById('object' + i);
+        if (objectStates[i] && currentRelic.classList.contains('uncollected')) {
+            currentRelic.classList.remove('uncollected');
+        } else if (!objectStates[i] && !currentRelic.classList.contains('uncollected')) {
+            currentRelic.classList.add('uncollected');
         }
     }
 }
@@ -137,7 +170,7 @@ function connectWebsocket() {
     socket.onmessage = function (e) {
         const dataView = new DataView(e.data);
         if (dataView.getInt8(0) == 0) {
-            updateStatus(dataView.getInt32(1, true), dataView.getInt32(5, true));
+            updateStatus(dataView.getInt32(1, true), dataView.getInt32(5, true), dataView.getInt32(9, true));
         } else {
             slots = e.data;
             insertItems();
@@ -168,20 +201,23 @@ function handleDrop(event) {
     }
 
     const byteArray = new Uint8Array(slots);
-    byteArray[draggedIndex] = targetRelic;
-    byteArray[targetIndex] = draggedRelic;
+    if (draggedRelic > -1) {
+        byteArray[draggedRelic] = targetIndex;
+    }
+    if (targetRelic > -1) {
+        byteArray[targetRelic] = draggedIndex;
+    }
 
     event.currentTarget.dataset.relic = draggedRelic;
     draggedElement.dataset.relic = targetRelic;
 
     draggedElement.innerHTML = '';
     event.currentTarget.innerHTML = '';
-    console.log(targetImage);
 
     if (targetImage !== null) {
         draggedElement.appendChild(targetImage);
     }
-    if (draggedImage !== null) {  
+    if (draggedImage !== null) {
         event.currentTarget.appendChild(draggedImage);
     }
 
@@ -192,7 +228,7 @@ function handleDragOver(event) {
     event.preventDefault();
 }
 
-// Initiate on document load
-$(function () {
+window.onload = (event) => {
+    initializeCells();
     connectWebsocket();
-});
+};

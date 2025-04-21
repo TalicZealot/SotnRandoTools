@@ -10,54 +10,57 @@ body {
     min-width: 520px;
 }
 
-.column {
-    float: left;
-}
-
-.portlet {
+.slot {
     padding: 0.1em;
-    width: 6vw;
-    height: 6vw;
+    width: 5vw;
+    height: 5vw;
+    display: inline-block;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
-.portlet:hover {
+.slot:hover {
     background-color: #CCCCCC;
     border: 0.5vw solid #111111;
 }
 
 .relic {
+    image-rendering: pixelated;
+    display: inline-block;
     width: 100%;
     height: 100%;
-    image-rendering: pixelated;
-    clip-path: rect(0px, 0px, 14px, 14px);
-}
+    aspect-ratio: 1 / 1;
 
-#SoulOfBat {
-    clip-path: rect(0px, 0px, 14px, 14px);
+    background-image: url('../Images/texture.png');
+    background-repeat: no-repeat;
+    background-size: 700% 900%;
+    background-position: 
+        calc(var(--col) * 100% / 6)
+        calc(var(--row) * 100% / 8);
 }
 
 .uncollected {
     filter: grayscale(100%) brightness(50%);
 }
 
-.portlet-header {
+.slot-header {
     padding: 0.2em 0.3em;
     margin-bottom: 0.5em;
     position: relative;
 }
 
-.portlet-toggle {
+.slot-toggle {
     position: absolute;
     top: 50%;
     right: 0;
     margin-top: -8px;
 }
 
-.portlet-content {
+.slot-content {
     padding: 0.4em;
 }
 
-.portlet-placeholder {
+.slot-placeholder {
     border: 1px dotted black;
     margin: 0 1em 1em 0;
     height: 50px;

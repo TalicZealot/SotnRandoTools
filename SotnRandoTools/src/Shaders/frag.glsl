@@ -5,13 +5,13 @@ flat in int sIndex;
 
 out vec4 fragColor;
 
-uniform float collected[36];
+uniform float collected[58];
 uniform sampler2D uTexture[2];
 uniform bool grid;
 
 void main()
 {
-	if (sIndex == 35)
+	if (sIndex == 100)
 	{
 		fragColor = texture(uTexture[1], sTexcoord);
 		return;

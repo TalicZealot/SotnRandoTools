@@ -24,7 +24,7 @@ namespace SotnRandoTools.Services
 		private CancellationTokenSource socketLoopTokenSource;
 		private CancellationTokenSource listenerLoopTokenSource;
 		private int socketCounter = 0;
-		private byte[] relicsData = new byte[10];
+		private byte[] objectsData = new byte[13];
 		public OverlaySocketServer(IToolConfig toolConfig)
 		{
 			this.toolConfig = toolConfig ?? throw new ArgumentNullException(nameof(toolConfig));
@@ -214,26 +214,35 @@ namespace SotnRandoTools.Services
 			return false;
 		}
 
-		public void UpdateTracker(int relics, int items)
+		public void UpdateTracker(int relics, int items, int bosses)
 		{
-			relicsData[0] = 0;
-			byte[] relicsBytes = BitConverter.GetBytes(relics);
+			objectsData[0] = 0;
 			int dataIndex = 1;
+
+			byte[] relicsBytes = BitConverter.GetBytes(relics);
 			for (int i = 0; i < relicsBytes.Length; i++)
 			{
-				relicsData[dataIndex] = relicsBytes[i];
+				objectsData[dataIndex] = relicsBytes[i];
 				dataIndex++;
 			}
+
 			byte[] itemsBytes = BitConverter.GetBytes(items);
 			for (int i = 0; i < itemsBytes.Length; i++)
 			{
-				relicsData[dataIndex] = itemsBytes[i];
+				objectsData[dataIndex] = itemsBytes[i];
+				dataIndex++;
+			}
+
+			byte[] bossesBytes = BitConverter.GetBytes(bosses);
+			for (int i = 0; i < bossesBytes.Length; i++)
+			{
+				objectsData[dataIndex] = bossesBytes[i];
 				dataIndex++;
 			}
 
 			for (int i = 0; i < clients.Count; i++)
 			{
-				SendData(clients[i], relicsData);
+				SendData(clients[i], objectsData);
 			}
 		}
 
@@ -247,8 +256,8 @@ namespace SotnRandoTools.Services
 
 		public void SaveSlots(byte[] data)
 		{
-			byte[] trimmed = new byte[121];
-			Array.Copy(data, trimmed, 121);
+			byte[] trimmed = new byte[57];
+			Array.Copy(data, trimmed, 57);
 			toolConfig.Tracker.OverlaySlots = trimmed;
 		}
 	}

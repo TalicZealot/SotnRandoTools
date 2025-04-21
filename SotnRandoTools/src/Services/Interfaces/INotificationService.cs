@@ -7,6 +7,6 @@
 		void PlayAlert();
 		void StartOverlayServer();
 		void StopOverlayServer();
-		void UpdateTrackerOverlay(int relics, int items);
+		void UpdateTrackerOverlay(int relics, int items, int bosses);
 	}
 }

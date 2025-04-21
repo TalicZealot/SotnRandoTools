@@ -4,6 +4,6 @@
 	{
 		void StartServer();
 		void StopServer();
-		void UpdateTracker(int relics, int items);
+		void UpdateTracker(int relics, int items, int bosses); 
 	}
 }
