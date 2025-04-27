@@ -7,6 +7,8 @@ namespace SotnRandoTools.RandoTracker.Models
 	{
 		[JsonProperty("id")]
 		public string Id { get; set; }
+		[JsonProperty("metaExtension")]
+		public string Extension { get; set; }
 	}
 	internal sealed class LockLocation
 	{

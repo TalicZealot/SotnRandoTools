@@ -77,6 +77,7 @@ let draggables;
 function initializeCells() {
     let currentRow = null;
     let cells = 0;
+    mainContainer.innerHTML = "";
     for (let i = 0; i < 13; i++) {
         currentRow = document.createElement("div");
         for (let j = 0; j < 15; j++) {
@@ -131,7 +132,7 @@ function updateStatus(relics, items, bosses) {
         objectStates[i + 31] = items & bitFlags[i];
     }
 
-    for (let i = 0; i < 23; i++) {
+    for (let i = 0; i < 21; i++) {
         objectStates[i + 36] = bosses & bitFlags[i];
     }
 
@@ -173,6 +174,7 @@ function connectWebsocket() {
             updateStatus(dataView.getInt32(1, true), dataView.getInt32(5, true), dataView.getInt32(9, true));
         } else {
             slots = e.data;
+            initializeCells();
             insertItems();
         }
     };

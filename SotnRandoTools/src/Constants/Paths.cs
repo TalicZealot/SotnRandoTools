@@ -8,7 +8,7 @@
 		public const string ReadmeLink = "https://github.com/TalicZealot/SotnRandoTools/blob/main/README.md";
 		public const string ApiLink = "https://github.com/TalicZealot/SotnApi";
 		public const string UpdaterLink = "https://github.com/TalicZealot/SimpleLatestReleaseUpdater";
-		public const string RandoSourceLink = "https://github.com/3snowp7im/SotN-Randomizer";
+		public const string RandoSourceLink = "https://github.com/sotnrando/sotnrando";
 
 		public const string LatestReleaseApi = "https://api.github.com/repos/taliczealot/sotnrandotools/releases";
 		public const string LatestReleaseUrl = "https://github.com/TalicZealot/SotnRandoTools/releases/latest";

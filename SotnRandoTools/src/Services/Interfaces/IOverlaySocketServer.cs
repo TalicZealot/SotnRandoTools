@@ -1,9 +1,11 @@
-﻿namespace SotnRandoTools.Services.Interfaces
+﻿using System.Threading.Tasks;
+
+namespace SotnRandoTools.Services.Interfaces
 {
 	internal interface IOverlaySocketServer
 	{
 		void StartServer();
-		void StopServer();
+		Task StopServer();
 		void UpdateTracker(int relics, int items, int bosses); 
 	}
 }

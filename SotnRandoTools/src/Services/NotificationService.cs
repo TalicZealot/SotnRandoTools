@@ -83,9 +83,14 @@ namespace SotnRandoTools.Services
 			overlaySocketServer.StartServer();
 		}
 
-		public void StopOverlayServer()
+		public async Task StopOverlayServer()
 		{
-			overlaySocketServer.StopServer();
+			await overlaySocketServer.StopServer();
+		}
+
+		public void UpdateOverlayLayout()
+		{
+			overlaySocketServer.UpdateLayout();
 		}
 
 		public void UpdateTrackerOverlay(int relics, int items, int bosses)

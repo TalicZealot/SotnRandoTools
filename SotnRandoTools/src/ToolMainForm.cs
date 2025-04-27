@@ -133,6 +133,10 @@ namespace SotnRandoTools
 			{
 				coopSettingsPanel.NotificationService = notificationService;
 			}
+			if (autotrackerSettingsPanel is not null)
+			{
+				autotrackerSettingsPanel.NotificationService = notificationService;
+			}
 			autotrackerSelect.Image = Resources.Tracker;
 			coopSelect.Image = Resources.coop;
 			aboutButton.Image = Resources.VectorSimple;
@@ -178,6 +182,10 @@ namespace SotnRandoTools
 			{
 				coopSettingsPanel.NotificationService = notificationService;
 			}
+			if (autotrackerSettingsPanel is not null)
+			{
+				autotrackerSettingsPanel.NotificationService = notificationService;
+			}
 		}
 
 		public override void UpdateValues(ToolFormUpdateType type)
@@ -205,12 +213,12 @@ namespace SotnRandoTools
 			}
 		}
 
-		private void ToolMainForm_FormClosing(object sender, FormClosingEventArgs e)
+		private async void ToolMainForm_FormClosing(object sender, FormClosingEventArgs e)
 		{
 			toolConfig.SaveConfig();
 			if (trackerWindow is not null)
 			{
-				trackerWindow.Dispose();
+				await trackerWindow.Dispose();
 			}
 
 			if (coopForm != null)
@@ -221,18 +229,18 @@ namespace SotnRandoTools
 
 			if (notificationService != null)
 			{
-				notificationService.StopOverlayServer();
+				await notificationService.StopOverlayServer();
 				notificationService = null;
 			}
 
 			if (trackerWindow is not null)
 			{
-				trackerWindow.Dispose();
+				await trackerWindow.Dispose();
 			}
 			sotnApi = null;
 		}
 
-		private void autotrackerLaunch_Click(object sender, EventArgs e)
+		private async void autotrackerLaunch_Click(object sender, EventArgs e)
 		{
 			if (sotnApi is null)
 			{
@@ -240,7 +248,7 @@ namespace SotnRandoTools
 			}
 			if (trackerWindow is not null)
 			{
-				trackerWindow.Dispose();
+				await trackerWindow.Dispose();
 				trackerWindow = null;
 				trackerWindow = new TrackerWIndow(toolConfig, sotnApi, notificationService);
 			}

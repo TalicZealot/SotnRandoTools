@@ -626,12 +626,12 @@ namespace SotnRandoTools.RandoTracker
 			}
 			for (int i = 0; i < tracker.progressionItems.Length; i++)
 			{
-				if (collected[30 + i] == 0.0f && (tracker.progressionItems[i].Collected || tracker.progressionItems[i].Equipped))
+				if (collected[30 + i] == 0.0f && tracker.progressionItems[i].Status)
 				{
 					changes = true;
 					collected[30 + i] = 0.1f;
 				}
-				if (collected[30 + i] != 0.0f && !tracker.progressionItems[i].Collected && !tracker.progressionItems[i].Equipped)
+				if (collected[30 + i] != 0.0f && !tracker.progressionItems[i].Status)
 				{
 					changes = true;
 					collected[30 + i] = 0.0f;

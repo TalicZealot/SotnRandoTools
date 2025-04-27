@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Constants;
+using SotnRandoTools.Services;
 
 namespace SotnRandoTools
 {
@@ -20,6 +21,8 @@ namespace SotnRandoTools
 
 			InitializeComponent();
 		}
+
+		internal INotificationService NotificationService { get; set; }
 
 		private void AutotrackerSettingsPanel_Load(object sender, EventArgs e)
 		{
@@ -157,6 +160,10 @@ namespace SotnRandoTools
 			try
 			{
 				toolConfig.Tracker.LoadOverlayLayout(openLayoutDialog.FileName);
+				if (NotificationService is not null)
+				{
+					NotificationService.UpdateOverlayLayout();
+				}
 			}
 			catch (Exception)
 			{

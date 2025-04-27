@@ -44,7 +44,7 @@ namespace SotnRandoTools.RandoTracker
 			new Item {Value = 98, Index = (byte)SotnApi.Constants.Values.Alucard.Equipment.Items.IndexOf("Claymore")},
 			new Item {Value = 101, Index = (byte)SotnApi.Constants.Values.Alucard.Equipment.Items.IndexOf("Flamberge")},
 			new Item {Value = 103, Index = (byte)SotnApi.Constants.Values.Alucard.Equipment.Items.IndexOf("Zweihander")},
-			new Item {Value = 107, Index = (byte)SotnApi.Constants.Values.Alucard.Equipment.Items.IndexOf("ObsidianSword")}
+			new Item {Value = 107, Index = (byte)SotnApi.Constants.Values.Alucard.Equipment.Items.IndexOf("Obsidian sword")}
 		};
 		public readonly bool[] timeAttacks = new bool[21];
 		public bool allBossesGoal = false;
@@ -418,6 +418,10 @@ namespace SotnRandoTools.RandoTracker
 			{
 				LoadExtension(Paths.ExtensionPath + "classic.json");
 			}
+			else if (preset.RelicLocationsExtension == null && preset.Metadata.Extension != null)
+			{
+				LoadExtension(Paths.ExtensionPath + preset.Metadata.Extension.ToLower() + ".json");
+			}
 			else if (preset.RelicLocationsExtension == null)
 			{
 				LoadExtension(Paths.ExtensionPath + "guarded.json");
@@ -426,6 +430,7 @@ namespace SotnRandoTools.RandoTracker
 			{
 				LoadExtension(Paths.ExtensionPath + preset.RelicLocationsExtension + ".json");
 			}
+
 			Dictionary<string, string> aliases = new Dictionary<string, string>();
 			for (int i = 0; i < preset.Aliases.Count; i++)
 			{
@@ -509,7 +514,7 @@ namespace SotnRandoTools.RandoTracker
 			for (int i = 0; i < finalLocksAllowed.Length; i++)
 			{
 				string locationName = finalLocksAllowed[i].Name;
-				if (!locationToIndex.ContainsKey(locationName))
+				if (!locationToIndex.ContainsKey(locationName) || locations.states[locationToIndex[locationName]].availabilityColor == MapColor.Available)
 				{
 					continue;
 				}
@@ -674,12 +679,10 @@ namespace SotnRandoTools.RandoTracker
 						progressionItems[i].CollectedAt = (ushort) replayLenght;
 					}
 					progressionItems[i].Collected = true;
-					itemsFlags |= (1 << i);
 				}
 				else
 				{
 					progressionItems[i].Collected = false;
-					itemsFlags &= (byte) ~(1 << i);
 				}
 			}
 
@@ -705,11 +708,13 @@ namespace SotnRandoTools.RandoTracker
 				if (!progressionItems[i].Status && (progressionItems[i].Collected || progressionItems[i].Equipped))
 				{
 					progressionItems[i].Status = true;
+					itemsFlags |= (1 << i);
 					changes++;
 				}
 				else if (progressionItems[i].Status && !(progressionItems[i].Collected || progressionItems[i].Equipped))
 				{
 					progressionItems[i].Status = false;
+					itemsFlags &= (byte) ~(1 << i);
 					changes++;
 				}
 			}
@@ -790,7 +795,7 @@ namespace SotnRandoTools.RandoTracker
 			}
 
 			int changes = 0;
-			for (int i = 0; i < timeAttacks.Length - 2; i++)
+			for (int i = 0; i < timeAttacks.Length; i++)
 			{
 				bool state = sotnApi.GameApi.GetTimeAttack((Times) (i + 1)) > 0;
 				if ((!timeAttacks[i] && state) || (timeAttacks[i] && !state))

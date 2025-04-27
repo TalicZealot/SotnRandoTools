@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 using SotnApi.Interfaces;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Services;
 
 namespace SotnRandoTools.RandoTracker
 {
-	internal class TrackerWIndow : IDisposable
+	internal class TrackerWIndow
 	{
 		private readonly IToolConfig toolConfig;
 		private readonly ISotnApi sotnApi;
@@ -45,7 +46,7 @@ namespace SotnRandoTools.RandoTracker
 			renderer.Run();
 		}
 
-		public void Dispose()
+		public async Task Dispose()
 		{
 			if (disposed) return;
 			if (renderer != null)
@@ -58,9 +59,12 @@ namespace SotnRandoTools.RandoTracker
 			{
 				tracker.SaveReplay();
 			}
-			notificationService.StopOverlayServer();
-			tracker.CloseAutosplitter();
-			tracker = null;
+			await notificationService.StopOverlayServer();
+			if (tracker != null)
+			{
+				tracker.CloseAutosplitter();
+				tracker = null;
+			}
 			disposed = true;
 		}
 

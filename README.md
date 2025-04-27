@@ -9,7 +9,7 @@ This tool and the accompanying library and app are open source. The idea is to i
 ## Associated Projects
 * [SotnApi](https://github.com/TalicZealot/SotnApi)
 * [SimpleLatestReleaseUpdater](https://github.com/TalicZealot/SimpleLatestReleaseUpdater)
-* [SotN Randomizer Source](https://github.com/3snowp7im/SotN-Randomizer)
+* [SotN Randomizer Source](https://github.com/sotnrando/sotnrando)
 * [SotN Decomp](https://github.com/Xeeynamo/sotn-decomp)
 
 ## Table of Contents
@@ -66,9 +66,6 @@ The autotracker will also automatically start, restart and split when Dracula di
 ## Co-Op
 Coop requires the host to have the port they want to use forwarded. Hosting automatically copies your address(ip:port) to the clipboard. The other player uses that address to connect. Please be careful to not leak your IP!
 Bindings over at: [https://taliczealot.github.io/coop/](https://taliczealot.github.io/coop/)
-
-## Khaos-Setup
-Khaos has moved to [https://github.com/TalicZealot/SotnKhaosTools](https://github.com/TalicZealot/SotnKhaosTools)
 
 ## Useful links
 * [SotN Randomizer](https://sotn.io)

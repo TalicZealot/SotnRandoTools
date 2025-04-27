@@ -1,4 +1,6 @@
-﻿namespace SotnRandoTools.Services
+﻿using System.Threading.Tasks;
+
+namespace SotnRandoTools.Services
 {
 	internal interface INotificationService
 	{
@@ -6,7 +8,8 @@
 		void AddMessage(string message);
 		void PlayAlert();
 		void StartOverlayServer();
-		void StopOverlayServer();
+		Task StopOverlayServer();
+		void UpdateOverlayLayout();
 		void UpdateTrackerOverlay(int relics, int items, int bosses);
 	}
 }

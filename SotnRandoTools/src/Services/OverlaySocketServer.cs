@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Bson;
 using SotnRandoTools.Configuration.Interfaces;
 using SotnRandoTools.Constants;
 using SotnRandoTools.Services.Interfaces;
@@ -25,6 +26,9 @@ namespace SotnRandoTools.Services
 		private CancellationTokenSource listenerLoopTokenSource;
 		private int socketCounter = 0;
 		private byte[] objectsData = new byte[13];
+		private int relics = 0;
+		private int items = 0;
+		private int bosses = 0;
 		public OverlaySocketServer(IToolConfig toolConfig)
 		{
 			this.toolConfig = toolConfig ?? throw new ArgumentNullException(nameof(toolConfig));
@@ -45,16 +49,23 @@ namespace SotnRandoTools.Services
 			Task.Run(() => AcceptClients().ConfigureAwait(false));
 		}
 
-		public async void StopServer()
+		public async Task StopServer()
 		{
 			if (!started)
 			{
 				return;
 			}
-			started = false;
 			await CloseAllSocketsAsync();
-			server.Stop();
-			server.Close();
+			try
+			{
+				server.Stop();
+				server.Close();
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.ToString());
+			}
+			started = false;
 		}
 
 		private async Task CloseAllSocketsAsync()
@@ -67,7 +78,7 @@ namespace SotnRandoTools.Services
 
 				if (client.Socket.State == WebSocketState.Open)
 				{
-					var timeout = new CancellationTokenSource(400);
+					var timeout = new CancellationTokenSource(700);
 					try
 					{
 						await client.Socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", timeout.Token);
@@ -127,7 +138,7 @@ namespace SotnRandoTools.Services
 						clients.Add(client);
 					}
 					_ = Task.Run(() => SocketProcessingLoopAsync(client).ConfigureAwait(false));
-					SendSlots();
+					UpdateLayout();
 				}
 				catch (Exception ex)
 				{
@@ -214,8 +225,17 @@ namespace SotnRandoTools.Services
 			return false;
 		}
 
-		public void UpdateTracker(int relics, int items, int bosses)
+		public void UpdateLayout()
 		{
+			SendSlots();
+			UpdateTracker(relics, items, bosses);
+		}
+
+		public void UpdateTracker(int trackerRelics, int trackerItems, int trackerBosses)
+		{
+			relics = trackerRelics;
+			items = trackerItems;
+			bosses = trackerBosses;
 			objectsData[0] = 0;
 			int dataIndex = 1;
 
